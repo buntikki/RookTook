@@ -20,10 +20,10 @@ class GoogleSignInButton extends StatelessWidget {
         'assets/images/googleimage.png',
         height: 24.0,
       ),
-      label: const Text('Sign in with Google'),
+      label: Text('Continue with Google', style: TextTheme.of(context).titleMedium),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: const Color(0xff464A4F),
+        foregroundColor: const Color(0xff464A4F),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
