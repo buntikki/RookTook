@@ -65,7 +65,7 @@ class GameListTile extends StatelessWidget {
               decoration: const BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
               child: const Padding(
                 padding: EdgeInsets.all(4.0),
-                child: Text('D', style: TextStyle(color: Colors.white, fontSize: 8)),
+                child: Text('D', style: TextStyle(color: Colors.white, fontSize: 10)),
               ),
             )
             : game.winner == mySide
@@ -80,7 +80,7 @@ class GameListTile extends StatelessWidget {
               decoration: const BoxDecoration(color: Color(0xffF77178), shape: BoxShape.circle),
               child: const Padding(
                 padding: EdgeInsets.all(4.0),
-                child: Text('L', style: TextStyle(color: Colors.white, fontSize: 8)),
+                child: Text('L', style: TextStyle(color: Colors.white, fontSize: 10)),
               ),
             );
       }
