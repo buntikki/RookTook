@@ -82,7 +82,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> with SingleTickerPr
     );
 
     final listContent = [
-      if (session != null) _OnlineFriendsWidget(),
+      // if (session != null) _OnlineFriendsWidget(),
       RatingPrefAware(
         child: Column(
           children: [
@@ -239,7 +239,7 @@ class _BodyState extends ConsumerState<_Body> with SingleTickerProviderStateMixi
 
     return ListView(
       children: [
-        if (session != null) _OnlineFriendsWidget(),
+        // if (session != null) _OnlineFriendsWidget(),
         RatingPrefAware(
           child: Column(
             children: [

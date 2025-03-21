@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/model/account/account_repository.dart';
@@ -10,10 +7,12 @@ import 'package:lichess_mobile/src/model/account/ongoing_game.dart';
 import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
 import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/model/challenge/challenges.dart';
+import 'package:lichess_mobile/src/model/common/time_increment.dart';
 import 'package:lichess_mobile/src/model/correspondence/correspondence_game_storage.dart';
 import 'package:lichess_mobile/src/model/correspondence/offline_correspondence_game.dart';
 import 'package:lichess_mobile/src/model/game/archived_game.dart';
 import 'package:lichess_mobile/src/model/game/game_history.dart';
+import 'package:lichess_mobile/src/model/lobby/game_seek.dart';
 import 'package:lichess_mobile/src/model/settings/home_preferences.dart';
 import 'package:lichess_mobile/src/navigation.dart';
 import 'package:lichess_mobile/src/network/connectivity.dart';
@@ -23,8 +22,6 @@ import 'package:lichess_mobile/src/utils/l10n.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
 import 'package:lichess_mobile/src/utils/screen.dart';
 import 'package:lichess_mobile/src/view/account/profile_screen.dart';
-import 'package:lichess_mobile/src/view/common/apple_sign_in_button.dart';
-import 'package:lichess_mobile/src/view/common/google_sign_in_button.dart';
 import 'package:lichess_mobile/src/view/correspondence/offline_correspondence_game_screen.dart';
 import 'package:lichess_mobile/src/view/game/game_screen.dart';
 import 'package:lichess_mobile/src/view/game/offline_correspondence_games_screen.dart';
@@ -33,7 +30,6 @@ import 'package:lichess_mobile/src/view/play/create_game_options.dart';
 import 'package:lichess_mobile/src/view/play/ongoing_games_screen.dart';
 import 'package:lichess_mobile/src/view/play/play_screen.dart';
 import 'package:lichess_mobile/src/view/play/quick_game_button.dart';
-import 'package:lichess_mobile/src/view/play/quick_game_matrix.dart';
 import 'package:lichess_mobile/src/view/user/challenge_requests_screen.dart';
 import 'package:lichess_mobile/src/view/user/player_screen.dart';
 import 'package:lichess_mobile/src/view/user/recent_games.dart';
@@ -103,102 +99,162 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   recentGames: recentGames,
                   nbOfGames: nbOfGames,
                 )
-                : _handsetWidgets(
-                  session: session,
-                  status: status,
-                  ongoingGames: ongoingGames,
-                  offlineCorresGames: offlineCorresGames,
-                  recentGames: recentGames,
-                  nbOfGames: nbOfGames,
-                );
+                : _welcomeScreenWidgets(session: session, status: status, isTablet: isTablet);
+        // _handsetWidgets(
+        //   session: session,
+        //   status: status,
+        //   ongoingGames: ongoingGames,
+        //   offlineCorresGames: offlineCorresGames,
+        //   recentGames: recentGames,
+        //   nbOfGames: nbOfGames,
+        // );
 
-        if (Theme.of(context).platform == TargetPlatform.iOS) {
-          return CupertinoPageScaffold(
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                CustomScrollView(
-                  controller: homeScrollController,
-                  slivers: [
-                    CupertinoSliverNavigationBar(
-                      padding: const EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
-                      largeTitle: Text(context.l10n.mobileHomeTab),
-                      leading: CupertinoButton(
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.zero,
-                        onPressed: () {
-                          ref.read(editModeProvider.notifier).state = !isEditing;
-                        },
-                        child: Text(isEditing ? 'Done' : 'Edit'),
-                      ),
-                      trailing: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [_ChallengeScreenButton(), _PlayerScreenButton()],
-                      ),
-                    ),
-                    CupertinoSliverRefreshControl(
-                      onRefresh: () => _refreshData(isOnline: status.isOnline),
-                    ),
-                    const SliverToBoxAdapter(child: ConnectivityBanner()),
-                    SliverSafeArea(
-                      top: false,
-                      sliver: SliverList(delegate: SliverChildListDelegate(widgets)),
-                    ),
-                  ],
-                ),
-                if (getScreenType(context) == ScreenType.handset)
-                  Positioned(
-                    bottom: MediaQuery.paddingOf(context).bottom + 16.0,
-                    right: 8.0,
-                    child: FloatingActionButton.extended(
-                      onPressed: () {
-                        Navigator.of(context).push(PlayScreen.buildRoute(context));
-                      },
-                      icon: const Icon(Icons.add),
-                      label: Text(context.l10n.play),
-                    ),
-                  ),
-              ],
-            ),
-          );
-        } else {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('lichess.org'),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    ref.read(editModeProvider.notifier).state = !isEditing;
+        // if (Theme.of(context).platform == TargetPlatform.iOS) {
+        //   return Scaffold(
+        //     body: Stack(
+        //       alignment: Alignment.bottomCenter,
+        //       children: [
+        //         CustomScrollView(
+        //           controller: homeScrollController,
+        //           slivers: [
+        //             SliverAppBar(
+        //               actions: [
+        //                 IconButton(
+        //                   onPressed: () {
+        //                     ref.read(editModeProvider.notifier).state = !isEditing;
+        //                   },
+        //                   icon: Icon(isEditing ? Icons.save_outlined : Icons.app_registration),
+        //                   tooltip: isEditing ? 'Save' : 'Edit',
+        //                 ),
+
+        //                 const _PlayerScreenButton(),
+        //               ],
+        //             ),
+        //             // CupertinoSliverNavigationBar(
+        //             //   padding: const EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
+
+        //             //   leading: CupertinoButton(
+        //             //     alignment: Alignment.centerLeft,
+        //             //     padding: EdgeInsets.zero,
+        //             //     onPressed: () {
+        //             //       ref.read(editModeProvider.notifier).state = !isEditing;
+        //             //     },
+        //             //     child: Text(isEditing ? 'Done' : 'Edit'),
+        //             //   ),
+        //             //   trailing: const Row(
+        //             //     mainAxisSize: MainAxisSize.min,
+        //             //     children: [_ChallengeScreenButton(), _PlayerScreenButton()],
+        //             //   ),
+        //             // ),
+        //             CupertinoSliverRefreshControl(
+        //               onRefresh: () => _refreshData(isOnline: status.isOnline),
+        //             ),
+        //             const SliverToBoxAdapter(child: ConnectivityBanner()),
+        //             SliverSafeArea(
+        //               top: false,
+        //               sliver: SliverList(
+        //                 delegate: SliverChildListDelegate([
+        //                   Padding(
+        //                     padding: const EdgeInsets.all(12.0),
+        //                     child: Text(
+        //                       'A Platform for\nnext level chess',
+        //                       textAlign: TextAlign.start,
+        //                       style: Theme.of(context).textTheme.headlineMedium!.merge(
+        //                         const TextStyle(fontWeight: FontWeight.w600),
+        //                       ),
+        //                     ),
+        //                   ),
+        //                   ...widgets,
+        //                 ]),
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //         if (getScreenType(context) == ScreenType.handset)
+        //           Positioned(
+        //             bottom: MediaQuery.paddingOf(context).bottom + 16.0,
+        //             right: 8.0,
+        //             child: FloatingActionButton.extended(
+        //               onPressed: () {
+        //                 Navigator.of(context).push(PlayScreen.buildRoute(context));
+        //               },
+        //               icon: const Icon(Icons.add),
+        //               label: Text(context.l10n.play),
+        //             ),
+        //           ),
+        //       ],
+        //     ),
+        //   );
+        // } else {
+        return Scaffold(
+          appBar: AppBar(
+            leading: ClipOval(
+              child: Center(
+                child: Image.asset(
+                  'assets/images/avatar.png', // Replace with your asset or use network image
+                  fit: BoxFit.cover,
+                  height: 36,
+                  width: 36,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.person, color: Colors.black54, size: 24);
                   },
-                  icon: Icon(isEditing ? Icons.save_outlined : Icons.app_registration),
-                  tooltip: isEditing ? 'Save' : 'Edit',
                 ),
-                const _ChallengeScreenButton(),
-                const _PlayerScreenButton(),
-              ],
-            ),
-            body: RefreshIndicator(
-              key: _androidRefreshKey,
-              onRefresh: () => _refreshData(isOnline: status.isOnline),
-              child: Column(
-                children: [
-                  const ConnectivityBanner(),
-                  Expanded(child: ListView(controller: homeScrollController, children: widgets)),
-                ],
               ),
             ),
-            floatingActionButton:
-                isTablet
-                    ? null
-                    : FloatingActionButton.extended(
-                      onPressed: () {
-                        Navigator.of(context).push(PlayScreen.buildRoute(context));
-                      },
-                      icon: const Icon(Icons.add),
-                      label: Text(context.l10n.play),
-                    ),
-          );
-        }
+            title: const Text(''),
+            actions: [
+              // IconButton(
+              //   onPressed: () {
+              //     ref.read(editModeProvider.notifier).state = !isEditing;
+              //   },
+              //   icon: Icon(isEditing ? Icons.save_outlined : Icons.app_registration),
+              //   tooltip: isEditing ? 'Save' : 'Edit',
+              // ),
+              // const _ChallengeScreenButton(),
+              IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
+              const _PlayerScreenButton(),
+            ],
+          ),
+          body: RefreshIndicator(
+            key: _androidRefreshKey,
+            onRefresh: () => _refreshData(isOnline: status.isOnline),
+            child: Column(
+              children: [
+                const ConnectivityBanner(),
+                Expanded(
+                  child: ListView(
+                    controller: homeScrollController,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Text(
+                          'A Platform for\nnext level chess',
+                          textAlign: TextAlign.start,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.headlineMedium!.merge(TextStyle(fontWeight: FontWeight.w600)),
+                        ),
+                      ),
+                      ...widgets,
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          floatingActionButton:
+              isTablet
+                  ? null
+                  : FloatingActionButton.extended(
+                    onPressed: () {
+                      Navigator.of(context).push(PlayScreen.buildRoute(context));
+                    },
+                    icon: const Icon(Icons.add),
+                    label: Text(context.l10n.play),
+                  ),
+        );
+
+        // }
       },
       error: (_, __) => const CenterLoadingIndicator(),
       loading: () => const CenterLoadingIndicator(),
@@ -220,12 +276,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         (!status.isOnline &&
             offlineCorresGames.maybeWhen(data: (data) => data.isNotEmpty, orElse: () => false));
     final list = [
-      _EditableWidget(
-        widget: HomeEditableWidget.hello,
-        shouldShow: true,
-        index: homePrefs.enabledWidgets.indexOf(HomeEditableWidget.hello),
-        child: const _HelloWidget(),
-      ),
+      // _EditableWidget(
+      //   widget: HomeEditableWidget.hello,
+      //   shouldShow: true,
+      //   index: homePrefs.enabledWidgets.indexOf(HomeEditableWidget.hello),
+      //   child: const _HelloWidget(),
+      // ),
       _EditableWidget(
         widget: HomeEditableWidget.perfCards,
         shouldShow: session != null && status.isOnline,
@@ -234,12 +290,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           padding: Styles.horizontalBodyPadding.add(Styles.sectionBottomPadding),
         ),
       ),
-      _EditableWidget(
-        widget: HomeEditableWidget.quickPairing,
-        shouldShow: status.isOnline,
-        index: homePrefs.enabledWidgets.indexOf(HomeEditableWidget.quickPairing),
-        child: const Padding(padding: Styles.bodySectionPadding, child: QuickGameMatrix()),
-      ),
+      // _EditableWidget(
+      //   widget: HomeEditableWidget.quickPairing,
+      //   shouldShow: status.isOnline,
+      //   index: homePrefs.enabledWidgets.indexOf(HomeEditableWidget.quickPairing),
+      //   child: const Padding(padding: Styles.bodySectionPadding, child: QuickGameMatrix()),
+      // ),
       _EditableWidget(
         widget: HomeEditableWidget.ongoingGames,
         shouldShow: hasOngoingGames,
@@ -285,27 +341,59 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         ),
       ),*/
       const SizedBox(height: 24.0),
-      if (session == null) ...[
-        const Center(child: _SignInWidget()),
-        const SizedBox(height: 16.0),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: GoogleSignInButton(onSignInError: (e) {
-            print(e);
-          }, onSignInSuccess: (credentials) {
-            print(credentials);
-          }),
+      Container(
+        height: 50,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: ElevatedButton.icon(
+          label: const Text(
+            'PLAY NOW',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xff54C339),
+            foregroundColor: Colors.black,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+          onPressed: () async {
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: const Color(0xff464A4F),
+              isScrollControlled: true,
+              showDragHandle: true,
+              useSafeArea: true,
+              builder: (BuildContext context) => const GameTypeBottomSheet(),
+            );
+          },
         ),
-        const SizedBox(height: 16.0),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: AppleSignInButton(onSignInError: (e) {
-            print(e);
-          }, onSignInSuccess: (credentials) {
-            print(credentials);
-          }),
-        ),
-      ],
+      ),
+      // if (session == null) ...[
+      //   const Center(child: _SignInWidget()),
+      //   const SizedBox(height: 16.0),
+      //   Container(
+      //     padding: const EdgeInsets.symmetric(horizontal: 16),
+      //     child: GoogleSignInButton(
+      //       onSignInError: (e) {
+      //         print(e);
+      //       },
+      //       onSignInSuccess: (credentials) {
+      //         print(credentials);
+      //       },
+      //     ),
+      //   ),
+      //   const SizedBox(height: 16.0),
+      //   Container(
+      //     padding: const EdgeInsets.symmetric(horizontal: 16),
+      //     child: AppleSignInButton(
+      //       onSignInError: (e) {
+      //         print(e);
+      //       },
+      //       onSignInSuccess: (credentials) {
+      //         print(credentials);
+      //       },
+      //     ),
+      //   ),
+      // ],
       /*if (Theme.of(context).platform != TargetPlatform.iOS &&
           (session == null || session.user.isPatron != true)) ...[
         Center(
@@ -339,12 +427,13 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           ],
         )
       else ...[
-        if (status.isOnline)
-          const _EditableWidget(
-            widget: HomeEditableWidget.quickPairing,
-            shouldShow: true,
-            child: Padding(padding: Styles.bodySectionPadding, child: QuickGameMatrix()),
-          ),
+        ChessRatingCards(),
+        // if (status.isOnline)
+        //   const _EditableWidget(
+        //     widget: HomeEditableWidget.quickPairing,
+        //     shouldShow: true,
+        //     child: Padding(padding: Styles.bodySectionPadding, child: QuickGameMatrix()),
+        //   ),
         ...welcomeWidgets,
       ],
     ];
@@ -409,6 +498,241 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
   }
 }
 
+class GameTypeBottomSheet extends ConsumerWidget {
+  const GameTypeBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final session = ref.watch(authSessionProvider);
+    return Container(
+      decoration: const BoxDecoration(
+        color: Color(0xff464A4F),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Close button and title
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Text(
+                  'Select Game Type',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                // Positioned(
+                //   right: 0,
+                //   child: GestureDetector(
+                //     onTap: () => Navigator.pop(context),
+                //     child: Container(
+                //       decoration: BoxDecoration(color: Colors.grey[800], shape: BoxShape.circle),
+                //       padding: const EdgeInsets.all(8),
+                //       child: const Icon(Icons.close, color: Colors.white, size: 20),
+                //     ),
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+          const Divider(color: Colors.grey, height: 1),
+          SizedBox(height: 10),
+          // Game options
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // Bullet option
+                GameTypeCard(
+                  icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
+                  title: 'Play',
+                  subtitle: 'Bullet',
+                  subtitleColor: const Color(0xFF8BC34A), // Light green
+                  onTap: () {
+                    Navigator.of(context, rootNavigator: true).push(
+                      GameScreen.buildRoute(
+                        context,
+                        seek: GameSeek.fastPairing(const TimeIncrement(120, 1), session),
+                      ),
+                    );
+                  },
+                ),
+
+                // Rapid option
+                GameTypeCard(
+                  icon: Image.asset('assets/images/flip.png', height: 33, width: 33),
+                  title: 'Play',
+                  subtitle: 'Rapid',
+                  subtitleColor: const Color(0xFF8BC34A), // Light green
+                  onTap: () {
+                    Navigator.of(context, rootNavigator: true).push(
+                      GameScreen.buildRoute(
+                        context,
+                        seek: GameSeek.fastPairing(TimeIncrement(600, 5), session),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+}
+
+class ChessRatingCards extends StatelessWidget {
+  const ChessRatingCards({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          _buildRatingCard(
+            icon: Image.asset('assets/images/blitz.png'),
+            iconColor: Colors.amber,
+            title: 'Bullet',
+            rating: '1020',
+          ),
+          SizedBox(width: 8),
+          _buildRatingCard(
+            icon: Image.asset('assets/images/flip.png'),
+
+            iconColor: Colors.blue,
+            title: 'Rapid',
+            rating: '980',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRatingCard({
+    required Widget icon,
+    required Color iconColor,
+    required String title,
+    required String rating,
+  }) {
+    return Container(
+      width: 140,
+      height: 135,
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.0)),
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+            child: icon,
+          ),
+          const SizedBox(height: 12),
+          Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+          const SizedBox(height: 4),
+          Text(
+            rating,
+            style: const TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class GameTypeCard extends StatelessWidget {
+  final Widget icon;
+  final String title;
+  final String subtitle;
+  final Color subtitleColor;
+  final VoidCallback onTap;
+
+  const GameTypeCard({
+    Key? key,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.subtitleColor,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 160,
+        height: 111,
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+        child: Stack(
+          children: [
+            // Content
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  icon,
+                  // Text(icon, style: const TextStyle(fontSize: 32)),
+                  const SizedBox(height: 16),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '$title ',
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: subtitle,
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: subtitleColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Arrow button
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+                  ],
+                ),
+                child: const Icon(Icons.arrow_outward, color: Colors.black, size: 20),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class _SignInWidget extends ConsumerWidget {
   const _SignInWidget();
@@ -571,11 +895,11 @@ class _TabletCreateAGameSection extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _EditableWidget(
-          widget: HomeEditableWidget.quickPairing,
-          shouldShow: true,
-          child: Padding(padding: Styles.bodySectionPadding, child: QuickGameMatrix()),
-        ),
+        // _EditableWidget(
+        //   widget: HomeEditableWidget.quickPairing,
+        //   shouldShow: true,
+        //   child: Padding(padding: Styles.bodySectionPadding, child: QuickGameMatrix()),
+        // ),
         Padding(padding: Styles.bodySectionPadding, child: QuickGameButton()),
         CreateGameOptions(),
       ],
