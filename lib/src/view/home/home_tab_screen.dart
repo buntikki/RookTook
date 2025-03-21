@@ -13,6 +13,8 @@ import 'package:lichess_mobile/src/model/correspondence/offline_correspondence_g
 import 'package:lichess_mobile/src/model/game/archived_game.dart';
 import 'package:lichess_mobile/src/model/game/game_history.dart';
 import 'package:lichess_mobile/src/model/lobby/game_seek.dart';
+import 'package:lichess_mobile/src/model/puzzle/puzzle_angle.dart';
+import 'package:lichess_mobile/src/model/puzzle/puzzle_theme.dart';
 import 'package:lichess_mobile/src/model/settings/home_preferences.dart';
 import 'package:lichess_mobile/src/navigation.dart';
 import 'package:lichess_mobile/src/network/connectivity.dart';
@@ -30,6 +32,8 @@ import 'package:lichess_mobile/src/view/play/create_game_options.dart';
 import 'package:lichess_mobile/src/view/play/ongoing_games_screen.dart';
 import 'package:lichess_mobile/src/view/play/play_screen.dart';
 import 'package:lichess_mobile/src/view/play/quick_game_button.dart';
+import 'package:lichess_mobile/src/view/puzzle/puzzle_screen.dart';
+import 'package:lichess_mobile/src/view/puzzle/puzzle_tab_screen.dart';
 import 'package:lichess_mobile/src/view/user/challenge_requests_screen.dart';
 import 'package:lichess_mobile/src/view/user/player_screen.dart';
 import 'package:lichess_mobile/src/view/user/recent_games.dart';
@@ -367,6 +371,16 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           },
         ),
       ),
+      SizedBox(height: 24),
+      InkWell(
+        onTap: () {
+          Navigator.of(
+            context,
+            rootNavigator: true,
+          ).push(PuzzleScreen.buildRoute(context, angle: const PuzzleTheme(PuzzleThemeKey.mix)));
+        },
+        child: ChessPuzzleScreen(),
+      ),
       // if (session == null) ...[
       //   const Center(child: _SignInWidget()),
       //   const SizedBox(height: 16.0),
@@ -495,6 +509,74 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       if (isOnline) ref.refresh(accountProvider.future),
       if (isOnline) ref.refresh(ongoingGamesProvider.future),
     ]);
+  }
+}
+
+class ChessPuzzleScreen extends StatelessWidget {
+  const ChessPuzzleScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xff464A4F),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                // Left side - Chess board
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Image.asset('assets/images/board.png'),
+                  ),
+                ),
+
+                // Right side - Information
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Solve Puzzles',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const Text(
+                        'Continue Your Journey!',
+                        style: TextStyle(fontSize: 12, color: Color(0xFF7E8899)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Arrow Icon in top right corner
+          Positioned(
+            top: 25,
+            right: 25,
+            child: Container(
+              height: 36,
+              width: 36,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white10),
+              ),
+              child: const Icon(Icons.north_east, color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

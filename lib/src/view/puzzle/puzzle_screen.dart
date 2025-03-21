@@ -110,9 +110,10 @@ class _Title extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return switch (angle) {
       PuzzleTheme(themeKey: final key) =>
-        key == PuzzleThemeKey.mix
-            ? Text(context.l10n.puzzleDesc)
-            : Text(key.l10n(context.l10n).name),
+      // key == PuzzleThemeKey.mix
+      // ?
+      Text('Puzzles'),
+      // : Text(key.l10n(context.l10n).name),
       PuzzleOpening(key: final key) => ref
           .watch(puzzleOpeningNameProvider(key))
           .when(
