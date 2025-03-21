@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:dynamic_system_colors/dynamic_system_colors.dart';
-import 'package:flutter/material.dart' show ColorScheme;
+import 'package:flutter/material.dart' show ColorScheme, Colors;
 import 'package:material_color_utilities/material_color_utilities.dart';
 
 typedef ColorSchemes = ({ColorScheme light, ColorScheme dark});
@@ -27,8 +27,8 @@ void setSystemColors(CorePalette? palette, ColorSchemes? schemes) {
       dark: palette.toColorScheme(brightness: Brightness.dark),
     );
 
-    final darkSquare = Color(palette.secondary.get(60));
-    final lightSquare = Color(palette.primary.get(95));
+    final darkSquare = Color(0xffD0D7DD);
+    final lightSquare = Colors.white;
 
     _boardColorScheme ??= ChessboardColorScheme(
       darkSquare: darkSquare,

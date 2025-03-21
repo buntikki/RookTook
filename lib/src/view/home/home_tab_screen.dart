@@ -93,7 +93,14 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
 
         final widgets =
             shouldShowWelcomeScreen
-                ? _welcomeScreenWidgets(session: session, status: status, isTablet: isTablet)
+                ? _welcomeScreenWidgets(
+                  session: session,
+                  status: status,
+                  isTablet: isTablet,
+
+                  recentGames: recentGames,
+                  nbOfGames: nbOfGames,
+                )
                 : isTablet
                 ? _tabletWidgets(
                   session: session,
@@ -103,7 +110,13 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   recentGames: recentGames,
                   nbOfGames: nbOfGames,
                 )
-                : _welcomeScreenWidgets(session: session, status: status, isTablet: isTablet);
+                : _welcomeScreenWidgets(
+                  session: session,
+                  status: status,
+                  isTablet: isTablet,
+                  recentGames: recentGames,
+                  nbOfGames: nbOfGames,
+                );
         // _handsetWidgets(
         //   session: session,
         //   status: status,
@@ -246,16 +259,16 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-          floatingActionButton:
-              isTablet
-                  ? null
-                  : FloatingActionButton.extended(
-                    onPressed: () {
-                      Navigator.of(context).push(PlayScreen.buildRoute(context));
-                    },
-                    icon: const Icon(Icons.add),
-                    label: Text(context.l10n.play),
-                  ),
+          // floatingActionButton:
+          //     isTablet
+          //         ? null
+          //         : FloatingActionButton.extended(
+          //           onPressed: () {
+          //             Navigator.of(context).push(PlayScreen.buildRoute(context));
+          //           },
+          //           icon: const Icon(Icons.add),
+          //           label: Text(context.l10n.play),
+          //         ),
         );
 
         // }
@@ -332,6 +345,8 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required AuthSessionState? session,
     required ConnectivityStatus status,
     required bool isTablet,
+    required AsyncValue<IList<LightArchivedGameWithPov>> recentGames,
+    required int nbOfGames,
   }) {
     final welcomeWidgets = [
       /*Padding(
@@ -381,6 +396,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         },
         child: ChessPuzzleScreen(),
       ),
+      RecentGamesWidget(recentGames: recentGames, nbOfGames: nbOfGames, user: null),
       // if (session == null) ...[
       //   const Center(child: _SignInWidget()),
       //   const SizedBox(height: 16.0),

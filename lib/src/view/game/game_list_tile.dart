@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:lichess_mobile/src/model/analysis/analysis_controller.dart';
 import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/model/common/id.dart';
+import 'package:lichess_mobile/src/model/common/perf.dart';
 import 'package:lichess_mobile/src/model/game/archived_game.dart';
 import 'package:lichess_mobile/src/model/game/game_filter.dart';
 import 'package:lichess_mobile/src/model/game/game_share_service.dart';
@@ -54,11 +55,34 @@ class GameListTile extends StatelessWidget {
       if (game.status == GameStatus.aborted || game.status == GameStatus.noStart) {
         return const Icon(CupertinoIcons.xmark_square_fill, color: LichessColors.grey);
       } else {
+        // return game.winner == null
+        //     ? Icon(CupertinoIcons.equal_square_fill, color: context.lichessColors.brag)
+        //     : game.winner == mySide
+        //     ? Icon(CupertinoIcons.plus_square_fill, color: context.lichessColors.good)
+        //     : Icon(CupertinoIcons.minus_square_fill, color: context.lichessColors.error);
         return game.winner == null
-            ? Icon(CupertinoIcons.equal_square_fill, color: context.lichessColors.brag)
+            ? Container(
+              decoration: const BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
+              child: const Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text('D', style: TextStyle(color: Colors.white, fontSize: 8)),
+              ),
+            )
             : game.winner == mySide
-            ? Icon(CupertinoIcons.plus_square_fill, color: context.lichessColors.good)
-            : Icon(CupertinoIcons.minus_square_fill, color: context.lichessColors.error);
+            ? Container(
+              decoration: const BoxDecoration(color: Color(0xff54C339), shape: BoxShape.circle),
+              child: const Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text('W', style: TextStyle(color: Colors.white, fontSize: 10)),
+              ),
+            )
+            : Container(
+              decoration: const BoxDecoration(color: Color(0xffF77178), shape: BoxShape.circle),
+              child: const Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Text('L', style: TextStyle(color: Colors.white, fontSize: 8)),
+              ),
+            );
       }
     }
 
@@ -80,9 +104,10 @@ class GameListTile extends StatelessWidget {
         user: opponent.user,
         aiLevel: opponent.aiLevel,
         rating: opponent.rating,
+        style: TextStyle(color: Colors.black),
       ),
       onPressedBookmark: onPressedBookmark,
-      subtitle: Text(relativeDate(context.l10n, game.lastMoveAt, shortDate: false)),
+      subtitle: Text('#${opponent.rating}', style: TextStyle(color: Color(0xff959494))),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -123,37 +148,101 @@ class _GameListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformListTile(
-      onTap: onTap,
-      onLongPress: () {
-        showAdaptiveBottomSheet<void>(
-          context: context,
-          useRootNavigator: true,
-          isDismissible: true,
-          isScrollControlled: true,
-          showDragHandle: true,
-          builder:
-              (context) => GameContextMenu(
-                game: game,
-                mySide: mySide,
-                showGameSummary: true,
-                opponentTitle: opponentTitle,
-                onPressedBookmark: onPressedBookmark,
+    return Container(
+      margin: EdgeInsets.only(top: 10),
+      color: Colors.white,
+      child: ListTile(
+        tileColor: Colors.white12,
+        shape: RoundedRectangleBorder(),
+        leading:
+            icon == Perf.bullet.icon
+                ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
+                : SizedBox(),
+        onTap: onTap,
+        title: Row(
+          children: [
+            ClipOval(
+              child: Center(
+                child: Image.asset(
+                  'assets/images/avatar.png', // Replace with your asset or use network image
+                  fit: BoxFit.cover,
+                  height: 36,
+                  width: 36,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(Icons.person, color: Colors.black54, size: 24);
+                  },
+                ),
               ),
-        );
-      },
-      leading: icon != null ? Icon(icon) : null,
-      title: opponentTitle,
-      subtitle:
-          subtitle != null
-              ? DefaultTextStyle.merge(
-                child: subtitle!,
-                style: TextStyle(color: textShade(context, Styles.subtitleOpacity)),
-              )
-              : null,
-      trailing: trailing,
-      padding: padding,
+            ),
+            SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                opponentTitle,
+                SizedBox(
+                  child:
+                      subtitle != null
+                          ? DefaultTextStyle.merge(
+                            child: subtitle!,
+                            style: TextStyle(color: textShade(context, Styles.subtitleOpacity)),
+                          )
+                          : null,
+                ),
+              ],
+            ),
+          ],
+        ),
+        onLongPress: () {
+          showAdaptiveBottomSheet<void>(
+            context: context,
+            useRootNavigator: true,
+            isDismissible: true,
+            isScrollControlled: true,
+            showDragHandle: true,
+            builder:
+                (context) => GameContextMenu(
+                  game: game,
+                  mySide: mySide,
+                  showGameSummary: true,
+                  opponentTitle: opponentTitle,
+                  onPressedBookmark: onPressedBookmark,
+                ),
+          );
+        },
+        trailing: trailing,
+      ),
     );
+    // PlatformListTile(
+    //   onTap: onTap,
+    //   onLongPress: () {
+    //     showAdaptiveBottomSheet<void>(
+    //       context: context,
+    //       useRootNavigator: true,
+    //       isDismissible: true,
+    //       isScrollControlled: true,
+    //       showDragHandle: true,
+    //       builder:
+    //           (context) => GameContextMenu(
+    //             game: game,
+    //             mySide: mySide,
+    //             showGameSummary: true,
+    //             opponentTitle: opponentTitle,
+    //             onPressedBookmark: onPressedBookmark,
+    //           ),
+    //     );
+    //   },
+    //   leading: icon != null ? Icon(icon) : null,
+    //   title: opponentTitle,
+    //   subtitle:
+    //       subtitle != null
+    //           ? DefaultTextStyle.merge(
+    //             child: subtitle!,
+    //             style: TextStyle(color: textShade(context, Styles.subtitleOpacity)),
+    //           )
+    //           : null,
+    //   trailing: trailing,
+    //   padding: padding,
+    // );
   }
 }
 
