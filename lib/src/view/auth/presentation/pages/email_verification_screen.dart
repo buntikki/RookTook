@@ -31,25 +31,17 @@ class EmailInputScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 28),
-
-              // Title
+              const SizedBox(height: 32),
               Text(
                 'Enter Your\nEmail Address',
                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-
               const SizedBox(height: 16),
-
-              // Subtitle
               Text(
                 'We will send you a confirmation code',
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(color: const Color(0xff8F9193))
               ),
-
               const SizedBox(height: 32),
-
-              // Email input field
               TextField(
                 decoration: InputDecoration(
                   hintText: 'Enter Email ID',

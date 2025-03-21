@@ -5,8 +5,8 @@ import 'package:lichess_mobile/src/utils/google_sign_in_service.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final GoogleSignInService _googleSignInService = GoogleSignInService();
-  final Function(UserCredential)  onSignInSuccess;
-  final Function(dynamic) onSignInError;
+  final void Function(UserCredential)  onSignInSuccess;
+  final void Function(dynamic) onSignInError;
 
   GoogleSignInButton({
     required this.onSignInSuccess,

@@ -55,7 +55,11 @@ class LoginScreen extends StatelessWidget {
                 AppleSignInButton(onSignInSuccess: (data){}, onSignInError: (error){},),
                 const SizedBox(height: 12),
                 // Google login button
-                GoogleSignInButton(onSignInSuccess: (data){}, onSignInError: (error){}),
+                GoogleSignInButton(onSignInSuccess: (data){
+                  print(data);
+                }, onSignInError: (error){
+                  print(error);
+                }),
 
                 const SizedBox(height: 40),
 
