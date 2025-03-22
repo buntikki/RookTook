@@ -21,6 +21,8 @@ import 'package:lichess_mobile/src/network/socket.dart';
 import 'package:lichess_mobile/src/theme.dart';
 import 'package:lichess_mobile/src/utils/navigation.dart';
 import 'package:lichess_mobile/src/utils/screen.dart';
+import 'package:lichess_mobile/src/view/auth/presentation/pages/login_screen.dart';
+import 'package:lichess_mobile/src/view/auth/presentation/pages/set_username_screen.dart';
 
 /// Application initialization and main entry point.
 class AppInitializationScreen extends ConsumerWidget {
@@ -168,13 +170,6 @@ class _AppState extends ConsumerState<Application> {
         ).copyWith(height: remainingHeight < kSmallRemainingHeightLeftBoardThreshold ? 60 : null),
       ),
       themeMode: ThemeMode.dark,
-      // generalPrefs.isForcedDarkMode
-      //     ? ThemeMode.dark
-      //     : switch (generalPrefs.themeMode) {
-      //       BackgroundThemeMode.light => ThemeMode.light,
-      //       BackgroundThemeMode.dark => ThemeMode.dark,
-      //       BackgroundThemeMode.system => ThemeMode.system,
-      //     },
       builder:
           isIOS
               ? (context, child) => IconTheme.merge(
@@ -186,7 +181,7 @@ class _AppState extends ConsumerState<Application> {
           (settings) =>
               settings.name != null ? resolveAppLinkUri(context, Uri.parse(settings.name!)) : null,
       onGenerateInitialRoutes: (initialRoute) {
-        final homeRoute = buildScreenRoute<void>(context, screen: const BottomNavScaffold());
+        final homeRoute = buildScreenRoute<void>(context, screen: const LoginScreen());
         return <Route<dynamic>?>[
           homeRoute,
           resolveAppLinkUri(context, Uri.parse(initialRoute)),

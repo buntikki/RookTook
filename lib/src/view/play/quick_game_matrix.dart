@@ -37,16 +37,7 @@ class QuickGameMatrix extends ConsumerWidget {
         Text(context.l10n.quickPairing, style: Styles.sectionTitle),
         const SizedBox(height: 6.0),
         Container(
-          decoration:
-              scaffoldOpacity != 0
-                  ? BoxDecoration(
-                    image: DecorationImage(
-                      colorFilter: ColorFilter.mode(logoColor, BlendMode.modulate),
-                      image: const AssetImage('assets/images/logo-transp.png'),
-                      fit: BoxFit.contain,
-                    ),
-                  )
-                  : null,
+          decoration: null,
           child: const Column(
             children: [
               _SectionChoices(

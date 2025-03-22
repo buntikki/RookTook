@@ -6,8 +6,8 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AppleSignInButton extends StatelessWidget {
   final AppleSignInService _appleSignInService = AppleSignInService();
-  final Function(UserCredential) onSignInSuccess;
-  final Function(dynamic) onSignInError;
+  final void Function(UserCredential) onSignInSuccess;
+  final void Function(dynamic) onSignInError;
 
   AppleSignInButton({
     required this.onSignInSuccess,
@@ -22,11 +22,11 @@ class AppleSignInButton extends StatelessWidget {
         // Only show the button if Apple Sign In is available on this device
         if (snapshot.data == true) {
           return ElevatedButton.icon(
-            icon: const Icon(Icons.apple, color: Colors.black),
-            label: const Text('Sign in with Apple'),
+            icon: const Icon(Icons.apple, color: Colors.white),
+            label: Text('Continue with Apple', style: TextTheme.of(context).titleMedium),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
+              backgroundColor: const Color(0xff464A4F),
+              foregroundColor: const Color(0xff464A4F),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

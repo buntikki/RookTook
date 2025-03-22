@@ -109,14 +109,11 @@ flutter_launcher_icons:
   min_sdk_android: 21 # android min sdk min:16, default 21
 
 flutter:
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
-
   assets:
     - assets/chess_openings.db
     - assets/images/
+    - assets/images/svg/
     - assets/images/stockfish/
     - assets/images/fide-fed/
     - assets/sounds/futuristic/
@@ -142,21 +139,32 @@ flutter:
     - family: LichessPuzzleIcons
       fonts:
         - asset: assets/fonts/PuzzleIcons.ttf
+    - family: BricolageGrotesque
+      fonts:
+        - asset: assets/fonts/BricolageGrotesque-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/BricolageGrotesque-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/BricolageGrotesque-ExtraBold.ttf
+          weight: 900
+        - asset: assets/fonts/BricolageGrotesque-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/BricolageGrotesque-SemiBold.ttf
+          weight: 600
 
   # Enable generation of localized Strings from arb files.
   generate: true
 
 flutter_native_splash:
-  color: '#ffffff'
-  image: assets/images/logo-black.png
+  color: '#13191D'
+  image: assets/images/logo-white.png
 
-  color_dark: '#000000'
+  color_dark: '#13191D'
   image_dark: assets/images/logo-white.png
 
   android_12:
-    color: '#ffffff'
-    image: assets/images/android12logo-black.png
+    color: '#13191D'
+    image: assets/images/android12logo-white.png
 
-    color_dark: '#000000'
+    color_dark: '#13191D'
     image_dark: assets/images/android12logo-white.png
-

@@ -5,8 +5,8 @@ import 'package:lichess_mobile/src/utils/google_sign_in_service.dart';
 
 class GoogleSignInButton extends StatelessWidget {
   final GoogleSignInService _googleSignInService = GoogleSignInService();
-  final Function(UserCredential)  onSignInSuccess;
-  final Function(dynamic) onSignInError;
+  final void Function(UserCredential)  onSignInSuccess;
+  final void Function(dynamic) onSignInError;
 
   GoogleSignInButton({
     required this.onSignInSuccess,
@@ -20,10 +20,10 @@ class GoogleSignInButton extends StatelessWidget {
         'assets/images/googleimage.png',
         height: 24.0,
       ),
-      label: const Text('Sign in with Google'),
+      label: Text('Continue with Google', style: TextTheme.of(context).titleMedium),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: const Color(0xff464A4F),
+        foregroundColor: const Color(0xff464A4F),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),

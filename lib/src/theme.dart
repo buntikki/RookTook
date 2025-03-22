@@ -109,25 +109,35 @@ extension CustomThemeBuildContext on BuildContext {
           ? ThemeData.from(colorScheme: systemScheme.dark)
           : ThemeData.from(colorScheme: defaultDark);
 
+  // Apply default font family to the themes
+  final lightWithFont = themeLight.copyWith(
+    textTheme: themeLight.textTheme.apply(fontFamily: 'BricolageGrotesque'),
+    primaryTextTheme: themeLight.primaryTextTheme.apply(fontFamily: 'BricolageGrotesque'),
+  );
+  final darkWithFont = themeDark.copyWith(
+    textTheme: themeDark.textTheme.apply(fontFamily: 'BricolageGrotesque'),
+    primaryTextTheme: themeDark.primaryTextTheme.apply(fontFamily: 'BricolageGrotesque'),
+  );
+
   final lightCupertino = CupertinoThemeData(
     applyThemeToAll: true,
-    primaryColor: themeLight.colorScheme.primary,
-    primaryContrastingColor: themeLight.colorScheme.onPrimary,
+    primaryColor: lightWithFont.colorScheme.primary,
+    primaryContrastingColor: lightWithFont.colorScheme.onPrimary,
     brightness: Brightness.light,
     scaffoldBackgroundColor: Color(0xFF13191D),
     // scaffoldBackgroundColor: Colors.green,
     barBackgroundColor: const Color(0xE6F9F9F9),
-    textTheme: cupertinoTextTheme(themeLight.colorScheme),
+    textTheme: cupertinoTextTheme(lightWithFont.colorScheme),
   );
 
   final darkCupertino = CupertinoThemeData(
     applyThemeToAll: true,
     primaryColor: Colors.white,
-    primaryContrastingColor: themeDark.colorScheme.onPrimary,
+    primaryContrastingColor: darkWithFont.colorScheme.onPrimary,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: Color(0xFF13191D),
     barBackgroundColor: Color(0xFF13191D),
-    textTheme: cupertinoTextTheme(themeDark.colorScheme),
+    textTheme: cupertinoTextTheme(darkWithFont.colorScheme),
   );
 
   final cupertinoFloatingActionButtonTheme = FloatingActionButtonThemeData(
@@ -136,13 +146,13 @@ extension CustomThemeBuildContext on BuildContext {
   );
 
   return (
-    light: themeLight.copyWith(
+    light: lightWithFont.copyWith(
       cupertinoOverrideTheme: lightCupertino,
       splashFactory: isIOS ? NoSplash.splashFactory : null,
       cardTheme:
           isIOS
               ? CardThemeData(
-                color: themeLight.colorScheme.surfaceContainerLowest,
+                color: lightWithFont.colorScheme.surfaceContainerLowest,
                 elevation: 0,
                 margin: EdgeInsets.zero,
               )
@@ -154,23 +164,23 @@ extension CustomThemeBuildContext on BuildContext {
               : null,
       floatingActionButtonTheme: isIOS ? cupertinoFloatingActionButtonTheme : null,
       menuTheme:
-          isIOS ? _makeCupertinoMenuThemeData(themeLight.colorScheme.surfaceContainerLowest) : null,
+          isIOS ? _makeCupertinoMenuThemeData(lightWithFont.colorScheme.surfaceContainerLowest) : null,
       pageTransitionsTheme: kPageTransitionsTheme,
       progressIndicatorTheme: kProgressIndicatorTheme,
       sliderTheme: kSliderTheme,
       extensions: [
-        lichessCustomColors.harmonized(themeLight.colorScheme),
+        lichessCustomColors.harmonized(lightWithFont.colorScheme),
         if (isIOS)
           const CustomTheme(rowEven: Colors.white, rowOdd: Color.fromARGB(255, 247, 246, 245)),
       ],
     ),
-    dark: themeDark.copyWith(
+    dark: darkWithFont.copyWith(
       cupertinoOverrideTheme: darkCupertino,
       splashFactory: isIOS ? NoSplash.splashFactory : null,
       cardTheme:
           isIOS
               ? CardThemeData(
-                color: themeDark.colorScheme.surfaceContainerHigh,
+                color: darkWithFont.colorScheme.surfaceContainerHigh,
                 elevation: 0,
                 margin: EdgeInsets.zero,
               )
@@ -181,11 +191,11 @@ extension CustomThemeBuildContext on BuildContext {
               ? BottomSheetThemeData(backgroundColor: darkCupertino.scaffoldBackgroundColor)
               : null,
       floatingActionButtonTheme: isIOS ? cupertinoFloatingActionButtonTheme : null,
-      menuTheme: isIOS ? _makeCupertinoMenuThemeData(themeDark.colorScheme.surface) : null,
+      menuTheme: isIOS ? _makeCupertinoMenuThemeData(darkWithFont.colorScheme.surface) : null,
       pageTransitionsTheme: kPageTransitionsTheme,
       progressIndicatorTheme: kProgressIndicatorTheme,
       sliderTheme: kSliderTheme,
-      extensions: [lichessCustomColors.harmonized(themeDark.colorScheme)],
+      extensions: [lichessCustomColors.harmonized(darkWithFont.colorScheme)],
     ),
   );
 }
@@ -199,36 +209,43 @@ extension CustomThemeBuildContext on BuildContext {
 }) {
   final primary = baseTheme.colorScheme.primary;
   final onPrimary = baseTheme.colorScheme.onPrimary;
+  
+  // Apply custom font to base theme
+  final baseThemeWithFont = baseTheme.copyWith(
+    textTheme: baseTheme.textTheme.apply(fontFamily: 'BricolageGrotesque'),
+    primaryTextTheme: baseTheme.primaryTextTheme.apply(fontFamily: 'BricolageGrotesque'),
+  );
+  
   final cupertinoTheme = CupertinoThemeData(
     primaryColor: primary,
     primaryContrastingColor: onPrimary,
     brightness: Brightness.dark,
-    textTheme: cupertinoTextTheme(baseTheme.colorScheme),
+    textTheme: cupertinoTextTheme(baseThemeWithFont.colorScheme),
     scaffoldBackgroundColor: Color(0xFF13191D),
-    barBackgroundColor: baseTheme.colorScheme.surface.withValues(alpha: 0.6),
+    barBackgroundColor: baseThemeWithFont.colorScheme.surface.withValues(alpha: 0.6),
     applyThemeToAll: true,
   );
 
   final baseSurfaceAlpha = isBackgroundImage ? 0.5 : 0.3;
 
-  final theme = baseTheme.copyWith(
-    colorScheme: baseTheme.colorScheme.copyWith(
-      surface: baseTheme.colorScheme.surface.withValues(alpha: baseSurfaceAlpha),
-      surfaceContainerLowest: baseTheme.colorScheme.surfaceContainerLowest.withValues(
+  final theme = baseThemeWithFont.copyWith(
+    colorScheme: baseThemeWithFont.colorScheme.copyWith(
+      surface: baseThemeWithFont.colorScheme.surface.withValues(alpha: baseSurfaceAlpha),
+      surfaceContainerLowest: baseThemeWithFont.colorScheme.surfaceContainerLowest.withValues(
         alpha: baseSurfaceAlpha,
       ),
-      surfaceContainerLow: baseTheme.colorScheme.surfaceContainerLow.withValues(
+      surfaceContainerLow: baseThemeWithFont.colorScheme.surfaceContainerLow.withValues(
         alpha: baseSurfaceAlpha,
       ),
-      surfaceContainer: baseTheme.colorScheme.surfaceContainer.withValues(alpha: baseSurfaceAlpha),
-      surfaceContainerHigh: baseTheme.colorScheme.surfaceContainerHigh.withValues(
+      surfaceContainer: baseThemeWithFont.colorScheme.surfaceContainer.withValues(alpha: baseSurfaceAlpha),
+      surfaceContainerHigh: baseThemeWithFont.colorScheme.surfaceContainerHigh.withValues(
         alpha: baseSurfaceAlpha,
       ),
-      surfaceContainerHighest: baseTheme.colorScheme.surfaceContainerHighest.withValues(
+      surfaceContainerHighest: baseThemeWithFont.colorScheme.surfaceContainerHighest.withValues(
         alpha: baseSurfaceAlpha,
       ),
-      surfaceDim: baseTheme.colorScheme.surfaceDim.withValues(alpha: baseSurfaceAlpha + 1),
-      surfaceBright: baseTheme.colorScheme.surfaceBright.withValues(alpha: baseSurfaceAlpha - 2),
+      surfaceDim: baseThemeWithFont.colorScheme.surfaceDim.withValues(alpha: baseSurfaceAlpha + 1),
+      surfaceBright: baseThemeWithFont.colorScheme.surfaceBright.withValues(alpha: baseSurfaceAlpha - 2),
     ),
     cupertinoOverrideTheme: cupertinoTheme,
     listTileTheme: isIOS ? _cupertinoListTileTheme(cupertinoTheme) : null,
@@ -236,24 +253,24 @@ extension CustomThemeBuildContext on BuildContext {
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor:
           isIOS
-              ? lighten(baseTheme.colorScheme.surface, 0.1).withValues(alpha: 0.9)
-              : baseTheme.colorScheme.surface.withValues(alpha: 0.9),
+              ? lighten(baseThemeWithFont.colorScheme.surface, 0.1).withValues(alpha: 0.9)
+              : baseThemeWithFont.colorScheme.surface.withValues(alpha: 0.9),
     ),
-    dialogTheme: DialogThemeData(backgroundColor: baseTheme.colorScheme.surface.withValues(alpha: 0.9)),
+    dialogTheme: DialogThemeData(backgroundColor: baseThemeWithFont.colorScheme.surface.withValues(alpha: 0.9)),
     menuTheme:
         isIOS
             ? _makeCupertinoMenuThemeData(
-              baseTheme.colorScheme.surfaceContainerLow.withValues(alpha: 0.8),
+              baseThemeWithFont.colorScheme.surfaceContainerLow.withValues(alpha: 0.8),
             )
             : MenuThemeData(
               style: MenuStyle(
                 backgroundColor: WidgetStatePropertyAll(
-                  baseTheme.colorScheme.surfaceContainerLow.withValues(alpha: 0.8),
+                  baseThemeWithFont.colorScheme.surfaceContainerLow.withValues(alpha: 0.8),
                 ),
               ),
             ),
     scaffoldBackgroundColor:Color(0xFF13191D),
-    appBarTheme: baseTheme.appBarTheme.copyWith(backgroundColor: seedColor.withValues(alpha: 0.5)),
+    appBarTheme: baseThemeWithFont.appBarTheme.copyWith(backgroundColor: seedColor.withValues(alpha: 0.5)),
     splashFactory: isIOS ? NoSplash.splashFactory : null,
     pageTransitionsTheme: PageTransitionsTheme(
       builders: {
@@ -266,7 +283,7 @@ extension CustomThemeBuildContext on BuildContext {
 
     progressIndicatorTheme: kProgressIndicatorTheme,
     sliderTheme: kSliderTheme,
-    extensions: [lichessCustomColors.harmonized(baseTheme.colorScheme)],
+    extensions: [lichessCustomColors.harmonized(baseThemeWithFont.colorScheme)],
   );
 
   return (light: theme, dark: theme);
@@ -288,12 +305,22 @@ MenuThemeData _makeCupertinoMenuThemeData(Color backgroundColor) {
 CupertinoTextThemeData cupertinoTextTheme(ColorScheme colors) =>
     const CupertinoThemeData().textTheme.copyWith(
       primaryColor: Colors.white,
-      textStyle: const CupertinoThemeData().textTheme.textStyle.copyWith(color: colors.onSurface),
-      navTitleTextStyle: const CupertinoThemeData().textTheme.navTitleTextStyle.copyWith(
+      textStyle: TextStyle(
         color: colors.onSurface,
+        fontFamily: 'BricolageGrotesque',
+        fontSize: 16,
       ),
-      navLargeTitleTextStyle: const CupertinoThemeData().textTheme.navLargeTitleTextStyle.copyWith(
+      navTitleTextStyle: TextStyle(
         color: colors.onSurface,
+        fontFamily: 'BricolageGrotesque',
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      ),
+      navLargeTitleTextStyle: TextStyle(
+        color: colors.onSurface,
+        fontFamily: 'BricolageGrotesque',
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
       ),
     );
 
