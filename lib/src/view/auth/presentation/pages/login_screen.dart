@@ -49,12 +49,18 @@ class LoginScreen extends StatelessWidget {
 
                 const SizedBox(height: 80),
 
-                AppleSignInButton(onSignInSuccess: (data) {}, onSignInError: (error) {}),
+                AppleSignInButton(onSignInSuccess: (data) {
+                  Navigator.of(context).pushReplacement(
+                    buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+                  );
+                }, onSignInError: (error) {}),
                 const SizedBox(height: 12),
                 // Google login button
                 GoogleSignInButton(
                   onSignInSuccess: (data) {
-                    print(data);
+                    Navigator.of(context).pushReplacement(
+                      buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+                    );
                   },
                   onSignInError: (error) {
                     print(error);
