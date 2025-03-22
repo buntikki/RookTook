@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/model/auth/password/password_controller.dart';
+import 'package:lichess_mobile/src/utils/navigation.dart';
+import 'package:lichess_mobile/src/view/auth/presentation/pages/set_username_screen.dart';
 
 class CreatePasswordScreen extends ConsumerStatefulWidget {
   const CreatePasswordScreen({super.key});
+
+  static Route<dynamic> buildRoute(
+      BuildContext context) {
+    return buildScreenRoute(
+      context,
+      screen: const CreatePasswordScreen(),
+    );
+  }
 
   @override
   ConsumerState<CreatePasswordScreen> createState() => _PasswordCreationScreenState();
@@ -11,6 +21,7 @@ class CreatePasswordScreen extends ConsumerStatefulWidget {
 
 class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
+
 
   @override
   void initState() {
@@ -28,7 +39,6 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Read the current state from the provider
     final state = ref.watch(passwordControllerProvider);
     final controller = ref.watch(passwordControllerProvider.notifier);
 
@@ -49,10 +59,11 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () {
-                    // Handle back button press
+                    Navigator.of(context).pop();
                   },
                 ),
               ),
+
               const SizedBox(height: 32),
               // Create Your Password text
               Text(
@@ -123,7 +134,7 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                   onPressed:
                       controller.isButtonEnabled
                           ? () {
-                            // Handle password submission
+                        Navigator.of(context).push(SetUsernameScreen.buildRoute(context));
                             debugPrint('Password submitted: ${state.password}');
                           }
                           : null,
@@ -135,9 +146,12 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     disabledBackgroundColor: Colors.grey.shade700,
                   ),
-                  child: const Text(
+                  child: Text(
                     'CONTINUE',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold
+                    ),
                   ),
                 ),
               ),

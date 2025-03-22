@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lichess_mobile/src/navigation.dart';
+import 'package:lichess_mobile/src/utils/navigation.dart';
+import 'package:lichess_mobile/src/view/auth/presentation/pages/create_password_screen.dart';
 import 'package:lichess_mobile/src/view/common/apple_sign_in_button.dart';
 import 'package:lichess_mobile/src/view/common/google_sign_in_button.dart';
 
@@ -12,10 +15,7 @@ class LoginScreen extends StatelessWidget {
       body: Stack(
         children: [
           // Background layer with black color
-          Container(
-            color: const Color(0xFF13191D),
-          ),
-
+          Container(color: const Color(0xFF13191D)),
           // Chess background image
           Positioned(
             top: 0,
@@ -23,10 +23,7 @@ class LoginScreen extends StatelessWidget {
             right: 0,
             child: Opacity(
               opacity: 0.8,
-              child: Image.asset(
-                'assets/images/bg_chess.png',
-                fit: BoxFit.fitWidth,
-              ),
+              child: Image.asset('assets/images/bg_chess.png', fit: BoxFit.fitWidth),
             ),
           ),
 
@@ -52,42 +49,32 @@ class LoginScreen extends StatelessWidget {
 
                 const SizedBox(height: 80),
 
-                AppleSignInButton(onSignInSuccess: (data){}, onSignInError: (error){},),
+                AppleSignInButton(onSignInSuccess: (data) {}, onSignInError: (error) {}),
                 const SizedBox(height: 12),
                 // Google login button
-                GoogleSignInButton(onSignInSuccess: (data){
-                  print(data);
-                }, onSignInError: (error){
-                  print(error);
-                }),
+                GoogleSignInButton(
+                  onSignInSuccess: (data) {
+                    print(data);
+                  },
+                  onSignInError: (error) {
+                    print(error);
+                  },
+                ),
 
                 const SizedBox(height: 40),
 
                 // OR divider
                 const Row(
                   children: [
-                    Expanded(
-                      child: Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                    ),
+                    Expanded(child: Divider(color: Colors.grey, thickness: 1)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'OR',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
                       ),
                     ),
-                    Expanded(
-                      child: Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                    ),
+                    Expanded(child: Divider(color: Colors.grey, thickness: 1)),
                   ],
                 ),
 
@@ -107,29 +94,39 @@ class LoginScreen extends StatelessWidget {
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // Continue with Email button
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(CreatePasswordScreen.buildRoute(context));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text(
+                  child: Text(
                     'CONTINUE WITH EMAIL',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold
                     ),
                   ),
                 ),
               ],
+            ),
+          ),
+          Positioned(
+            top: 56,
+            right: 24,
+            child: OutlinedButton(
+              onPressed:
+                  () => {
+                Navigator.of(context).pushReplacement(
+                  buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+                ),
+              },
+              child: const Text('Skip'),
             ),
           ),
         ],

@@ -21,9 +21,8 @@ import 'package:lichess_mobile/src/network/socket.dart';
 import 'package:lichess_mobile/src/theme.dart';
 import 'package:lichess_mobile/src/utils/navigation.dart';
 import 'package:lichess_mobile/src/utils/screen.dart';
-import 'package:lichess_mobile/src/view/auth/presentation/pages/create_password_screen.dart';
-import 'package:lichess_mobile/src/view/auth/presentation/pages/email_verification_screen.dart';
 import 'package:lichess_mobile/src/view/auth/presentation/pages/login_screen.dart';
+import 'package:lichess_mobile/src/view/auth/presentation/pages/set_username_screen.dart';
 
 /// Application initialization and main entry point.
 class AppInitializationScreen extends ConsumerWidget {
