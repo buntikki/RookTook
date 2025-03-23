@@ -23,6 +23,7 @@ import 'package:lichess_mobile/src/styles/styles.dart';
 import 'package:lichess_mobile/src/utils/l10n.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
 import 'package:lichess_mobile/src/utils/screen.dart';
+import 'package:lichess_mobile/src/view/account/new_profile_screen.dart';
 import 'package:lichess_mobile/src/view/account/profile_screen.dart';
 import 'package:lichess_mobile/src/view/correspondence/offline_correspondence_game_screen.dart';
 import 'package:lichess_mobile/src/view/game/game_screen.dart';
@@ -37,6 +38,7 @@ import 'package:lichess_mobile/src/view/user/player_screen.dart';
 import 'package:lichess_mobile/src/view/user/recent_games.dart';
 import 'package:lichess_mobile/src/widgets/buttons.dart';
 import 'package:lichess_mobile/src/widgets/feedback.dart';
+import 'package:lichess_mobile/src/widgets/match_result_popup.dart';
 import 'package:lichess_mobile/src/widgets/user_full_name.dart';
 
 final editModeProvider = StateProvider<bool>((ref) => false);
@@ -203,16 +205,24 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         // } else {
         return Scaffold(
           appBar: AppBar(
-            leading: ClipOval(
-              child: Center(
-                child: Image.asset(
-                  'assets/images/avatar.png', // Replace with your asset or use network image
-                  fit: BoxFit.cover,
-                  height: 36,
-                  width: 36,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.person, color: Colors.black54, size: 24);
-                  },
+            leading: InkWell(
+              onTap: () {
+                // Navigate to profile screen
+                Navigator.of(context).push(UserProfileScreen.buildRoute(context));
+
+              },
+              borderRadius: BorderRadius.circular(18), // Half of width/height to make it circular
+              child: ClipOval(
+                child: Center(
+                  child: Image.asset(
+                    'assets/images/avatar.png', // Replace with your asset or use network image
+                    fit: BoxFit.cover,
+                    height: 36,
+                    width: 36,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(Icons.person, color: Colors.black54, size: 24);
+                    },
+                  ),
                 ),
               ),
             ),
