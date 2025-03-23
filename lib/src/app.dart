@@ -22,7 +22,7 @@ import 'package:lichess_mobile/src/theme.dart';
 import 'package:lichess_mobile/src/utils/navigation.dart';
 import 'package:lichess_mobile/src/utils/screen.dart';
 import 'package:lichess_mobile/src/view/auth/presentation/pages/login_screen.dart';
-import 'package:lichess_mobile/src/view/auth/presentation/pages/set_username_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Application initialization and main entry point.
 class AppInitializationScreen extends ConsumerWidget {
@@ -153,6 +153,7 @@ class _AppState extends ConsumerState<Application> {
       onGenerateTitle: (BuildContext context) => 'lichess.org',
       locale: generalPrefs.locale,
       theme: themeLight.copyWith(
+        textTheme: GoogleFonts.bricolageGrotesqueTextTheme(themeLight.textTheme),
         navigationBarTheme: NavigationBarTheme.of(
           context,
         ).copyWith(height: remainingHeight < kSmallRemainingHeightLeftBoardThreshold ? 60 : null),
@@ -161,6 +162,7 @@ class _AppState extends ConsumerState<Application> {
         primaryColor: const Color(0xFF13191D),
         scaffoldBackgroundColor: const Color(0xFF13191D),
         appBarTheme: const AppBarTheme(backgroundColor: Color(0xFF13191D)),
+        textTheme: GoogleFonts.bricolageGrotesqueTextTheme(themeDark.textTheme),
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF13191D),
           brightness: Brightness.dark,
