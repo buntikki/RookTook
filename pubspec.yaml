@@ -85,6 +85,7 @@ dependencies:
   web_socket_channel: ^3.0.0
   flutter_svg: ^2.0.17
   flutter_launcher_icons: ^0.14.3
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   build_runner: ^2.3.2
@@ -139,18 +140,6 @@ flutter:
     - family: LichessPuzzleIcons
       fonts:
         - asset: assets/fonts/PuzzleIcons.ttf
-    - family: BricolageGrotesque
-      fonts:
-        - asset: assets/fonts/BricolageGrotesque-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/BricolageGrotesque-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/BricolageGrotesque-ExtraBold.ttf
-          weight: 900
-        - asset: assets/fonts/BricolageGrotesque-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/BricolageGrotesque-SemiBold.ttf
-          weight: 600
 
   # Enable generation of localized Strings from arb files.
   generate: true
