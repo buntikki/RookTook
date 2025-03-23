@@ -648,6 +648,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Bullet',
+                  type: '2/1',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
                     Navigator.of(context, rootNavigator: true).push(
@@ -664,6 +665,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   icon: Image.asset('assets/images/flip.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Rapid',
+                  type: '10/15',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
                     Navigator.of(context, rootNavigator: true).push(
@@ -767,6 +769,7 @@ class GameTypeCard extends StatelessWidget {
   final Widget icon;
   final String title;
   final String subtitle;
+  final String type;
   final Color subtitleColor;
   final VoidCallback onTap;
 
@@ -776,7 +779,7 @@ class GameTypeCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.subtitleColor,
-    required this.onTap,
+    required this.onTap, required this.type,
   });
 
   @override
@@ -791,34 +794,40 @@ class GameTypeCard extends StatelessWidget {
           children: [
             // Content
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.only(left: 16,top: 16,right: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   icon,
                   // Text(icon, style: const TextStyle(fontSize: 32)),
                   const SizedBox(height: 16),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '$title ',
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+                  Row(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '$title ',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextSpan(
+                              text: subtitle,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: subtitleColor,
+                              ),
+                            ),
+                          ],
                         ),
-                        TextSpan(
-                          text: subtitle,
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: subtitleColor,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                      Spacer(),
+                      Text(type, style: TextStyle(color: Color(0xff959494))),
+                    ],
                   ),
                 ],
               ),
