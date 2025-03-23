@@ -30,10 +30,8 @@ import 'package:lichess_mobile/src/view/game/offline_correspondence_games_screen
 import 'package:lichess_mobile/src/view/home/games_carousel.dart';
 import 'package:lichess_mobile/src/view/play/create_game_options.dart';
 import 'package:lichess_mobile/src/view/play/ongoing_games_screen.dart';
-import 'package:lichess_mobile/src/view/play/play_screen.dart';
 import 'package:lichess_mobile/src/view/play/quick_game_button.dart';
 import 'package:lichess_mobile/src/view/puzzle/puzzle_screen.dart';
-import 'package:lichess_mobile/src/view/puzzle/puzzle_tab_screen.dart';
 import 'package:lichess_mobile/src/view/user/challenge_requests_screen.dart';
 import 'package:lichess_mobile/src/view/user/player_screen.dart';
 import 'package:lichess_mobile/src/view/user/recent_games.dart';
@@ -73,7 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     });
 
     final connectivity = ref.watch(connectivityChangesProvider);
-    final isEditing = ref.watch(editModeProvider);
+    // final isEditing = ref.watch(editModeProvider);
 
     return connectivity.when(
       skipLoadingOnReload: true,
@@ -228,7 +226,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               //   tooltip: isEditing ? 'Save' : 'Edit',
               // ),
               // const _ChallengeScreenButton(),
-              IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
               const _PlayerScreenButton(),
             ],
           ),
@@ -247,9 +245,9 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                         child: Text(
                           'A Platform for\nnext level chess',
                           textAlign: TextAlign.start,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.headlineMedium!.merge(TextStyle(fontWeight: FontWeight.w600)),
+                          style: Theme.of(context).textTheme.headlineMedium!.merge(
+                            const TextStyle(fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
                       ...widgets,
@@ -386,7 +384,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           },
         ),
       ),
-      SizedBox(height: 24),
+      const SizedBox(height: 24),
       InkWell(
         onTap: () {
           Navigator.of(
@@ -394,7 +392,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
             rootNavigator: true,
           ).push(PuzzleScreen.buildRoute(context, angle: const PuzzleTheme(PuzzleThemeKey.mix)));
         },
-        child: ChessPuzzleScreen(),
+        child: const ChessPuzzleScreen(),
       ),
       RecentGamesWidget(recentGames: recentGames, nbOfGames: nbOfGames, user: null),
       // if (session == null) ...[
@@ -457,7 +455,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           ],
         )
       else ...[
-        ChessRatingCards(),
+        const ChessRatingCards(),
         // if (status.isOnline)
         //   const _EditableWidget(
         //     widget: HomeEditableWidget.quickPairing,
@@ -529,7 +527,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
 }
 
 class ChessPuzzleScreen extends StatelessWidget {
-  const ChessPuzzleScreen({Key? key}) : super(key: key);
+  const ChessPuzzleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -553,12 +551,12 @@ class ChessPuzzleScreen extends StatelessWidget {
                 ),
 
                 // Right side - Information
-                Expanded(
+                const Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         'Solve Puzzles',
                         style: TextStyle(
                           fontSize: 16,
@@ -566,7 +564,7 @@ class ChessPuzzleScreen extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      const Text(
+                      Text(
                         'Continue Your Journey!',
                         style: TextStyle(fontSize: 12, color: Color(0xFF7E8899)),
                       ),
@@ -638,7 +636,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
             ),
           ),
           const Divider(color: Colors.grey, height: 1),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           // Game options
           Padding(
             padding: const EdgeInsets.all(16),
@@ -671,7 +669,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
                     Navigator.of(context, rootNavigator: true).push(
                       GameScreen.buildRoute(
                         context,
-                        seek: GameSeek.fastPairing(TimeIncrement(600, 5), session),
+                        seek: GameSeek.fastPairing(const TimeIncrement(600, 5), session),
                       ),
                     );
                   },
@@ -679,7 +677,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
               ],
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
         ],
       ),
     );
@@ -687,7 +685,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
 }
 
 class ChessRatingCards extends StatelessWidget {
-  const ChessRatingCards({Key? key}) : super(key: key);
+  const ChessRatingCards({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -695,19 +693,23 @@ class ChessRatingCards extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Row(
         children: [
-          _buildRatingCard(
-            icon: Image.asset('assets/images/blitz.png'),
-            iconColor: Colors.amber,
-            title: 'Bullet',
-            rating: '1020',
+          Expanded(
+            child: _buildRatingCard(
+              icon: Image.asset('assets/images/blitz.png'),
+              iconColor: const Color(0xffFFEEB4),
+              title: 'Bullet',
+              rating: '1020',
+            ),
           ),
-          SizedBox(width: 8),
-          _buildRatingCard(
-            icon: Image.asset('assets/images/flip.png'),
+          const SizedBox(width: 8),
+          Expanded(
+            child: _buildRatingCard(
+              icon: Image.asset('assets/images/flip.png'),
 
-            iconColor: Colors.blue,
-            title: 'Rapid',
-            rating: '980',
+              iconColor: const Color(0xffC1F0FF),
+              title: 'Rapid',
+              rating: '980',
+            ),
           ),
         ],
       ),
@@ -721,26 +723,40 @@ class ChessRatingCards extends StatelessWidget {
     required String rating,
   }) {
     return Container(
-      width: 140,
-      height: 135,
+      // width: 140,
+      // height: 135,
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.0)),
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: iconColor,
+              // borderRadius: BorderRadius.circular(8.0),
+              shape: BoxShape.circle,
+            ),
+            padding: const EdgeInsets.all(8.0),
             child: icon,
           ),
-          const SizedBox(height: 12),
-          Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
-          const SizedBox(height: 4),
-          Text(
-            rating,
-            style: const TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+              Text(
+                rating,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 12),
         ],
       ),
     );
@@ -755,13 +771,13 @@ class GameTypeCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const GameTypeCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.subtitleColor,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
