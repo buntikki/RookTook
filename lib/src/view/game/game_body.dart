@@ -31,6 +31,7 @@ import 'package:lichess_mobile/src/widgets/bottom_bar.dart';
 import 'package:lichess_mobile/src/widgets/bottom_bar_button.dart';
 import 'package:lichess_mobile/src/widgets/buttons.dart';
 import 'package:lichess_mobile/src/widgets/clock.dart';
+import 'package:lichess_mobile/src/widgets/match_result_popup.dart';
 import 'package:lichess_mobile/src/widgets/platform_alert_dialog.dart';
 import 'package:lichess_mobile/src/widgets/user_full_name.dart';
 import 'package:lichess_mobile/src/widgets/yes_no_dialog.dart';
@@ -366,12 +367,28 @@ class GameBody extends ConsumerWidget {
           state.requireValue.game.playable == false) {
         Timer(const Duration(milliseconds: 500), () {
           if (context.mounted) {
-            showAdaptiveDialog<void>(
+            // showAdaptiveDialog<void>(
+            //   context: context,
+            //   builder:
+            //       (context) =>
+            //           GameResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback),
+            //   barrierDismissible: true,
+            // );
+
+            showDialog(
               context: context,
-              builder:
-                  (context) =>
-                      GameResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback),
-              barrierDismissible: true,
+              builder: (_) => const MatchResultPopup(
+                title: 'White Wins',
+                subtitle: 'Opponent wins by Resignation',
+                player1: 'magCarl2116',
+                player2: 'kaundi5128',
+                score1: 2,
+                score2: 5,
+                rating: 241,
+                ratingChange: -159,
+                avatar1: 'assets/avatar1.png',
+                avatar2: 'assets/avatar2.png',
+              ),
             );
           }
         });
