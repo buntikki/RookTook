@@ -209,7 +209,6 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               onTap: () {
                 // Navigate to profile screen
                 Navigator.of(context).push(UserProfileScreen.buildRoute(context));
-
               },
               borderRadius: BorderRadius.circular(18), // Half of width/height to make it circular
               child: ClipOval(
@@ -661,6 +660,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   type: '2/1',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.of(context, rootNavigator: true).push(
                       GameScreen.buildRoute(
                         context,
@@ -678,6 +678,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   type: '10/15',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.of(context, rootNavigator: true).push(
                       GameScreen.buildRoute(
                         context,
@@ -789,7 +790,8 @@ class GameTypeCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.subtitleColor,
-    required this.onTap, required this.type,
+    required this.onTap,
+    required this.type,
   });
 
   @override
@@ -804,7 +806,7 @@ class GameTypeCard extends StatelessWidget {
           children: [
             // Content
             Padding(
-              padding: const EdgeInsets.only(left: 16,top: 16,right: 10),
+              padding: const EdgeInsets.only(left: 16, top: 16, right: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

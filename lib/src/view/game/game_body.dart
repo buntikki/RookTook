@@ -374,22 +374,71 @@ class GameBody extends ConsumerWidget {
             //           GameResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback),
             //   barrierDismissible: true,
             // );
+            if (Theme.of(context).platform == TargetPlatform.iOS) {
+              showCupertinoDialog(
+                context: context,
+                builder:
+                    (_) => MatchResultPopup(
+                      seek: state,
+                      title: 'White Wins',
+                      subtitle: 'Opponent wins by Resignation',
+                      player1: 'magCarl2116',
+                      player2: 'kaundi5128',
+                      score1: 2,
+                      score2: 5,
+                      rating: 241,
+                      ratingChange: -159,
+                      avatar1: 'assets/images/avatar.png',
+                      avatar2: 'assets/images/avatar.png',
+                      onRematch: () {
+                        ref.read(gameControllerProvider(id).notifier).proposeOrAcceptRematch();
+                      },
+                      onNewMatch: () {
+                        final ctrlProvider = gameControllerProvider(id);
+                        final gameState = ref.watch(ctrlProvider).requireValue;
 
-            showDialog(
-              context: context,
-              builder: (_) => const MatchResultPopup(
-                title: 'White Wins',
-                subtitle: 'Opponent wins by Resignation',
-                player1: 'magCarl2116',
-                player2: 'kaundi5128',
-                score1: 2,
-                score2: 5,
-                rating: 241,
-                ratingChange: -159,
-                avatar1: 'assets/avatar1.png',
-                avatar2: 'assets/avatar2.png',
-              ),
-            );
+                        // print('${gameState} $ctrlProvider');
+                        Navigator.of(context).popUntil((route) => route is! PopupRoute);
+                        if (gameState.canGetNewOpponent) {
+                          onNewOpponentCallback(gameState.game);
+                        }
+                        // onNewOpponentCallback();
+                      },
+                    ),
+              );
+            } else {
+              showDialog(
+                context: context,
+                builder:
+                    (_) => MatchResultPopup(
+                      seek: state,
+                      title: 'White Wins',
+                      subtitle: 'Opponent wins by Resignation',
+                      player1: 'magCarl2116',
+                      player2: 'kaundi5128',
+                      score1: 2,
+                      score2: 5,
+                      rating: 241,
+                      ratingChange: -159,
+                      avatar1: 'assets/images/avatar.png',
+                      avatar2: 'assets/images/avatar.png',
+                      onRematch: () {
+                        ref.read(gameControllerProvider(id).notifier).proposeOrAcceptRematch();
+                      },
+                      onNewMatch: () {
+                        final ctrlProvider = gameControllerProvider(id);
+                        final gameState = ref.watch(ctrlProvider).requireValue;
+
+                        // print('${gameState} $ctrlProvider');
+                        Navigator.of(context).popUntil((route) => route is! PopupRoute);
+                        if (gameState.canGetNewOpponent) {
+                          onNewOpponentCallback(gameState.game);
+                        }
+                        // onNewOpponentCallback();
+                      },
+                    ),
+              );
+            }
           }
         });
       }
