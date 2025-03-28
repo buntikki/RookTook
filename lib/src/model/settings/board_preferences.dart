@@ -1,4 +1,5 @@
 import 'package:chessground/chessground.dart';
+import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:lichess_mobile/l10n/l10n.dart';
@@ -163,9 +164,35 @@ class BoardPrefs with _$BoardPrefs implements Serializable {
       brightness != kBoardDefaultBrightnessFilter || hue != kBoardDefaultHueFilter;
 
   ChessboardSettings toBoardSettings() {
+    final darkSquare = Color(0xffD0D7DD);
+    final lightSquare = Colors.white;
     return ChessboardSettings(
       pieceAssets: pieceSet.assets,
-      colorScheme: boardTheme.colors,
+      colorScheme: ChessboardColorScheme(
+        darkSquare: darkSquare,
+        lightSquare: lightSquare,
+        background: SolidColorChessboardBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+        ),
+        whiteCoordBackground: SolidColorChessboardBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          coordinates: true,
+        ),
+        blackCoordBackground: SolidColorChessboardBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          coordinates: true,
+          orientation: Side.black,
+        ),
+        lastMove: HighlightDetails(solidColor: Color(0xffFFEE93)),
+        selected: HighlightDetails(solidColor: Color(0xffFFEE93)),
+        validMoves: Color(0xffFFEE93),
+        validPremoves: Color(0xffFFEE93),
+      ),
+
+      //  boardTheme.colors,
       brightness: brightness,
       hue: hue,
       border:
@@ -242,7 +269,7 @@ enum BoardTheme {
   ChessboardColorScheme get colors {
     switch (this) {
       case BoardTheme.system:
-        return getBoardColorScheme() ?? ChessboardColorScheme.brown;
+        return getBoardColorScheme() ?? ChessboardColorScheme.blue;
       case BoardTheme.blue:
         return ChessboardColorScheme.blue;
       case BoardTheme.blue2:
@@ -302,10 +329,9 @@ enum BoardTheme {
                 for (final c in const [1, 2, 3, 4, 5, 6])
                   Container(
                     width: 44,
-                    color:
-                        c.isEven
-                            ? BoardTheme.system.colors.darkSquare
-                            : BoardTheme.system.colors.lightSquare,
+                    color: c.isEven ? Color(0xffD0D7DD) : Colors.white,
+                    // ? BoardTheme.system.colors.darkSquare
+                    // : BoardTheme.system.colors.lightSquare,
                   ),
               ],
             ),

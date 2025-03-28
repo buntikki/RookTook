@@ -2,11 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lichess_mobile/src/constants.dart';
 import 'package:lichess_mobile/src/model/account/account_repository.dart';
 import 'package:lichess_mobile/src/model/account/ongoing_game.dart';
 import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
 import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/model/challenge/challenges.dart';
+import 'package:lichess_mobile/src/model/common/perf.dart';
 import 'package:lichess_mobile/src/model/common/time_increment.dart';
 import 'package:lichess_mobile/src/model/correspondence/correspondence_game_storage.dart';
 import 'package:lichess_mobile/src/model/correspondence/offline_correspondence_game.dart';
@@ -16,6 +18,7 @@ import 'package:lichess_mobile/src/model/lobby/game_seek.dart';
 import 'package:lichess_mobile/src/model/puzzle/puzzle_angle.dart';
 import 'package:lichess_mobile/src/model/puzzle/puzzle_theme.dart';
 import 'package:lichess_mobile/src/model/settings/home_preferences.dart';
+import 'package:lichess_mobile/src/model/user/user_repository_providers.dart';
 import 'package:lichess_mobile/src/navigation.dart';
 import 'package:lichess_mobile/src/network/connectivity.dart';
 import 'package:lichess_mobile/src/styles/lichess_icons.dart';
@@ -31,6 +34,7 @@ import 'package:lichess_mobile/src/view/game/offline_correspondence_games_screen
 import 'package:lichess_mobile/src/view/home/games_carousel.dart';
 import 'package:lichess_mobile/src/view/play/create_game_options.dart';
 import 'package:lichess_mobile/src/view/play/ongoing_games_screen.dart';
+import 'package:lichess_mobile/src/view/play/play_screen.dart';
 import 'package:lichess_mobile/src/view/play/quick_game_button.dart';
 import 'package:lichess_mobile/src/view/puzzle/puzzle_screen.dart';
 import 'package:lichess_mobile/src/view/user/challenge_requests_screen.dart';
@@ -79,12 +83,38 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       skipLoadingOnReload: true,
       data: (status) {
         final session = ref.watch(authSessionProvider);
+        final account = ref.watch(accountProvider);
+
+        const puzzlePerfsSet = {Perf.bullet, Perf.rapid};
+
+        final userPerfs = puzzlePerfsSet;
+
+        final perf = userPerfs;
+
+        final rapid =
+            session == null
+                ? null
+                : ref.watch(
+                  userPerfStatsProvider(
+                    id: session!.user.id,
+                    perf: perf.where((e) => e.title == 'Rapid').first,
+                  ),
+                );
+        final bullet =
+            session == null
+                ? null
+                : ref.watch(
+                  userPerfStatsProvider(
+                    id: session!.user.id,
+                    perf: perf.where((e) => e.title == 'Bullet').first,
+                  ),
+                );
+
         final ongoingGames = ref.watch(ongoingGamesProvider);
         final offlineCorresGames = ref.watch(offlineOngoingCorrespondenceGamesProvider);
         final recentGames = ref.watch(myRecentGamesProvider);
         final nbOfGames = ref.watch(userNumberOfGamesProvider(null)).valueOrNull ?? 0;
         final isTablet = isTabletOrLarger(context);
-
         // Show the welcome screen if not logged in and there are no recent games and no stored games
         // (i.e. first installation, or the user has never played a game)
         final shouldShowWelcomeScreen =
@@ -97,7 +127,18 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   session: session,
                   status: status,
                   isTablet: isTablet,
-
+                  rapidRank:
+                      session != null
+                          ? rapid!.value != null
+                              ? rapid.value!.rating.toInt()
+                              : 0
+                          : 0,
+                  bulletRank:
+                      session != null
+                          ? bullet!.value != null
+                              ? bullet.value!.rating.toInt()
+                              : 0
+                          : 0,
                   recentGames: recentGames,
                   nbOfGames: nbOfGames,
                 )
@@ -111,6 +152,18 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   nbOfGames: nbOfGames,
                 )
                 : _welcomeScreenWidgets(
+                  rapidRank:
+                      session != null
+                          ? rapid!.value != null
+                              ? rapid.value!.rating.toInt()
+                              : 0
+                          : 0,
+                  bulletRank:
+                      session != null
+                          ? bullet!.value != null
+                              ? bullet.value!.rating.toInt()
+                              : 0
+                          : 0,
                   session: session,
                   status: status,
                   isTablet: isTablet,
@@ -205,27 +258,6 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         // } else {
         return Scaffold(
           appBar: AppBar(
-            leading: InkWell(
-              onTap: () {
-                // Navigate to profile screen
-                Navigator.of(context).push(UserProfileScreen.buildRoute(context));
-
-              },
-              borderRadius: BorderRadius.circular(18), // Half of width/height to make it circular
-              child: ClipOval(
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/avatar.png', // Replace with your asset or use network image
-                    fit: BoxFit.cover,
-                    height: 36,
-                    width: 36,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.person, color: Colors.black54, size: 24);
-                    },
-                  ),
-                ),
-              ),
-            ),
             title: const Text(''),
             actions: [
               // IconButton(
@@ -236,8 +268,31 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               //   tooltip: isEditing ? 'Save' : 'Edit',
               // ),
               // const _ChallengeScreenButton(),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
-              const _PlayerScreenButton(),
+              // IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+              // const _PlayerScreenButton(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: InkWell(
+                  onTap: () {
+                    // Navigate to profile screen
+                    Navigator.of(context).push(UserProfileScreen.buildRoute(context));
+                  },
+                  borderRadius: BorderRadius.circular(
+                    18,
+                  ), // Half of width/height to make it circular
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/avatar.png', // Replace with your asset or use network image
+                      fit: BoxFit.cover,
+                      height: 36,
+                      width: 36,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.person, color: Colors.black54, size: 24);
+                      },
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
           body: RefreshIndicator(
@@ -267,16 +322,16 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-          // floatingActionButton:
-          //     isTablet
-          //         ? null
-          //         : FloatingActionButton.extended(
-          //           onPressed: () {
-          //             Navigator.of(context).push(PlayScreen.buildRoute(context));
-          //           },
-          //           icon: const Icon(Icons.add),
-          //           label: Text(context.l10n.play),
-          //         ),
+          floatingActionButton:
+              isTablet
+                  ? null
+                  : FloatingActionButton.extended(
+                    onPressed: () {
+                      Navigator.of(context).push(PlayScreen.buildRoute(context));
+                    },
+                    icon: const Icon(Icons.add),
+                    label: Text(context.l10n.play),
+                  ),
         );
 
         // }
@@ -355,6 +410,8 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required bool isTablet,
     required AsyncValue<IList<LightArchivedGameWithPov>> recentGames,
     required int nbOfGames,
+    required int rapidRank,
+    required int bulletRank,
   }) {
     final welcomeWidgets = [
       /*Padding(
@@ -404,7 +461,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         },
         child: const ChessPuzzleScreen(),
       ),
-      RecentGamesWidget(recentGames: recentGames, nbOfGames: nbOfGames, user: null),
+      RecentGamesWidget(
+        recentGames: recentGames,
+        nbOfGames: nbOfGames,
+        user: null,
+        maxGamesToShow: 5,
+      ),
       // if (session == null) ...[
       //   const Center(child: _SignInWidget()),
       //   const SizedBox(height: 16.0),
@@ -465,7 +527,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           ],
         )
       else ...[
-        const ChessRatingCards(),
+        ChessRatingCards(rapidRank: '$rapidRank', bulletRank: '$bulletRank'),
         // if (status.isOnline)
         //   const _EditableWidget(
         //     widget: HomeEditableWidget.quickPairing,
@@ -658,8 +720,10 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Bullet',
+                  type: '2/1',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.of(context, rootNavigator: true).push(
                       GameScreen.buildRoute(
                         context,
@@ -674,8 +738,10 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   icon: Image.asset('assets/images/flip.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Rapid',
+                  type: '10/15',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.of(context, rootNavigator: true).push(
                       GameScreen.buildRoute(
                         context,
@@ -695,7 +761,10 @@ class GameTypeBottomSheet extends ConsumerWidget {
 }
 
 class ChessRatingCards extends StatelessWidget {
-  const ChessRatingCards({super.key});
+  final String bulletRank;
+  final String rapidRank;
+
+  const ChessRatingCards({super.key, required this.bulletRank, required this.rapidRank});
 
   @override
   Widget build(BuildContext context) {
@@ -708,7 +777,7 @@ class ChessRatingCards extends StatelessWidget {
               icon: Image.asset('assets/images/blitz.png'),
               iconColor: const Color(0xffFFEEB4),
               title: 'Bullet',
-              rating: '1020',
+              rating: bulletRank,
             ),
           ),
           const SizedBox(width: 8),
@@ -718,7 +787,7 @@ class ChessRatingCards extends StatelessWidget {
 
               iconColor: const Color(0xffC1F0FF),
               title: 'Rapid',
-              rating: '980',
+              rating: rapidRank,
             ),
           ),
         ],
@@ -777,6 +846,7 @@ class GameTypeCard extends StatelessWidget {
   final Widget icon;
   final String title;
   final String subtitle;
+  final String type;
   final Color subtitleColor;
   final VoidCallback onTap;
 
@@ -787,6 +857,7 @@ class GameTypeCard extends StatelessWidget {
     required this.subtitle,
     required this.subtitleColor,
     required this.onTap,
+    required this.type,
   });
 
   @override
@@ -801,34 +872,40 @@ class GameTypeCard extends StatelessWidget {
           children: [
             // Content
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.only(left: 16, top: 16, right: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   icon,
                   // Text(icon, style: const TextStyle(fontSize: 32)),
                   const SizedBox(height: 16),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '$title ',
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+                  Row(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '$title ',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextSpan(
+                              text: subtitle,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: subtitleColor,
+                              ),
+                            ),
+                          ],
                         ),
-                        TextSpan(
-                          text: subtitle,
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: subtitleColor,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                      Spacer(),
+                      Text(type, style: TextStyle(color: Color(0xff959494))),
+                    ],
                   ),
                 ],
               ),

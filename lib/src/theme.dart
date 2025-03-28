@@ -94,9 +94,11 @@ extension CustomThemeBuildContext on BuildContext {
   final boardTheme = boardPrefs.boardTheme;
   final systemScheme = getDynamicColorSchemes();
   final hasSystemColors = systemScheme != null && generalPrefs.systemColors == true;
-  final defaultLight = ColorScheme.fromSeed(seedColor: boardTheme.colors.darkSquare);
+  final defaultLight = ColorScheme.fromSeed(seedColor: Color(0xffD0D7DD));
+  //  boardTheme.colors.darkSquare);
   final defaultDark = ColorScheme.fromSeed(
-    seedColor: boardTheme.colors.darkSquare,
+    seedColor: Color(0xffD0D7DD),
+    // boardTheme.colors.darkSquare,
     brightness: Brightness.dark,
   );
 
@@ -239,7 +241,9 @@ extension CustomThemeBuildContext on BuildContext {
               ? lighten(baseTheme.colorScheme.surface, 0.1).withValues(alpha: 0.9)
               : baseTheme.colorScheme.surface.withValues(alpha: 0.9),
     ),
-    dialogTheme: DialogThemeData(backgroundColor: baseTheme.colorScheme.surface.withValues(alpha: 0.9)),
+    dialogTheme: DialogThemeData(
+      backgroundColor: baseTheme.colorScheme.surface.withValues(alpha: 0.9),
+    ),
     menuTheme:
         isIOS
             ? _makeCupertinoMenuThemeData(
@@ -252,7 +256,7 @@ extension CustomThemeBuildContext on BuildContext {
                 ),
               ),
             ),
-    scaffoldBackgroundColor:Color(0xFF13191D),
+    scaffoldBackgroundColor: Color(0xFF13191D),
     appBarTheme: baseTheme.appBarTheme.copyWith(backgroundColor: seedColor.withValues(alpha: 0.5)),
     splashFactory: isIOS ? NoSplash.splashFactory : null,
     pageTransitionsTheme: PageTransitionsTheme(

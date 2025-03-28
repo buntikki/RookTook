@@ -25,6 +25,7 @@ import 'package:lichess_mobile/src/view/game/game_player.dart';
 import 'package:lichess_mobile/src/view/game/game_result_dialog.dart';
 import 'package:lichess_mobile/src/view/game/game_screen_providers.dart';
 import 'package:lichess_mobile/src/view/game/message_screen.dart';
+import 'package:lichess_mobile/src/view/game/status_l10n.dart';
 import 'package:lichess_mobile/src/widgets/adaptive_action_sheet.dart';
 import 'package:lichess_mobile/src/widgets/board_table.dart';
 import 'package:lichess_mobile/src/widgets/bottom_bar.dart';
@@ -297,6 +298,7 @@ class GameBody extends ConsumerWidget {
                     ),
                   ),
                 ),
+
                 _GameBottomBar(
                   id: id,
                   onLoadGameCallback: onLoadGameCallback,
@@ -367,6 +369,19 @@ class GameBody extends ConsumerWidget {
           state.requireValue.game.playable == false) {
         Timer(const Duration(milliseconds: 500), () {
           if (context.mounted) {
+            final ctrlProvider = gameControllerProvider(id);
+            final gameState = ref.watch(ctrlProvider).requireValue;
+            print('user is :================ ${gameState.game.winner?.name}');
+            print('user is :================ ${gameState.game.aborted}');
+            print('user is :================ ${gameState.game.resignable}');
+
+            print('user is :================ ${gameState.game.me?.toJson()}');
+            print('user is :================ ${gameState.game.opponent?.toJson()}');
+            final showWinner =
+                gameState.game.winner != null
+                    ? ' • ${gameState.game.winner == Side.white ? context.l10n.whiteIsVictorious : context.l10n.blackIsVictorious}'
+                    : '';
+
             // showAdaptiveDialog<void>(
             //   context: context,
             //   builder:
@@ -374,22 +389,83 @@ class GameBody extends ConsumerWidget {
             //           GameResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback),
             //   barrierDismissible: true,
             // );
+            if (Theme.of(context).platform == TargetPlatform.iOS) {
+              showCupertinoDialog(
+                context: context,
+                builder:
+                    (_) => MatchResultPopup(
+                      seek: state,
+                      title:
+                          '${gameStatusL10n(context, variant: gameState.game.meta.variant, status: gameState.game.status, lastPosition: gameState.game.lastPosition, winner: gameState.game.winner, isThreefoldRepetition: gameState.game.isThreefoldRepetition)} Wins',
+                      subtitle: 'Wins ${gameState.game.source.name} by $showWinner',
+                      player1: '${gameState.game.me?.user?.name}',
+                      player2: '${gameState.game.opponent?.user?.name}',
+                      score1:
+                          gameState.game.winner == null
+                              ? '½-½'
+                              : gameState.game.winner == Side.white
+                              ? '1-0'
+                              : '0-1',
+                      score2:50,
+                      rating: gameState.game.me!.rating ?? 0,
+                      ratingChange: gameState.game.me!.ratingDiff ?? 0,
+                      avatar1: 'assets/images/avatar.png',
+                      avatar2: 'assets/images/avatar.png',
+                      onRematch: () {
+                        ref.read(gameControllerProvider(id).notifier).proposeOrAcceptRematch();
+                      },
+                      onNewMatch: () {
+                        // final ctrlProvider = gameControllerProvider(id);
+                        // final gameState = ref.watch(ctrlProvider).requireValue;
 
-            showDialog(
-              context: context,
-              builder: (_) => const MatchResultPopup(
-                title: 'White Wins',
-                subtitle: 'Opponent wins by Resignation',
-                player1: 'magCarl2116',
-                player2: 'kaundi5128',
-                score1: 2,
-                score2: 5,
-                rating: 241,
-                ratingChange: -159,
-                avatar1: 'assets/avatar1.png',
-                avatar2: 'assets/avatar2.png',
-              ),
-            );
+                        // print('${gameState} $ctrlProvider');
+                        Navigator.of(context).popUntil((route) => route is! PopupRoute);
+                        if (gameState.canGetNewOpponent) {
+                          onNewOpponentCallback(gameState.game);
+                        }
+                        // onNewOpponentCallback();
+                      },
+                    ),
+              );
+            } else {
+              showDialog(
+                context: context,
+                builder:
+                    (_) => MatchResultPopup(
+                      seek: state,
+                      title:
+                          '${gameStatusL10n(context, variant: gameState.game.meta.variant, status: gameState.game.status, lastPosition: gameState.game.lastPosition, winner: gameState.game.winner, isThreefoldRepetition: gameState.game.isThreefoldRepetition)}$showWinner',
+                      subtitle: 'Opponent wins by Resignation',
+                      player1: '${gameState.game.me?.user?.name}',
+                      player2: '${gameState.game.opponent?.user?.name}',
+                      score1:
+                          gameState.game.winner == null
+                              ? '½-½'
+                              : gameState.game.winner == Side.white
+                              ? '1-0'
+                              : '0-1',
+                      score2: 5,
+                      rating: 241,
+                      ratingChange: -159,
+                      avatar1: 'assets/images/avatar.png',
+                      avatar2: 'assets/images/avatar.png',
+                      onRematch: () {
+                        ref.read(gameControllerProvider(id).notifier).proposeOrAcceptRematch();
+                      },
+                      onNewMatch: () {
+                        final ctrlProvider = gameControllerProvider(id);
+                        final gameState = ref.watch(ctrlProvider).requireValue;
+
+                        // print('${gameState} $ctrlProvider');
+                        Navigator.of(context).popUntil((route) => route is! PopupRoute);
+                        if (gameState.canGetNewOpponent) {
+                          onNewOpponentCallback(gameState.game);
+                        }
+                        // onNewOpponentCallback();
+                      },
+                    ),
+              );
+            }
           }
         });
       }

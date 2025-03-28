@@ -38,6 +38,7 @@ class UserProfileWidget extends ConsumerWidget {
             : null;
 
     return PlatformCard(
+      color: Color(0xff2B2D30),
       margin: Styles.horizontalBodyPadding.add(Styles.sectionTopPadding),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
