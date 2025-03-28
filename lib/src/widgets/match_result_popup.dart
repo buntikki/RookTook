@@ -6,7 +6,7 @@ class MatchResultPopup extends ConsumerStatefulWidget {
   final String subtitle;
   final String player1;
   final String player2;
-  final int score1;
+  final String score1;
   final int score2;
   final int rating;
   final int ratingChange;
@@ -99,7 +99,8 @@ class _MatchResultPopupState extends ConsumerState<MatchResultPopup> {
                     children: [
                       const SizedBox(width: 120, child: Divider()),
                       Text(
-                        '${widget.score1} - ${widget.score2}',
+                        '${widget.score1}',
+                        // '${widget.score1} - ${widget.score2}',
                         style: const TextStyle(color: Colors.white, fontSize: 24),
                       ),
                       SizedBox(width: 120, child: Divider()),

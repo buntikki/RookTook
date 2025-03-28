@@ -45,14 +45,10 @@ void setSystemColors(CorePalette? palette, ColorSchemes? schemes) {
         coordinates: true,
         orientation: Side.black,
       ),
-      lastMove: HighlightDetails(
-        solidColor: Color(palette.tertiary.get(80)).withValues(alpha: 0.6),
-      ),
-      selected: HighlightDetails(
-        solidColor: Color(palette.neutral.get(40)).withValues(alpha: 0.80),
-      ),
-      validMoves: Color(palette.neutral.get(40)).withValues(alpha: 0.40),
-      validPremoves: Color(palette.error.get(40)).withValues(alpha: 0.30),
+      lastMove: HighlightDetails(solidColor: Color(0xffFFEE93)),
+      selected: HighlightDetails(solidColor: Color(0xffFFEE93)),
+      validMoves: Color(0xffFFEE93),
+      validPremoves: Color(0xffFFEE93),
     );
   }
 }

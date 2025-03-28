@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/db/database.dart';
+import 'package:lichess_mobile/src/model/account/account_repository.dart';
 import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
 import 'package:lichess_mobile/src/navigation.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
 import 'package:lichess_mobile/src/utils/navigation.dart';
+import 'package:lichess_mobile/src/view/account/profile_screen.dart';
+import 'package:lichess_mobile/src/view/user/player_screen.dart';
 import 'package:lichess_mobile/src/widgets/adaptive_action_sheet.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   const UserProfileScreen({super.key});
@@ -75,15 +79,32 @@ class UserProfileScreen extends ConsumerWidget {
                 margin: EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    _MenuItem(icon: Icons.person_outline, title: 'My Profile'),
+                    _MenuItem(
+                      icon: Icons.person_outline,
+                      title: 'My Profile',
+                      onTap: () {
+                        ref.invalidate(accountActivityProvider);
+                        Navigator.of(context).push(ProfileScreen.buildRoute(context));
+                      },
+                    ),
                     const Divider(color: Colors.white24),
-                    _MenuItem(icon: Icons.leaderboard, title: 'Leaderboard'),
+                    _MenuItem(
+                      icon: Icons.leaderboard,
+                      title: 'Leaderboard',
+                      onTap: () => Navigator.of(context).push(PlayerScreen.buildRoute(context)),
+                    ),
                     const Divider(color: Colors.white24),
 
                     _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
                     const Divider(color: Colors.white24),
 
-                    _MenuItem(icon: Icons.star_border, title: 'Rate this App'),
+                    _MenuItem(
+                      icon: Icons.star_border,
+                      title: 'Rate this App',
+                      onTap: () {
+                        launchUrl(Uri.parse('https://lichess.org/contact'));
+                      },
+                    ),
                   ],
                 ),
               ),

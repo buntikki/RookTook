@@ -34,6 +34,7 @@ class UserActivityWidget extends ConsumerWidget {
           return const SizedBox.shrink();
         }
         return ListSection(
+          backgroundColor: Color(0xff2B2D30),
           header: Text(context.l10n.activityActivity, style: Styles.sectionTitle),
           hasLeading: true,
           children:
@@ -82,7 +83,13 @@ class UserActivityEntry extends ConsumerWidget {
         if (entry.games != null)
           for (final gameEntry in entry.games!.entries)
             _UserActivityListTile(
-              leading: Icon(gameEntry.key.icon, size: leadingIconSize),
+              leading:
+                  gameEntry.key.title == 'Rapid'
+                      ? Image.asset('assets/images/flip.png', height: 20, width: 20)
+                      : gameEntry.key.title == 'Bullet'
+                      ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
+                      : SizedBox(),
+
               title: context.l10n.activityPlayedNbGames(
                 gameEntry.value.win + gameEntry.value.draw + gameEntry.value.loss,
                 gameEntry.key.title,

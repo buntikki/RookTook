@@ -29,6 +29,7 @@ class LobbyScreenLoadingContent extends StatelessWidget {
           child: SafeArea(
             bottom: false,
             child: BoardTable(
+              
               orientation: Side.white,
               fen: kEmptyFen,
               topTable: const SizedBox.shrink(),

@@ -66,7 +66,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             onRefresh: () async => ref.refresh(accountProvider),
             child: ListView(
               children: [
-                UserProfileWidget(user: user),
+                // UserProfileWidget(user: user),
                 const AccountPerfCards(),
                 if (user.count != null && user.count!.bookmark > 0)
                   ListSection(
@@ -87,7 +87,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ],
                   ),
                 const UserActivityWidget(),
-                RecentGamesWidget(recentGames: recentGames, nbOfGames: nbOfGames, user: null),
+                RecentGamesWidget(
+                  textColor: Colors.white,
+                  color: Color(0xff2B2D30),
+                  titleColor: Colors.white,
+                  tileColor: Color(0xff2B2D30),
+                  recentGames: recentGames,
+                  nbOfGames: nbOfGames,
+                  user: null,
+                ),
               ],
             ),
           );

@@ -36,11 +36,16 @@ class GameListTile extends StatelessWidget {
     this.padding,
     this.onPressedBookmark,
     this.gameListContext,
+    this.tileColor,
+    this.titleColor,
   });
 
   final LightArchivedGameWithPov item;
   final EdgeInsetsGeometry? padding;
   final Future<void> Function(BuildContext context)? onPressedBookmark;
+  final Color? tileColor;
+  final Color? titleColor;
+
 
   /// The context of the game list that opened this screen, if available.
   final (UserId?, GameFilterState)? gameListContext;
@@ -88,6 +93,7 @@ class GameListTile extends StatelessWidget {
 
     return _GameListTile(
       game: game,
+      color: tileColor,
       mySide: youAre,
       padding: padding,
       onTap:
@@ -103,8 +109,8 @@ class GameListTile extends StatelessWidget {
       opponentTitle: UserFullNameWidget.player(
         user: opponent.user,
         aiLevel: opponent.aiLevel,
-        rating: opponent.rating,
-        style: TextStyle(color: Colors.black),
+        // rating: opponent.rating,
+        style: TextStyle(color:titleColor?? Colors.black),
       ),
       onPressedBookmark: onPressedBookmark,
       subtitle: Text('#${opponent.rating}', style: TextStyle(color: Color(0xff959494))),
@@ -133,6 +139,7 @@ class _GameListTile extends StatelessWidget {
     this.trailing,
     this.onTap,
     this.padding,
+    this.color,
   });
 
   final LightArchivedGame game;
@@ -145,18 +152,21 @@ class _GameListTile extends StatelessWidget {
   final Widget? trailing;
   final GestureTapCallback? onTap;
   final EdgeInsetsGeometry? padding;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10),
-      color: Colors.white,
+      color: color ?? Colors.white,
       child: ListTile(
         tileColor: Colors.white12,
         shape: RoundedRectangleBorder(),
         leading:
             icon == Perf.bullet.icon
                 ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
+                : icon == Perf.rapid.icon
+                ? Image.asset('assets/images/flip.png', height: 20, width: 20)
                 : SizedBox(),
         onTap: onTap,
         title: Row(

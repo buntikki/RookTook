@@ -1,6 +1,7 @@
 import 'package:chessground/chessground.dart';
 import 'package:collection/collection.dart';
 import 'package:dartchess/dartchess.dart';
+import 'package:dynamic_system_colors/dynamic_system_colors.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:lichess_mobile/src/styles/styles.dart';
 import 'package:lichess_mobile/src/utils/screen.dart';
 import 'package:lichess_mobile/src/view/engine/engine_gauge.dart';
 import 'package:lichess_mobile/src/widgets/move_list.dart';
+import 'package:material_color_utilities/palettes/core_palette.dart';
 
 /// Board layout that adapts to screen size and aspect ratio.
 ///
@@ -349,6 +351,7 @@ class _BoardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final board = Chessboard(
+      
       key: boardKey,
       size: size,
       fen: fen,
@@ -437,11 +440,52 @@ class BoardSettingsOverrides {
   final PieceAssets? pieceAssets;
 
   ChessboardSettings merge(ChessboardSettings settings) {
+    final darkSquare = Color(0xffD0D7DD);
+    final lightSquare = Colors.white;
+    // Use a nullable variable that can be updated
+    // CorePalette? palette;
+
+    // // Use async method to get palette
+    // Future<void> fetchPalette() async {
+    //   final results = await Future.wait([
+    //     DynamicColorPlugin.getCorePalette(),
+    //     DynamicColorPlugin.getColorSchemes()
+    //   ]);
+    //   palette = results[0] as CorePalette?;
+    // }
+
+    // // Call the async method (note: this won't wait for completion in this synchronous method)
+    // fetchPalette();
+
     return settings.copyWith(
       animationDuration: animationDuration,
       autoQueenPromotion: autoQueenPromotion,
       autoQueenPromotionOnPremove: autoQueenPromotionOnPremove,
       blindfoldMode: blindfoldMode,
+      colorScheme: ChessboardColorScheme(
+        darkSquare: darkSquare,
+        lightSquare: lightSquare,
+        background: SolidColorChessboardBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+        ),
+        whiteCoordBackground: SolidColorChessboardBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          coordinates: true,
+        ),
+        blackCoordBackground: SolidColorChessboardBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          coordinates: true,
+          orientation: Side.black,
+        ),
+        lastMove: HighlightDetails(solidColor: Colors.amber.withValues(alpha: 0.6)),
+        selected: HighlightDetails(solidColor: Colors.amber.withValues(alpha: 0.6)),
+        validMoves: Colors.amber.withValues(alpha: 0.6),
+        validPremoves: Colors.amber.withValues(alpha: 0.6),
+      ),
+ 
       drawShape: drawShape,
       pieceOrientationBehavior: pieceOrientationBehavior,
       pieceAssets: pieceAssets,

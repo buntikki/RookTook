@@ -53,6 +53,7 @@ class AuthRepository {
 
     final token = authResp.accessToken;
 
+
     if (token == null) {
       throw Exception('Access token not found.');
     }
@@ -62,6 +63,7 @@ class AuthRepository {
       headers: {'Authorization': 'Bearer ${signBearerToken(token)}'},
       mapper: User.fromServerJson,
     );
+    debugPrint('==================== $token ${user.lightUser}');
     return AuthSessionState(token: token, user: user.lightUser);
   }
 

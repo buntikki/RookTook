@@ -109,6 +109,7 @@ class _Body extends ConsumerWidget {
 
     final List<Widget> content = [
       ListSection(
+        backgroundColor: Color(0xff2B2D30),
         header: userSession != null ? UserFullNameWidget(user: userSession.user) : null,
         hasLeading: true,
         children: [
@@ -165,11 +166,12 @@ class _Body extends ConsumerWidget {
                 },
               ),
           ],
-          if (Theme.of(context).platform == TargetPlatform.android && donateButton != null)
-            donateButton,
+          // if (Theme.of(context).platform == TargetPlatform.android && donateButton != null)
+          // donateButton,
         ],
       ),
       ListSection(
+        backgroundColor: Color(0xff2B2D30),
         hasLeading: true,
         children: [
           SettingsListTile(
@@ -181,37 +183,38 @@ class _Body extends ConsumerWidget {
               Navigator.of(context).push(SoundSettingsScreen.buildRoute(context));
             },
           ),
-          Opacity(
-            opacity: generalPrefs.isForcedDarkMode ? 0.5 : 1.0,
-            child: SettingsListTile(
-              icon: const Icon(Icons.brightness_medium_outlined),
-              settingsLabel: Text(context.l10n.background),
-              settingsValue: AppBackgroundModeScreen.themeTitle(
-                context,
-                generalPrefs.isForcedDarkMode ? BackgroundThemeMode.dark : generalPrefs.themeMode,
-              ),
-              onTap:
-                  generalPrefs.isForcedDarkMode
-                      ? null
-                      : () {
-                        if (Theme.of(context).platform == TargetPlatform.android) {
-                          showChoicePicker(
-                            context,
-                            choices: BackgroundThemeMode.values,
-                            selectedItem: generalPrefs.themeMode,
-                            labelBuilder:
-                                (t) => Text(AppBackgroundModeScreen.themeTitle(context, t)),
-                            onSelectedItemChanged:
-                                (BackgroundThemeMode? value) => ref
-                                    .read(generalPreferencesProvider.notifier)
-                                    .setBackgroundThemeMode(value ?? BackgroundThemeMode.system),
-                          );
-                        } else {
-                          Navigator.of(context).push(AppBackgroundModeScreen.buildRoute(context));
-                        }
-                      },
-            ),
-          ),
+
+          // Opacity(
+          //   opacity: generalPrefs.isForcedDarkMode ? 0.5 : 1.0,
+          //   child: SettingsListTile(
+          //     icon: const Icon(Icons.brightness_medium_outlined),
+          //     settingsLabel: Text(context.l10n.background),
+          //     settingsValue: AppBackgroundModeScreen.themeTitle(
+          //       context,
+          //       generalPrefs.isForcedDarkMode ? BackgroundThemeMode.dark : generalPrefs.themeMode,
+          //     ),
+          //     onTap:
+          //         generalPrefs.isForcedDarkMode
+          //             ? null
+          //             : () {
+          //               if (Theme.of(context).platform == TargetPlatform.android) {
+          //                 showChoicePicker(
+          //                   context,
+          //                   choices: BackgroundThemeMode.values,
+          //                   selectedItem: generalPrefs.themeMode,
+          //                   labelBuilder:
+          //                       (t) => Text(AppBackgroundModeScreen.themeTitle(context, t)),
+          //                   onSelectedItemChanged:
+          //                       (BackgroundThemeMode? value) => ref
+          //                           .read(generalPreferencesProvider.notifier)
+          //                           .setBackgroundThemeMode(value ?? BackgroundThemeMode.system),
+          //                 );
+          //               } else {
+          //                 Navigator.of(context).push(AppBackgroundModeScreen.buildRoute(context));
+          //               }
+          //             },
+          //   ),
+          // ),
           PlatformListTile(
             leading: const Icon(Icons.palette_outlined),
             title: Text(context.l10n.mobileTheme),
@@ -234,31 +237,33 @@ class _Body extends ConsumerWidget {
               Navigator.of(context).push(BoardSettingsScreen.buildRoute(context));
             },
           ),
-          SettingsListTile(
-            icon: const Icon(Icons.language_outlined),
-            settingsLabel: Text(context.l10n.language),
-            settingsValue: localeToLocalizedName(
-              generalPrefs.locale ?? Localizations.localeOf(context),
-            ),
-            onTap: () {
-              if (Theme.of(context).platform == TargetPlatform.android) {
-                showChoicePicker<Locale>(
-                  context,
-                  choices: AppLocalizations.supportedLocales,
-                  selectedItem: generalPrefs.locale ?? Localizations.localeOf(context),
-                  labelBuilder: (t) => Text(localeToLocalizedName(t)),
-                  onSelectedItemChanged:
-                      (Locale? locale) =>
-                          ref.read(generalPreferencesProvider.notifier).setLocale(locale),
-                );
-              } else {
-                AppSettings.openAppSettings();
-              }
-            },
-          ),
+
+          // SettingsListTile(
+          //   icon: const Icon(Icons.language_outlined),
+          //   settingsLabel: Text(context.l10n.language),
+          //   settingsValue: localeToLocalizedName(
+          //     generalPrefs.locale ?? Localizations.localeOf(context),
+          //   ),
+          //   onTap: () {
+          //     if (Theme.of(context).platform == TargetPlatform.android) {
+          //       showChoicePicker<Locale>(
+          //         context,
+          //         choices: AppLocalizations.supportedLocales,
+          //         selectedItem: generalPrefs.locale ?? Localizations.localeOf(context),
+          //         labelBuilder: (t) => Text(localeToLocalizedName(t)),
+          //         onSelectedItemChanged:
+          //             (Locale? locale) =>
+          //                 ref.read(generalPreferencesProvider.notifier).setLocale(locale),
+          //       );
+          //     } else {
+          //       AppSettings.openAppSettings();
+          //     }
+          //   },
+          // ),
         ],
       ),
       ListSection(
+        backgroundColor: Color(0xff2B2D30),
         hasLeading: true,
         children: [
           /*PlatformListTile(
@@ -295,6 +300,7 @@ class _Body extends ConsumerWidget {
           ),
         ],
       ),
+
       /*ListSection(
         hasLeading: true,
         children: [
@@ -324,50 +330,50 @@ class _Body extends ConsumerWidget {
           ),
         ],
       ),*/
-      ListSection(
-        hasLeading: true,
-        children: [
-          PlatformListTile(
-            leading: const Icon(Icons.storage_outlined),
-            title: const Text('Local database size'),
-            subtitle:
-                Theme.of(context).platform == TargetPlatform.iOS
-                    ? null
-                    : Text(_getSizeString(dbSize.value)),
-            additionalInfo: dbSize.hasValue ? Text(_getSizeString(dbSize.value)) : null,
-          ),
-        ],
-      ),
-      if (userSession != null)
-        ListSection(
-          hasLeading: true,
-          children: [
-            if (Theme.of(context).platform == TargetPlatform.iOS)
-              PlatformListTile(
-                leading: Icon(Icons.dangerous_outlined, color: context.lichessColors.error),
-                title: Text(
-                  'Delete your account',
-                  style: TextStyle(color: context.lichessColors.error),
-                ),
-                trailing: const _OpenInNewIcon(),
-                onTap: () {
-                  launchUrl(lichessUri('/account/delete'));
-                },
-              )
-            else
-              PlatformListTile(
-                leading: Icon(Icons.dangerous_outlined, color: context.lichessColors.error),
-                title: Text(
-                  context.l10n.settingsCloseAccount,
-                  style: TextStyle(color: context.lichessColors.error),
-                ),
-                trailing: const _OpenInNewIcon(),
-                onTap: () {
-                  launchUrl(lichessUri('/account/close'));
-                },
-              ),
-          ],
-        ),
+      // ListSection(
+      //   hasLeading: true,
+      //   children: [
+      //     PlatformListTile(
+      //       leading: const Icon(Icons.storage_outlined),
+      //       title: const Text('Local database size'),
+      //       subtitle:
+      //           Theme.of(context).platform == TargetPlatform.iOS
+      //               ? null
+      //               : Text(_getSizeString(dbSize.value)),
+      //       additionalInfo: dbSize.hasValue ? Text(_getSizeString(dbSize.value)) : null,
+      //     ),
+      //   ],
+      // ),
+      // if (userSession != null)
+      //   ListSection(
+      //     hasLeading: true,
+      //     children: [
+      //       if (Theme.of(context).platform == TargetPlatform.iOS)
+      //         PlatformListTile(
+      //           leading: Icon(Icons.dangerous_outlined, color: context.lichessColors.error),
+      //           title: Text(
+      //             'Delete your account',
+      //             style: TextStyle(color: context.lichessColors.error),
+      //           ),
+      //           trailing: const _OpenInNewIcon(),
+      //           onTap: () {
+      //             launchUrl(lichessUri('/account/delete'));
+      //           },
+      //         )
+      //       else
+      //         PlatformListTile(
+      //           leading: Icon(Icons.dangerous_outlined, color: context.lichessColors.error),
+      //           title: Text(
+      //             context.l10n.settingsCloseAccount,
+      //             style: TextStyle(color: context.lichessColors.error),
+      //           ),
+      //           trailing: const _OpenInNewIcon(),
+      //           onTap: () {
+      //             launchUrl(lichessUri('/account/close'));
+      //           },
+      //         ),
+      //     ],
+      //   ),
       Padding(
         padding: Styles.bodySectionPadding,
         child: Column(

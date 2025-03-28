@@ -23,6 +23,10 @@ class RecentGamesWidget extends ConsumerWidget {
     required this.user,
     required this.nbOfGames,
     this.maxGamesToShow = 10,
+    this.color,
+    this.textColor,
+    this.tileColor,
+    this.titleColor,
     super.key,
   });
 
@@ -30,6 +34,10 @@ class RecentGamesWidget extends ConsumerWidget {
   final AsyncValue<IList<LightArchivedGameWithPov>> recentGames;
   final int nbOfGames;
   final int maxGamesToShow;
+  final Color? color;
+  final Color? textColor;
+  final Color? tileColor;
+  final Color? titleColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,7 +51,10 @@ class RecentGamesWidget extends ConsumerWidget {
         final list = data.take(maxGamesToShow);
         return Container(
           margin: EdgeInsets.all(16),
-          decoration: BoxDecoration(color:Color(0xffF4F4F4), borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(
+            color: color ?? Color(0xffF4F4F4),
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +66,7 @@ class RecentGamesWidget extends ConsumerWidget {
                     children: [
                       Text(
                         context.l10n.recentGames,
-                        style: const TextStyle(color: Colors.black, fontSize: 18),
+                        style: TextStyle(color: textColor ?? Colors.black, fontSize: 18),
                       ),
                       Container(
                         child:
@@ -70,14 +81,18 @@ class RecentGamesWidget extends ConsumerWidget {
                                       ),
                                     );
                                   },
-                                  child: Text(context.l10n.more),
+                                  child: Text(
+                                    context.l10n.more,
+                                    style: TextStyle(color: textColor ?? Colors.black),
+                                  ),
                                 )
                                 : null,
                       ),
                     ],
                   ),
                 ),
-                for (final item in list) GameListTile(item: item),
+                for (final item in list)
+                  GameListTile(item: item, tileColor: tileColor, titleColor: titleColor),
                 SizedBox(height: 10),
               ],
             ),
