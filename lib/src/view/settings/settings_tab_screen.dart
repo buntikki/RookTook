@@ -30,6 +30,7 @@ import 'package:lichess_mobile/src/widgets/platform.dart';
 import 'package:lichess_mobile/src/widgets/settings.dart';
 import 'package:lichess_mobile/src/widgets/user_full_name.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SettingsTabScreen extends ConsumerWidget {
   const SettingsTabScreen({super.key});
@@ -175,7 +176,8 @@ class _Body extends ConsumerWidget {
         hasLeading: true,
         children: [
           SettingsListTile(
-            icon: const Icon(Icons.music_note_outlined),
+            icon: SvgPicture.asset('assets/images/volume.svg'),
+            // icon: const Icon(Icons.music_note_outlined),
             settingsLabel: Text(context.l10n.sound),
             settingsValue:
                 '${soundThemeL10n(context, generalPrefs.soundTheme)} (${volumeLabel(generalPrefs.masterVolume)})',
@@ -216,7 +218,8 @@ class _Body extends ConsumerWidget {
           //   ),
           // ),
           PlatformListTile(
-            leading: const Icon(Icons.palette_outlined),
+            leading: SvgPicture.asset('assets/images/theme.svg'),
+            // leading: const Icon(Icons.palette_outlined),
             title: Text(context.l10n.mobileTheme),
             trailing:
                 Theme.of(context).platform == TargetPlatform.iOS
@@ -227,7 +230,8 @@ class _Body extends ConsumerWidget {
             },
           ),
           PlatformListTile(
-            leading: const Icon(LichessIcons.chess_board),
+            leading: SvgPicture.asset('assets/images/chess.svg'),
+            // leading: const Icon(LichessIcons.chess_board),
             title: Text(context.l10n.preferencesGameBehavior, overflow: TextOverflow.ellipsis),
             trailing:
                 Theme.of(context).platform == TargetPlatform.iOS
@@ -275,7 +279,8 @@ class _Body extends ConsumerWidget {
             },
           ),*/
           PlatformListTile(
-            leading: const Icon(Icons.feedback_outlined),
+            leading: SvgPicture.asset('assets/images/chat.svg'),
+            // leading: const Icon(Icons.feedback_outlined),
             title: Text(context.l10n.mobileFeedbackButton),
             trailing: const _OpenInNewIcon(),
             onTap: () {
@@ -283,7 +288,8 @@ class _Body extends ConsumerWidget {
             },
           ),
           PlatformListTile(
-            leading: const Icon(Icons.article_outlined),
+            leading: SvgPicture.asset('assets/images/document.svg'),
+            // leading: const Icon(Icons.article_outlined),
             title: Text(context.l10n.termsOfService),
             trailing: const _OpenInNewIcon(),
             onTap: () {
@@ -291,7 +297,8 @@ class _Body extends ConsumerWidget {
             },
           ),
           PlatformListTile(
-            leading: const Icon(Icons.privacy_tip_outlined),
+            leading: SvgPicture.asset('assets/images/shieldDone.svg'),
+            // leading: const Icon(Icons.privacy_tip_outlined),
             title: Text(context.l10n.privacyPolicy),
             trailing: const _OpenInNewIcon(),
             onTap: () {

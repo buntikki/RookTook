@@ -147,56 +147,65 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
       key: _formKey,
       child: Column(
         children: [
+          // _TextField(
+          //   label: context.l10n.biography,
+          //   initialValue: widget.user.profile?.bio,
+          //   formKey: 'bio',
+          //   formData: _formData,
+          //   description: context.l10n.biographyDescription,
+          //   maxLength: 400,
+          //   maxLines: 6,
+          //   textInputAction: TextInputAction.newline,
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.only(bottom: 16.0),
+          //   child: FormField<String>(
+          //     initialValue: widget.user.profile?.country,
+          //     onSaved: (value) {
+          //       _formData['flag'] = value;
+          //     },
+          //     builder: (FormFieldState<String> field) {
+          //       return Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Text(context.l10n.countryRegion, style: Styles.formLabel),
+          //           const SizedBox(height: 6.0),
+          //           AdaptiveAutoComplete<String>(
+          //             cupertinoDecoration: _cupertinoTextFieldDecoration,
+          //             textInputAction: TextInputAction.next,
+          //             initialValue:
+          //                 field.value != null
+          //                     ? TextEditingValue(text: countries[field.value]!)
+          //                     : null,
+          //             optionsBuilder: (TextEditingValue value) {
+          //               if (value.text.isEmpty) {
+          //                 return const Iterable<String>.empty();
+          //               }
+          //               return _countries.where((String option) {
+          //                 return option.toLowerCase().contains(value.text.toLowerCase());
+          //               });
+          //             },
+          //             onSelected: (String selection) {
+          //               final country = countries.entries.firstWhere(
+          //                 (element) => element.value == selection,
+          //               );
+          //               field.didChange(country.key);
+          //             },
+          //           ),
+          //         ],
+          //       );
+          //     },
+          //   ),
+          // ),
           _TextField(
-            label: context.l10n.biography,
-            initialValue: widget.user.profile?.bio,
-            formKey: 'bio',
+            label: 'Full Name',
+            // label: context.l10n.realName,
+            initialValue: widget.user.profile?.realName,
+            formKey: 'realName',
             formData: _formData,
-            description: context.l10n.biographyDescription,
-            maxLength: 400,
-            maxLines: 6,
-            textInputAction: TextInputAction.newline,
+            maxLength: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: FormField<String>(
-              initialValue: widget.user.profile?.country,
-              onSaved: (value) {
-                _formData['flag'] = value;
-              },
-              builder: (FormFieldState<String> field) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(context.l10n.countryRegion, style: Styles.formLabel),
-                    const SizedBox(height: 6.0),
-                    AdaptiveAutoComplete<String>(
-                      cupertinoDecoration: _cupertinoTextFieldDecoration,
-                      textInputAction: TextInputAction.next,
-                      initialValue:
-                          field.value != null
-                              ? TextEditingValue(text: countries[field.value]!)
-                              : null,
-                      optionsBuilder: (TextEditingValue value) {
-                        if (value.text.isEmpty) {
-                          return const Iterable<String>.empty();
-                        }
-                        return _countries.where((String option) {
-                          return option.toLowerCase().contains(value.text.toLowerCase());
-                        });
-                      },
-                      onSelected: (String selection) {
-                        final country = countries.entries.firstWhere(
-                          (element) => element.value == selection,
-                        );
-                        field.didChange(country.key);
-                      },
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
+
           _TextField(
             label: context.l10n.location,
             initialValue: widget.user.profile?.location,
@@ -204,117 +213,175 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
             formKey: 'location',
             maxLength: 80,
           ),
-          _TextField(
-            label: context.l10n.realName,
-            initialValue: widget.user.profile?.realName,
-            formKey: 'realName',
-            formData: _formData,
-            maxLength: 20,
-          ),
 
-          _NumericField(
-            label: context.l10n.xRating('FIDE'),
-            initialValue: widget.user.profile?.fideRating,
-            formKey: 'fideRating',
-            formData: _formData,
-            validator: (value) {
-              if (value != null && (value < 1400 || value > 3000)) {
-                return 'Rating must be between 1400 and 3000';
-              }
-              return null;
-            },
-          ),
-          _NumericField(
-            label: context.l10n.xRating('USCF'),
-            initialValue: widget.user.profile?.uscfRating,
-            formKey: 'uscfRating',
-            formData: _formData,
-            validator: (value) {
-              if (value != null && (value < 100 || value > 3000)) {
-                return 'Rating must be between 100 and 3000';
-              }
-              return null;
-            },
-          ),
-          _NumericField(
-            label: context.l10n.xRating('ECF'),
-            initialValue: widget.user.profile?.ecfRating,
-            formKey: 'ecfRating',
-            formData: _formData,
-            validator: (value) {
-              if (value != null && (value < 0 || value > 3000)) {
-                return 'Rating must be between 0 and 3000';
-              }
-              return null;
-            },
-          ),
-          _TextField(
-            label: context.l10n.socialMediaLinks,
-            initialValue: initialLinks,
-            formKey: 'links',
-            formData: _formData,
-            maxLength: 3000,
-            maxLines: 4,
-            textInputAction: TextInputAction.newline,
-            description:
-                'Mastodon, Facebook, GitHub, Chess.com, ...\r\n${context.l10n.oneUrlPerLine}',
-          ),
+          // _NumericField(
+          //   label: context.l10n.xRating('FIDE'),
+          //   initialValue: widget.user.profile?.fideRating,
+          //   formKey: 'fideRating',
+          //   formData: _formData,
+          //   validator: (value) {
+          //     if (value != null && (value < 1400 || value > 3000)) {
+          //       return 'Rating must be between 1400 and 3000';
+          //     }
+          //     return null;
+          //   },
+          // ),
+          // _NumericField(
+          //   label: context.l10n.xRating('USCF'),
+          //   initialValue: widget.user.profile?.uscfRating,
+          //   formKey: 'uscfRating',
+          //   formData: _formData,
+          //   validator: (value) {
+          //     if (value != null && (value < 100 || value > 3000)) {
+          //       return 'Rating must be between 100 and 3000';
+          //     }
+          //     return null;
+          //   },
+          // ),
+          // _NumericField(
+          //   label: context.l10n.xRating('ECF'),
+          //   initialValue: widget.user.profile?.ecfRating,
+          //   formKey: 'ecfRating',
+          //   formData: _formData,
+          //   validator: (value) {
+          //     if (value != null && (value < 0 || value > 3000)) {
+          //       return 'Rating must be between 0 and 3000';
+          //     }
+          //     return null;
+          //   },
+          // ),
+          // _TextField(
+          //   label: context.l10n.socialMediaLinks,
+          //   initialValue: initialLinks,
+          //   formKey: 'links',
+          //   formData: _formData,
+          //   maxLength: 3000,
+          //   maxLines: 4,
+          //   textInputAction: TextInputAction.newline,
+          //   description:
+          //       'Mastodon, Facebook, GitHub, Chess.com, ...\r\n${context.l10n.oneUrlPerLine}',
+          // ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.0),
             child: FutureBuilder(
               future: _pendingSaveProfile,
               builder: (context, snapshot) {
-                return FatButton(
-                  semanticsLabel: context.l10n.apply,
-                  onPressed:
-                      snapshot.connectionState == ConnectionState.waiting
-                          ? null
-                          : () async {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-                              _formData.removeWhere((key, value) {
-                                return value == null;
-                              });
-                              final future = Result.capture(
-                                ref.withClient(
-                                  (client) => AccountRepository(client).saveProfile(
-                                    _formData.map((key, value) => MapEntry(key, value.toString())),
+                return Container(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed:
+                        snapshot.connectionState == ConnectionState.waiting
+                            ? null
+                            : () async {
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                _formData.removeWhere((key, value) {
+                                  return value == null;
+                                });
+                                final future = Result.capture(
+                                  ref.withClient(
+                                    (client) => AccountRepository(client).saveProfile(
+                                      _formData.map((key, value) => MapEntry(key, value.toString())),
+                                    ),
                                   ),
-                                ),
-                              );
-
-                              setState(() {
-                                _pendingSaveProfile = future;
-                              });
-
-                              final result = await future;
-
-                              result.match(
-                                onError: (err, __) {
-                                  if (context.mounted) {
-                                    showPlatformSnackbar(
-                                      context,
-                                      'Something went wrong',
-                                      type: SnackBarType.error,
-                                    );
-                                  }
-                                },
-                                onSuccess: (_) {
-                                  if (context.mounted) {
-                                    ref.invalidate(accountProvider);
-                                    showPlatformSnackbar(
-                                      context,
-                                      context.l10n.success,
-                                      type: SnackBarType.success,
-                                    );
-                                    Navigator.of(context).pop();
-                                  }
-                                },
-                              );
-                            }
-                          },
-                  child: Text(context.l10n.apply),
+                                );
+                  
+                                setState(() {
+                                  _pendingSaveProfile = future;
+                                });
+                  
+                                final result = await future;
+                  
+                                result.match(
+                                  onError: (err, __) {
+                                    if (context.mounted) {
+                                      showPlatformSnackbar(
+                                        context,
+                                        'Something went wrong',
+                                        type: SnackBarType.error,
+                                      );
+                                    }
+                                  },
+                                  onSuccess: (_) {
+                                    if (context.mounted) {
+                                      ref.invalidate(accountProvider);
+                                      showPlatformSnackbar(
+                                        context,
+                                        context.l10n.success,
+                                        type: SnackBarType.success,
+                                      );
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                                );
+                              }
+                            },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Text(
+                      context.l10n.apply,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 );
+                // FatButton(
+                //   semanticsLabel: context.l10n.apply,
+                //   onPressed:
+                //       snapshot.connectionState == ConnectionState.waiting
+                //           ? null
+                //           : () async {
+                //             if (_formKey.currentState!.validate()) {
+                //               _formKey.currentState!.save();
+                //               _formData.removeWhere((key, value) {
+                //                 return value == null;
+                //               });
+                //               final future = Result.capture(
+                //                 ref.withClient(
+                //                   (client) => AccountRepository(client).saveProfile(
+                //                     _formData.map((key, value) => MapEntry(key, value.toString())),
+                //                   ),
+                //                 ),
+                //               );
+
+                //               setState(() {
+                //                 _pendingSaveProfile = future;
+                //               });
+
+                //               final result = await future;
+
+                //               result.match(
+                //                 onError: (err, __) {
+                //                   if (context.mounted) {
+                //                     showPlatformSnackbar(
+                //                       context,
+                //                       'Something went wrong',
+                //                       type: SnackBarType.error,
+                //                     );
+                //                   }
+                //                 },
+                //                 onSuccess: (_) {
+                //                   if (context.mounted) {
+                //                     ref.invalidate(accountProvider);
+                //                     showPlatformSnackbar(
+                //                       context,
+                //                       context.l10n.success,
+                //                       type: SnackBarType.success,
+                //                     );
+                //                     Navigator.of(context).pop();
+                //                   }
+                //                 },
+                //               );
+                //             }
+                //           },
+                //   child: Text(context.l10n.apply),
+                // );
               },
             ),
           ),
