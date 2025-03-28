@@ -11,6 +11,7 @@ import 'package:lichess_mobile/src/view/account/profile_screen.dart';
 import 'package:lichess_mobile/src/view/user/player_screen.dart';
 import 'package:lichess_mobile/src/widgets/adaptive_action_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   const UserProfileScreen({super.key});
@@ -80,7 +81,7 @@ class UserProfileScreen extends ConsumerWidget {
                 child: Column(
                   children: [
                     _MenuItem(
-                      icon: Icons.person_outline,
+                      icon: 'assets/images/profile.svg',
                       title: 'My Profile',
                       onTap: () {
                         ref.invalidate(accountActivityProvider);
@@ -89,7 +90,7 @@ class UserProfileScreen extends ConsumerWidget {
                     ),
                     const Divider(color: Colors.white24),
                     _MenuItem(
-                      icon: Icons.leaderboard,
+                      icon: 'assets/images/leaderboard.svg',
                       title: 'Leaderboard',
                       onTap: () => Navigator.of(context).push(PlayerScreen.buildRoute(context)),
                     ),
@@ -97,9 +98,8 @@ class UserProfileScreen extends ConsumerWidget {
 
                     // _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
                     // const Divider(color: Colors.white24),
-
                     _MenuItem(
-                      icon: Icons.star_border,
+                      icon: 'assets/images/star.svg',
                       title: 'Rate this App',
                       onTap: () {
                         launchUrl(Uri.parse('https://lichess.org/contact'));
@@ -115,7 +115,7 @@ class UserProfileScreen extends ConsumerWidget {
                 ),
                 margin: const EdgeInsets.all(16),
                 child: _MenuItem(
-                  icon: Icons.logout,
+                  icon: 'assets/images/logout.svg',
                   title: 'Logout',
                   onTap: () {
                     _showSignOutConfirmDialog(context, ref);
@@ -224,7 +224,7 @@ Future<void> _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
 }
 
 class _MenuItem extends StatelessWidget {
-  final IconData icon;
+  final String icon;
   final String title;
   void Function()? onTap;
 
@@ -233,7 +233,7 @@ class _MenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon, color: Colors.white),
+      leading: SvgPicture.asset(icon),
       title: Text(title, style: const TextStyle(color: Colors.white)),
       trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white24, size: 16),
       onTap: onTap,
