@@ -8,6 +8,7 @@ import 'package:lichess_mobile/src/view/home/home_tab_screen.dart';
 import 'package:lichess_mobile/src/view/puzzle/puzzle_tab_screen.dart';
 import 'package:lichess_mobile/src/view/settings/settings_tab_screen.dart';
 import 'package:lichess_mobile/src/view/tools/tools_tab_screen.dart';
+import 'package:lichess_mobile/src/view/tournament/tournament_screen.dart';
 import 'package:lichess_mobile/src/view/watch/watch_tab_screen.dart';
 import 'package:lichess_mobile/src/widgets/background.dart';
 import 'package:lichess_mobile/src/widgets/feedback.dart';
@@ -15,7 +16,8 @@ import 'package:lichess_mobile/src/widgets/feedback.dart';
 enum BottomTab {
   home,
   puzzles,
-  tools,
+  // tools,
+  tournament,
   //watch,
   settings;
 
@@ -25,8 +27,10 @@ enum BottomTab {
         return strings.mobileHomeTab;
       case BottomTab.puzzles:
         return strings.mobilePuzzlesTab;
-      case BottomTab.tools:
-        return strings.mobileToolsTab;
+      // case BottomTab.tools:
+      //   return strings.mobileToolsTab;
+      case BottomTab.tournament:
+        return strings.tournament;
       // case BottomTab.watch:
       //   return strings.mobileWatchTab;
       case BottomTab.settings:
@@ -40,8 +44,10 @@ enum BottomTab {
         return Icons.home_outlined;
       case BottomTab.puzzles:
         return Icons.extension_outlined;
-      case BottomTab.tools:
-        return Icons.handyman_outlined;
+      case BottomTab.tournament:
+        return Icons.emoji_events_outlined;
+      // case BottomTab.tools:
+      //   return Icons.handyman_outlined;
       // case BottomTab.watch:
       //   return Icons.live_tv_outlined;
       case BottomTab.settings:
@@ -55,8 +61,10 @@ enum BottomTab {
         return Icons.home;
       case BottomTab.puzzles:
         return Icons.extension;
-      case BottomTab.tools:
-        return Icons.handyman;
+      case BottomTab.tournament:
+        return Icons.emoji_events;
+      // case BottomTab.tools:
+      //   return Icons.handyman;
       // case BottomTab.watch:
       //   return Icons.live_tv;
       case BottomTab.settings:
@@ -74,8 +82,10 @@ final currentNavigatorKeyProvider = Provider<GlobalKey<NavigatorState>>((ref) {
       return homeNavigatorKey;
     case BottomTab.puzzles:
       return puzzlesNavigatorKey;
-    case BottomTab.tools:
+    case BottomTab.tournament:
       return toolsNavigatorKey;
+    // case BottomTab.tools:
+    //   return toolsNavigatorKey;
     // case BottomTab.watch:
     //   return watchNavigatorKey;
     case BottomTab.settings:
@@ -90,7 +100,7 @@ final currentRootScrollControllerProvider = Provider<ScrollController>((ref) {
       return homeScrollController;
     case BottomTab.puzzles:
       return puzzlesScrollController;
-    case BottomTab.tools:
+    case BottomTab.tournament:
       return toolsScrollController;
     // case BottomTab.watch:
     //   return watchScrollController;
@@ -235,7 +245,7 @@ class BottomNavScaffold extends ConsumerWidget {
             homeTabInteraction.notifyItemTapped();
           case BottomTab.puzzles:
             puzzlesTabInteraction.notifyItemTapped();
-          case BottomTab.tools:
+          case BottomTab.tournament:
             toolsTabInteraction.notifyItemTapped();
           /*case BottomTab.watch:
             watchTabInteraction.notifyItemTapped();*/
@@ -266,8 +276,9 @@ Widget _androidTabBuilder(BuildContext context, int index) {
     case 2:
       return _MaterialTabView(
         navigatorKey: toolsNavigatorKey,
-        tab: BottomTab.tools,
-        builder: (context) => const ToolsTabScreen(),
+        tab: BottomTab.tournament,
+        builder: (context) => TournamentScreen(),
+        // builder: (context) => const ToolsTabScreen(),
       );
     // case 3:
     //   return _MaterialTabView(
@@ -305,7 +316,8 @@ Widget _iOSTabBuilder(BuildContext context, int index) {
       return CupertinoTabView(
         defaultTitle: context.l10n.mobileToolsTab,
         navigatorKey: toolsNavigatorKey,
-        builder: (context) => const ToolsTabScreen(),
+        // builder: (context) => const ToolsTabScreen(),
+        builder: (context) => TournamentScreen(),
       );
     // case 3:
     //   return CupertinoTabView(

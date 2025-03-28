@@ -95,8 +95,8 @@ class UserProfileScreen extends ConsumerWidget {
                     ),
                     const Divider(color: Colors.white24),
 
-                    _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
-                    const Divider(color: Colors.white24),
+                    // _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
+                    // const Divider(color: Colors.white24),
 
                     _MenuItem(
                       icon: Icons.star_border,
