@@ -1,9 +1,12 @@
+import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/db/database.dart';
 import 'package:lichess_mobile/src/model/account/account_repository.dart';
 import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
+import 'package:lichess_mobile/src/model/auth/auth_session.dart';
+import 'package:lichess_mobile/src/model/game/archived_game.dart';
+import 'package:lichess_mobile/src/model/game/game_history.dart';
 import 'package:lichess_mobile/src/navigation.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
 import 'package:lichess_mobile/src/utils/navigation.dart';
@@ -12,6 +15,7 @@ import 'package:lichess_mobile/src/view/user/player_screen.dart';
 import 'package:lichess_mobile/src/widgets/adaptive_action_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:random_avatar/random_avatar.dart';
 
 class UserProfileScreen extends ConsumerWidget {
   const UserProfileScreen({super.key});
@@ -28,13 +32,37 @@ class UserProfileScreen extends ConsumerWidget {
     ref.invalidate(getDbSizeInBytesProvider);
   }
 
+  getTotalGamer(LightArchivedGameWithPov item) {
+    final (game: game, pov: youAre) = item;
+    final me = youAre == Side.white ? game.white : game.black;
+    final opponent = youAre == Side.white ? game.black : game.white;
+    return youAre;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userSession = ref.watch(authSessionProvider);
     ref.listen(currentBottomTabProvider, (prev, current) {
       if (prev != BottomTab.settings && current == BottomTab.settings) {
         _refreshData(ref);
       }
     });
+    final recentGames = ref.watch(myRecentGamesProvider);
+
+    final draw = recentGames.value!.where((element) => element.game.winner == null).length;
+
+    final win =
+        recentGames.value!.where((element) => element.game.winner == getTotalGamer(element)).length;
+
+    final loose =
+        recentGames.value!
+            .where(
+              (element) =>
+                  element.game.winner != null && element.game.winner != getTotalGamer(element),
+            )
+            .length;
+
+    final String avatarSeed = userSession?.user.name ?? 'default';
 
     return Scaffold(
       backgroundColor: const Color(0xFF0F151A),
@@ -45,30 +73,37 @@ class UserProfileScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-
-              Image.asset(
-                'assets/images/user_profile_avatar.png', // Replace with your asset or use network image
-                fit: BoxFit.cover,
+              Container(
                 height: 120,
                 width: 120,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Icon(Icons.person, color: Colors.green, size: 120);
-                },
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                child: ClipOval(child: RandomAvatar(avatarSeed, height: 120, width: 120)),
               ),
+
+              // Image.asset(
+              //   'assets/images/user_profile_avatar.png', // Replace with your asset or use network image
+              //   fit: BoxFit.cover,
+              //   height: 120,
+              //   width: 120,
+              //   errorBuilder: (context, error, stackTrace) {
+              //     return const Icon(Icons.person, color: Colors.green, size: 120);
+              //   },
+              // ),
               const SizedBox(height: 10),
-              const Text(
-                'Magnus Carlsen 🇺🇸',
-                style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 5),
-              const Text('@magnuscarlsen', style: TextStyle(color: Colors.grey, fontSize: 16)),
+              if (userSession != null) Text('${userSession.user.name}'),
+              // const Text(
+              //   'Magnus Carlsen 🇺🇸',
+              //   style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+              // ),
+              // const SizedBox(height: 5),
+              // const Text('@magnuscarlsen', style: TextStyle(color: Colors.grey, fontSize: 16)),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: const [
-                  _StatCard(label: 'Game Won', count: 500, color: Colors.green, labelIcon: 'W'),
-                  _StatCard(label: 'Game Loss', count: 300, color: Colors.red, labelIcon: 'L'),
-                  _StatCard(label: 'Game Draw', count: 100, color: Colors.blue, labelIcon: 'D'),
+                children: [
+                  _StatCard(label: 'Game Won', count: win, color: Colors.green, labelIcon: 'W'),
+                  _StatCard(label: 'Game Loss', count: loose, color: Colors.red, labelIcon: 'L'),
+                  _StatCard(label: 'Game Draw', count: draw, color: Colors.blue, labelIcon: 'D'),
                 ],
               ),
               const SizedBox(height: 30),

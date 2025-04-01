@@ -32,6 +32,7 @@ import 'package:lichess_mobile/src/view/correspondence/offline_correspondence_ga
 import 'package:lichess_mobile/src/view/game/game_screen.dart';
 import 'package:lichess_mobile/src/view/game/offline_correspondence_games_screen.dart';
 import 'package:lichess_mobile/src/view/home/games_carousel.dart';
+import 'package:lichess_mobile/src/view/over_the_board/over_the_board_screen.dart';
 import 'package:lichess_mobile/src/view/play/create_game_options.dart';
 import 'package:lichess_mobile/src/view/play/ongoing_games_screen.dart';
 import 'package:lichess_mobile/src/view/play/play_screen.dart';
@@ -44,6 +45,7 @@ import 'package:lichess_mobile/src/widgets/buttons.dart';
 import 'package:lichess_mobile/src/widgets/feedback.dart';
 import 'package:lichess_mobile/src/widgets/match_result_popup.dart';
 import 'package:lichess_mobile/src/widgets/user_full_name.dart';
+import 'package:random_avatar/random_avatar.dart';
 
 final editModeProvider = StateProvider<bool>((ref) => false);
 
@@ -78,7 +80,8 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
 
     final connectivity = ref.watch(connectivityChangesProvider);
     // final isEditing = ref.watch(editModeProvider);
-
+    final userSession = ref.watch(authSessionProvider);
+    final String avatarSeed = userSession?.user.name ?? 'default';
     return connectivity.when(
       skipLoadingOnReload: true,
       data: (status) {
@@ -281,15 +284,16 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                     18,
                   ), // Half of width/height to make it circular
                   child: Center(
-                    child: Image.asset(
-                      'assets/images/avatar.png', // Replace with your asset or use network image
-                      fit: BoxFit.cover,
-                      height: 36,
-                      width: 36,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.person, color: Colors.black54, size: 24);
-                      },
-                    ),
+                    child: RandomAvatar(avatarSeed, height: 36, width: 36),
+                    // Image.asset(
+                    //   'assets/images/avatar.png', // Replace with your asset or use network image
+                    //   fit: BoxFit.cover,
+                    //   height: 36,
+                    //   width: 36,
+                    //   errorBuilder: (context, error, stackTrace) {
+                    //     return const Icon(Icons.person, color: Colors.black54, size: 24);
+                    //   },
+                    // ),
                   ),
                 ),
               ),
@@ -682,29 +686,36 @@ class GameTypeBottomSheet extends ConsumerWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Close button and title
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Text(
-                  'Select Game Type',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                // Positioned(
-                //   right: 0,
-                //   child: GestureDetector(
-                //     onTap: () => Navigator.pop(context),
-                //     child: Container(
-                //       decoration: BoxDecoration(color: Colors.grey[800], shape: BoxShape.circle),
-                //       padding: const EdgeInsets.all(8),
-                //       child: const Icon(Icons.close, color: Colors.white, size: 20),
-                //     ),
-                //   ),
-                // ),
-              ],
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Text(
+                    'Select Game Type',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  // Positioned(
+                  //   right: 0,
+                  //   child: GestureDetector(
+                  //     onTap: () => Navigator.pop(context),
+                  //     child: Container(
+                  //       decoration: BoxDecoration(color: Colors.grey[800], shape: BoxShape.circle),
+                  //       padding: const EdgeInsets.all(8),
+                  //       child: const Icon(Icons.close, color: Colors.white, size: 20),
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
           ),
           const Divider(color: Colors.grey, height: 1),
@@ -720,7 +731,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Bullet',
-                  type: '2/1',
+                  type: '2+1',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
                     Navigator.pop(context);
@@ -738,7 +749,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   icon: Image.asset('assets/images/flip.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Rapid',
-                  type: '10/15',
+                  type: '10+15',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
                     Navigator.pop(context);
@@ -751,6 +762,24 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   },
                 ),
               ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 32.0),
+            child: GameTypeCard(
+              icon: Image.asset('assets/images/pass&play.png', height: 33, width: 33),
+              title: 'Pass &',
+              subtitle: 'Play',
+              type: '',
+              subtitleColor: const Color(0xFF8BC34A), // Light green
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(
+                  context,
+                  rootNavigator: true,
+                ).push(OverTheBoardScreen.buildRoute(context));
+              },
             ),
           ),
           const SizedBox(height: 10),

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/navigation.dart';
-import 'package:lichess_mobile/src/utils/navigation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/view/account/new_profile_screen.dart';
-import 'package:lichess_mobile/src/view/auth/presentation/pages/create_password_screen.dart';
-import 'package:lichess_mobile/src/view/common/apple_sign_in_button.dart';
-import 'package:lichess_mobile/src/view/common/google_sign_in_button.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:random_avatar/random_avatar.dart';
 
-class TournamentScreen extends StatelessWidget {
+class TournamentScreen extends ConsumerWidget {
   const TournamentScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userSession = ref.watch(authSessionProvider);
+    final String avatarSeed = userSession?.user.name ?? 'default';
     return Scaffold(
       backgroundColor: const Color(0xFF13191D),
       body: Stack(
@@ -35,7 +36,8 @@ class TournamentScreen extends StatelessWidget {
 
               text: TextSpan(
                 text: 'Coming\n',
-                style: TextStyle(fontSize: 68),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 68),
+                //  TextStyle(fontSize: 68,fontFamily: GoogleFonts.bricolageGrotesqueTextTheme.),
                 children: [TextSpan(text: 'Soon', style: TextStyle(color: Colors.green))],
               ),
             ),
@@ -56,9 +58,9 @@ class TournamentScreen extends StatelessWidget {
                   Navigator.of(context).push(UserProfileScreen.buildRoute(context));
                 },
                 borderRadius: BorderRadius.circular(18), // Half of width/height to make it circular
-                child: CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/avatar.png'),
-                  // child: Image.asset(
+                child: Center(
+                  child: RandomAvatar(avatarSeed, height: 36, width: 36),
+                  // Image.asset(
                   //   'assets/images/avatar.png', // Replace with your asset or use network image
                   //   fit: BoxFit.cover,
                   //   height: 36,
@@ -68,6 +70,18 @@ class TournamentScreen extends StatelessWidget {
                   //   },
                   // ),
                 ),
+                //  CircleAvatar(
+                //   backgroundImage: AssetImage('assets/images/avatar.png'),
+                //   // child: Image.asset(
+                //   //   'assets/images/avatar.png', // Replace with your asset or use network image
+                //   //   fit: BoxFit.cover,
+                //   //   height: 36,
+                //   //   width: 36,
+                //   //   errorBuilder: (context, error, stackTrace) {
+                //   //     return const Icon(Icons.person, color: Colors.black54, size: 24);
+                //   //   },
+                //   // ),
+                // ),
               ),
             ),
           ),

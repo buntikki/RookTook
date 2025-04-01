@@ -65,14 +65,15 @@ Widget _buildMainListItem(
     case 0:
       return const _PuzzleMenu();
     case 1:
-      return Padding(
-        padding: Styles.horizontalBodyPadding.add(
-          Theme.of(context).platform == TargetPlatform.iOS
-              ? Styles.sectionTopPadding
-              : EdgeInsets.zero,
-        ),
-        child: Text(context.l10n.puzzleDesc, style: Styles.sectionTitle),
-      );
+      return SizedBox();
+      // Padding(
+      //   padding: Styles.horizontalBodyPadding.add(
+      //     Theme.of(context).platform == TargetPlatform.iOS
+      //         ? Styles.sectionTopPadding
+      //         : EdgeInsets.zero,
+      //   ),
+      //   child: Text(context.l10n.puzzleDesc, style: Styles.sectionTitle),
+      // );
     case 2:
       return const DailyPuzzle();
     case 3:
@@ -223,7 +224,7 @@ class _CupertinoTabBodyState extends ConsumerState<_CupertinoTabBody> {
             largeTitle: Text(context.l10n.puzzles),
             trailing: const Row(
               mainAxisSize: MainAxisSize.min,
-              children: [_DashboardButton(), SizedBox(width: 6.0), _HistoryButton()],
+              // children: [_DashboardButton(), SizedBox(width: 6.0), _HistoryButton()],
             ),
           ),
           const SliverToBoxAdapter(child: ConnectivityBanner()),
@@ -308,7 +309,7 @@ class _MaterialTabBodyState extends ConsumerState<_MaterialTabBody> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(context.l10n.puzzles),
-          actions: const [_DashboardButton(), _HistoryButton()],
+          // actions: const [_DashboardButton(), _HistoryButton()],
         ),
         body:
             isTablet
@@ -388,57 +389,60 @@ class _PuzzleMenu extends ConsumerWidget {
     final connectivity = ref.watch(connectivityChangesProvider);
     final bool isOnline = connectivity.value?.isOnline ?? false;
 
-    return ListSection(
-      hasLeading: true,
-      children: [
-        _PuzzleMenuListTile(
-          icon: PuzzleIcons.opening,
-          title: context.l10n.puzzlePuzzleThemes,
-          subtitle: context.l10n.mobilePuzzleThemesSubtitle,
-          onTap: () {
-            Navigator.of(context).push(PuzzleThemesScreen.buildRoute(context));
-          },
-        ),
-        Opacity(
-          opacity: isOnline ? 1 : 0.5,
-          child: _PuzzleMenuListTile(
-            icon: LichessIcons.streak,
-            title: 'Puzzle Streak',
-            subtitle:
-                context.l10n.puzzleStreakDescription.characters
-                    .takeWhile((c) => c != '.')
-                    .toString() +
-                (context.l10n.puzzleStreakDescription.contains('.') ? '.' : ''),
-            onTap:
-                isOnline
-                    ? () {
-                      Navigator.of(
-                        context,
-                        rootNavigator: true,
-                      ).push(StreakScreen.buildRoute(context));
-                    }
-                    : null,
-          ),
-        ),
-        Opacity(
-          opacity: isOnline ? 1 : 0.5,
-          child: _PuzzleMenuListTile(
-            icon: LichessIcons.storm,
-            title: 'Puzzle Storm',
-            subtitle: context.l10n.mobilePuzzleStormSubtitle,
-            onTap:
-                isOnline
-                    ? () {
-                      Navigator.of(
-                        context,
-                        rootNavigator: true,
-                      ).push(StormScreen.buildRoute(context));
-                    }
-                    : null,
-          ),
-        ),
-      ],
-    );
+    return SizedBox();
+    // ListSection(
+    //   hasLeading: true,
+    //   children: [
+    //     // _PuzzleMenuListTile(
+    //     //   icon: PuzzleIcons.opening,
+    //     //   title: context.l10n.puzzlePuzzleThemes,
+    //     //   subtitle: context.l10n.mobilePuzzleThemesSubtitle,
+    //     //   onTap: () {
+    //     //     Navigator.of(context).push(PuzzleThemesScreen.buildRoute(context));
+    //     //   },
+    //     // ),
+    //     // Opacity(
+    //     //   opacity: isOnline ? 1 : 0.5,
+    //     //   child: _PuzzleMenuListTile(
+    //     //     icon: LichessIcons.streak,
+    //     //     title: 'Puzzle Streak',
+    //     //     subtitle:
+    //     //         context.l10n.puzzleStreakDescription.characters
+    //     //             .takeWhile((c) => c != '.')
+    //     //             .toString() +
+    //     //         (context.l10n.puzzleStreakDescription.contains('.') ? '.' : ''),
+    //     //     onTap:
+    //     //         isOnline
+    //     //             ? () {
+    //     //               Navigator.of(
+    //     //                 context,
+    //     //                 rootNavigator: true,
+    //     //               ).push(StreakScreen.buildRoute(context));
+    //     //             }
+    //     //             : null,
+    //     //   ),
+    //     // ),
+    //     // Opacity(
+    //     //   opacity: isOnline ? 1 : 0.5,
+    //     //   child: _PuzzleMenuListTile(
+    //     //     icon: LichessIcons.storm,
+    //     //     title: 'Puzzle Storm',
+    //     //     subtitle: context.l10n.mobilePuzzleStormSubtitle,
+    //     //     onTap:
+    //     //         isOnline
+    //     //             ? () {
+    //     //               Navigator.of(
+    //     //                 context,
+    //     //                 rootNavigator: true,
+    //     //               ).push(StormScreen.buildRoute(context));
+    //     //             }
+    //     //             : null,
+    //     //   ),
+    //     // ),
+  
+    //   ],
+    // );
+
   }
 }
 
