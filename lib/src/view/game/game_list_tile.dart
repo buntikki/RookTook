@@ -84,7 +84,7 @@ class GameListTile extends StatelessWidget {
             : Container(
               decoration: const BoxDecoration(color: Color(0xffF77178), shape: BoxShape.circle),
               child: const Padding(
-                padding: EdgeInsets.all(4.0),
+                padding: EdgeInsets.all(6.0),
                 child: Text('L', style: TextStyle(color: Colors.white, fontSize: 10)),
               ),
             );

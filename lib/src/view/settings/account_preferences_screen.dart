@@ -137,7 +137,7 @@ class _AccountPreferencesScreenState extends ConsumerState<AccountPreferencesScr
                       Navigator.of(context).push(ShowRatingsSettingsScreen.buildRoute(context));
                     }
                   },
-                  explanation: context.l10n.preferencesExplainShowPlayerRatings,
+                  // explanation: context.l10n.preferencesExplainShowPlayerRatings,
                 ),
               ],
             ),
