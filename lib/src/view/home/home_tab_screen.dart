@@ -326,16 +326,16 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-          floatingActionButton:
-              isTablet
-                  ? null
-                  : FloatingActionButton.extended(
-                    onPressed: () {
-                      Navigator.of(context).push(PlayScreen.buildRoute(context));
-                    },
-                    icon: const Icon(Icons.add),
-                    label: Text(context.l10n.play),
-                  ),
+          // floatingActionButton:
+          //     isTablet
+          //         ? null
+          //         : FloatingActionButton.extended(
+          //           onPressed: () {
+          //             Navigator.of(context).push(PlayScreen.buildRoute(context));
+          //           },
+          //           icon: const Icon(Icons.add),
+          //           label: Text(context.l10n.play),
+          //         ),
         );
 
         // }
