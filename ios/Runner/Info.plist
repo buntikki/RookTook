@@ -14,6 +14,21 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>NSAppTransportSecurity</key>
+      <dict>
+          <key>NSAllowsArbitraryLoads</key>
+          <true/>
+          <key>NSExceptionDomains</key>
+          <dict>
+              <key>13.203.89.65:9663</key>
+              <dict>
+                  <key>NSIncludesSubdomains</key>
+                  <true/>
+                  <key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
+                  <false/>
+              </dict>
+         </dict>
+    </dict>
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>af</string>
