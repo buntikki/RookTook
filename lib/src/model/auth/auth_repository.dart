@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:lichess_mobile/src/constants.dart';
 import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/model/auth/bearer.dart';
+import 'package:lichess_mobile/src/model/auth/login/login_response.dart';
 import 'package:lichess_mobile/src/model/user/user.dart';
 import 'package:lichess_mobile/src/network/http.dart';
 import 'package:logging/logging.dart';
@@ -53,6 +56,38 @@ class AuthRepository {
 
     final token = authResp.accessToken;
 
+
+    if (token == null) {
+      throw Exception('Access token not found.');
+    }
+
+    final user = await _client.readJson(
+      Uri(path: '/api/account'),
+      headers: {'Authorization': 'Bearer ${signBearerToken(token)}'},
+      mapper: User.fromServerJson,
+    );
+    debugPrint('==================== $token ${user.lightUser}');
+    return AuthSessionState(token: token, user: user.lightUser);
+  }
+
+  Future<AuthSessionState> signInWithPassword(String username, String password) async {
+    final body = {
+      "username": username,
+      "password": password
+    };
+
+    // Make the login API call
+    final authResp = await _client.postReadJson(
+      Uri(path: '/api/login'),
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      mapper: (json) => LoginResponse.fromJson(json),
+    );
+
+    final token = authResp.accessToken;
 
     if (token == null) {
       throw Exception('Access token not found.');

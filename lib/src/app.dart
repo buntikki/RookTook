@@ -8,6 +8,7 @@ import 'package:lichess_mobile/src/app_links.dart';
 import 'package:lichess_mobile/src/constants.dart';
 import 'package:lichess_mobile/src/model/account/account_repository.dart';
 import 'package:lichess_mobile/src/model/account/account_service.dart';
+import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/model/challenge/challenge_service.dart';
 import 'package:lichess_mobile/src/model/common/preloaded_data.dart';
 import 'package:lichess_mobile/src/model/correspondence/correspondence_service.dart';
@@ -136,6 +137,7 @@ class _AppState extends ConsumerState<Application> {
   @override
   Widget build(BuildContext context) {
     final generalPrefs = ref.watch(generalPreferencesProvider);
+    final userSession = ref.read(authSessionProvider)?.user;
     final boardPrefs = ref.watch(boardPreferencesProvider);
     final (light: themeLight, dark: themeDark) = makeAppTheme(context, generalPrefs, boardPrefs);
 
@@ -183,7 +185,7 @@ class _AppState extends ConsumerState<Application> {
           (settings) =>
               settings.name != null ? resolveAppLinkUri(context, Uri.parse(settings.name!)) : null,
       onGenerateInitialRoutes: (initialRoute) {
-        final homeRoute = buildScreenRoute<void>(context, screen: const LoginScreen());
+        final homeRoute = userSession!=null ?  buildScreenRoute<void>(context, screen: const BottomNavScaffold()) : buildScreenRoute<void>(context, screen: const LoginScreen());
         return <Route<dynamic>?>[
           homeRoute,
           resolveAppLinkUri(context, Uri.parse(initialRoute)),

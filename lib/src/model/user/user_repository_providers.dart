@@ -90,6 +90,11 @@ Future<IList<LightUser>> autoCompleteUser(Ref ref, String term) async {
 }
 
 @riverpod
+Future<bool> userExists(Ref ref, {required String username}) async {
+  return ref.withClient((client) => UserRepository(client).userExists(username));
+}
+
+@riverpod
 Future<IList<UserRatingHistoryPerf>> userRatingHistory(Ref ref, {required UserId id}) async {
   return ref.withClientCacheFor(
     (client) => UserRepository(client).getRatingHistory(id),

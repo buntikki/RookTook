@@ -65,6 +65,32 @@ class UserRepository {
     );
   }
 
+  Future<bool> userExists(String usernameOrEmail) async {
+    try {
+      final response = await client.get(
+        Uri(
+          path: '/api/player/autocomplete',
+          queryParameters: {'term': usernameOrEmail, 'exists': '1'},
+        ),
+      );
+      print('Response -> ${response.body}');
+      return response.statusCode == 200 && response.body == 'true';
+    } catch (e) {
+      print('Error checking if user exists: $e');
+      rethrow;
+    }
+  }
+
+  Future<IList<LightUser>> userNameLookup(String username) {
+    return client.readJson(
+      Uri(
+        path: '/api/player/autocomplete',
+        queryParameters: {'term': username, 'exists': '1'},
+      ),
+      mapper: _autocompleteFromJson,
+    );
+  }
+
   Future<IList<UserRatingHistoryPerf>> getRatingHistory(UserId id) {
     return client.readJsonList(
       Uri(path: '/api/user/$id/rating-history'),
