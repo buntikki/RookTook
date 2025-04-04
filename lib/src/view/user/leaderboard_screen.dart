@@ -89,7 +89,7 @@ class LeaderboardListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformListTile(
-      onTap: () => _handleTap(context),
+      onTap: () {},
       leading: Container(
         height: 22,
         width: 36,
@@ -151,7 +151,7 @@ class LeaderboardListTile extends StatelessWidget {
   }
 
   void _handleTap(BuildContext context) {
-    Navigator.of(context).push(UserScreen.buildRoute(context, user.lightUser));
+   // Navigator.of(context).push(UserScreen.buildRoute(context, user.lightUser));
   }
 }
 

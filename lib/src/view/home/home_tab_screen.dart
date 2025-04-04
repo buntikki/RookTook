@@ -326,16 +326,16 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-          // floatingActionButton:
-          //     isTablet
-          //         ? null
-          //         : FloatingActionButton.extended(
-          //           onPressed: () {
-          //             Navigator.of(context).push(PlayScreen.buildRoute(context));
-          //           },
-          //           icon: const Icon(Icons.add),
-          //           label: Text(context.l10n.play),
-          //         ),
+          floatingActionButton:
+              isTablet
+                  ? null
+                  : FloatingActionButton.extended(
+                    onPressed: () {
+                      Navigator.of(context).push(PlayScreen.buildRoute(context));
+                    },
+                    icon: const Icon(Icons.add),
+                    label: Text(context.l10n.play),
+                  ),
         );
 
         // }
@@ -749,7 +749,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   icon: Image.asset('assets/images/flip.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Rapid',
-                  type: '10+15',
+                  type: '10+5',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
                     Navigator.pop(context);
