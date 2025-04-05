@@ -70,6 +70,39 @@ class AuthRepository {
     return AuthSessionState(token: token, user: user.lightUser);
   }
 
+  Future<AuthSessionState> signUp(String email, String username, String password) async {
+    final body = {
+      'username': username,
+      'password': password,
+      'email': email
+    };
+
+    final authResp = await _client.postReadJson(
+      Uri(path: '/api/sign-up'),
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      mapper: (json) => LoginResponse.fromJson(json),
+    );
+
+    final token = authResp.accessToken;
+
+    if (token == null) {
+      throw Exception('Access token not found.');
+    }
+
+    final user = await _client.readJson(
+      Uri(path: '/api/account'),
+      headers: {'Authorization': 'Bearer ${signBearerToken(token)}'},
+      mapper: User.fromServerJson,
+    );
+    debugPrint('==================== $token ${user.lightUser}');
+    return AuthSessionState(token: token, user: user.lightUser);
+  }
+
+
   Future<AuthSessionState> signInWithPassword(String username, String password) async {
     final body = {
       "username": username,

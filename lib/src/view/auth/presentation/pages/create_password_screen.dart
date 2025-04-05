@@ -184,7 +184,7 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                       : (controller.isButtonEnabled
                       ? () {
                     if (mode == PasswordScreenMode.create) {
-                      Navigator.of(context).push(SetUsernameScreen.buildRoute(context));
+                      Navigator.of(context).push(SetUsernameScreen.buildRoute(context, previousInput: widget.username, password: _passwordController.text));
                       debugPrint('Password submitted: ${state.password}');
                     } else {
                       _handleSignIn();
