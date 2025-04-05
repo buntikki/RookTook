@@ -82,57 +82,59 @@ class UserActivityEntry extends ConsumerWidget {
         ),
         if (entry.games != null)
           for (final gameEntry in entry.games!.entries)
-            _UserActivityListTile(
-              leading:
-                  gameEntry.key.title == 'Rapid'
-                      ? Image.asset('assets/images/flip.png', height: 20, width: 20)
-                      : gameEntry.key.title == 'Bullet'
-                      ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
-                      : SizedBox(),
+            if (gameEntry.key.title != 'puzzle')
+              _UserActivityListTile(
+                leading:
+                    gameEntry.key.title == 'Rapid'
+                        ? Image.asset('assets/images/flip.png', height: 20, width: 20)
+                        : gameEntry.key.title == 'Bullet'
+                        ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
+                        : SizedBox(),
 
-              title: context.l10n.activityPlayedNbGames(
-                gameEntry.value.win + gameEntry.value.draw + gameEntry.value.loss,
-                gameEntry.key.title,
-              ),
-              subtitle: RatingPrefAware(
-                child: Row(
-                  children: [
-                    RatingWidget(deviation: 0, rating: gameEntry.value.ratingAfter),
-                    const SizedBox(width: 3),
-                    if (gameEntry.value.ratingAfter - gameEntry.value.ratingBefore != 0) ...[
-                      Icon(
-                        gameEntry.value.ratingAfter - gameEntry.value.ratingBefore > 0
-                            ? LichessIcons.arrow_full_upperright
-                            : LichessIcons.arrow_full_lowerright,
-                        color:
-                            gameEntry.value.ratingAfter - gameEntry.value.ratingBefore > 0
-                                ? greenColor
-                                : redColor,
-                        size: 12,
-                      ),
-                      Text(
-                        (gameEntry.value.ratingAfter - gameEntry.value.ratingBefore)
-                            .abs()
-                            .toString(),
-                        style: TextStyle(
+                title: context.l10n.activityPlayedNbGames(
+                  gameEntry.value.win + gameEntry.value.draw + gameEntry.value.loss,
+                  gameEntry.key.title,
+                ),
+                subtitle: RatingPrefAware(
+                  child: Row(
+                    children: [
+                      RatingWidget(deviation: 0, rating: gameEntry.value.ratingAfter),
+                      const SizedBox(width: 3),
+                      if (gameEntry.value.ratingAfter - gameEntry.value.ratingBefore != 0) ...[
+                        Icon(
+                          gameEntry.value.ratingAfter - gameEntry.value.ratingBefore > 0
+                              ? LichessIcons.arrow_full_upperright
+                              : LichessIcons.arrow_full_lowerright,
                           color:
                               gameEntry.value.ratingAfter - gameEntry.value.ratingBefore > 0
                                   ? greenColor
                                   : redColor,
-                          fontSize: 11,
+                          size: 12,
                         ),
-                      ),
+                        Text(
+                          (gameEntry.value.ratingAfter - gameEntry.value.ratingBefore)
+                              .abs()
+                              .toString(),
+                          style: TextStyle(
+                            color:
+                                gameEntry.value.ratingAfter - gameEntry.value.ratingBefore > 0
+                                    ? greenColor
+                                    : redColor,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
+                ),
+                trailing: BriefGameResultBox(
+                  win: gameEntry.value.win,
+                  draw: gameEntry.value.draw,
+                  loss: gameEntry.value.loss,
                 ),
               ),
-              trailing: BriefGameResultBox(
-                win: gameEntry.value.win,
-                draw: gameEntry.value.draw,
-                loss: gameEntry.value.loss,
-              ),
-            ),
-        if (entry.puzzles != null)
+        if (entry.puzzles ==
+            null) //Actually It was entry.puzzles != null condition chnaged for hiding
           _UserActivityListTile(
             leading: const Icon(LichessIcons.target, size: leadingIconSize),
             title: context.l10n.activitySolvedNbPuzzles(entry.puzzles!.win + entry.puzzles!.loss),

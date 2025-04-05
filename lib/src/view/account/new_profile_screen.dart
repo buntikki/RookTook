@@ -11,6 +11,7 @@ import 'package:lichess_mobile/src/navigation.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
 import 'package:lichess_mobile/src/utils/navigation.dart';
 import 'package:lichess_mobile/src/view/account/profile_screen.dart';
+import 'package:lichess_mobile/src/view/auth/presentation/pages/login_screen.dart';
 import 'package:lichess_mobile/src/view/user/player_screen.dart';
 import 'package:lichess_mobile/src/widgets/adaptive_action_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -215,7 +216,7 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-Future<void> _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
+_showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
   if (Theme.of(context).platform == TargetPlatform.iOS) {
     return showCupertinoActionSheet(
       context: context,
@@ -225,6 +226,7 @@ Future<void> _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
           isDestructiveAction: true,
           onPressed: () async {
             await ref.read(authControllerProvider.notifier).signOut();
+            buildScreenRoute<void>(context, screen: const LoginScreen());
           },
         ),
       ],
@@ -248,7 +250,21 @@ Future<void> _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
               child: Text(context.l10n.mobileOkButton),
               onPressed: () async {
                 Navigator.of(context).pop();
-                await ref.read(authControllerProvider.notifier).signOut();
+                ref.read(authControllerProvider.notifier).signOut();
+                // Navigator.of(context).pushAndRemoveUntil(
+                //   buildScreenRoute<void>(context, screen: const LoginScreen()),
+                //   (route) => false,
+                // );
+                Navigator.of(
+                  context,
+                ).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
+                // Navigator.of(context, rootNavigator: true).pushReplacement(
+                //   LoginScreen()
+                //   GameScreen.buildRoute(
+                //     context,
+                //     seek: GameSeek.newOpponentFromGame(game, savedSetup),
+                //   ),
+                // );
               },
             ),
           ],

@@ -64,10 +64,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     : 0,
             key: _refreshIndicatorKey,
             onRefresh: () async => ref.refresh(accountProvider),
-            child: ListView(
+            child: 
+            ListView(
               children: [
                 // UserProfileWidget(user: user),
-                const AccountPerfCards(),
+                // const AccountPerfCards(),
                 if (user.count != null && user.count!.bookmark > 0)
                   ListSection(
                     hasLeading: true,
@@ -98,6 +99,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
               ],
             ),
+         
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),

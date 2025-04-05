@@ -109,68 +109,69 @@ class _Body extends ConsumerWidget {
             : null;
 
     final List<Widget> content = [
-      ListSection(
-        backgroundColor: Color(0xff2B2D30),
-        header: userSession != null ? UserFullNameWidget(user: userSession.user) : null,
-        hasLeading: true,
-        children: [
-          if (userSession != null) ...[
-            PlatformListTile(
-              leading: const Icon(Icons.person_outline),
-              title: Text(context.l10n.profile),
-              trailing:
-                  Theme.of(context).platform == TargetPlatform.iOS
-                      ? const CupertinoListTileChevron()
-                      : null,
-              onTap: () {
-                ref.invalidate(accountActivityProvider);
-                Navigator.of(context).push(ProfileScreen.buildRoute(context));
-              },
-            ),
-            PlatformListTile(
-              leading: const Icon(Icons.manage_accounts_outlined),
-              title: Text(context.l10n.preferencesPreferences),
-              trailing:
-                  Theme.of(context).platform == TargetPlatform.iOS
-                      ? const CupertinoListTileChevron()
-                      : null,
-              onTap: () {
-                Navigator.of(context).push(AccountPreferencesScreen.buildRoute(context));
-              },
-            ),
-            if (authController.isLoading)
-              const PlatformListTile(
-                leading: Icon(Icons.logout_outlined),
-                title: Center(child: ButtonLoadingIndicator()),
-              )
-            else
-              PlatformListTile(
-                leading: const Icon(Icons.logout_outlined),
-                title: Text(context.l10n.logOut),
-                onTap: () {
-                  _showSignOutConfirmDialog(context, ref);
-                },
-              ),
-          ] else ...[
-            if (authController.isLoading)
-              const PlatformListTile(
-                leading: Icon(Icons.login_outlined),
-                title: Center(child: ButtonLoadingIndicator()),
-              )
-            else
-              PlatformListTile(
-                backgroundColor: const Color(0xff2B2D30),
-                leading: const Icon(Icons.login_outlined),
-                title: Text(context.l10n.signIn),
-                onTap: () {
-                  ref.read(authControllerProvider.notifier).signIn();
-                },
-              ),
-          ],
-          // if (Theme.of(context).platform == TargetPlatform.android && donateButton != null)
-          // donateButton,
-        ],
-      ),
+      // ListSection(
+      //   backgroundColor: Color(0xff2B2D30),
+      //   header: userSession != null ? UserFullNameWidget(user: userSession.user) : null,
+      //   hasLeading: true,
+      //   children: [
+      //     // if (userSession != null) ...[
+      //     //   PlatformListTile(
+      //     //     leading: const Icon(Icons.person_outline),
+      //     //     title: Text(context.l10n.profile),
+      //     //     trailing:
+      //     //         Theme.of(context).platform == TargetPlatform.iOS
+      //     //             ? const CupertinoListTileChevron()
+      //     //             : null,
+      //     //     onTap: () {
+      //     //       ref.invalidate(accountActivityProvider);
+      //     //       Navigator.of(context).push(ProfileScreen.buildRoute(context));
+      //     //     },
+      //     //   ),
+      //     //   PlatformListTile(
+      //     //     leading: const Icon(Icons.manage_accounts_outlined),
+      //     //     title: Text(context.l10n.preferencesPreferences),
+      //     //     trailing:
+      //     //         Theme.of(context).platform == TargetPlatform.iOS
+      //     //             ? const CupertinoListTileChevron()
+      //     //             : null,
+      //     //     onTap: () {
+      //     //       Navigator.of(context).push(AccountPreferencesScreen.buildRoute(context));
+      //     //     },
+      //     //   ),
+      //     //   if (authController.isLoading)
+      //     //     const PlatformListTile(
+      //     //       leading: Icon(Icons.logout_outlined),
+      //     //       title: Center(child: ButtonLoadingIndicator()),
+      //     //     )
+      //     //   else
+      //     //     PlatformListTile(
+      //     //       leading: const Icon(Icons.logout_outlined),
+      //     //       title: Text(context.l10n.logOut),
+      //     //       onTap: () {
+      //     //         _showSignOutConfirmDialog(context, ref);
+      //     //       },
+      //     //     ),
+      //     // ] else
+      //     ...[
+      //       if (authController.isLoading)
+      //         const PlatformListTile(
+      //           leading: Icon(Icons.login_outlined),
+      //           title: Center(child: ButtonLoadingIndicator()),
+      //         )
+      //       else
+      //         PlatformListTile(
+      //           backgroundColor: const Color(0xff2B2D30),
+      //           leading: const Icon(Icons.login_outlined),
+      //           title: Text(context.l10n.signIn),
+      //           onTap: () {
+      //             ref.read(authControllerProvider.notifier).signIn();
+      //           },
+      //         ),
+      //     ],
+      //     // if (Theme.of(context).platform == TargetPlatform.android && donateButton != null)
+      //     // donateButton,
+      //   ],
+      // ),
       ListSection(
         backgroundColor: Color(0xff2B2D30),
         hasLeading: true,
@@ -284,7 +285,12 @@ class _Body extends ConsumerWidget {
             title: Text(context.l10n.mobileFeedbackButton),
             trailing: const _OpenInNewIcon(),
             onTap: () {
-              launchUrl(Uri.parse('https://lichess.org/contact'));
+              final Uri emailUri = Uri(
+                scheme: 'mailto',
+                path: 'hello@rooktook.com',
+                queryParameters: {'subject': 'How may I help you', 'body': ''},
+              );
+              launchUrl(emailUri);
             },
           ),
           PlatformListTile(
@@ -293,7 +299,7 @@ class _Body extends ConsumerWidget {
             title: Text(context.l10n.termsOfService),
             trailing: const _OpenInNewIcon(),
             onTap: () {
-              launchUrl(Uri.parse('https://lichess.org/terms-of-service'));
+              launchUrl(Uri.parse('https://www.rooktook.com/'));
             },
           ),
           PlatformListTile(
@@ -302,7 +308,7 @@ class _Body extends ConsumerWidget {
             title: Text(context.l10n.privacyPolicy),
             trailing: const _OpenInNewIcon(),
             onTap: () {
-              launchUrl(Uri.parse('https://lichess.org/privacy'));
+              launchUrl(Uri.parse('https://www.rooktook.com/'));
             },
           ),
         ],

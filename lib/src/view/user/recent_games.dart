@@ -2,8 +2,10 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lichess_mobile/src/model/account/account_repository.dart';
 import 'package:lichess_mobile/src/model/game/archived_game.dart';
 import 'package:lichess_mobile/src/model/user/user.dart';
+import 'package:lichess_mobile/src/model/user/user_repository_providers.dart';
 import 'package:lichess_mobile/src/network/connectivity.dart';
 import 'package:lichess_mobile/src/styles/styles.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
@@ -42,6 +44,14 @@ class RecentGamesWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final connectivity = ref.watch(connectivityChangesProvider);
+    final activity =
+        user != null
+            ? ref.watch(userActivityProvider(id: user!.id))
+            : ref.watch(accountActivityProvider);
+    final nonEmptyActivities = activity.value!.where((entry) => entry.isNotEmpty);
+    final rating = nonEmptyActivities
+        .expand((e) => e.games!.entries)
+        .map((e1) => e1.value.ratingAfter);
 
     return recentGames.when(
       data: (data) {
@@ -49,6 +59,7 @@ class RecentGamesWidget extends ConsumerWidget {
           return const SizedBox.shrink();
         }
         final list = data.take(maxGamesToShow);
+        // activity.value[0].games.entries.first.value.ratingBefore;
         return Container(
           margin: EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -91,8 +102,17 @@ class RecentGamesWidget extends ConsumerWidget {
                     ],
                   ),
                 ),
-                for (final item in list)
-                  GameListTile(item: item, tileColor: tileColor, titleColor: titleColor),
+                // for (final item in list)
+                for (int i = 0; i < list.length; i++)
+                  GameListTile(
+                    item: list.elementAt(i),
+                    tileColor: tileColor,
+                    titleColor: titleColor,
+                    rating:
+                        i < rating.length
+                            ? rating.elementAt(i)
+                            : null, // Provide a default if index out of bounds
+                  ),
                 SizedBox(height: 10),
               ],
             ),

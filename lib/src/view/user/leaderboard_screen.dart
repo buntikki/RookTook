@@ -110,8 +110,7 @@ class LeaderboardListTile extends StatelessWidget {
             const SizedBox(width: 12),
             if (user.title != null) ...[
               Container(
-                // height: 30,
-                width: 35,
+                width: 60, // Fixed width for all titles
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
@@ -120,6 +119,8 @@ class LeaderboardListTile extends StatelessWidget {
                 child: Center(
                   child: Text(
                     user.title!,
+                    overflow: TextOverflow.visible, // Ensures the text isn't cut off
+                    textAlign: TextAlign.center, // Centers the text within the container
                     // style: (style ?? const TextStyle()).copyWith(
                     //   color:
                     //       user?.title == 'BOT'
@@ -134,7 +135,11 @@ class LeaderboardListTile extends StatelessWidget {
             ],
             Text(
               user.lightUser.name,
-              style: const TextStyle(fontSize: 14, color: Color(0xffEFEDED)),
+              style: TextStyle(
+                fontSize: 14,
+                color: Color(0xffEFEDED),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),

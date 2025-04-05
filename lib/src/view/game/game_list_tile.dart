@@ -26,6 +26,7 @@ import 'package:lichess_mobile/src/widgets/board_thumbnail.dart';
 import 'package:lichess_mobile/src/widgets/feedback.dart';
 import 'package:lichess_mobile/src/widgets/list.dart';
 import 'package:lichess_mobile/src/widgets/user_full_name.dart';
+import 'package:random_avatar/random_avatar.dart';
 
 final _dateFormatter = DateFormat.yMMMd().add_Hm();
 
@@ -38,6 +39,7 @@ class GameListTile extends StatelessWidget {
     this.gameListContext,
     this.tileColor,
     this.titleColor,
+    this.rating,
   });
 
   final LightArchivedGameWithPov item;
@@ -45,7 +47,7 @@ class GameListTile extends StatelessWidget {
   final Future<void> Function(BuildContext context)? onPressedBookmark;
   final Color? tileColor;
   final Color? titleColor;
-
+  final int? rating;
 
   /// The context of the game list that opened this screen, if available.
   final (UserId?, GameFilterState)? gameListContext;
@@ -92,10 +94,12 @@ class GameListTile extends StatelessWidget {
     }
 
     return _GameListTile(
+      name: opponent.user!.name,
       game: game,
       color: tileColor,
       mySide: youAre,
       padding: padding,
+
       onTap:
           () => openGameScreen(
             context,
@@ -110,10 +114,10 @@ class GameListTile extends StatelessWidget {
         user: opponent.user,
         aiLevel: opponent.aiLevel,
         // rating: opponent.rating,
-        style: TextStyle(color:titleColor?? Colors.black),
+        style: TextStyle(color: titleColor ?? Colors.black),
       ),
       onPressedBookmark: onPressedBookmark,
-      subtitle: Text('#${opponent.rating}', style: TextStyle(color: Color(0xff959494))),
+      subtitle: Text('#$rating', style: TextStyle(color: Color(0xff959494))),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -140,6 +144,7 @@ class _GameListTile extends StatelessWidget {
     this.onTap,
     this.padding,
     this.color,
+    this.name,
   });
 
   final LightArchivedGame game;
@@ -153,6 +158,7 @@ class _GameListTile extends StatelessWidget {
   final GestureTapCallback? onTap;
   final EdgeInsetsGeometry? padding;
   final Color? color;
+  final String? name;
 
   @override
   Widget build(BuildContext context) {
@@ -173,15 +179,16 @@ class _GameListTile extends StatelessWidget {
           children: [
             ClipOval(
               child: Center(
-                child: Image.asset(
-                  'assets/images/avatar.png', // Replace with your asset or use network image
-                  fit: BoxFit.cover,
-                  height: 36,
-                  width: 36,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.person, color: Colors.black54, size: 24);
-                  },
-                ),
+                child: RandomAvatar('$name', height: 36, width: 36),
+                //  Image.asset(
+                //   'assets/images/avatar.png', // Replace with your asset or use network image
+                //   fit: BoxFit.cover,
+                //   height: 36,
+                //   width: 36,
+                //   errorBuilder: (context, error, stackTrace) {
+                //     return const Icon(Icons.person, color: Colors.black54, size: 24);
+                //   },
+                // ),
               ),
             ),
             SizedBox(width: 16),

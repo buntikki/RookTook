@@ -710,6 +710,7 @@ class _PuzzleSettingsBottomSheet extends ConsumerWidget {
               title: const Text('Board settings'),
               trailing: const Icon(CupertinoIcons.chevron_right),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.of(
                   context,
                 ).push(BoardSettingsScreen.buildRoute(context, fullscreenDialog: true));
