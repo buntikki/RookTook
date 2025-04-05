@@ -199,19 +199,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
 
           // Skip button
-          Positioned(
-            top: 56,
-            right: 24,
-            child: OutlinedButton(
-              onPressed:
-                  () => {
-                    Navigator.of(context).pushReplacement(
-                      buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-                    ),
-                  },
-              child: const Text('Skip'),
-            ),
-          ),
+          // Positioned(
+          //   top: 56,
+          //   right: 24,
+          //   child: OutlinedButton(
+          //     onPressed:
+          //         () => {
+          //           Navigator.of(context).pushReplacement(
+          //             buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+          //           ),
+          //         },
+          //     child: const Text('Skip'),
+          //   ),
+          // ),
+     
         ],
       ),
     );
