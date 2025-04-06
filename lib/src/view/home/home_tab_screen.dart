@@ -326,7 +326,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-          floatingActionButton:
+         /* floatingActionButton:
               isTablet
                   ? null
                   : FloatingActionButton.extended(
@@ -335,7 +335,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                     },
                     icon: const Icon(Icons.add),
                     label: Text(context.l10n.play),
-                  ),
+                  ),*/
         );
 
         // }

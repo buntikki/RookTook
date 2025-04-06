@@ -173,7 +173,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                         ).textTheme.labelMedium?.copyWith(color: const Color(0xff8F9193)),
                       ),
 
-                      const SizedBox(height: 32),
+                     /* const SizedBox(height: 32),
 
                       Container(
                         width: 120,
@@ -190,7 +190,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                         child: Center(
                           child: SvgPicture.asset('assets/images/svg/select_avatar.svg', width: 48, height: 48),
                         ),
-                      ),
+                      ),*/
                       const SizedBox(height: 32),
                       Container(
                         decoration: BoxDecoration(
