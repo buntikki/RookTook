@@ -188,7 +188,7 @@ class _BodyState extends ConsumerState<_Body> {
                         ref.read(generalPreferencesProvider.notifier).toggleSystemColors();
                       },
                     ),
-                  SettingsListTile(
+                  /*SettingsListTile(
                     icon: const Icon(Icons.wallpaper),
                     settingsLabel: Text(context.l10n.background),
                     settingsValue:
@@ -211,24 +211,24 @@ class _BodyState extends ConsumerState<_Body> {
                             .read(generalPreferencesProvider.notifier)
                             .setBackground(backgroundColor: null, backgroundImage: null);
                       },
-                    ),
-                  SettingsListTile(
+                    ),*/
+                 /* SettingsListTile(
                     icon: const Icon(LichessIcons.chess_board),
                     settingsLabel: Text(context.l10n.board),
                     settingsValue: boardPrefs.boardTheme.label,
                     onTap: () {
                       Navigator.of(context).push(BoardChoiceScreen.buildRoute(context));
                     },
-                  ),
-                  SettingsListTile(
+                  ),*/
+                /*  SettingsListTile(
                     icon: const Icon(LichessIcons.chess_pawn),
                     settingsLabel: Text(context.l10n.pieceSet),
                     settingsValue: boardPrefs.pieceSet.label,
                     onTap: () {
                       Navigator.of(context).push(PieceSetScreen.buildRoute(context));
                     },
-                  ),
-                  SettingsListTile(
+                  ),*/
+                  /*SettingsListTile(
                     icon: const Icon(LichessIcons.arrow_full_upperright),
                     settingsLabel: const Text('Shape color'),
                     settingsValue: shapeColorL10n(context, boardPrefs.shapeColor),
@@ -256,7 +256,7 @@ class _BodyState extends ConsumerState<_Body> {
                         },
                       );
                     },
-                  ),
+                  ),*/
                   SwitchSettingTile(
                     leading: const Icon(Icons.location_on),
                     title: Text(context.l10n.preferencesBoardCoordinates),
@@ -276,7 +276,7 @@ class _BodyState extends ConsumerState<_Body> {
                   ),
                 ],
               ),
-              ListSection(
+             /* ListSection(
                 header: SettingsSectionTitle(context.l10n.advancedSettings),
                 hasLeading: true,
                 children: [
@@ -337,7 +337,7 @@ class _BodyState extends ConsumerState<_Body> {
                             : null,
                   ),
                 ],
-              ),
+              ),*/
             ],
           ),
           const SliverSafeArea(

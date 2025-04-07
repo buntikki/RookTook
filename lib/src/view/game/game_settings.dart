@@ -64,13 +64,13 @@ class GameSettings extends ConsumerWidget {
                 ref.read(gameControllerProvider(id).notifier).onToggleChat(value);
               },
             ),
-            SwitchSettingTile(
+            /*SwitchSettingTile(
               title: Text(context.l10n.preferencesBlindfold),
               value: gamePrefs.blindfoldMode ?? false,
               onChanged: (value) {
                 ref.read(gamePreferencesProvider.notifier).toggleBlindfoldMode();
               },
-            ),
+            ),*/
             PlatformListTile(
               // TODO translate
               title: const Text('Board settings'),

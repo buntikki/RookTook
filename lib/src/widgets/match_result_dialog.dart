@@ -11,6 +11,7 @@ import 'package:lichess_mobile/src/model/game/playable_game.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
 import 'package:lichess_mobile/src/view/game/status_l10n.dart';
 import 'package:lichess_mobile/src/widgets/buttons.dart';
+import 'package:random_avatar/random_avatar.dart';
 
 class MatchResultDialog extends ConsumerStatefulWidget {
   const MatchResultDialog({required this.id, required this.onNewOpponentCallback, super.key});
@@ -25,7 +26,6 @@ class MatchResultDialog extends ConsumerStatefulWidget {
 }
 
 class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
-
   late Timer _buttonActivationTimer;
   bool _activateButtons = false;
 
@@ -76,7 +76,7 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                   style: const TextStyle(fontWeight: FontWeight.bold),
                   children: [
                     TextSpan(
-                      text:" ${game.winner == Side.white ? 'White' : 'Black'}",
+                      text: " ${game.winner == Side.white ? 'White' : 'Black'}",
                       style: const TextStyle(fontSize: 24, color: Colors.white),
                     ),
                     const TextSpan(
@@ -98,7 +98,7 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                   children: [
                     TextSpan(text: "It's a", style: TextStyle(fontSize: 24, color: Colors.white)),
                     TextSpan(
-                      text: 'DRAW',
+                      text: ' DRAW',
                       style: TextStyle(
                         fontSize: 24,
                         color: Color(0xff54C339),
@@ -129,12 +129,7 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                 Expanded(
                   child: Column(
                     children: [
-                      Image.asset(
-                        'assets/images/avatar.png',
-                        width: 70,
-                        height: 70,
-                        fit: BoxFit.cover,
-                      ),
+                      RandomAvatar('${gameState.game.me?.user?.name}', height: 70, width: 70),
                       const SizedBox(height: 8),
                       Text(
                         '${gameState.game.me?.user?.name}',
@@ -167,12 +162,7 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                 Expanded(
                   child: Column(
                     children: [
-                      Image.asset(
-                        'assets/images/avatar.png',
-                        width: 70,
-                        height: 70,
-                        fit: BoxFit.cover,
-                      ),
+                      RandomAvatar('${gameState.game.opponent?.user?.name}', height: 70, width: 70),
                       const SizedBox(height: 8),
                       Text(
                         '${gameState.game.opponent?.user?.name}',
@@ -193,7 +183,7 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Rapid Rating', style: TextStyle(color: Colors.grey)),
+                  const Text('Rating', style: TextStyle(color: Colors.grey)),
                   const SizedBox(width: 12),
                   Container(
                     width: 30,
@@ -218,7 +208,7 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '${game.me!.ratingDiff ?? 0}',
+                    game.me!.ratingDiff! < 0 ? '${game.me!.ratingDiff ?? 0}' : '+${game.me!.ratingDiff ?? 0}',
                     style: TextStyle(
                       color: game.me!.ratingDiff! < 0 ? Colors.red : Colors.green,
                       fontWeight: FontWeight.bold,
@@ -271,34 +261,39 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                       : CrossFadeState.showFirst,
             ),
             if (gameState.game.me?.offeringRematch == true)
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  ref.read(ctrlProvider.notifier).declineRematch();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff585B5E),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    ref.read(ctrlProvider.notifier).declineRematch();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff585B5E),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                  ),
+                  child: const Text(
+                    'Cancel Rematch',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                 ),
-                child: const Text(
-                  'Cancel Rematch',
-                  style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w800),
-                ),
-              ),
-            )
+              )
             else if (gameState.canOfferRematch)
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed:  _activateButtons &&
-                      gameState.game.opponent?.onGame == true &&
-                      gameState.game.opponent?.offeringRematch != true
-                      ? () {
-                    ref.read(ctrlProvider.notifier).proposeOrAcceptRematch();
-                  }
-                      : null,
+                  onPressed:
+                      _activateButtons &&
+                              gameState.game.opponent?.onGame == true &&
+                              gameState.game.opponent?.offeringRematch != true
+                          ? () {
+                            ref.read(ctrlProvider.notifier).proposeOrAcceptRematch();
+                          }
+                          : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xff585B5E),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -306,36 +301,44 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                   ),
                   child: const Text(
                     'REMATCH',
-                    style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
-              )
-            ,
+              ),
             const SizedBox(height: 12),
             if (gameState.canGetNewOpponent)
-            SizedBox(
-              width: double.infinity,
+              SizedBox(
+                width: double.infinity,
 
-              child: ElevatedButton(
-                onPressed:   _activateButtons
-                    ? () {
-                  Navigator.of(context).popUntil((route) => route is! PopupRoute);
-                  widget.onNewOpponentCallback(gameState.game);
-                }
-                    : null,
+                child: ElevatedButton(
+                  onPressed:
+                      _activateButtons
+                          ? () {
+                            Navigator.of(context).popUntil((route) => route is! PopupRoute);
+                            widget.onNewOpponentCallback(gameState.game);
+                          }
+                          : null,
 
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff585B5E),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xff585B5E),
 
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-                ),
-                child: const Text(
-                  'NEW OPPONENT',
-                  style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w800),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                  ),
+                  child: const Text(
+                    'NEW OPPONENT',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

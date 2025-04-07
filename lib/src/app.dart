@@ -145,6 +145,7 @@ class _AppState extends ConsumerState<Application> {
     final remainingHeight = estimateRemainingHeightLeftBoard(context);
 
     return MaterialApp(
+      navigatorKey: rootNavigatorKey,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         ...AppLocalizations.localizationsDelegates,

@@ -433,9 +433,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ElevatedButton.icon(
-          label: const Text(
+          label: Text(
             'PLAY NOW',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xff54C339),

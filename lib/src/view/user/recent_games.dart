@@ -79,7 +79,7 @@ class RecentGamesWidget extends ConsumerWidget {
                         context.l10n.recentGames,
                         style: TextStyle(color: textColor ?? Colors.black, fontSize: 18),
                       ),
-                      Container(
+                    /*  Container(
                         child:
                             nbOfGames > list.length
                                 ? NoPaddingTextButton(
@@ -98,7 +98,7 @@ class RecentGamesWidget extends ConsumerWidget {
                                   ),
                                 )
                                 : null,
-                      ),
+                      ),*/
                     ],
                   ),
                 ),
