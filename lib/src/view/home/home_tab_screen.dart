@@ -393,7 +393,11 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         widget: HomeEditableWidget.recentGames,
         index: homePrefs.enabledWidgets.indexOf(HomeEditableWidget.recentGames),
         shouldShow: true,
-        child: RecentGamesWidget(recentGames: recentGames, nbOfGames: nbOfGames, user: null),
+        child: RecentGamesWidget(
+          recentGames: recentGames,
+          nbOfGames: nbOfGames,
+          user: session?.user,
+        ),
       ),
     ].sortedBy((_EditableWidget widget) {
       final i = homePrefs.enabledWidgets.indexOf(widget.widget);
@@ -417,6 +421,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required int rapidRank,
     required int bulletRank,
   }) {
+    // fetch the account user to be sure we have the latest data (flair, etc.)
+    final accountUser = ref
+        .watch(accountProvider)
+        .maybeWhen(data: (data) => data?.lightUser, orElse: () => null);
+
+    final user = accountUser ?? session?.user;
     final welcomeWidgets = [
       /*Padding(
         padding: Styles.horizontalBodyPadding,
@@ -471,7 +481,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       RecentGamesWidget(
         recentGames: recentGames,
         nbOfGames: nbOfGames,
-        user: null,
+        user: session?.user,
         maxGamesToShow: 5,
       ),
       // if (session == null) ...[
@@ -554,6 +564,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required AsyncValue<IList<LightArchivedGameWithPov>> recentGames,
     required int nbOfGames,
   }) {
+    // fetch the account user to be sure we have the latest data (flair, etc.)
+    final accountUser = ref
+        .watch(accountProvider)
+        .maybeWhen(data: (data) => data?.lightUser, orElse: () => null);
+
+    final user = accountUser ?? session?.user;
     return [
       const _EditableWidget(
         widget: HomeEditableWidget.hello,
@@ -587,7 +603,11 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(height: 8.0),
-                RecentGamesWidget(recentGames: recentGames, nbOfGames: nbOfGames, user: null),
+                RecentGamesWidget(
+                  recentGames: recentGames,
+                  nbOfGames: nbOfGames,
+                  user: session?.user,
+                ),
               ],
             ),
           ),

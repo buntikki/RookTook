@@ -44,11 +44,16 @@ class RecentGamesWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final connectivity = ref.watch(connectivityChangesProvider);
+
     final activity =
         user != null
             ? ref.watch(userActivityProvider(id: user!.id))
             : ref.watch(accountActivityProvider);
-    final nonEmptyActivities = activity.value!.where((entry) => entry.isNotEmpty);
+
+    // Handle activity null safety
+    final nonEmptyActivities =
+        activity.valueOrNull?.where((entry) => entry.isNotEmpty).toList() ?? [];
+
     final rating = nonEmptyActivities
         .expand((e) => e.games!.entries)
         .map((e1) => e1.value.ratingAfter);
