@@ -134,6 +134,7 @@ class _SliderSettingsTileState extends State<SliderSettingsTile> {
       onChangeEnd: (value) {
         widget.onChangeEnd(widget.values[_index]);
       },
+
     );
 
     return PlatformListTile(

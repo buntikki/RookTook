@@ -22,7 +22,7 @@ class AppleSignInButton extends StatelessWidget {
         // Only show the button if Apple Sign In is available on this device
         if (snapshot.data == true) {
           return ElevatedButton.icon(
-            icon: const Icon(Icons.apple, color: Colors.white),
+            icon: const Icon(Icons.apple, color: Colors.white,size: 24,),
             label: Text('Continue with Apple', style: TextTheme.of(context).titleMedium),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xff464A4F),

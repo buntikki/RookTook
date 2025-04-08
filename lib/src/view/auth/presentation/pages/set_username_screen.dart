@@ -128,7 +128,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
     }
 
     final fieldLabel = _isInputEmail ? 'Username' : 'Email';
-    final hintText = _isInputEmail ? 'Choose a username' : 'Enter your email';
+    final hintText = _isInputEmail ? 'Create username' : 'Enter12345678 email';
 
     return Scaffold(
       backgroundColor: const Color(0xff1C1E21),
@@ -159,7 +159,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                       ),
                       const SizedBox(height: 32),
                       Text(
-                        'Choose\nYour $fieldLabel',
+                        'Enter\nYour $fieldLabel',
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
 

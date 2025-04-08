@@ -18,13 +18,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:random_avatar/random_avatar.dart';
 
-class UserProfileScreen extends ConsumerWidget {
-  const UserProfileScreen({super.key});
+class NewProfileScreen extends ConsumerWidget {
+  const NewProfileScreen({super.key});
 
   static Route<dynamic> buildRoute(BuildContext context) {
     return buildScreenRoute(
       context,
-      screen: const UserProfileScreen(),
+      screen: const NewProfileScreen(),
       title: context.l10n.profile,
     );
   }

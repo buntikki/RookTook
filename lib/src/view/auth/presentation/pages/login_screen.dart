@@ -111,9 +111,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                 AppleSignInButton(
                   onSignInSuccess: (data) {
-                    Navigator.of(context).pushReplacement(
-                      buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-                    );
+                    // Navigator.of(context).pushReplacement(
+                    //   buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+                    // );
                   },
                   onSignInError: (error) {},
                 ),
@@ -121,9 +121,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Google login button
                 GoogleSignInButton(
                   onSignInSuccess: (data) {
-                    Navigator.of(context).pushReplacement(
-                      buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-                    );
+                    // Navigator.of(context).pushReplacement(
+                    //   buildScreenRoute<void>(context, screen: const BottomNavScaffold()),d
+                    // );do
                   },
                   onSignInError: (error) {
                     print(error);

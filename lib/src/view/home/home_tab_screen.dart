@@ -278,7 +278,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                 child: InkWell(
                   onTap: () {
                     // Navigate to profile screen
-                    Navigator.of(context).push(UserProfileScreen.buildRoute(context));
+                    Navigator.of(context).push(NewProfileScreen.buildRoute(context));
                   },
                   borderRadius: BorderRadius.circular(
                     18,

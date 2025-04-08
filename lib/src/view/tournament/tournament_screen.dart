@@ -38,7 +38,9 @@ class TournamentScreen extends ConsumerWidget {
                 text: 'Coming\n',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 68),
                 //  TextStyle(fontSize: 68,fontFamily: GoogleFonts.bricolageGrotesqueTextTheme.),
-                children: [TextSpan(text: 'Soon', style: TextStyle(color: Colors.green))],
+                children: const [
+                  TextSpan(text: 'Soon', style: TextStyle(color: Colors.green, height: 0.5)),
+                ],
               ),
             ),
             // Text(
@@ -55,9 +57,10 @@ class TournamentScreen extends ConsumerWidget {
               child: InkWell(
                 onTap: () {
                   // Navigate to profile screen
-                  Navigator.of(context).push(UserProfileScreen.buildRoute(context));
+                  Navigator.of(context).push(NewProfileScreen.buildRoute(context));
                 },
-                borderRadius: BorderRadius.circular(18), // Half of width/height to make it circular
+                borderRadius: BorderRadius.circular(18),
+                // Half of width/height to make it circular
                 child: Center(
                   child: RandomAvatar(avatarSeed, height: 36, width: 36),
                   // Image.asset(
