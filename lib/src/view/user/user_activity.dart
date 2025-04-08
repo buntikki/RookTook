@@ -73,6 +73,7 @@ class UserActivityEntry extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+
         Padding(
           padding: const EdgeInsets.only(left: 14.0, top: 16.0, right: 14.0, bottom: 4.0),
           child: Text(
@@ -133,54 +134,57 @@ class UserActivityEntry extends ConsumerWidget {
                   loss: gameEntry.value.loss,
                 ),
               ),
-        if (entry.puzzles ==
-            null) //Actually It was entry.puzzles != null condition chnaged for hiding
-          _UserActivityListTile(
-            leading: const Icon(LichessIcons.target, size: leadingIconSize),
-            title: context.l10n.activitySolvedNbPuzzles(entry.puzzles!.win + entry.puzzles!.loss),
-            subtitle: RatingPrefAware(
-              child: Row(
-                children: [
-                  RatingWidget(deviation: 0, rating: entry.puzzles!.ratingAfter),
-                  const SizedBox(width: 3),
-                  if (entry.puzzles!.ratingAfter - entry.puzzles!.ratingBefore != 0) ...[
-                    Icon(
-                      entry.puzzles!.ratingAfter - entry.puzzles!.ratingBefore > 0
-                          ? LichessIcons.arrow_full_upperright
-                          : LichessIcons.arrow_full_lowerright,
-                      color:
-                          entry.puzzles!.ratingAfter - entry.puzzles!.ratingBefore > 0
-                              ? greenColor
-                              : redColor,
-                      size: 12,
-                    ),
-                    Text(
-                      (entry.puzzles!.ratingAfter - entry.puzzles!.ratingBefore).abs().toString(),
-                      style: TextStyle(
-                        color:
-                            entry.puzzles!.ratingAfter - entry.puzzles!.ratingBefore > 0
-                                ? greenColor
-                                : redColor,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
-                ],
+        if (entry.puzzles != null)
+          //Actually It was entry.puzzles != null condition chnaged for hiding
+          // _UserActivityListTile(
+          //   leading: const Icon(LichessIcons.target, size: leadingIconSize),
+          //   title: context.l10n.activitySolvedNbPuzzles(entry.puzzles!.win + entry.puzzles!.loss),
+          //   subtitle: RatingPrefAware(
+          //     child: Row(
+          //       children: [
+          //         RatingWidget(deviation: 0, rating: entry.puzzles!.ratingAfter),
+          //         const SizedBox(width: 3),
+          //         if (entry.puzzles!.ratingAfter - entry.puzzles!.ratingBefore != 0) ...[
+          //           Icon(
+          //             entry.puzzles!.ratingAfter - entry.puzzles!.ratingBefore > 0
+          //                 ? LichessIcons.arrow_full_upperright
+          //                 : LichessIcons.arrow_full_lowerright,
+          //             color:
+          //                 entry.puzzles!.ratingAfter - entry.puzzles!.ratingBefore > 0
+          //                     ? greenColor
+          //                     : redColor,
+          //             size: 12,
+          //           ),
+          //           Text(
+          //             (entry.puzzles!.ratingAfter - entry.puzzles!.ratingBefore).abs().toString(),
+          //             style: TextStyle(
+          //               color:
+          //                   entry.puzzles!.ratingAfter - entry.puzzles!.ratingBefore > 0
+          //                       ? greenColor
+          //                       : redColor,
+          //               fontSize: 11,
+          //             ),
+          //           ),
+          //         ],
+          //       ],
+          //     ),
+          //   ),
+          //   trailing: BriefGameResultBox(
+          //     win: entry.puzzles!.win,
+          //     draw: 0,
+          //     loss: entry.puzzles!.loss,
+          //   ),
+          // ),
+          if (entry.streak != null)
+            _UserActivityListTile(
+              leading: const Icon(LichessIcons.streak, size: leadingIconSize),
+              title: context.l10n.stormPlayedNbRunsOfPuzzleStorm(
+                entry.streak!.runs,
+                'Puzzle Streak',
               ),
+              subtitle: emptySubtitle,
+              trailing: BriefGameResultBox(win: entry.streak!.score, draw: 0, loss: 0),
             ),
-            trailing: BriefGameResultBox(
-              win: entry.puzzles!.win,
-              draw: 0,
-              loss: entry.puzzles!.loss,
-            ),
-          ),
-        if (entry.streak != null)
-          _UserActivityListTile(
-            leading: const Icon(LichessIcons.streak, size: leadingIconSize),
-            title: context.l10n.stormPlayedNbRunsOfPuzzleStorm(entry.streak!.runs, 'Puzzle Streak'),
-            subtitle: emptySubtitle,
-            trailing: BriefGameResultBox(win: entry.streak!.score, draw: 0, loss: 0),
-          ),
         if (entry.storm != null)
           _UserActivityListTile(
             leading: const Icon(LichessIcons.storm, size: leadingIconSize),

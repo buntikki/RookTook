@@ -48,7 +48,11 @@ class RecentGamesWidget extends ConsumerWidget {
         user != null
             ? ref.watch(userActivityProvider(id: user!.id))
             : ref.watch(accountActivityProvider);
-    final nonEmptyActivities = activity.value!.where((entry) => entry.isNotEmpty);
+
+    // Handle activity null safety
+    final nonEmptyActivities =
+        activity.valueOrNull?.where((entry) => entry.isNotEmpty).toList() ?? [];
+
     final rating = nonEmptyActivities
         .expand((e) => e.games!.entries)
         .map((e1) => e1.value.ratingAfter);
@@ -79,7 +83,7 @@ class RecentGamesWidget extends ConsumerWidget {
                         context.l10n.recentGames,
                         style: TextStyle(color: textColor ?? Colors.black, fontSize: 18),
                       ),
-                      Container(
+                    /*  Container(
                         child:
                             nbOfGames > list.length
                                 ? NoPaddingTextButton(
@@ -98,7 +102,7 @@ class RecentGamesWidget extends ConsumerWidget {
                                   ),
                                 )
                                 : null,
-                      ),
+                      ),*/
                     ],
                   ),
                 ),

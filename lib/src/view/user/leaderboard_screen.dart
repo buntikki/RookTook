@@ -12,6 +12,7 @@ import 'package:lichess_mobile/src/utils/navigation.dart';
 import 'package:lichess_mobile/src/view/user/user_screen.dart';
 import 'package:lichess_mobile/src/widgets/list.dart';
 import 'package:lichess_mobile/src/widgets/platform_scaffold.dart';
+import 'package:random_avatar/random_avatar.dart';
 
 /// Create a Screen with Top 10 players for each Lichess Variant
 class LeaderboardScreen extends StatelessWidget {
@@ -106,12 +107,14 @@ class LeaderboardListTile extends StatelessWidget {
         padding: const EdgeInsets.only(right: 5.0),
         child: Row(
           children: [
-            Image.asset('assets/images/avatar.png', height: 30, width: 30),
+            ClipOval(child: RandomAvatar(user.title!, height: 30, width: 30)),
+
             const SizedBox(width: 12),
             if (user.title != null) ...[
               Container(
                 width: 60, // Fixed width for all titles
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                // height: 20,
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(6),
                   color: const Color(0xff21B8E8),
@@ -156,7 +159,7 @@ class LeaderboardListTile extends StatelessWidget {
   }
 
   void _handleTap(BuildContext context) {
-   // Navigator.of(context).push(UserScreen.buildRoute(context, user.lightUser));
+    // Navigator.of(context).push(UserScreen.buildRoute(context, user.lightUser));
   }
 }
 

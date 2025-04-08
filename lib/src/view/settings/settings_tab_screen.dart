@@ -177,7 +177,7 @@ class _Body extends ConsumerWidget {
         hasLeading: true,
         children: [
           SettingsListTile(
-            icon: SvgPicture.asset('assets/images/volume.svg'),
+            icon: SvgPicture.asset('assets/images/volume.svg',height: 24.0,),
             // icon: const Icon(Icons.music_note_outlined),
             settingsLabel: Text(context.l10n.sound),
             settingsValue:
@@ -233,7 +233,7 @@ class _Body extends ConsumerWidget {
           PlatformListTile(
             leading: SvgPicture.asset('assets/images/chess.svg'),
             // leading: const Icon(LichessIcons.chess_board),
-            title: Text(context.l10n.preferencesGameBehavior, overflow: TextOverflow.ellipsis),
+            title: const Text('Game Behaviour', overflow: TextOverflow.ellipsis),
             trailing:
                 Theme.of(context).platform == TargetPlatform.iOS
                     ? const CupertinoListTileChevron()
@@ -284,13 +284,18 @@ class _Body extends ConsumerWidget {
             // leading: const Icon(Icons.feedback_outlined),
             title: Text(context.l10n.mobileFeedbackButton),
             trailing: const _OpenInNewIcon(),
-            onTap: () {
+            onTap: () async {
               final Uri emailUri = Uri(
                 scheme: 'mailto',
                 path: 'hello@rooktook.com',
                 queryParameters: {'subject': 'How may I help you', 'body': ''},
               );
-              launchUrl(emailUri);
+              if (await canLaunchUrl(emailUri)) {
+                Theme.of(context).platform == TargetPlatform.iOS ? await launchUrl(emailUri, mode: LaunchMode.externalApplication) : await launchUrl(emailUri);
+              await launchUrl(emailUri);
+              } else {
+              print('⚠️ Could not launch email client');
+              }
             },
           ),
           PlatformListTile(
@@ -305,7 +310,7 @@ class _Body extends ConsumerWidget {
           PlatformListTile(
             leading: SvgPicture.asset('assets/images/shieldDone.svg'),
             // leading: const Icon(Icons.privacy_tip_outlined),
-            title: Text(context.l10n.privacyPolicy),
+            title: const Text('Privacy Policy'),
             trailing: const _OpenInNewIcon(),
             onTap: () {
               launchUrl(Uri.parse('https://www.rooktook.com/'));

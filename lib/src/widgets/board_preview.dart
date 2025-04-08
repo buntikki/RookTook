@@ -46,6 +46,8 @@ class SmallBoardPreview extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final boardPrefs = ref.watch(boardPreferencesProvider);
+    const darkSquare = Color(0xffD0D7DD);
+    const lightSquare = Colors.white;
 
     final content = LayoutBuilder(
       builder: (context, constraints) {
@@ -75,7 +77,29 @@ class SmallBoardPreview extends ConsumerWidget {
                     orientation: orientation,
                     lastMove: lastMove as NormalMove?,
                     pieceAssets: boardPrefs.pieceSet.assets,
-                    colorScheme: boardPrefs.boardTheme.colors,
+                    colorScheme: const ChessboardColorScheme(
+                      darkSquare: darkSquare,
+                      lightSquare: lightSquare,
+                      background: SolidColorChessboardBackground(
+                        lightSquare: lightSquare,
+                        darkSquare: darkSquare,
+                      ),
+                      whiteCoordBackground: SolidColorChessboardBackground(
+                        lightSquare: lightSquare,
+                        darkSquare: darkSquare,
+                        coordinates: true,
+                      ),
+                      blackCoordBackground: SolidColorChessboardBackground(
+                        lightSquare: lightSquare,
+                        darkSquare: darkSquare,
+                        coordinates: true,
+                        orientation: Side.black,
+                      ),
+                      lastMove: HighlightDetails(solidColor: Color(0xffFFEE93)),
+                      selected: HighlightDetails(solidColor: Color(0xffFFEE93)),
+                      validMoves: Color(0xffFFEE93),
+                      validPremoves: Color(0xffFFEE93),
+                    ),
                     brightness: boardPrefs.brightness,
                     hue: boardPrefs.hue,
                     enableCoordinates: false,

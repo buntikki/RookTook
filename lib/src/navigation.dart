@@ -108,7 +108,7 @@ final currentRootScrollControllerProvider = Provider<ScrollController>((ref) {
       return settingsScrollController;
   }
 });
-
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 final puzzlesNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'puzzles');
 final toolsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tools');

@@ -32,6 +32,7 @@ import 'package:lichess_mobile/src/widgets/bottom_bar.dart';
 import 'package:lichess_mobile/src/widgets/bottom_bar_button.dart';
 import 'package:lichess_mobile/src/widgets/buttons.dart';
 import 'package:lichess_mobile/src/widgets/clock.dart';
+import 'package:lichess_mobile/src/widgets/match_result_dialog.dart';
 import 'package:lichess_mobile/src/widgets/match_result_popup.dart';
 import 'package:lichess_mobile/src/widgets/platform_alert_dialog.dart';
 import 'package:lichess_mobile/src/widgets/user_full_name.dart';
@@ -393,7 +394,9 @@ class GameBody extends ConsumerWidget {
               showCupertinoDialog(
                 context: context,
                 builder:
-                    (_) => MatchResultPopup(
+                    (_) => MatchResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback)
+
+                /*MatchResultPopup(
                       seek: state,
                       title:
                           '${gameStatusL10n(context, variant: gameState.game.meta.variant, status: gameState.game.status, lastPosition: gameState.game.lastPosition, winner: gameState.game.winner, isThreefoldRepetition: gameState.game.isThreefoldRepetition)} Wins',
@@ -425,13 +428,15 @@ class GameBody extends ConsumerWidget {
                         }
                         // onNewOpponentCallback();
                       },
-                    ),
+                    )*/,
               );
             } else {
               showDialog(
                 context: context,
                 builder:
-                    (_) => MatchResultPopup(
+                    (_) => MatchResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback)
+
+                /*MatchResultPopup(
                       seek: state,
                       title:
                           '${gameStatusL10n(context, variant: gameState.game.meta.variant, status: gameState.game.status, lastPosition: gameState.game.lastPosition, winner: gameState.game.winner, isThreefoldRepetition: gameState.game.isThreefoldRepetition)}$showWinner',
@@ -463,7 +468,7 @@ class GameBody extends ConsumerWidget {
                         }
                         // onNewOpponentCallback();
                       },
-                    ),
+                    )*/,
               );
             }
           }
@@ -562,7 +567,7 @@ class _GameBottomBar extends ConsumerWidget {
                     context: context,
                     builder:
                         (context) =>
-                            GameResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback),
+                            MatchResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback),
                     barrierDismissible: true,
                   );
                 },
@@ -741,12 +746,12 @@ class _GameBottomBar extends ConsumerWidget {
     return showAdaptiveActionSheet(
       context: context,
       actions: [
-        BottomSheetAction(
-          makeLabel: (context) => Text(context.l10n.flipBoard),
-          onPressed: () {
-            ref.read(isBoardTurnedProvider.notifier).toggle();
-          },
-        ),
+        // BottomSheetAction(
+        //   makeLabel: (context) => Text(context.l10n.flipBoard),
+        //   onPressed: () {
+        //     ref.read(isBoardTurnedProvider.notifier).toggle();
+        //   },
+        // ),
         if (gameState.game.playable && gameState.game.meta.speed == Speed.correspondence)
           BottomSheetAction(
             makeLabel: (context) => Text(context.l10n.analysis),
@@ -763,31 +768,31 @@ class _GameBottomBar extends ConsumerWidget {
               ref.read(gameControllerProvider(id).notifier).abortGame();
             },
           ),
-        if (gameState.game.meta.clock != null && gameState.game.canGiveTime)
-          BottomSheetAction(
-            makeLabel:
-                (context) => Text(
-                  context.l10n.giveNbSeconds(gameState.game.meta.clock!.moreTime?.inSeconds ?? 15),
-                ),
-            onPressed: () {
-              ref.read(gameControllerProvider(id).notifier).moreTime();
-            },
-          ),
-        if (gameState.game.canTakeback)
-          BottomSheetAction(
-            makeLabel: (context) => Text(context.l10n.takeback),
-            onPressed: () {
-              ref.read(gameControllerProvider(id).notifier).offerTakeback();
-            },
-          ),
-        if (gameState.game.me?.proposingTakeback == true)
-          BottomSheetAction(
-            makeLabel: (context) => Text(context.l10n.mobileCancelTakebackOffer),
-            isDestructiveAction: true,
-            onPressed: () {
-              ref.read(gameControllerProvider(id).notifier).cancelOrDeclineTakeback();
-            },
-          ),
+        // if (gameState.game.meta.clock != null && gameState.game.canGiveTime)
+        //   BottomSheetAction(
+        //     makeLabel:
+        //         (context) => Text(
+        //           context.l10n.giveNbSeconds(gameState.game.meta.clock!.moreTime?.inSeconds ?? 15),
+        //         ),
+        //     onPressed: () {
+        //       ref.read(gameControllerProvider(id).notifier).moreTime();
+        //     },
+        //   ),
+        // if (gameState.game.canTakeback)
+        //   BottomSheetAction(
+        //     makeLabel: (context) => Text(context.l10n.takeback),
+        //     onPressed: () {
+        //       ref.read(gameControllerProvider(id).notifier).offerTakeback();
+        //     },
+        //   ),
+        // if (gameState.game.me?.proposingTakeback == true)
+        //   BottomSheetAction(
+        //     makeLabel: (context) => Text(context.l10n.mobileCancelTakebackOffer),
+        //     isDestructiveAction: true,
+        //     onPressed: () {
+        //       ref.read(gameControllerProvider(id).notifier).cancelOrDeclineTakeback();
+        //     },
+        //   ),
         if (gameState.canOfferDraw)
           BottomSheetAction(
             makeLabel: (context) => Text(context.l10n.offerDraw),

@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:io';
+
 
 class GoogleSignInService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -16,7 +18,21 @@ class GoogleSignInService {
       
       // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      
+
+
+
+      void printLongString(String text) {
+        const int chunkSize = 800;
+        for (var i = 0; i < text.length; i += chunkSize) {
+          final chunk = text.substring(i, i + chunkSize > text.length ? text.length : i + chunkSize);
+          print(chunk);
+        }
+      }
+
+      printLongString("--- ----- -Access Token: ${googleAuth.accessToken}");
+      printLongString("--- ---- ----ID Token: ${googleAuth.idToken}");
+
+
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,

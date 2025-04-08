@@ -201,7 +201,7 @@ class _Body extends ConsumerWidget {
                 }
               },
             ),
-            SwitchSettingTile(
+            /*SwitchSettingTile(
               // TODO: Add l10n
               title: const Text('Shape drawing'),
               subtitle: const Text(
@@ -213,7 +213,7 @@ class _Body extends ConsumerWidget {
               onChanged: (value) {
                 ref.read(boardPreferencesProvider.notifier).toggleEnableShapeDrawings();
               },
-            ),
+            ),*/
           ],
         ),
       ],

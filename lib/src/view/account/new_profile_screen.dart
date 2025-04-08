@@ -18,13 +18,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:random_avatar/random_avatar.dart';
 
-class UserProfileScreen extends ConsumerWidget {
-  const UserProfileScreen({super.key});
+class NewProfileScreen extends ConsumerWidget {
+  const NewProfileScreen({super.key});
 
   static Route<dynamic> buildRoute(BuildContext context) {
     return buildScreenRoute(
       context,
-      screen: const UserProfileScreen(),
+      screen: const NewProfileScreen(),
       title: context.l10n.profile,
     );
   }
@@ -102,9 +102,9 @@ class UserProfileScreen extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _StatCard(label: 'Game Won', count: win, color: Colors.green, labelIcon: 'W'),
-                  _StatCard(label: 'Game Loss', count: loose, color: Colors.red, labelIcon: 'L'),
-                  _StatCard(label: 'Game Draw', count: draw, color: Colors.blue, labelIcon: 'D'),
+                  _StatCard(label: 'Games Won', count: win, color: Colors.green, labelIcon: 'W'),
+                  _StatCard(label: 'Games Lost', count: loose, color: Colors.red, labelIcon: 'L'),
+                  _StatCard(label: 'Games Drawn', count: draw, color: Colors.blue, labelIcon: 'D'),
                 ],
               ),
               const SizedBox(height: 30),
@@ -115,7 +115,9 @@ class UserProfileScreen extends ConsumerWidget {
                 ),
                 margin: EdgeInsets.all(16),
                 child: Column(
+
                   children: [
+
                     _MenuItem(
                       icon: 'assets/images/profile.svg',
                       title: 'My Profile',
@@ -124,13 +126,13 @@ class UserProfileScreen extends ConsumerWidget {
                         Navigator.of(context).push(ProfileScreen.buildRoute(context));
                       },
                     ),
-                    const Divider(color: Colors.white24),
+                    const Divider(color: Colors.white24,height: 1,),
                     _MenuItem(
                       icon: 'assets/images/leaderboard.svg',
                       title: 'Leaderboard',
                       onTap: () => Navigator.of(context).push(PlayerScreen.buildRoute(context)),
                     ),
-                    const Divider(color: Colors.white24),
+                    const Divider(color: Colors.white24,height: 1,),
 
                     // _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
                     // const Divider(color: Colors.white24),
@@ -217,6 +219,8 @@ class _StatCard extends StatelessWidget {
 }
 
 _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
+
+  final authController = ref.read(authControllerProvider.notifier);
   if (Theme.of(context).platform == TargetPlatform.iOS) {
     return showCupertinoActionSheet(
       context: context,
@@ -224,10 +228,22 @@ _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
         BottomSheetAction(
           makeLabel: (context) => Text(context.l10n.logOut),
           isDestructiveAction: true,
-          onPressed: () async {
-            await ref.read(authControllerProvider.notifier).signOut();
-            buildScreenRoute<void>(context, screen: const LoginScreen());
-          },
+            onPressed: () async {
+              Navigator.of(context).pop(); // Dismiss the dialog
+
+              await Future.delayed(Duration(milliseconds: 200)); // Let animation finish
+
+              authController.signOut();
+
+              // Reset current tab to avoid keeping state
+              ref.read(currentBottomTabProvider.notifier).state = BottomTab.home;
+
+              // Navigate to login from root navigator
+              rootNavigatorKey.currentState?.pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    (route) => false,
+              );
+            }
         ),
       ],
     );
@@ -249,22 +265,12 @@ _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
               style: TextButton.styleFrom(textStyle: TextTheme.of(context).labelLarge),
               child: Text(context.l10n.mobileOkButton),
               onPressed: () async {
-                Navigator.of(context).pop();
-                ref.read(authControllerProvider.notifier).signOut();
-                // Navigator.of(context).pushAndRemoveUntil(
-                //   buildScreenRoute<void>(context, screen: const LoginScreen()),
-                //   (route) => false,
-                // );
-                Navigator.of(
-                  context,
-                ).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
-                // Navigator.of(context, rootNavigator: true).pushReplacement(
-                //   LoginScreen()
-                //   GameScreen.buildRoute(
-                //     context,
-                //     seek: GameSeek.newOpponentFromGame(game, savedSetup),
-                //   ),
-                // );
+                Navigator.of(context).pop(); // Close the dialog first
+                authController.signOut();
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      (route) => false,
+                );
               },
             ),
           ],
@@ -285,7 +291,9 @@ class _MenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: SvgPicture.asset(icon),
-      title: Text(title, style: const TextStyle(color: Colors.white)),
+      title: Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(
+    color: Colors.white,
+    fontWeight: FontWeight.normal,)),
       trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white24, size: 16),
       onTap: onTap,
     );
@@ -397,7 +405,7 @@ class GameWonCard extends StatelessWidget {
                 const SizedBox(height: 40),
                 // Game Won text
                 const Text(
-                  'Game Won',
+                  'Games Won',
                   style: TextStyle(
                     color: Color(0xFF818181),
                     fontSize: 32,

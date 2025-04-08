@@ -278,7 +278,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                 child: InkWell(
                   onTap: () {
                     // Navigate to profile screen
-                    Navigator.of(context).push(UserProfileScreen.buildRoute(context));
+                    Navigator.of(context).push(NewProfileScreen.buildRoute(context));
                   },
                   borderRadius: BorderRadius.circular(
                     18,
@@ -326,7 +326,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-          floatingActionButton:
+         /* floatingActionButton:
               isTablet
                   ? null
                   : FloatingActionButton.extended(
@@ -335,7 +335,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                     },
                     icon: const Icon(Icons.add),
                     label: Text(context.l10n.play),
-                  ),
+                  ),*/
         );
 
         // }
@@ -393,7 +393,11 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         widget: HomeEditableWidget.recentGames,
         index: homePrefs.enabledWidgets.indexOf(HomeEditableWidget.recentGames),
         shouldShow: true,
-        child: RecentGamesWidget(recentGames: recentGames, nbOfGames: nbOfGames, user: null),
+        child: RecentGamesWidget(
+          recentGames: recentGames,
+          nbOfGames: nbOfGames,
+          user: session?.user,
+        ),
       ),
     ].sortedBy((_EditableWidget widget) {
       final i = homePrefs.enabledWidgets.indexOf(widget.widget);
@@ -417,6 +421,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required int rapidRank,
     required int bulletRank,
   }) {
+    // fetch the account user to be sure we have the latest data (flair, etc.)
+    final accountUser = ref
+        .watch(accountProvider)
+        .maybeWhen(data: (data) => data?.lightUser, orElse: () => null);
+
+    final user = accountUser ?? session?.user;
     final welcomeWidgets = [
       /*Padding(
         padding: Styles.horizontalBodyPadding,
@@ -433,9 +443,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ElevatedButton.icon(
-          label: const Text(
+          label: Text(
             'PLAY NOW',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xff54C339),
@@ -468,7 +481,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       RecentGamesWidget(
         recentGames: recentGames,
         nbOfGames: nbOfGames,
-        user: null,
+        user: session?.user,
         maxGamesToShow: 5,
       ),
       // if (session == null) ...[
@@ -551,6 +564,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required AsyncValue<IList<LightArchivedGameWithPov>> recentGames,
     required int nbOfGames,
   }) {
+    // fetch the account user to be sure we have the latest data (flair, etc.)
+    final accountUser = ref
+        .watch(accountProvider)
+        .maybeWhen(data: (data) => data?.lightUser, orElse: () => null);
+
+    final user = accountUser ?? session?.user;
     return [
       const _EditableWidget(
         widget: HomeEditableWidget.hello,
@@ -584,7 +603,11 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const SizedBox(height: 8.0),
-                RecentGamesWidget(recentGames: recentGames, nbOfGames: nbOfGames, user: null),
+                RecentGamesWidget(
+                  recentGames: recentGames,
+                  nbOfGames: nbOfGames,
+                  user: session?.user,
+                ),
               ],
             ),
           ),
