@@ -29,6 +29,7 @@ Future<void> showChoicePicker<T>(
                 final List<Widget> choiceWidgets = choices
                     .map((value) {
                       return RadioListTile<T>(
+                        activeColor: Color(0xff54C339),
                         title: labelBuilder(value),
                         value: value,
                         groupValue: selectedItem,
@@ -52,7 +53,7 @@ Future<void> showChoicePicker<T>(
             ),
             actions: [
               TextButton(
-                child: Text(context.l10n.cancel),
+                child: Text(context.l10n.cancel, style: const TextStyle(color: Colors.white)),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],

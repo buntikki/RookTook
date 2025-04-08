@@ -177,17 +177,18 @@ class _BodyState extends ConsumerState<_Body> {
           SliverList.list(
             children: [
               ListSection(
+                backgroundColor: Color(0xff2B2D30),
                 hasLeading: true,
                 children: [
-                  if (getCorePalette() != null)
-                    SwitchSettingTile(
-                      leading: const Icon(Icons.colorize_outlined),
-                      title: Text(context.l10n.mobileSystemColors),
-                      value: generalPrefs.systemColors,
-                      onChanged: (value) {
-                        ref.read(generalPreferencesProvider.notifier).toggleSystemColors();
-                      },
-                    ),
+                  // if (getCorePalette() != null)
+                  //   SwitchSettingTile(
+                  //     leading: const Icon(Icons.colorize_outlined),
+                  //     title: Text(context.l10n.mobileSystemColors),
+                  //     value: generalPrefs.systemColors,
+                  //     onChanged: (value) {
+                  //       ref.read(generalPreferencesProvider.notifier).toggleSystemColors();
+                  //     },
+                  //   ),
                   /*SettingsListTile(
                     icon: const Icon(Icons.wallpaper),
                     settingsLabel: Text(context.l10n.background),
@@ -212,7 +213,7 @@ class _BodyState extends ConsumerState<_Body> {
                             .setBackground(backgroundColor: null, backgroundImage: null);
                       },
                     ),*/
-                 /* SettingsListTile(
+                  /* SettingsListTile(
                     icon: const Icon(LichessIcons.chess_board),
                     settingsLabel: Text(context.l10n.board),
                     settingsValue: boardPrefs.boardTheme.label,
@@ -220,7 +221,7 @@ class _BodyState extends ConsumerState<_Body> {
                       Navigator.of(context).push(BoardChoiceScreen.buildRoute(context));
                     },
                   ),*/
-                /*  SettingsListTile(
+                  /*  SettingsListTile(
                     icon: const Icon(LichessIcons.chess_pawn),
                     settingsLabel: Text(context.l10n.pieceSet),
                     settingsValue: boardPrefs.pieceSet.label,
@@ -276,7 +277,7 @@ class _BodyState extends ConsumerState<_Body> {
                   ),
                 ],
               ),
-             /* ListSection(
+              /* ListSection(
                 header: SettingsSectionTitle(context.l10n.advancedSettings),
                 hasLeading: true,
                 children: [

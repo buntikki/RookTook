@@ -47,6 +47,7 @@ class _Body extends ConsumerWidget {
     return ListView(
       children: [
         ListSection(
+          backgroundColor: Color(0xff2B2D30),
           hasLeading: false,
           children: [
             SettingsListTile(
