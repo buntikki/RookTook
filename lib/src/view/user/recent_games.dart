@@ -75,13 +75,13 @@ class RecentGamesWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.only(left: 16.0,right: 16.0,top: 16.0,bottom: 8.0,),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        context.l10n.recentGames,
-                        style: TextStyle(color: textColor ?? Colors.black, fontSize: 18),
+                        'Recent Games',
+                        style: TextStyle(color: textColor ?? Colors.black, fontSize: 18,fontWeight: FontWeight.bold,),
                       ),
                     /*  Container(
                         child:

@@ -174,11 +174,17 @@ class BottomNavScaffold extends ConsumerWidget {
                 final isOnline =
                     ref.watch(connectivityChangesProvider).valueOrNull?.isOnline ?? true;
                 return NavigationBar(
+                  backgroundColor: Color(0xFF13191D),
+                  indicatorColor: Colors.transparent,
+
                   selectedIndex: currentTab.index,
                   destinations: [
                     for (final tab in BottomTab.values)
                       NavigationDestination(
-                        icon: Icon(tab == currentTab ? tab.activeIcon : tab.icon),
+                        icon: Icon(
+                          tab == currentTab ? tab.activeIcon : tab.icon,
+                          color: tab == currentTab ? Colors.white : null,
+                        ),
                         label: tab.label(context.l10n),
                       ),
                   ],

@@ -69,7 +69,7 @@ class GameListTile extends StatelessWidget {
         //     : Icon(CupertinoIcons.minus_square_fill, color: context.lichessColors.error);
         return game.winner == null
             ? Container(
-              decoration: const BoxDecoration(color: Colors.yellow, shape: BoxShape.circle),
+              decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
               child: const Padding(
                 padding: EdgeInsets.all(4.0),
                 child: Text('D', style: TextStyle(color: Colors.white, fontSize: 10)),
@@ -170,9 +170,9 @@ class _GameListTile extends StatelessWidget {
         shape: RoundedRectangleBorder(),
         leading:
             icon == Perf.bullet.icon
-                ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
+                ? Image.asset('assets/images/bullet_game.png', height: 20, width: 20)
                 : icon == Perf.rapid.icon
-                ? Image.asset('assets/images/flip.png', height: 20, width: 20)
+                ? Image.asset('assets/images/rapid_game.png', height: 20, width: 20)
                 : SizedBox(),
         onTap: onTap,
         title: Row(
@@ -210,7 +210,7 @@ class _GameListTile extends StatelessWidget {
           ],
         ),
         onLongPress: () {
-          showAdaptiveBottomSheet<void>(
+          /*showAdaptiveBottomSheet<void>(
             context: context,
             useRootNavigator: true,
             isDismissible: true,
@@ -224,7 +224,7 @@ class _GameListTile extends StatelessWidget {
                   opponentTitle: opponentTitle,
                   onPressedBookmark: onPressedBookmark,
                 ),
-          );
+          );*/
         },
         trailing: trailing,
       ),
@@ -384,7 +384,7 @@ class GameContextMenu extends ConsumerWidget {
               },
             ),
           ),
-        BottomSheetContextMenuAction(
+        /*BottomSheetContextMenuAction(
           icon: Icons.biotech,
           onPressed:
               game.variant.isReadSupported
@@ -404,7 +404,7 @@ class GameContextMenu extends ConsumerWidget {
                     );
                   },
           child: Text(context.l10n.gameAnalysis),
-        ),
+        ),*/
         if (isLoggedIn && onPressedBookmark != null)
           BottomSheetContextMenuAction(
             onPressed: () => onPressedBookmark?.call(context),

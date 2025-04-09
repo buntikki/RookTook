@@ -55,7 +55,7 @@ class GameListDetailTile extends StatelessWidget {
 
     return AdaptiveInkWell(
       onLongPress: () {
-        showAdaptiveBottomSheet<void>(
+       /* showAdaptiveBottomSheet<void>(
           context: context,
           useRootNavigator: true,
           isDismissible: true,
@@ -73,7 +73,7 @@ class GameListDetailTile extends StatelessWidget {
                 showGameSummary: false,
                 onPressedBookmark: onPressedBookmark,
               ),
-        );
+        );*/
       },
       onTap:
           () => openGameScreen(

@@ -79,9 +79,7 @@ class _LeaderboardWidgetState extends ConsumerState<LeaderboardWidget> {
             hasLeading: true,
             header: const Text('World Rank'),
             headerTrailing: NoPaddingTextButton(
-              onPressed: () {
-                Navigator.of(context).push(LeaderboardScreen.buildRoute(context));
-              },
+              onPressed: null,
               child: Container(
                 height: 36,
                 width: 36, 

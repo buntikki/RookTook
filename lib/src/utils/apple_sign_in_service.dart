@@ -34,6 +34,17 @@ class AppleSignInService {
         nonce: nonce,
       );
 
+      void printLongString(String text) {
+        const int chunkSize = 800;
+        for (var i = 0; i < text.length; i += chunkSize) {
+          final chunk = text.substring(i, i + chunkSize > text.length ? text.length : i + chunkSize);
+          print(chunk);
+        }
+      }
+
+      printLongString('--- ----- -IDENTITY Token: ${appleCredential.identityToken}');
+      //printLongString("--- ---- ----RAW NONCE: ${appleCredential.}");
+
       final oauthCredential = OAuthProvider("apple.com").credential(
         idToken: appleCredential.identityToken,
         rawNonce: rawNonce,

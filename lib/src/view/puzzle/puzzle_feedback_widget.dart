@@ -48,17 +48,7 @@ class PuzzleFeedbackWidget extends ConsumerWidget {
                         : context.l10n.puzzlePuzzleComplete,
                     overflow: TextOverflow.ellipsis,
                   ),
-          subtitle:
-              onStreak && state.result == PuzzleResult.lose
-                  ? null
-                  : RatingPrefAware(
-                    orElse: Text('$playedXTimes.', overflow: TextOverflow.ellipsis, maxLines: 2),
-                    child: Text(
-                      '$puzzleRating. $playedXTimes.',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                  ),
+
         );
       case PuzzleMode.load:
       case PuzzleMode.play:

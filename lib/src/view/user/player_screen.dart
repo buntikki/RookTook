@@ -35,6 +35,7 @@ class PlayerScreen extends ConsumerStatefulWidget {
 class _PlayerScreenState extends ConsumerState<PlayerScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +57,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> with SingleTickerPr
   }
 
   List<Widget> filteredChildren = [];
+
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(authSessionProvider);
@@ -103,17 +105,22 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> with SingleTickerPr
                       _buildTabButton(
                         0,
                         'Bullet',
-                        Image.asset('assets/images/bullet.png', color: Colors.amber),
+                        Image.asset('assets/images/bullet_game.png',),
                       ),
-                      _buildTabButton(1, 'Rapid', Icon(Icons.timer_outlined, color: Colors.green)),
+                      _buildTabButton(
+                        1,
+                        'Rapid',
+                        Image.asset('assets/images/rapid_game.png',),
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
             Container(
-              height: 480,
+              height: 700,
               child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(), // 👈 disables swipe
                 controller: _tabController,
                 children: [
                   LeaderboardWidget(index: _selectedIndex),
@@ -192,7 +199,7 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> with SingleTickerPr
                 text,
                 style: TextStyle(
                   color: isSelected ? Colors.black : Colors.grey,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
@@ -211,6 +218,7 @@ class _Body extends ConsumerStatefulWidget {
 class _BodyState extends ConsumerState<_Body> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -232,6 +240,7 @@ class _BodyState extends ConsumerState<_Body> with SingleTickerProviderStateMixi
   }
 
   List<Widget> filteredChildren = [];
+
   @override
   Widget build(BuildContext context) {
     final session = ref.watch(authSessionProvider);
@@ -260,12 +269,12 @@ class _BodyState extends ConsumerState<_Body> with SingleTickerProviderStateMixi
                         _buildTabButton(
                           0,
                           'Bullet',
-                          Image.asset('assets/images/bullet.png', color: Colors.amber),
+                          Image.asset('assets/images/bullet_game.png',height: 20,width: 20,),
                         ),
                         _buildTabButton(
                           1,
                           'Rapid',
-                          Icon(Icons.timer_outlined, color: Colors.green),
+                          Image.asset('assets/images/rapid_game.png',height: 20,width: 20,),
                         ),
                       ],
                     ),
@@ -273,8 +282,9 @@ class _BodyState extends ConsumerState<_Body> with SingleTickerProviderStateMixi
                 ),
               ),
               Container(
-                height: 480,
+                height: 700,
                 child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(), // 👈 disables swipe
                   controller: _tabController,
                   children: [
                     LeaderboardWidget(index: _selectedIndex),
@@ -335,7 +345,7 @@ class _BodyState extends ConsumerState<_Body> with SingleTickerProviderStateMixi
                 text,
                 style: TextStyle(
                   color: isSelected ? Colors.black : Colors.grey,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],

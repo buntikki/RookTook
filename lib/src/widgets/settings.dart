@@ -90,7 +90,12 @@ class SwitchSettingTile extends StatelessWidget {
       leading: leading,
       title: _SettingsTitle(title: title),
       subtitle: subtitle,
-      trailing: Switch.adaptive(value: value, onChanged: onChanged),
+      trailing: Switch.adaptive(
+        value: value,
+        onChanged: onChanged,
+        activeColor: Color(0xff54C339),
+        thumbColor: WidgetStatePropertyAll(Colors.white),
+      ),
     );
   }
 }
@@ -125,6 +130,7 @@ class _SliderSettingsTileState extends State<SliderSettingsTile> {
       max: widget.values.length.toDouble() - 1,
       divisions: widget.values.length - 1,
       label: widget.labelBuilder?.call(widget.values[_index]) ?? widget.values[_index].toString(),
+      activeColor: Color(0xff54C339),
       onChanged: (value) {
         final newIndex = value.toInt();
         setState(() {
@@ -134,7 +140,6 @@ class _SliderSettingsTileState extends State<SliderSettingsTile> {
       onChangeEnd: (value) {
         widget.onChangeEnd(widget.values[_index]);
       },
-
     );
 
     return PlatformListTile(

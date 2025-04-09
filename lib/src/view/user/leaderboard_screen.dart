@@ -42,9 +42,9 @@ class _Body extends ConsumerWidget {
     return leaderboard.when(
       data: (data) {
         final List<Widget> list = [
-          _Leaderboard(data.bullet, LichessIcons.bullet, 'BULLET'),
+          _Leaderboard(data.bullet, 'assets/images/bullet_game.png', 'BULLET'),
           // _Leaderboard(data.blitz, LichessIcons.blitz, 'BLITZ'),
-          _Leaderboard(data.rapid, LichessIcons.rapid, 'RAPID'),
+          _Leaderboard(data.rapid, 'assets/images/rapid_game.png', 'RAPID'),
           // _Leaderboard(data.classical, LichessIcons.classical, 'CLASSICAL'),
           // _Leaderboard(data.ultrabullet, LichessIcons.ultrabullet, 'ULTRA BULLET'),
           // _Leaderboard(data.crazyhouse, LichessIcons.h_square, 'CRAZYHOUSE'),
@@ -195,7 +195,7 @@ class _Progress extends StatelessWidget {
 class _Leaderboard extends StatelessWidget {
   const _Leaderboard(this.userList, this.iconData, this.title);
   final List<LeaderboardUser> userList;
-  final IconData iconData;
+  final String iconData;
   final String title;
 
   @override
@@ -207,7 +207,8 @@ class _Leaderboard extends StatelessWidget {
         hasLeading: false,
         header: Row(
           children: [
-            Icon(iconData, color: context.lichessColors.brag),
+            Image.asset(iconData, height: 20, width: 20,),
+            //Icon(iconData, color: context.lichessColors.brag),
             const SizedBox(width: 10.0),
             Text(title),
           ],

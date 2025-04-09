@@ -128,7 +128,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
     }
 
     final fieldLabel = _isInputEmail ? 'Username' : 'Email';
-    final hintText = _isInputEmail ? 'Create username' : 'Enter12345678 email';
+    final hintText = _isInputEmail ? 'Create username' : 'Enter email';
 
     return Scaffold(
       backgroundColor: const Color(0xff1C1E21),

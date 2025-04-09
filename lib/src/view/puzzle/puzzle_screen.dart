@@ -352,8 +352,8 @@ class _Body extends ConsumerWidget {
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Row(
                           children: [
-                            Text(context.l10n.rating),
-                            const SizedBox(width: 5.0),
+                           /* Text(context.l10n.rating),*//*
+                            const SizedBox(width: 5.0),*/
                             TweenAnimationBuilder<double>(
                               tween: Tween<double>(
                                 begin: puzzleState.glicko!.rating,
@@ -363,11 +363,15 @@ class _Body extends ConsumerWidget {
                               ),
                               duration: const Duration(milliseconds: 500),
                               builder: (context, double rating, _) {
-                                return Text(
-                                  rating.truncate().toString(),
-                                  style: const TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
+                                final hasStarted = rating != puzzleState.glicko!.rating;
+                                return Opacity(
+                                  opacity: hasStarted ? 1 : 0, // Hide while on 'begin'
+                                  child: Text(
+                                    rating.truncate().toString(),
+                                    style: const TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 );
                               },
@@ -485,15 +489,15 @@ class _BottomBarState extends ConsumerState<_BottomBar> {
               );
             },
           ),
-        if (puzzleState.mode == PuzzleMode.view)
+        /* if (puzzleState.mode == PuzzleMode.view)
           BottomBarButton(
             label: context.l10n.menu,
             onTap: () {
               _showPuzzleMenu(context, ref);
             },
             icon: Icons.menu,
-          ),
-        if (puzzleState.mode == PuzzleMode.view)
+          ),*/
+        /* if (puzzleState.mode == PuzzleMode.view)
           BottomBarButton(
             onTap: () {
               ref.read(ctrlProvider.notifier).toggleEngine();
@@ -501,7 +505,7 @@ class _BottomBarState extends ConsumerState<_BottomBar> {
             label: context.l10n.toggleLocalEvaluation,
             icon: CupertinoIcons.gauge,
             highlighted: puzzleState.isEngineAvailable(enginePrefs),
-          ),
+          ),*/
         if (puzzleState.mode == PuzzleMode.view)
           RepeatButton(
             triggerDelays: _BottomBar._repeatTriggerDelays,
@@ -621,7 +625,7 @@ class _PuzzleSettingsButton extends StatelessWidget {
             isDismissible: true,
             isScrollControlled: true,
             showDragHandle: true,
-            constraints: BoxConstraints(minHeight: MediaQuery.sizeOf(context).height * 0.5),
+
             builder: (_) => _PuzzleSettingsBottomSheet(initialPuzzleContext),
           ),
       semanticsLabel: context.l10n.settingsSettings,

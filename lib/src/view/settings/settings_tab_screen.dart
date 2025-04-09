@@ -298,7 +298,7 @@ class _Body extends ConsumerWidget {
               }
             },
           ),
-          PlatformListTile(
+         /* PlatformListTile(
             leading: SvgPicture.asset('assets/images/document.svg'),
             // leading: const Icon(Icons.article_outlined),
             title: Text(context.l10n.termsOfService),
@@ -306,14 +306,14 @@ class _Body extends ConsumerWidget {
             onTap: () {
               launchUrl(Uri.parse('https://www.rooktook.com/'));
             },
-          ),
+          ),*/
           PlatformListTile(
             leading: SvgPicture.asset('assets/images/shieldDone.svg'),
             // leading: const Icon(Icons.privacy_tip_outlined),
             title: const Text('Privacy Policy'),
             trailing: const _OpenInNewIcon(),
             onTap: () {
-              launchUrl(Uri.parse('https://www.rooktook.com/'));
+              launchUrl(Uri.parse('https://www.rooktook.com/privacy-policy'));
             },
           ),
         ],
@@ -392,15 +392,17 @@ class _Body extends ConsumerWidget {
       //         ),
       //     ],
       //   ),
-      Padding(
-        padding: Styles.bodySectionPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // LichessMessage(style: TextTheme.of(context).bodyMedium),
-            const SizedBox(height: 10),
-            Text('v${packageInfo.version}', style: TextTheme.of(context).bodySmall),
-          ],
+      Center(
+        child: Padding(
+          padding: Styles.bodySectionPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // LichessMessage(style: TextTheme.of(context).bodyMedium),
+              const SizedBox(height: 10),
+              Text('v${packageInfo.version}', style: TextTheme.of(context).bodySmall),
+            ],
+          ),
         ),
       ),
     ];

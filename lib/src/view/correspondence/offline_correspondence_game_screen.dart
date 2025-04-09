@@ -80,7 +80,8 @@ class _Title extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(game.perf.icon, color: DefaultTextStyle.of(context).style.color),
+        if (game.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+        //Icon(game.perf.icon, color: DefaultTextStyle.of(context).style.color),
         const SizedBox(width: 4.0),
         if (game.daysPerTurn != null)
           Text('${context.l10n.nbDays(game.daysPerTurn!)}$mode')
