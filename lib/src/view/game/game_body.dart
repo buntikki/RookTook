@@ -372,12 +372,7 @@ class GameBody extends ConsumerWidget {
           if (context.mounted) {
             final ctrlProvider = gameControllerProvider(id);
             final gameState = ref.watch(ctrlProvider).requireValue;
-            print('user is :================ ${gameState.game.winner?.name}');
-            print('user is :================ ${gameState.game.aborted}');
-            print('user is :================ ${gameState.game.resignable}');
 
-            print('user is :================ ${gameState.game.me?.toJson()}');
-            print('user is :================ ${gameState.game.opponent?.toJson()}');
             final showWinner =
                 gameState.game.winner != null
                     ? ' • ${gameState.game.winner == Side.white ? context.l10n.whiteIsVictorious : context.l10n.blackIsVictorious}'

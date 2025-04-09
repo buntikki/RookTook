@@ -111,7 +111,7 @@ class _AnalysisScreenState extends ConsumerState<_AnalysisScreen>
           resizeToAvoidBottomInset: false,
           enableBackgroundFilterBlur: false,
           appBarTitle: _Title(variant: value.variant),
-          appBarActions: appBarActions,
+          //appBarActions: appBarActions,
           body: _Body(
             options: widget.options,
             controller: _tabController,
@@ -126,12 +126,12 @@ class _AnalysisScreenState extends ConsumerState<_AnalysisScreen>
           },
         );
       case _:
-        return PlatformScaffold(
+        return const PlatformScaffold(
           resizeToAvoidBottomInset: false,
           enableBackgroundFilterBlur: false,
-          appBarTitle: const _Title(variant: Variant.standard),
-          appBarActions: appBarActions,
-          body: const Center(child: CircularProgressIndicator()),
+          appBarTitle: _Title(variant: Variant.standard),
+         // appBarActions: appBarActions,
+          body: Center(child: CircularProgressIndicator()),
         );
     }
   }
@@ -324,23 +324,23 @@ class _BottomBar extends ConsumerWidget {
             },
           ),
         // PGN share can be used to quickly analyze a position, so engine must be allowed to access
-        if (analysisState.isComputerAnalysisAllowed)
+      /*  if (analysisState.isComputerAnalysisAllowed)
           BottomSheetAction(
             makeLabel: (context) => Text(context.l10n.mobileShareGamePGN),
             onPressed: () {
               Navigator.of(context).push(AnalysisShareScreen.buildRoute(context, options: options));
             },
-          ),
+          ),*/
         // share position as FEN can be used to quickly analyze a position, so engine must be allowed to access
-        if (analysisState.isComputerAnalysisAllowed)
+       /* if (analysisState.isComputerAnalysisAllowed)
           BottomSheetAction(
             makeLabel: (context) => Text(context.l10n.mobileSharePositionAsFEN),
             onPressed: () {
               final analysisState = ref.read(analysisControllerProvider(options)).requireValue;
               launchShareDialog(context, text: analysisState.currentPosition.fen);
             },
-          ),
-        if (options.gameId != null)
+          ),*/
+       /* if (options.gameId != null)
           BottomSheetAction(
             makeLabel: (context) => Text(context.l10n.screenshotCurrentPosition),
             onPressed: () async {
@@ -367,7 +367,7 @@ class _BottomBar extends ConsumerWidget {
                 }
               }
             },
-          ),
+          ),*/
       ],
     );
   }
