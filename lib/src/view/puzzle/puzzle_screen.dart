@@ -346,44 +346,44 @@ class _Body extends ConsumerWidget {
               bottomTable: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (puzzleState.glicko != null)
-                    RatingPrefAware(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Row(
-                          children: [
-                           /* Text(context.l10n.rating),*//*
-                            const SizedBox(width: 5.0),*/
-                            TweenAnimationBuilder<double>(
-                              tween: Tween<double>(
-                                begin: puzzleState.glicko!.rating,
-                                end:
-                                    puzzleState.nextContext?.glicko?.rating ??
-                                    puzzleState.glicko!.rating,
-                              ),
-                              duration: const Duration(milliseconds: 500),
-                              builder: (context, double rating, _) {
-                                final hasStarted = rating != puzzleState.glicko!.rating;
-                                return Opacity(
-                                  opacity: hasStarted ? 1 : 0, // Hide while on 'begin'
-                                  child: Text(
-                                    rating.truncate().toString(),
-                                    style: const TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  PuzzleSessionWidget(
-                    initialPuzzleContext: initialPuzzleContext,
-                    ctrlProvider: ctrlProvider,
-                  ),
+                  // if (puzzleState.glicko != null)
+                  //   RatingPrefAware(
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.only(top: 10.0),
+                  //       child: Row(
+                  //         children: [
+                  //          /* Text(context.l10n.rating),*//*
+                  //           const SizedBox(width: 5.0),*/
+                  //           TweenAnimationBuilder<double>(
+                  //             tween: Tween<double>(
+                  //               begin: puzzleState.glicko!.rating,
+                  //               end:
+                  //                   puzzleState.nextContext?.glicko?.rating ??
+                  //                   puzzleState.glicko!.rating,
+                  //             ),
+                  //             duration: const Duration(milliseconds: 500),
+                  //             builder: (context, double rating, _) {
+                  //               final hasStarted = rating != puzzleState.glicko!.rating;
+                  //               return Opacity(
+                  //                 opacity: hasStarted ? 1 : 0, // Hide while on 'begin'
+                  //                 child: Text(
+                  //                   rating.truncate().toString(),
+                  //                   style: const TextStyle(
+                  //                     fontSize: 16.0,
+                  //                     fontWeight: FontWeight.bold,
+                  //                   ),
+                  //                 ),
+                  //               );
+                  //             },
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // PuzzleSessionWidget(
+                  //   initialPuzzleContext: initialPuzzleContext,
+                  //   ctrlProvider: ctrlProvider,
+                  // ),
                 ],
               ),
             ),
@@ -455,90 +455,125 @@ class _BottomBarState extends ConsumerState<_BottomBar> {
     final puzzleState = ref.watch(ctrlProvider);
     final enginePrefs = ref.watch(engineEvaluationPreferencesProvider);
 
-    return PlatformBottomBar(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
       children: [
-        if (puzzleState.mode != PuzzleMode.view)
-          FutureBuilder(
-            future: _viewSolutionCompleter.future,
-            builder: (context, snapshot) {
-              return BottomBarButton(
-                icon: Icons.info,
-                label: context.l10n.getAHint,
-                showLabel: true,
-                highlighted: puzzleState.hintSquare != null,
-                onTap:
-                    snapshot.connectionState == ConnectionState.done
-                        ? () => ref.read(ctrlProvider.notifier).toggleHint()
-                        : null,
-              );
-            },
-          ),
-        if (puzzleState.mode != PuzzleMode.view)
-          FutureBuilder(
-            future: _viewSolutionCompleter.future,
-            builder: (context, snapshot) {
-              return BottomBarButton(
-                icon: Icons.help,
-                label: context.l10n.viewTheSolution,
-                showLabel: true,
-                onTap:
-                    snapshot.connectionState == ConnectionState.done
-                        ? () => ref.read(ctrlProvider.notifier).viewSolution()
-                        : null,
-              );
-            },
-          ),
-        /* if (puzzleState.mode == PuzzleMode.view)
-          BottomBarButton(
-            label: context.l10n.menu,
-            onTap: () {
-              _showPuzzleMenu(context, ref);
-            },
-            icon: Icons.menu,
-          ),*/
-        /* if (puzzleState.mode == PuzzleMode.view)
-          BottomBarButton(
-            onTap: () {
-              ref.read(ctrlProvider.notifier).toggleEngine();
-            },
-            label: context.l10n.toggleLocalEvaluation,
-            icon: CupertinoIcons.gauge,
-            highlighted: puzzleState.isEngineAvailable(enginePrefs),
-          ),*/
         if (puzzleState.mode == PuzzleMode.view)
-          RepeatButton(
-            triggerDelays: _BottomBar._repeatTriggerDelays,
-            onLongPress: puzzleState.canGoBack ? () => _moveBackward(ref) : null,
-            child: BottomBarButton(
-              onTap: puzzleState.canGoBack ? () => _moveBackward(ref) : null,
-              label: 'Previous',
-              icon: CupertinoIcons.chevron_back,
-              showTooltip: false,
+          Container(
+            height: 54,
+            width: 140,
+            decoration: BoxDecoration(
+              color: Color(0xff54C339),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: ElevatedButton.icon(
+              iconAlignment: IconAlignment.end, // Changed to center
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xff54C339),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                alignment: Alignment.center, // Added alignment center
+              ),
+
+              onPressed:
+                  puzzleState.mode == PuzzleMode.view && puzzleState.nextContext != null
+                      ? () => ref.read(ctrlProvider.notifier).onLoadPuzzle(puzzleState.nextContext!)
+                      : null,
+              label: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Next', style: TextStyle(color: Colors.white,fontWeight: FontWeight.w800)),
+                  SizedBox(width: 10),
+                  Icon(Icons.arrow_forward, color: Colors.white),
+                ],
+              ),
             ),
           ),
-        if (puzzleState.mode == PuzzleMode.view)
-          RepeatButton(
-            triggerDelays: _BottomBar._repeatTriggerDelays,
-            onLongPress: puzzleState.canGoNext ? () => _moveForward(ref) : null,
-            child: BottomBarButton(
-              onTap: puzzleState.canGoNext ? () => _moveForward(ref) : null,
-              label: context.l10n.next,
-              icon: CupertinoIcons.chevron_forward,
-              showTooltip: false,
-              blink: puzzleState.shouldBlinkNextArrow,
-            ),
-          ),
-        if (puzzleState.mode == PuzzleMode.view)
-          BottomBarButton(
-            onTap:
-                puzzleState.mode == PuzzleMode.view && puzzleState.nextContext != null
-                    ? () => ref.read(ctrlProvider.notifier).onLoadPuzzle(puzzleState.nextContext!)
-                    : null,
-            highlighted: true,
-            label: context.l10n.puzzleContinueTraining,
-            icon: CupertinoIcons.play_arrow_solid,
-          ),
+        PlatformBottomBar(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            if (puzzleState.mode != PuzzleMode.view)
+              FutureBuilder(
+                future: _viewSolutionCompleter.future,
+                builder: (context, snapshot) {
+                  return BottomBarButton(
+                    icon: Icons.info,
+                    label: context.l10n.getAHint,
+                    showLabel: true,
+                    highlighted: puzzleState.hintSquare != null,
+                    onTap:
+                        snapshot.connectionState == ConnectionState.done
+                            ? () => ref.read(ctrlProvider.notifier).toggleHint()
+                            : null,
+                  );
+                },
+              ),
+            if (puzzleState.mode != PuzzleMode.view)
+              FutureBuilder(
+                future: _viewSolutionCompleter.future,
+                builder: (context, snapshot) {
+                  return BottomBarButton(
+                    icon: Icons.help,
+                    label: context.l10n.viewTheSolution,
+                    showLabel: true,
+                    onTap:
+                        snapshot.connectionState == ConnectionState.done
+                            ? () => ref.read(ctrlProvider.notifier).viewSolution()
+                            : null,
+                  );
+                },
+              ),
+            /* if (puzzleState.mode == PuzzleMode.view)
+              BottomBarButton(
+                label: context.l10n.menu,
+                onTap: () {
+                  _showPuzzleMenu(context, ref);
+                },
+                icon: Icons.menu,
+              ),*/
+            /* if (puzzleState.mode == PuzzleMode.view)
+              BottomBarButton(
+                onTap: () {
+                  ref.read(ctrlProvider.notifier).toggleEngine();
+                },
+                label: context.l10n.toggleLocalEvaluation,
+                icon: CupertinoIcons.gauge,
+                highlighted: puzzleState.isEngineAvailable(enginePrefs),
+              ),*/
+            if (puzzleState.mode == PuzzleMode.view)
+              RepeatButton(
+                triggerDelays: _BottomBar._repeatTriggerDelays,
+                onLongPress: puzzleState.canGoBack ? () => _moveBackward(ref) : null,
+                child: BottomBarButton(
+                  onTap: puzzleState.canGoBack ? () => _moveBackward(ref) : null,
+                  label: 'Previous',
+                  icon: CupertinoIcons.chevron_back,
+                  showTooltip: false,
+                ),
+              ),
+            if (puzzleState.mode == PuzzleMode.view)
+              RepeatButton(
+                triggerDelays: _BottomBar._repeatTriggerDelays,
+                onLongPress: puzzleState.canGoNext ? () => _moveForward(ref) : null,
+                child: BottomBarButton(
+                  onTap: puzzleState.canGoNext ? () => _moveForward(ref) : null,
+                  label: context.l10n.next,
+                  icon: CupertinoIcons.chevron_forward,
+                  showTooltip: false,
+                  blink: puzzleState.shouldBlinkNextArrow,
+                ),
+              ),
+            // if (puzzleState.mode == PuzzleMode.view)
+            //   BottomBarButton(
+            //     onTap:
+            //         puzzleState.mode == PuzzleMode.view && puzzleState.nextContext != null
+            //             ? () => ref.read(ctrlProvider.notifier).onLoadPuzzle(puzzleState.nextContext!)
+            //             : null,
+            //     highlighted: true,
+            //     label: context.l10n.puzzleContinueTraining,
+            //     icon: CupertinoIcons.play_arrow_solid,
+            //   ),
+          ],
+        ),
       ],
     );
   }

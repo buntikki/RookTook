@@ -49,13 +49,31 @@ class RecentGamesWidget extends ConsumerWidget {
             ? ref.watch(userActivityProvider(id: user!.id))
             : ref.watch(accountActivityProvider);
 
-    // Handle activity null safety
-    final nonEmptyActivities =
-        activity.valueOrNull?.where((entry) => entry.isNotEmpty).toList() ?? [];
-
-    final rating = nonEmptyActivities
-        .expand((e) => e.games!.entries)
-        .map((e1) => e1.value.ratingAfter);
+    // Safely extract ratings from activity
+    List<int?> getRatingsFromActivity() {
+      if (activity.valueOrNull == null) return [];
+      
+      final nonEmptyActivities = activity.valueOrNull!.where((entry) => 
+        entry.isNotEmpty && entry.games != null).toList();
+      
+      if (nonEmptyActivities.isEmpty) return [];
+      
+      final ratings = <int?>[];
+      
+      for (final activityEntry in nonEmptyActivities) {
+        if (activityEntry.games == null) continue;
+        
+        for (final gameEntry in activityEntry.games!.entries) {
+          if (gameEntry.value.ratingAfter != null) {
+            ratings.add(gameEntry.value.ratingAfter);
+          }
+        }
+      }
+      
+      return ratings;
+    }
+    
+    final ratings = getRatingsFromActivity();
 
     return recentGames.when(
       data: (data) {
@@ -63,86 +81,58 @@ class RecentGamesWidget extends ConsumerWidget {
           return const SizedBox.shrink();
         }
         final list = data.take(maxGamesToShow);
-        // activity.value[0].games.entries.first.value.ratingBefore;
+        
         return Container(
-          margin: EdgeInsets.all(16),
+          margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: color ?? Color(0xffF4F4F4),
+            color: color ?? const Color(0xffF4F4F4),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0,right: 16.0,top: 16.0,bottom: 8.0,),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Recent Games',
-                        style: TextStyle(color: textColor ?? Colors.black, fontSize: 18,fontWeight: FontWeight.bold,),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0, bottom: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Recent Games',
+                      style: TextStyle(
+                        color: textColor ?? Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                    /*  Container(
-                        child:
-                            nbOfGames > list.length
-                                ? NoPaddingTextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      GameHistoryScreen.buildRoute(
-                                        context,
-                                        user: user,
-                                        isOnline: connectivity.valueOrNull?.isOnline == true,
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    context.l10n.more,
-                                    style: TextStyle(color: textColor ?? Colors.black),
-                                  ),
-                                )
-                                : null,
-                      ),*/
-                    ],
-                  ),
+                    ),
+                    if (nbOfGames > list.length)
+                      NoPaddingTextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            GameHistoryScreen.buildRoute(
+                              context,
+                              user: user,
+                              isOnline: connectivity.valueOrNull?.isOnline == true,
+                            ),
+                          );
+                        },
+                        child: Text(
+                          context.l10n.more,
+                          style: TextStyle(color: textColor ?? Colors.black),
+                        ),
+                      ),
+                  ],
                 ),
-                // for (final item in list)
-                for (int i = 0; i < list.length; i++)
-                  GameListTile(
-                    item: list.elementAt(i),
-                    tileColor: tileColor,
-                    titleColor: titleColor,
-                    rating:
-                        i < rating.length
-                            ? rating.elementAt(i)
-                            : null, // Provide a default if index out of bounds
-                  ),
-                SizedBox(height: 10),
-              ],
-            ),
+              ),
+              for (int i = 0; i < list.length; i++)
+                GameListTile(
+                  item: list.elementAt(i),
+                  tileColor: tileColor,
+                  titleColor: titleColor,
+                  rating: i < ratings.length ? ratings[i] : null,
+                ),
+              const SizedBox(height: 10),
+            ],
           ),
-
-          // ListSection(
-          //   backgroundColor: Colors.white,
-          //   header: Text(context.l10n.recentGames, style: TextStyle(color: Colors.black)),
-          //   hasLeading: true,
-          //   headerTrailing:
-          //       nbOfGames > list.length
-          //           ? NoPaddingTextButton(
-          //             onPressed: () {
-          //               Navigator.of(context).push(
-          //                 GameHistoryScreen.buildRoute(
-          //                   context,
-          //                   user: user,
-          //                   isOnline: connectivity.valueOrNull?.isOnline == true,
-          //                 ),
-          //               );
-          //             },
-          //             child: Text(context.l10n.more),
-          //           )
-          //           : null,
-          //   children: [for (final item in list) GameListTile(item: item)],
-          // ),
         );
       },
       error: (error, stackTrace) {
@@ -152,13 +142,12 @@ class RecentGamesWidget extends ConsumerWidget {
           child: Text('Could not load recent games.'),
         );
       },
-      loading:
-          () => Shimmer(
-            child: ShimmerLoading(
-              isLoading: true,
-              child: ListSection.loading(itemsNumber: 10, header: true, hasLeading: true),
-            ),
-          ),
+      loading: () => Shimmer(
+        child: ShimmerLoading(
+          isLoading: true,
+          child: ListSection.loading(itemsNumber: 10, header: true, hasLeading: true),
+        ),
+      ),
     );
   }
 }

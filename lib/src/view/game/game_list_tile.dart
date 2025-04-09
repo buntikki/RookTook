@@ -117,7 +117,7 @@ class GameListTile extends StatelessWidget {
         style: TextStyle(color: titleColor ?? Colors.black),
       ),
       onPressedBookmark: onPressedBookmark,
-      subtitle: Text('#$rating', style: TextStyle(color: Color(0xff959494))),
+      subtitle: Text(rating==null?'N/A': '#$rating', style: TextStyle(color: Color(0xff959494))),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

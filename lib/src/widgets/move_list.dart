@@ -217,7 +217,7 @@ class InlineMoveItem extends StatelessWidget {
                     ? color != null
                         ? color!.withValues(alpha: _moveListOpacity)
                         : textShade(context, _moveListOpacity)
-                    : ColorScheme.of(context).primary,
+                    : Color(0xff54C339)
           ),
         ),
       ),

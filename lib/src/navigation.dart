@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lichess_mobile/l10n/l10n.dart';
 import 'package:lichess_mobile/src/network/connectivity.dart';
 import 'package:lichess_mobile/src/utils/l10n_context.dart';
@@ -38,20 +39,27 @@ enum BottomTab {
     }
   }
 
-  IconData get icon {
+  String get icon {
     switch (this) {
       case BottomTab.home:
-        return Icons.home_outlined;
+        return 'assets/images/home.svg';
+      // Icons.home_outlined;
       case BottomTab.puzzles:
-        return Icons.extension_outlined;
+        return 'assets/images/puzzle.svg';
+
+      // return Icons.extension_outlined;
       case BottomTab.tournament:
-        return Icons.emoji_events_outlined;
+        return 'assets/images/tournament.svg';
+
+      // return Icons.emoji_events_outlined;
       // case BottomTab.tools:
       //   return Icons.handyman_outlined;
       // case BottomTab.watch:
       //   return Icons.live_tv_outlined;
       case BottomTab.settings:
-        return Icons.settings_outlined;
+        return 'assets/images/setting.svg';
+
+      // return Icons.settings_outlined;
     }
   }
 
@@ -174,17 +182,27 @@ class BottomNavScaffold extends ConsumerWidget {
                 final isOnline =
                     ref.watch(connectivityChangesProvider).valueOrNull?.isOnline ?? true;
                 return NavigationBar(
+                  labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>((states) {
+                    return TextStyle(
+                      color: states.contains(MaterialState.selected) ? Color(0xff54C339) : null,
+                    );
+                  }),
                   backgroundColor: Color(0xFF13191D),
                   indicatorColor: Colors.transparent,
-
                   selectedIndex: currentTab.index,
                   destinations: [
                     for (final tab in BottomTab.values)
                       NavigationDestination(
-                        icon: Icon(
-                          tab == currentTab ? tab.activeIcon : tab.icon,
-                          color: tab == currentTab ? Colors.white : null,
+                        icon: SvgPicture.asset(
+                          tab.icon,
+                          height: 24,
+                          width: 24,
+                          color: tab == currentTab ? Color(0xff54C339) : null,
                         ),
+                        // Icon(
+                        //   tab == currentTab ? tab.activeIcon : tab.icon,
+                        //   color: tab == currentTab ? Colors.white : null,
+                        // ),
                         label: tab.label(context.l10n),
                       ),
                   ],
@@ -201,11 +219,18 @@ class BottomNavScaffold extends ConsumerWidget {
             tabBuilder: _iOSTabBuilder,
             controller: _cupertinoTabController,
             tabBar: CupertinoTabBar(
+              activeColor: Color(0xff54C339),
               currentIndex: currentTab.index,
               items: [
                 for (final tab in BottomTab.values)
                   BottomNavigationBarItem(
-                    icon: Icon(tab == currentTab ? tab.activeIcon : tab.icon),
+                    icon: SvgPicture.asset(
+                      tab.icon,
+                      height: 24,
+                      width: 25,
+                      color: tab == currentTab ? Color(0xff54C339) : null,
+                    ),
+                    // Icon(tab == currentTab ? tab.activeIcon : tab.icon),
                     label: tab.label(context.l10n),
                   ),
               ],

@@ -17,6 +17,7 @@ import 'package:lichess_mobile/src/widgets/list.dart';
 import 'package:lichess_mobile/src/widgets/platform_scaffold.dart';
 import 'package:lichess_mobile/src/widgets/shimmer.dart';
 import 'package:lichess_mobile/src/widgets/user_full_name.dart';
+import 'package:lottie/lottie.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -43,7 +44,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         loading: () => const SizedBox.shrink(),
         error: (error, _) => const SizedBox.shrink(),
       ),
-   /*   appBarActions: [
+      /*   appBarActions: [
         AppBarIconButton(
           icon: const Icon(Icons.edit),
           semanticsLabel: context.l10n.editProfile,
@@ -64,42 +65,62 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     : 0,
             key: _refreshIndicatorKey,
             onRefresh: () async => ref.refresh(accountProvider),
-            child: 
-            ListView(
-              children: [
-                // UserProfileWidget(user: user),
-                // const AccountPerfCards(),
-                if (user.count != null && user.count!.bookmark > 0)
-                  ListSection(
-                    hasLeading: true,
-                    children: [
-                      PlatformListTile(
-                        title: Text(context.l10n.nbBookmarks(user.count!.bookmark)),
-                        leading: const Icon(Icons.bookmarks_outlined),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            GameBookmarksScreen.buildRoute(
-                              context,
-                              nbBookmarks: user.count!.bookmark,
-                            ),
-                          );
-                        },
+            child:
+                recentGames.value!.isEmpty
+                    ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Lottie.asset('assets/chess_puzzle.json', width: 160, height: 160),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'No Games Yet',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Your recent games will appear here once you start playing.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 14, color: Colors.white),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                const UserActivityWidget(),
-                RecentGamesWidget(
-                  textColor: Colors.white,
-                  color: Color(0xff2B2D30),
-                  titleColor: Colors.white,
-                  tileColor: Color(0xff2B2D30),
-                  recentGames: recentGames,
-                  nbOfGames: nbOfGames,
-                  user: null,
-                ),
-              ],
-            ),
-         
+                    )
+                    : ListView(
+                      children: [
+                        // UserProfileWidget(user: user),
+                        // const AccountPerfCards(),
+                        if (user.count != null && user.count!.bookmark > 0)
+                          ListSection(
+                            hasLeading: true,
+                            children: [
+                              PlatformListTile(
+                                title: Text(context.l10n.nbBookmarks(user.count!.bookmark)),
+                                leading: const Icon(Icons.bookmarks_outlined),
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    GameBookmarksScreen.buildRoute(
+                                      context,
+                                      nbBookmarks: user.count!.bookmark,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        const UserActivityWidget(),
+                        RecentGamesWidget(
+                          textColor: Colors.white,
+                          color: Color(0xff2B2D30),
+                          titleColor: Colors.white,
+                          tileColor: Color(0xff2B2D30),
+                          recentGames: recentGames,
+                          nbOfGames: nbOfGames,
+                          user: null,
+                        ),
+                      ],
+                    ),
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
