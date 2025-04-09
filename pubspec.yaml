@@ -129,6 +129,7 @@ flutter:
     - assets/board-thumbnails/
     - assets/positions.json
     - assets/endgames.json
+    - assets/chess_puzzle.json
     - assets/finding_opponent.json
 
   fonts:
