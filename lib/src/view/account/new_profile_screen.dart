@@ -140,7 +140,7 @@ class NewProfileScreen extends ConsumerWidget {
                       icon: 'assets/images/star.svg',
                       title: 'Rate this App',
                       onTap: () {
-                        launchUrl(Uri.parse('https://lichess.org/contact'));
+                        launchUrl(Uri.parse('https://rooktook.com'));
                       },
                     ),
                   ],

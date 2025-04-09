@@ -96,7 +96,7 @@ class _Body extends ConsumerWidget {
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               children: [
                 SizedBox(height: Styles.bodyPadding.top),
-                Text(context.l10n.allInformationIsPublicAndOptional),
+                //Text(context.l10n.allInformationIsPublicAndOptional),
                 const SizedBox(height: 16),
                 _EditProfileForm(data),
                 SizedBox(height: Styles.bodyPadding.bottom),
@@ -197,6 +197,7 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
           //     },
           //   ),
           // ),
+
           _TextField(
             label: 'Full Name',
             // label: context.l10n.realName,

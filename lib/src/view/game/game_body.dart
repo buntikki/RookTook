@@ -630,7 +630,7 @@ class _GameBottomBar extends ConsumerWidget {
                 },
                 icon: CupertinoIcons.arrowshape_turn_up_left,
               )
-            else if (gameState.game.finished)
+           /* else if (gameState.game.finished)
               BottomBarButton(
                 label: context.l10n.gameAnalysis,
                 icon: Icons.biotech,
@@ -639,7 +639,7 @@ class _GameBottomBar extends ConsumerWidget {
                     context,
                   ).push(AnalysisScreen.buildRoute(context, gameState.analysisOptions));
                 },
-              )
+              )*/
             else if (gameState.game.meta.speed == Speed.bullet ||
                 gameState.game.meta.speed == Speed.ultraBullet)
               BottomBarButton(

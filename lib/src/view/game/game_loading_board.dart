@@ -14,6 +14,8 @@ import 'package:lichess_mobile/src/widgets/feedback.dart';
 import 'package:lichess_mobile/src/widgets/platform.dart';
 import 'package:lichess_mobile/src/widgets/shimmer.dart';
 import 'package:lichess_mobile/src/widgets/user_full_name.dart';
+import 'package:lottie/lottie.dart';
+
 
 class LobbyScreenLoadingContent extends StatelessWidget {
   const LobbyScreenLoadingContent(this.seek, this.cancelGameCreation);
@@ -43,13 +45,20 @@ class LobbyScreenLoadingContent extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Lottie.asset(
+                        'assets/finding_opponent.json',
+                        width: 60,
+                        height: 60,
+                      ),
+
                       Text(context.l10n.mobileWaitingForOpponentToJoin),
-                      const SizedBox(height: 26.0),
+                      const SizedBox(height: 20.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(seek.perf.icon, color: DefaultTextStyle.of(context).style.color),
+                          if (seek.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+                          //Icon(seek.perf.icon, color: DefaultTextStyle.of(context).style.color),
                           const SizedBox(width: 8.0),
                           Text(
                             seek.timeIncrement?.display ??
@@ -121,6 +130,12 @@ class ChallengeLoadingContent extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Lottie.asset(
+                        'assets/finding_opponent.json',
+                        width: 60,
+                        height: 60,
+                      ),
+
                       Text(context.l10n.waitingForOpponent),
                       const SizedBox(height: 16.0),
                       UserFullNameWidget(
@@ -132,10 +147,11 @@ class ChallengeLoadingContent extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          /*Icon(
                             challenge.perf.icon,
                             color: DefaultTextStyle.of(context).style.color,
-                          ),
+                          ),*/
+                          if (challenge.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
                           const SizedBox(width: 8.0),
                           Text(
                             challenge.timeIncrement?.display ??

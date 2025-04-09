@@ -139,7 +139,7 @@ class _MatchResultPopupState extends ConsumerState<MatchResultPopup> {
                       shape: BoxShape.circle,
                     ),
                     padding: const EdgeInsets.all(8.0),
-                    child: Image.asset('assets/images/blitz.png'),
+                    child: Image.asset('assets/images/bullet_game.png'),
                   ),
                   // const Icon(Icons.bolt, color: Colors.amber, size: 20),
                   const SizedBox(width: 25),

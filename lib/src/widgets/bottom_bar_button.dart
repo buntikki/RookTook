@@ -37,7 +37,7 @@ class BottomBarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary = ColorScheme.of(context).primary;
+    const primary = Color(0xff54C339);
 
     final labelFontSize =
         Theme.of(context).platform == TargetPlatform.iOS

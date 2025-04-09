@@ -312,7 +312,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                       Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Text(
-                          'A Platform for\nnext level chess',
+                          'A Platform for\nNext Level Chess',
                           textAlign: TextAlign.start,
                           style: Theme.of(context).textTheme.headlineMedium!.merge(
                             const TextStyle(fontWeight: FontWeight.w600),
@@ -326,7 +326,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-         /* floatingActionButton:
+        /*  floatingActionButton:
               isTablet
                   ? null
                   : FloatingActionButton.extended(
@@ -445,10 +445,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         child: ElevatedButton.icon(
           label: Text(
             'PLAY NOW',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14.0,),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xff54C339),
@@ -751,7 +748,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
               children: [
                 // Bullet option
                 GameTypeCard(
-                  icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
+                  icon: Image.asset('assets/images/bullet_game.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Bullet',
                   type: '2+1',
@@ -769,7 +766,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
 
                 // Rapid option
                 GameTypeCard(
-                  icon: Image.asset('assets/images/flip.png', height: 33, width: 33),
+                  icon: Image.asset('assets/images/rapid_game.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Rapid',
                   type: '10+5',
@@ -826,8 +823,8 @@ class ChessRatingCards extends StatelessWidget {
         children: [
           Expanded(
             child: _buildRatingCard(
-              icon: Image.asset('assets/images/blitz.png'),
-              iconColor: const Color(0xffFFEEB4),
+              icon: Image.asset('assets/images/bullet_game.png'),
+              iconColor: const Color(0xffFFF9E5),
               title: 'Bullet',
               rating: bulletRank,
             ),
@@ -835,9 +832,9 @@ class ChessRatingCards extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: _buildRatingCard(
-              icon: Image.asset('assets/images/flip.png'),
+              icon: Image.asset('assets/images/rapid_game.png'),
 
-              iconColor: const Color(0xffC1F0FF),
+              iconColor: const Color(0xffE5FFF1),
               title: 'Rapid',
               rating: rapidRank,
             ),

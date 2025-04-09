@@ -87,9 +87,9 @@ class UserActivityEntry extends ConsumerWidget {
               _UserActivityListTile(
                 leading:
                     gameEntry.key.title == 'Rapid'
-                        ? Image.asset('assets/images/flip.png', height: 20, width: 20)
+                        ? Image.asset('assets/images/rapid_game.png', height: 20, width: 20)
                         : gameEntry.key.title == 'Bullet'
-                        ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
+                        ? Image.asset('assets/images/bullet_game.png', height: 20, width: 20)
                         : SizedBox(),
 
                 title: context.l10n.activityPlayedNbGames(

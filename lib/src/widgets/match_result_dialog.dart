@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lichess_mobile/src/model/common/id.dart';
 import 'package:lichess_mobile/src/model/game/game.dart';
 import 'package:lichess_mobile/src/model/game/game_controller.dart';
@@ -132,7 +133,7 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                       RandomAvatar('${gameState.game.me?.user?.name}', height: 70, width: 70),
                       const SizedBox(height: 8),
                       Text(
-                        '${gameState.game.me?.user?.name}',
+                        '${gameState.game.me?.user?.name}',maxLines: 1,overflow: TextOverflow.ellipsis,
                         style: const TextStyle(color: Colors.white),
                       ),
                     ],
@@ -165,7 +166,7 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                       RandomAvatar('${gameState.game.opponent?.user?.name}', height: 70, width: 70),
                       const SizedBox(height: 8),
                       Text(
-                        '${gameState.game.opponent?.user?.name}',
+                        '${gameState.game.opponent?.user?.name}',maxLines: 1,overflow: TextOverflow.ellipsis,
                         style: const TextStyle(color: Colors.white),
                       ),
                     ],
@@ -194,10 +195,10 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                       shape: BoxShape.circle,
                     ),
                     padding: const EdgeInsets.all(8.0),
-                    child: Image.asset('assets/images/blitz.png'),
+                    child: game.me!.ratingDiff! < 0 ? SvgPicture.asset('assets/images/Arrow_Down.svg') : SvgPicture.asset('assets/images/Arrow_Up.svg'),
                   ),
                   // const Icon(Icons.bolt, color: Colors.amber, size: 20),
-                  const SizedBox(width: 25),
+                  const SizedBox(width: 16),
                   Text(
                     '${game.me!.rating ?? 0}',
                     style: const TextStyle(

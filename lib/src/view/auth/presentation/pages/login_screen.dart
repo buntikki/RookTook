@@ -97,7 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Heading text
                 const Center(
                   child: Text(
-                    'A Platform for\nnext level chess',
+                    'A Platform for\nNext Level Chess',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,

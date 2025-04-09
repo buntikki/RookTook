@@ -203,8 +203,8 @@ class _GameScreenState extends ConsumerState<GameScreen> with RouteAware {
                   ? _ChallengeGameTitle(challenge: widget.challenge!)
                   : const SizedBox.shrink(),
 
-          appBarActions: [
-            if (gameId != null) _GameMenu(gameId: gameId, gameListContext: widget.gameListContext),
+          appBarActions: const [
+           // if (gameId != null) _GameMenu(gameId: gameId, gameListContext: widget.gameListContext),
           ],
           body: body,
         );
@@ -337,7 +337,8 @@ class _LobbyGameTitle extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(seek.perf.icon, color: DefaultTextStyle.of(context).style.color),
+        if (seek.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+        //Icon(seek.perf.icon, color: DefaultTextStyle.of(context).style.color),
         const SizedBox(width: 4.0),
         Text('${seek.timeIncrement?.display}$mode'),
       ],
@@ -356,7 +357,8 @@ class _ChallengeGameTitle extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(challenge.perf.icon, color: DefaultTextStyle.of(context).style.color),
+        if (challenge.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+        //Icon(challenge.perf.icon, color: DefaultTextStyle.of(context).style.color),
         const SizedBox(width: 4.0),
         if (challenge.timeIncrement != null)
           Text('${challenge.timeIncrement?.display}$mode')
@@ -388,7 +390,8 @@ class _StandaloneGameTitle extends ConsumerWidget {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(meta.perf.icon, color: DefaultTextStyle.of(context).style.color),
+            if (meta.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+            //Icon(meta.perf.icon, color: DefaultTextStyle.of(context).style.color),
             const SizedBox(width: 4.0),
             if (meta.clock != null)
               Flexible(
