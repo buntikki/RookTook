@@ -175,48 +175,65 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
               ],
             ),
             const SizedBox(height: 24),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white12),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Rating', style: TextStyle(color: Colors.grey)),
-                  const SizedBox(width: 12),
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: const BoxDecoration(
-                      color: Color(0xffFFF9E5),
-                      // borderRadius: BorderRadius.circular(8.0),
-                      shape: BoxShape.circle,
+            Visibility(
+              visible: game.me?.ratingDiff != null,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Rating', style: TextStyle(color: Colors.grey)),
+                    const SizedBox(width: 12),
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: const BoxDecoration(
+                        color: Color(0xffFFF9E5),
+                        // borderRadius: BorderRadius.circular(8.0),
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: game.me?.ratingDiff == null
+                          ? const Icon(Icons.remove,color: Colors.blue,) // or a placeholder widget
+                          : SvgPicture.asset(
+                        game.me!.ratingDiff! < 0
+                            ? 'assets/images/Arrow_Down.svg'
+                            : 'assets/images/Arrow_Up.svg',
+                      ),
                     ),
-                    padding: const EdgeInsets.all(8.0),
-                    child: game.me!.ratingDiff! < 0 ? SvgPicture.asset('assets/images/Arrow_Down.svg') : SvgPicture.asset('assets/images/Arrow_Up.svg'),
-                  ),
-                  // const Icon(Icons.bolt, color: Colors.amber, size: 20),
-                  const SizedBox(width: 16),
-                  Text(
-                    '${game.me!.rating ?? 0}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                    // const Icon(Icons.bolt, color: Colors.amber, size: 20),
+                    const SizedBox(width: 16),
+                    Text(
+                      '${game.me!.rating ?? 0}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    game.me!.ratingDiff! < 0 ? '${game.me!.ratingDiff ?? 0}' : '+${game.me!.ratingDiff ?? 0}',
-                    style: TextStyle(
-                      color: game.me!.ratingDiff! < 0 ? Colors.red : Colors.green,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    Text(
+                      game.me?.ratingDiff == null
+                          ? '' // or '±0' or '—' or any placeholder text you prefer
+                          : game.me!.ratingDiff! < 0
+                          ? '${game.me?.ratingDiff}'
+                          : '+${game.me?.ratingDiff}',
+                      style: TextStyle(
+                        color: game.me?.ratingDiff == null
+                            ? Colors.grey // or your neutral color
+                            : game.me!.ratingDiff! < 0
+                            ? Colors.red
+                            : Colors.green,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 24),

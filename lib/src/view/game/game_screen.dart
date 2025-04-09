@@ -336,6 +336,7 @@ class _LobbyGameTitle extends ConsumerWidget {
     final mode = seek.rated ? ' • ${context.l10n.rated}' : ' • ${context.l10n.casual}';
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (seek.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
         //Icon(seek.perf.icon, color: DefaultTextStyle.of(context).style.color),
@@ -356,6 +357,7 @@ class _ChallengeGameTitle extends ConsumerWidget {
     final mode = challenge.rated ? ' • ${context.l10n.rated}' : ' • ${context.l10n.casual}';
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (challenge.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
         //Icon(challenge.perf.icon, color: DefaultTextStyle.of(context).style.color),
@@ -389,6 +391,7 @@ class _StandaloneGameTitle extends ConsumerWidget {
 
         return Row(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (meta.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
             //Icon(meta.perf.icon, color: DefaultTextStyle.of(context).style.color),
