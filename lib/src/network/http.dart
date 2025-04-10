@@ -213,7 +213,7 @@ class LichessClient implements Client {
       final method = request.method;
       final url = request.url;
       _logger.warning(
-        '$method $url responded with status ${response.statusCode} ${response.reasonPhrase}',
+        '$method $url responded with status ${response.statusCode} ${response.reasonPhrase} and Body is $request',
       );
     }
   }

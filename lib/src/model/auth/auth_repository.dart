@@ -135,6 +135,98 @@ class AuthRepository {
     return AuthSessionState(token: token, user: user.lightUser);
   }
 
+  Future<GoogleSignInResult> verifyGoogleSignIn(String idToken) async {
+    final body = {
+      'idToken': idToken,
+    };
+    // Make the verification request
+    final response = await _client.postReadJson(
+      Uri(path: '/api/auth/google/verify'),
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Cookie': 'lila2=6ef19f22350c0866429ba528222d6dcf61604d47-sid=D4Tde5f5NQISuDLoavepMU&access_uri=%2Faccount%2Femail'
+      },
+      mapper: (json) => json,
+    );
+
+    // Check if response contains token fields which indicates successful login
+    final bool isLoginResponse = response.containsKey('access_token') &&
+        response.containsKey('token') &&
+        response.containsKey('token_type');
+
+    if (isLoginResponse) {
+      // User already exists, we received login credentials
+      final loginResponse = LoginResponse.fromJson(response);
+
+      return GoogleSignInResult(
+        userAlreadyRegistered: true,
+        idToken: idToken,
+        loginResponse: loginResponse,
+      );
+    } else {
+      // We received a verification response
+      final bool userAlreadyRegistered = response['user_already_registered'] as bool? ?? false;
+
+      return GoogleSignInResult(
+        userAlreadyRegistered: userAlreadyRegistered,
+        idToken: idToken,
+      );
+    }
+  }
+
+  Future<AuthSessionState?> signInWithGoogle(GoogleSignInResult verificationResult) async {
+      // User already exists, complete the sign-in
+      final loginResponse = verificationResult.loginResponse;
+      if (loginResponse == null || loginResponse.accessToken == null) {
+        throw Exception('Login failed: Invalid response from server');
+      }
+
+      final token = loginResponse.accessToken!;
+
+      final user = await _client.readJson(
+        Uri(path: '/api/account'),
+        headers: {'Authorization': 'Bearer ${signBearerToken(token)}'},
+        mapper: User.fromServerJson,
+      );
+      return AuthSessionState(token: token, user: user.lightUser);
+  }
+
+
+  Future<AuthSessionState> signUpWithGoogle(String email, String username, String idToken) async {
+    final body = {
+      'username': username,
+      'email': email,
+      'idToken': idToken
+    };
+
+    final authResp = await _client.postReadJson(
+      Uri(path: '/api/sign-up'),
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      mapper: (json) => LoginResponse.fromJson(json),
+    );
+
+    final token = authResp.accessToken;
+
+    if (token == null) {
+      throw Exception('Access token not found.');
+    }
+
+    final user = await _client.readJson(
+      Uri(path: '/api/account'),
+      headers: {'Authorization': 'Bearer ${signBearerToken(token)}'},
+      mapper: User.fromServerJson,
+    );
+    debugPrint('==================== $token ${user.lightUser}');
+    return AuthSessionState(token: token, user: user.lightUser);
+  }
+
+
   Future<void> signOut() async {
     final url = Uri(path: '/api/token');
     final response = await _client.delete(Uri(path: '/api/token'));
@@ -142,4 +234,17 @@ class AuthRepository {
       throw http.ClientException('Failed to delete token: ${response.statusCode}', url);
     }
   }
+}
+
+
+class GoogleSignInResult {
+  final bool userAlreadyRegistered;
+  final String? idToken;
+  final LoginResponse? loginResponse;
+
+  GoogleSignInResult({
+    required this.userAlreadyRegistered,
+    this.idToken,
+    this.loginResponse,
+  });
 }

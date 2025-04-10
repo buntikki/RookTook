@@ -155,7 +155,7 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
               const SizedBox(height: 24),
 
               // Password strength indicator
-              if (state.password.isNotEmpty)
+              if (state.password.isNotEmpty && mode==PasswordScreenMode.create)
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   height: 8,
@@ -166,7 +166,7 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                   ),
                 ),
 
-              if (state.password.isNotEmpty)
+              if (state.password.isNotEmpty && mode==PasswordScreenMode.create)
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(

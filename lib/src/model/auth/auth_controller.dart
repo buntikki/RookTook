@@ -79,6 +79,71 @@ class AuthController extends _$AuthController {
     }
   }
 
+  Future<GoogleSignInResult> verifyGoogleSignIn(String idToken) async {
+    state = const AsyncLoading();
+    final appAuth = ref.read(appAuthProvider);
+
+    try {
+      final result = await ref.withClient((client) =>
+          AuthRepository(client, appAuth).verifyGoogleSignIn(idToken));
+      state = const AsyncValue.data(null);
+      return result;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      rethrow;
+    }
+  }
+
+  Future<AuthSessionState?> signInWithGoogle(GoogleSignInResult verificationResult) async {
+    state = const AsyncLoading();
+    final appAuth = ref.read(appAuthProvider);
+
+    try {
+      final session = await ref.withClient((client) =>
+          AuthRepository(client, appAuth).signInWithGoogle(verificationResult)
+      );
+
+      if (session != null) {
+        await ref.read(authSessionProvider.notifier).update(session);
+
+        // register device and reconnect to the current socket once the session token is updated
+        await Future.wait([
+          ref.read(notificationServiceProvider).registerDevice(),
+          // force reconnect to the current socket with the new token
+          ref.read(socketPoolProvider).currentClient.connect(),
+        ]);
+      }
+
+      state = const AsyncValue.data(null);
+      return session;
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+      return null;
+    }
+  }
+
+  Future<void> signUpWithGoogle(String email, String username, String idToken) async {
+    state = const AsyncLoading();
+    final appAuth = ref.read(appAuthProvider);
+
+    try {
+      final session = await ref.withClient((client) =>
+          AuthRepository(client, appAuth).signUpWithGoogle(email, username, idToken)
+      );
+
+      await ref.read(authSessionProvider.notifier).update(session);
+
+      await Future.wait([
+        ref.read(notificationServiceProvider).registerDevice(),
+        ref.read(socketPoolProvider).currentClient.connect(),
+      ]);
+
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
+
   Future<void> signOut() async {
     state = const AsyncLoading();
     await Future<void>.delayed(const Duration(milliseconds: 500));

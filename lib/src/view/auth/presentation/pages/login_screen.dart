@@ -1,10 +1,12 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/model/auth/login/login_controller.dart';
 import 'package:lichess_mobile/src/navigation.dart';
 import 'package:lichess_mobile/src/utils/navigation.dart';
 import 'package:lichess_mobile/src/view/auth/presentation/pages/create_password_screen.dart';
+import 'package:lichess_mobile/src/view/auth/presentation/pages/set_username_screen.dart';
 import 'package:lichess_mobile/src/view/common/apple_sign_in_button.dart';
 import 'package:lichess_mobile/src/view/common/google_sign_in_button.dart';
 
@@ -27,6 +29,41 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void _handleContinueWithEmail() {
     final usernameOrEmail = _usernameController.text.trim();
     ref.read(loginControllerProvider.notifier).checkUsername(usernameOrEmail);
+  }
+
+  void _handleGoogleSignInSuccess(AuthSessionState? session) {
+    if (session != null) {
+      // User already exists and login was successful - navigate to main screen
+      Navigator.of(context).pushAndRemoveUntil(
+        buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+            (route) => false,
+      );
+    }
+  }
+
+  void _handleNewGoogleUser(String email, String idToken) {
+    // Navigate to username selection screen for Google sign-up
+    Navigator.of(context).push(
+      SetUsernameScreen.buildRoute(
+        context,
+        previousInput: email,
+        registrationType: RegistrationType.google,
+        idToken: idToken,
+      ),
+    );
+  }
+
+  void _handleGoogleSignInError(dynamic error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Google sign-in failed: ${error.toString().replaceAll('Exception: ', '')}',
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red.shade700,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   @override
@@ -65,10 +102,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
         Future.delayed(
           const Duration(seconds: 3),
-          () => ref.read(loginControllerProvider.notifier).reset(),
+              () => ref.read(loginControllerProvider.notifier).reset(),
         );
       }
     });
+
+    // Listen for auth session changes from Google sign in
+    ref.listen<AuthSessionState?>(
+      authSessionProvider,
+          (previous, current) {
+        if (previous == null && current != null) {
+          // Navigate to main screen
+          Navigator.of(context).pushAndRemoveUntil(
+            buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+                (route) => false,
+          );
+        }
+      },
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFF13191D),
@@ -111,23 +162,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                 AppleSignInButton(
                   onSignInSuccess: (data) {
-                    // Navigator.of(context).pushReplacement(
-                    //   buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-                    // );
+                    // Apple sign in implementation
                   },
                   onSignInError: (error) {},
                 ),
                 const SizedBox(height: 12),
                 // Google login button
                 GoogleSignInButton(
-                  onSignInSuccess: (data) {
-                    // Navigator.of(context).pushReplacement(
-                    //   buildScreenRoute<void>(context, screen: const BottomNavScaffold()),d
-                    // );do
-                  },
-                  onSignInError: (error) {
-                    print(error);
-                  },
+                  onSignInSuccess: _handleGoogleSignInSuccess,
+                  onNewUserVerified: _handleNewGoogleUser,
+                  onSignInError: _handleGoogleSignInError,
                 ),
 
                 const SizedBox(height: 40),
@@ -169,9 +213,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Continue button with loading state
                 ElevatedButton(
                   onPressed:
-                      loginState.isLoading
-                          ? null // Disable button when loading
-                          : _handleContinueWithEmail,
+                  loginState.isLoading
+                      ? null // Disable button when loading
+                      : _handleContinueWithEmail,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
@@ -180,39 +224,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     disabledBackgroundColor: Colors.green.withOpacity(0.5),
                   ),
                   child:
-                      loginState.isLoading
-                          ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                          )
-                          : Text(
-                            'CONTINUE',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                  loginState.isLoading
+                      ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                  )
+                      : Text(
+                    'CONTINUE',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-
-          // Skip button
-          // Positioned(
-          //   top: 56,
-          //   right: 24,
-          //   child: OutlinedButton(
-          //     onPressed:
-          //         () => {
-          //           Navigator.of(context).pushReplacement(
-          //             buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-          //           ),
-          //         },
-          //     child: const Text('Skip'),
-          //   ),
-          // ),
-     
         ],
       ),
     );
