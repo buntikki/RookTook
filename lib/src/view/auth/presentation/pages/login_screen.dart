@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/model/auth/login/login_controller.dart';
@@ -206,6 +207,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Username or Email text field
                 TextField(
                   controller: _usernameController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   decoration: InputDecoration(
                     hintText: 'Username or Email',
                     hintStyle: const TextStyle(color: Colors.grey),

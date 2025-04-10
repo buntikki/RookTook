@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
 import 'package:lichess_mobile/src/model/auth/auth_session.dart';
@@ -38,7 +39,7 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
   void initState() {
     super.initState();
     _passwordController.addListener(() {
-      ref.read(passwordControllerProvider.notifier).updatePassword(_passwordController.text);
+      ref.read(passwordControllerProvider.notifier).updatePassword(_passwordController.text.trim());
     });
   }
 
@@ -50,7 +51,7 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
 
   void _handleSignIn() {
     final usernameOrEmail = widget.username;
-    final password = _passwordController.text;
+    final password = _passwordController.text.trim();
     ref.read(authControllerProvider.notifier).signInWithPassword(usernameOrEmail, password);
   }
 
@@ -127,6 +128,9 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
               TextField(
                 controller: _passwordController,
                 obscureText: !state.isPasswordVisible,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                ],
                 decoration: InputDecoration(
                   hintText: 'Enter Password',
                   hintStyle: const TextStyle(color: Colors.grey),
@@ -184,7 +188,7 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                       : (controller.isButtonEnabled
                       ? () {
                     if (mode == PasswordScreenMode.create) {
-                      Navigator.of(context).push(SetUsernameScreen.buildRoute(context, previousInput: widget.username, password: _passwordController.text));
+                      Navigator.of(context).push(SetUsernameScreen.buildRoute(context, previousInput: widget.username, password: _passwordController.text.trim()));
                       debugPrint('Password submitted: ${state.password}');
                     } else {
                       _handleSignIn();

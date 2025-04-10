@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
 import 'package:lichess_mobile/src/model/auth/auth_input_controller.dart';
@@ -75,7 +76,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
     });
 
     _inputController.addListener(() {
-      ref.read(authInputControllerProvider.notifier).updateInput(_inputController.text);
+      ref.read(authInputControllerProvider.notifier).updateInput(_inputController.text.trim());
     });
   }
 
@@ -99,7 +100,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
     if (widget.registrationType == RegistrationType.google) {
       // Handle Google sign-up with username
       final email = widget.previousInput;
-      final username = _inputController.text;
+      final username = _inputController.text.trim();
 
       ref.read(authControllerProvider.notifier).signUpWithGoogle(
         email,
@@ -109,7 +110,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
     } else if (widget.registrationType == RegistrationType.apple) {
       // Handle Apple sign-up with username
       final email = widget.previousInput;
-      final username = _inputController.text;
+      final username = _inputController.text.trim();
 
       ref.read(authControllerProvider.notifier).signUpWithApple(
         email,
@@ -118,8 +119,8 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
       );
     } else {
       // Handle regular email/password sign-up
-      final email = _isInputEmail ? widget.previousInput : _inputController.text;
-      final username = _isInputEmail ? _inputController.text : widget.previousInput;
+      final email = _isInputEmail ? widget.previousInput : _inputController.text.trim();
+      final username = _isInputEmail ? _inputController.text.trim() : widget.previousInput;
 
       ref.read(authControllerProvider.notifier).signUp(
         email,
@@ -283,6 +284,9 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: TextField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                          ],
                           controller: _inputController,
                           decoration: InputDecoration(
                             hintText: hintText,
