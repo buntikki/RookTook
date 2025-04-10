@@ -325,7 +325,9 @@ void _checkResponseSuccess(Uri url, Response response) {
       final json = jsonDecode(response.body);
       if (json is Map<String, dynamic>) {
         jsonError = json;
-        if (json.containsKey('error')) {
+        if (json.containsKey('message')) {
+          message = '${json['message']}';
+        } else if (json.containsKey('error')) {
           message = '$message: ${json['error']}';
         }
       }

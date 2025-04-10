@@ -28,9 +28,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _handleContinueWithEmail() {
     final usernameOrEmail = _usernameController.text.trim();
+
+    // Check if input is an email using regex pattern
+    final bool isEmail = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
+    ).hasMatch(usernameOrEmail);
+
+    // If it's a username and longer than 25 characters, show error
+    if (!isEmail && usernameOrEmail.length > 25) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'Username must be 25 characters or less',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red.shade700,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
     ref.read(loginControllerProvider.notifier).checkUsername(usernameOrEmail);
   }
-
   void _handleNewGoogleUser(String email, String idToken) {
     // Navigate to username selection screen for Google sign-up
     Navigator.of(context).push(
