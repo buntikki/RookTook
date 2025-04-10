@@ -7,12 +7,10 @@ import 'package:lichess_mobile/src/utils/google_sign_in_service.dart';
 
 class GoogleSignInButton extends ConsumerWidget {
   final GoogleSignInService _googleSignInService = GoogleSignInService();
-  final void Function(AuthSessionState?) onSignInSuccess;
   final void Function(String email, String idToken) onNewUserVerified;
   final void Function(dynamic) onSignInError;
 
   GoogleSignInButton({
-    required this.onSignInSuccess,
     required this.onNewUserVerified,
     required this.onSignInError,
   });
@@ -52,9 +50,8 @@ class GoogleSignInButton extends ConsumerWidget {
 
           if (result.userAlreadyRegistered) {
             // User already exists, complete sign in
-            final session = await authController.signInWithGoogle(result);
+            await authController.signInWithGoogle(result);
             loadingOverlay.remove();
-            onSignInSuccess(session);
           } else {
             // New user, needs to set username - use callback instead of direct navigation
             onNewUserVerified(googleSignInInfo.email, googleSignInInfo.idToken);

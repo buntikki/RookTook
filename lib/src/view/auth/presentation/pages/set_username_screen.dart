@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
 import 'package:lichess_mobile/src/model/auth/auth_input_controller.dart';
@@ -10,6 +11,7 @@ import 'package:lichess_mobile/src/utils/navigation.dart';
 enum RegistrationType {
   email,
   google,
+  apple,
 }
 
 class SetUsernameScreen extends ConsumerStatefulWidget {
@@ -19,12 +21,14 @@ class SetUsernameScreen extends ConsumerStatefulWidget {
     this.password,
     this.registrationType = RegistrationType.email,
     this.idToken,
+    this.appleUserId,
   });
 
   final String previousInput;
   final String? password;
   final RegistrationType registrationType;
   final String? idToken;
+  final String? appleUserId;
 
   static Route<dynamic> buildRoute(
       BuildContext context, {
@@ -32,6 +36,7 @@ class SetUsernameScreen extends ConsumerStatefulWidget {
         String? password,
         RegistrationType registrationType = RegistrationType.email,
         String? idToken,
+        String? appleUserId,
       }) {
     return buildScreenRoute(
       context,
@@ -40,6 +45,7 @@ class SetUsernameScreen extends ConsumerStatefulWidget {
         password: password,
         registrationType: registrationType,
         idToken: idToken,
+        appleUserId: appleUserId,
       ),
     );
   }
@@ -52,22 +58,25 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
   final TextEditingController _inputController = TextEditingController();
   bool _isSubmitting = false;
   bool _isInputEmail = false;
-  late final bool _isGoogleSignIn;
+  late final bool _isSocialSignIn;
+  late final String _socialAccountType;
 
   @override
   void initState() {
     super.initState();
-    _isGoogleSignIn = widget.registrationType == RegistrationType.google;
+    _isSocialSignIn = widget.registrationType == RegistrationType.google ||
+        widget.registrationType == RegistrationType.apple;
+    _socialAccountType = widget.registrationType == RegistrationType.google ? 'Google' : 'Apple';
     _isInputEmail = _isEmail(widget.previousInput);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(authInputControllerProvider.notifier).setInputType(
-          _isGoogleSignIn || _isInputEmail ? InputType.username : InputType.email
+          _isSocialSignIn || _isInputEmail ? InputType.username : InputType.email
       );
     });
 
     _inputController.addListener(() {
-      ref.read(authInputControllerProvider.notifier).updateInput(_inputController.text);
+      ref.read(authInputControllerProvider.notifier).updateInput(_inputController.text.trim());
     });
   }
 
@@ -88,20 +97,30 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
       _isSubmitting = true;
     });
 
-    if (_isGoogleSignIn) {
+    if (widget.registrationType == RegistrationType.google) {
       // Handle Google sign-up with username
       final email = widget.previousInput;
-      final username = _inputController.text;
+      final username = _inputController.text.trim();
 
       ref.read(authControllerProvider.notifier).signUpWithGoogle(
         email,
         username,
         widget.idToken!,
       );
+    } else if (widget.registrationType == RegistrationType.apple) {
+      // Handle Apple sign-up with username
+      final email = widget.previousInput;
+      final username = _inputController.text.trim();
+
+      ref.read(authControllerProvider.notifier).signUpWithApple(
+        email,
+        username,
+        widget.appleUserId!,
+      );
     } else {
       // Handle regular email/password sign-up
-      final email = _isInputEmail ? widget.previousInput : _inputController.text;
-      final username = _isInputEmail ? _inputController.text : widget.previousInput;
+      final email = _isInputEmail ? widget.previousInput : _inputController.text.trim();
+      final username = _isInputEmail ? _inputController.text.trim() : widget.previousInput;
 
       ref.read(authControllerProvider.notifier).signUp(
         email,
@@ -159,7 +178,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
     String hintText;
     String helperText;
 
-    if (_isGoogleSignIn) {
+    if (_isSocialSignIn) {
       pageTitle = 'Create\nYour Username';
       fieldLabel = 'Username';
       hintText = 'Create username';
@@ -214,7 +233,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                         ).textTheme.labelMedium?.copyWith(color: const Color(0xff8F9193)),
                       ),
 
-                      if (_isGoogleSignIn) ...[
+                      if (_isSocialSignIn) ...[
                         const SizedBox(height: 16),
                         Container(
                           padding: const EdgeInsets.all(16),
@@ -226,15 +245,20 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Google Account',
+                                '$_socialAccountType Account',
                                 style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.grey),
                               ),
                               const SizedBox(height: 8),
                               Row(
                                 children: [
-                                  const CircleAvatar(
+                                  CircleAvatar(
                                     backgroundColor: Colors.green,
-                                    child: Icon(Icons.check, color: Colors.white),
+                                    child: Icon(
+                                      widget.registrationType == RegistrationType.google
+                                          ? Icons.android
+                                          : Icons.apple,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
@@ -260,6 +284,9 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: TextField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                          ],
                           controller: _inputController,
                           decoration: InputDecoration(
                             hintText: hintText,
@@ -271,7 +298,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                           ),
                           style: const TextStyle(color: Colors.white, fontSize: 18),
                           maxLength: state.maxLength,
-                          keyboardType: _isInputEmail || _isGoogleSignIn
+                          keyboardType: _isInputEmail || _isSocialSignIn
                               ? TextInputType.text
                               : TextInputType.emailAddress,
                           buildCounter:
@@ -286,15 +313,8 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              decoration: BoxDecoration(
-                color: const Color(0xff1C1E21),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
+              decoration: const BoxDecoration(
+                color: Color(0xff1C1E21),
               ),
               child: ElevatedButton(
                 onPressed: (_isSubmitting || !state.isValid) ? null : _handleSignUp,

@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
 
-class AppleSignInService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+class AppleSignInUserInfo {
+  final String identityToken;
+  final String email;
+  final String userId;
 
+  AppleSignInUserInfo({
+    required this.identityToken,
+    required this.email,
+    required this.userId,
+  });
+}
+
+class AppleSignInService {
   String generateNonce([int length = 32]) {
     const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
     final random = Random.secure();
@@ -20,12 +29,12 @@ class AppleSignInService {
     return digest.toString();
   }
 
-  Future<UserCredential?> signInWithApple() async {
+  Future<AppleSignInUserInfo> signInWithApple() async {
     try {
       final rawNonce = generateNonce();
       final nonce = sha256ofString(rawNonce);
 
-      // Request credential for the currently signed in Apple account.
+      // Request credential for the currently signed in Apple account
       final appleCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
@@ -34,40 +43,26 @@ class AppleSignInService {
         nonce: nonce,
       );
 
-      void printLongString(String text) {
-        const int chunkSize = 800;
-        for (var i = 0; i < text.length; i += chunkSize) {
-          final chunk = text.substring(i, i + chunkSize > text.length ? text.length : i + chunkSize);
-          print(chunk);
-        }
+      // Debug logging
+      debugPrint('Apple credential received - Identity Token available: ${appleCredential.identityToken != null}');
+
+      if (appleCredential.identityToken == null) {
+        throw Exception('No identity token received from Apple');
       }
 
-      printLongString('--- ----- -IDENTITY Token: ${appleCredential.identityToken}');
-      //printLongString("--- ---- ----RAW NONCE: ${appleCredential.}");
+      if (appleCredential.email == null && appleCredential.userIdentifier == null) {
+        throw Exception('No email or user identifier received from Apple');
+      }
 
-      final oauthCredential = OAuthProvider("apple.com").credential(
-        idToken: appleCredential.identityToken,
-        rawNonce: rawNonce,
+      // Return user info
+      return AppleSignInUserInfo(
+        identityToken: appleCredential.identityToken!,
+        email: appleCredential.email!=null?appleCredential.email!:'',
+        userId: appleCredential.userIdentifier!,
       );
-
-      // Sign in the user with Firebase.
-      final authResult = await _auth.signInWithCredential(oauthCredential);
-      final User? user = authResult.user;
-      if (user != null &&
-          user.displayName == null &&
-          appleCredential.givenName != null &&
-          appleCredential.familyName != null) {
-        await user.updateDisplayName('${appleCredential.givenName} ${appleCredential.familyName}');
-      }
-
-      return authResult;
     } catch (e) {
-      print('Error signing in with Apple: $e');
+      debugPrint('Error signing in with Apple: $e');
       rethrow;
     }
-  }
-
-  Future<void> signOut() async {
-    await _auth.signOut();
   }
 }

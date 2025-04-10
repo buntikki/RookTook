@@ -1,5 +1,5 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/model/auth/login/login_controller.dart';
@@ -31,16 +31,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.read(loginControllerProvider.notifier).checkUsername(usernameOrEmail);
   }
 
-  void _handleGoogleSignInSuccess(AuthSessionState? session) {
-    if (session != null) {
-      // User already exists and login was successful - navigate to main screen
-      Navigator.of(context).pushAndRemoveUntil(
-        buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-            (route) => false,
-      );
-    }
-  }
-
   void _handleNewGoogleUser(String email, String idToken) {
     // Navigate to username selection screen for Google sign-up
     Navigator.of(context).push(
@@ -53,11 +43,36 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
+  void _handleNewAppleUser(String email, String appleUserId) {
+    // Navigate to username selection screen for Apple sign-up
+    Navigator.of(context).push(
+      SetUsernameScreen.buildRoute(
+        context,
+        previousInput: email,
+        registrationType: RegistrationType.apple,
+        appleUserId: appleUserId,
+      ),
+    );
+  }
+
   void _handleGoogleSignInError(dynamic error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           'Google sign-in failed: ${error.toString().replaceAll('Exception: ', '')}',
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red.shade700,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _handleAppleSignInError(dynamic error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Apple sign-in failed: ${error.toString().replaceAll('Exception: ', '')}',
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.red.shade700,
@@ -107,7 +122,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     });
 
-    // Listen for auth session changes from Google sign in
     ref.listen<AuthSessionState?>(
       authSessionProvider,
           (previous, current) {
@@ -161,15 +175,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 80),
 
                 AppleSignInButton(
-                  onSignInSuccess: (data) {
-                    // Apple sign in implementation
-                  },
-                  onSignInError: (error) {},
+                  onNewUserVerified: _handleNewAppleUser,
+                  onSignInError: _handleAppleSignInError,
                 ),
                 const SizedBox(height: 12),
                 // Google login button
                 GoogleSignInButton(
-                  onSignInSuccess: _handleGoogleSignInSuccess,
                   onNewUserVerified: _handleNewGoogleUser,
                   onSignInError: _handleGoogleSignInError,
                 ),
@@ -196,6 +207,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Username or Email text field
                 TextField(
                   controller: _usernameController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   decoration: InputDecoration(
                     hintText: 'Username or Email',
                     hintStyle: const TextStyle(color: Colors.grey),

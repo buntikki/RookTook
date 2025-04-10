@@ -226,6 +226,105 @@ class AuthRepository {
     return AuthSessionState(token: token, user: user.lightUser);
   }
 
+  Future<AppleSignInResult> verifyAppleSignIn(String identityToken, String appleUserId) async {
+    final body = {
+      'idToken': identityToken,
+    };
+
+    // Make the verification request
+    final response = await _client.postReadJson(
+      Uri(path: '/api/auth/apple/verify'),
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      mapper: (json) => json,
+    );
+
+    // Check if response contains token fields which indicates successful login
+    final bool isLoginResponse = response.containsKey('access_token') &&
+        response.containsKey('token') &&
+        response.containsKey('token_type');
+
+    if (isLoginResponse) {
+      final loginResponse = LoginResponse.fromJson(response);
+
+      return AppleSignInResult(
+        userAlreadyRegistered: true,
+        appleUserId: appleUserId,
+        loginResponse: loginResponse,
+      );
+    } else {
+      // We received a verification response
+      final bool userAlreadyRegistered = response['user_already_registered'] as bool? ?? false;
+      return AppleSignInResult(
+        userAlreadyRegistered: userAlreadyRegistered,
+        appleUserId: appleUserId,
+      );
+    }
+  }
+
+  Future<AuthSessionState?> signInWithApple(AppleSignInResult verificationResult) async {
+    if (!verificationResult.userAlreadyRegistered) {
+      // User doesn't exist, cannot sign in
+      return null;
+    }
+
+    // User exists, use the login response if available
+    if (verificationResult.loginResponse != null) {
+      final loginResponse = verificationResult.loginResponse!;
+      final token = loginResponse.accessToken;
+
+      if (token == null) {
+        throw Exception('Login failed: No access token received');
+      }
+
+      final user = await _client.readJson(
+        Uri(path: '/api/account'),
+        headers: {'Authorization': 'Bearer ${signBearerToken(token)}'},
+        mapper: User.fromServerJson,
+      );
+
+      return AuthSessionState(token: token, user: user.lightUser);
+    } else {
+      // This should not typically happen if the server is configured correctly,
+      // but included for completeness
+      throw Exception('Login failed: Invalid server response');
+    }
+  }
+
+  Future<AuthSessionState> signUpWithApple(String email, String username, String appleUserId) async {
+    final body = {
+      'username': username,
+      'email': email,
+      'appleUserId': appleUserId
+    };
+
+    final authResp = await _client.postReadJson(
+      Uri(path: '/api/sign-up'),
+      body: json.encode(body),
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      },
+      mapper: (json) => LoginResponse.fromJson(json),
+    );
+
+    final token = authResp.accessToken;
+
+    if (token == null) {
+      throw Exception('Access token not found.');
+    }
+
+    final user = await _client.readJson(
+      Uri(path: '/api/account'),
+      headers: {'Authorization': 'Bearer ${signBearerToken(token)}'},
+      mapper: User.fromServerJson,
+    );
+
+    return AuthSessionState(token: token, user: user.lightUser);
+  }
 
   Future<void> signOut() async {
     final url = Uri(path: '/api/token');
@@ -236,6 +335,18 @@ class AuthRepository {
   }
 }
 
+
+class AppleSignInResult {
+  final bool userAlreadyRegistered;
+  final String? appleUserId;
+  final LoginResponse? loginResponse;
+
+  AppleSignInResult({
+    required this.userAlreadyRegistered,
+    this.appleUserId,
+    this.loginResponse,
+  });
+}
 
 class GoogleSignInResult {
   final bool userAlreadyRegistered;
