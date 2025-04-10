@@ -373,7 +373,7 @@ class _BoardWidget extends StatelessWidget {
               child: Center(
                 child: SizedBox(
                   width: (size / 8) * 6.6,
-                  height: (size / 8) * 4.6,
+                  height: (size / 8) * 6.0,
                   child: boardOverlay,
                 ),
               ),
