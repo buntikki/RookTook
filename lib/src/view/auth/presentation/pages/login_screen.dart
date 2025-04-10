@@ -30,16 +30,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.read(loginControllerProvider.notifier).checkUsername(usernameOrEmail);
   }
 
-  void _handleSocialSignInSuccess(AuthSessionState? session) {
-    if (session != null) {
-      // User already exists and login was successful - navigate to main screen
-      Navigator.of(context).pushAndRemoveUntil(
-        buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-            (route) => false,
-      );
-    }
-  }
-
   void _handleNewGoogleUser(String email, String idToken) {
     // Navigate to username selection screen for Google sign-up
     Navigator.of(context).push(
@@ -131,7 +121,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     });
 
-    // Listen for auth session changes from social sign in
     ref.listen<AuthSessionState?>(
       authSessionProvider,
           (previous, current) {
@@ -185,14 +174,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 80),
 
                 AppleSignInButton(
-                  onSignInSuccess: _handleSocialSignInSuccess,
                   onNewUserVerified: _handleNewAppleUser,
                   onSignInError: _handleAppleSignInError,
                 ),
                 const SizedBox(height: 12),
                 // Google login button
                 GoogleSignInButton(
-                  onSignInSuccess: _handleSocialSignInSuccess,
                   onNewUserVerified: _handleNewGoogleUser,
                   onSignInError: _handleGoogleSignInError,
                 ),

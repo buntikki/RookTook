@@ -57,7 +57,7 @@ class AppleSignInService {
       // Return user info
       return AppleSignInUserInfo(
         identityToken: appleCredential.identityToken!,
-        email: appleCredential.email!,
+        email: appleCredential.email!=null?appleCredential.email!:'',
         userId: appleCredential.userIdentifier!,
       );
     } catch (e) {

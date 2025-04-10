@@ -8,12 +8,10 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AppleSignInButton extends ConsumerWidget {
   final AppleSignInService _appleSignInService = AppleSignInService();
-  final void Function(AuthSessionState?) onSignInSuccess;
   final void Function(String email, String appleUserId) onNewUserVerified;
   final void Function(dynamic) onSignInError;
 
   AppleSignInButton({
-    required this.onSignInSuccess,
     required this.onNewUserVerified,
     required this.onSignInError,
   });
@@ -54,12 +52,11 @@ class AppleSignInButton extends ConsumerWidget {
                 );
 
                 if (result.userAlreadyRegistered) {
-                  final session = await authController.signInWithApple(result);
+                  await authController.signInWithApple(result);
                   loadingOverlay.remove();
-                  onSignInSuccess(session);
                 } else {
                   loadingOverlay.remove();
-                  onNewUserVerified(appleUserInfo.email, appleUserInfo.userId);
+                  onNewUserVerified(appleUserInfo.email.isNotEmpty?appleUserInfo.email:'', appleUserInfo.userId);
                 }
               } catch (e) {
                 loadingOverlay.remove();
