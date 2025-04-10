@@ -134,7 +134,9 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                       RandomAvatar('${gameState.game.me?.user?.name}', height: 70, width: 70),
                       const SizedBox(height: 8),
                       Text(
-                        '${gameState.game.me?.user?.name}',maxLines: 1,overflow: TextOverflow.ellipsis,
+                        '${gameState.game.me?.user?.name}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(color: Colors.white),
                       ),
                     ],
@@ -167,7 +169,9 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                       RandomAvatar('${gameState.game.opponent?.user?.name}', height: 70, width: 70),
                       const SizedBox(height: 8),
                       Text(
-                        '${gameState.game.opponent?.user?.name}',maxLines: 1,overflow: TextOverflow.ellipsis,
+                        '${gameState.game.opponent?.user?.name}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(color: Colors.white),
                       ),
                     ],
@@ -186,6 +190,7 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  // mainAxisSize: MainAxisSize.min, // Add this to prevent Row from taking full width
                   children: [
                     const Text('Rating', style: TextStyle(color: Colors.grey)),
                     const SizedBox(width: 12),
@@ -194,19 +199,23 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                       height: 30,
                       decoration: const BoxDecoration(
                         color: Color(0xffFFF9E5),
-                        // borderRadius: BorderRadius.circular(8.0),
                         shape: BoxShape.circle,
                       ),
                       padding: const EdgeInsets.all(8.0),
-                      child: game.me?.ratingDiff == null
-                          ? const Icon(Icons.remove,color: Colors.blue,) // or a placeholder widget
-                          : SvgPicture.asset(
-                        game.me!.ratingDiff! < 0
-                            ? 'assets/images/Arrow_Down.svg'
-                            : 'assets/images/Arrow_Up.svg',
-                      ),
+                      child:
+                          game.me?.ratingDiff == null
+                              ? const Icon(
+                                Icons.remove,
+                                color: Colors.blue,
+                                size: 14,
+                              ) // Reduced icon size
+                              : SvgPicture.asset(
+                                game.me!.ratingDiff! < 0
+                                    ? 'assets/images/Arrow_Down.svg'
+                                    : 'assets/images/Arrow_Up.svg',
+                                fit: BoxFit.contain, // Ensure SVG fits within container
+                              ),
                     ),
-                    // const Icon(Icons.bolt, color: Colors.amber, size: 20),
                     const SizedBox(width: 16),
                     Text(
                       '${game.me!.rating ?? 0}',
@@ -223,21 +232,25 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                           : game.me!.ratingDiff! < 0
                           ? '${game.me?.ratingDiff}'
                           : '+${game.me?.ratingDiff}',
+                          maxLines: 1,
+                           // Fixed string interpolation here
                       style: TextStyle(
-                        color: game.me?.ratingDiff == null
-                            ? Colors.grey // or your neutral color
-                            : game.me!.ratingDiff! < 0
-                            ? Colors.red
-                            : Colors.green,
+                        color:
+                            game.me?.ratingDiff == null
+                                ? Colors.grey
+                                : game.me!.ratingDiff! < 0
+                                ? Colors.red
+                                : Colors.green,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 24),
+
             AnimatedCrossFade(
               duration: const Duration(milliseconds: 400),
               firstCurve: Curves.easeOutExpo,
@@ -255,19 +268,24 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FatButton(
-                          semanticsLabel: context.l10n.rematch,
-                          child: const Text('Accept rematch'),
-                          onPressed: () {
-                            ref.read(ctrlProvider.notifier).proposeOrAcceptRematch();
-                          },
+                        Expanded(
+                          child: FatButton(
+                            semanticsLabel: context.l10n.rematch,
+                            child: const Text('Accept'),
+                            onPressed: () {
+                              ref.read(ctrlProvider.notifier).proposeOrAcceptRematch();
+                            },
+                          ),
                         ),
-                        SecondaryButton(
-                          semanticsLabel: context.l10n.rematch,
-                          child: const Text('Decline'),
-                          onPressed: () {
-                            ref.read(ctrlProvider.notifier).declineRematch();
-                          },
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: SecondaryButton(
+                            semanticsLabel: context.l10n.rematch,
+                            child: const Text('Decline'),
+                            onPressed: () {
+                              ref.read(ctrlProvider.notifier).declineRematch();
+                            },
+                          ),
                         ),
                       ],
                     ),

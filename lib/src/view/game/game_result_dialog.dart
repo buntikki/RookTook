@@ -81,19 +81,23 @@ class _GameResultDialogState extends ConsumerState<GameResultDialog> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FatButton(
-                      semanticsLabel: context.l10n.rematch,
-                      child: const Text('Accept rematch'),
-                      onPressed: () {
-                        ref.read(ctrlProvider.notifier).proposeOrAcceptRematch();
-                      },
+                    Expanded(
+                      child: FatButton(
+                        semanticsLabel: context.l10n.rematch,
+                        child: const Text('Accept rematch'),
+                        onPressed: () {
+                          ref.read(ctrlProvider.notifier).proposeOrAcceptRematch();
+                        },
+                      ),
                     ),
-                    SecondaryButton(
-                      semanticsLabel: context.l10n.rematch,
-                      child: const Text('Decline'),
-                      onPressed: () {
-                        ref.read(ctrlProvider.notifier).declineRematch();
-                      },
+                    Expanded(
+                      child: SecondaryButton(
+                        semanticsLabel: context.l10n.rematch,
+                        child: const Text('Decline'),
+                        onPressed: () {
+                          ref.read(ctrlProvider.notifier).declineRematch();
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -186,13 +190,13 @@ class OverTheBoardGameResultDialog extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         GameResult(game: game),
-        const SizedBox(height: 16.0,),
+        const SizedBox(height: 16.0),
         SecondaryButton(
           semanticsLabel: context.l10n.rematch,
           onPressed: onRematch,
           child: Text(context.l10n.rematch, textAlign: TextAlign.center),
         ),
-       /* SecondaryButton(
+        /* SecondaryButton(
           semanticsLabel: context.l10n.analysis,
           onPressed: () {
             Navigator.of(context).push(
@@ -226,9 +230,7 @@ class GameResult extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final showWinner =
-        game.winner != null
-            ? ' • ${game.winner == Side.white ? 'White Wins' : 'Black Wins'}'
-            : '';
+        game.winner != null ? ' • ${game.winner == Side.white ? 'White Wins' : 'Black Wins'}' : '';
 
     return Column(
       mainAxisSize: MainAxisSize.min,
