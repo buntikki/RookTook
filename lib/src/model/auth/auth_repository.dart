@@ -176,12 +176,6 @@ class AuthRepository {
     }
   }
 
-  /// Sign in with Google
-  ///
-  /// This method handles the complete Google sign-in flow:
-  /// 1. Verifies the Google credentials with our server
-  /// 2. If user is already registered, returns the auth session
-  /// 3. If user is not registered, additional signup step is needed
   Future<AuthSessionState?> signInWithGoogle(GoogleSignInResult verificationResult) async {
       // User already exists, complete the sign-in
       final loginResponse = verificationResult.loginResponse;
@@ -199,10 +193,7 @@ class AuthRepository {
       return AuthSessionState(token: token, user: user.lightUser);
   }
 
-  /// Sign up with Google
-  ///
-  /// This method completes the Google sign-up process after verification:
-  /// It takes the verified email and chosen username to create an account
+
   Future<AuthSessionState> signUpWithGoogle(String email, String username, String idToken) async {
     final body = {
       'username': username,
