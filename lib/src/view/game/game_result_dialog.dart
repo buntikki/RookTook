@@ -138,7 +138,7 @@ class _GameResultDialogState extends ConsumerState<GameResultDialog> {
                     : null,
             child: Text(context.l10n.newOpponent, textAlign: TextAlign.center),
           ),
-        if (gameState.game.userAnalysable)
+        /*if (gameState.game.userAnalysable)
           SecondaryButton(
             semanticsLabel: context.l10n.analysis,
             onPressed: () {
@@ -147,7 +147,7 @@ class _GameResultDialogState extends ConsumerState<GameResultDialog> {
               ).push(AnalysisScreen.buildRoute(context, gameState.analysisOptions));
             },
             child: Text(context.l10n.analysis, textAlign: TextAlign.center),
-          ),
+          ),*/
       ],
     );
 
@@ -186,12 +186,13 @@ class OverTheBoardGameResultDialog extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         GameResult(game: game),
+        const SizedBox(height: 16.0,),
         SecondaryButton(
           semanticsLabel: context.l10n.rematch,
           onPressed: onRematch,
           child: Text(context.l10n.rematch, textAlign: TextAlign.center),
         ),
-        SecondaryButton(
+       /* SecondaryButton(
           semanticsLabel: context.l10n.analysis,
           onPressed: () {
             Navigator.of(context).push(
@@ -209,7 +210,7 @@ class OverTheBoardGameResultDialog extends StatelessWidget {
             );
           },
           child: Text(context.l10n.analysis, textAlign: TextAlign.center),
-        ),
+        ),*/
       ],
     );
 
@@ -226,7 +227,7 @@ class GameResult extends StatelessWidget {
   Widget build(BuildContext context) {
     final showWinner =
         game.winner != null
-            ? ' • ${game.winner == Side.white ? context.l10n.whiteIsVictorious : context.l10n.blackIsVictorious}'
+            ? ' • ${game.winner == Side.white ? 'White Wins' : 'Black Wins'}'
             : '';
 
     return Column(

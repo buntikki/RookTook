@@ -76,6 +76,7 @@ class LobbyScreenLoadingContent extends StatelessWidget {
                       ],
                       const SizedBox(height: 16.0),
                       _LobbyNumbers(),
+                      const SizedBox(height: 16.0),
                     ],
                   ),
                 ),

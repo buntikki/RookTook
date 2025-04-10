@@ -601,10 +601,10 @@ class DailyPuzzle extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(context.l10n.puzzlePuzzleOfTheDay, style: Styles.boardPreviewTitle),
-                  Text(
-                    context.l10n.puzzlePlayedXTimes(data.puzzle.plays).localizeNumbers(),
-                    style: _puzzlePreviewSubtitleStyle(context),
-                  ),
+                  // Text(
+                  //   context.l10n.puzzlePlayedXTimes(data.puzzle.plays).localizeNumbers(),
+                  //   style: _puzzlePreviewSubtitleStyle(context),
+                  // ),
                 ],
               ),
               Icon(

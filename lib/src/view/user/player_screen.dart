@@ -105,12 +105,12 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> with SingleTickerPr
                       _buildTabButton(
                         0,
                         'Bullet',
-                        Image.asset('assets/images/bullet_game.png',),
+                        Image.asset('assets/images/bullet_game.png',height: 20,width: 20,),
                       ),
                       _buildTabButton(
                         1,
                         'Rapid',
-                        Image.asset('assets/images/rapid_game.png',),
+                        Image.asset('assets/images/rapid_game.png',height: 20,width: 20,),
                       ),
                     ],
                   ),
