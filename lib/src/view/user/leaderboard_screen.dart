@@ -90,7 +90,7 @@ class LeaderboardListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformListTile(
-      onTap: () {},
+      onTap: null,
       leading: Container(
         height: 22,
         width: 36,

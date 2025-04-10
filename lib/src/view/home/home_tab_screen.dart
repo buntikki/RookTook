@@ -706,7 +706,8 @@ class GameTypeBottomSheet extends ConsumerWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Close button and title
           const Center(
@@ -742,9 +743,11 @@ class GameTypeBottomSheet extends ConsumerWidget {
           const SizedBox(height: 10),
           // Game options
           Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            padding: const EdgeInsets.symmetric(horizontal:  22,vertical: 16),
+            child: Wrap(
+              runSpacing: 10,
+              spacing: 25,
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Bullet option
                 GameTypeCard(
@@ -781,27 +784,41 @@ class GameTypeBottomSheet extends ConsumerWidget {
                     );
                   },
                 ),
+                GameTypeCard(
+                  icon: Image.asset('assets/images/pass&play.png', height: 33, width: 33),
+                  title: 'Pass &',
+                  subtitle: 'Play',
+                  type: '',
+                  subtitleColor: const Color(0xFF8BC34A), // Light green
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).push(OverTheBoardScreen.buildRoute(context));
+                  },
+                ),
               ],
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.only(left: 32.0),
-            child: GameTypeCard(
-              icon: Image.asset('assets/images/pass&play.png', height: 33, width: 33),
-              title: 'Pass &',
-              subtitle: 'Play',
-              type: '',
-              subtitleColor: const Color(0xFF8BC34A), // Light green
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.of(
-                  context,
-                  rootNavigator: true,
-                ).push(OverTheBoardScreen.buildRoute(context));
-              },
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 32.0),
+          //   child: GameTypeCard(
+          //     icon: Image.asset('assets/images/pass&play.png', height: 33, width: 33),
+          //     title: 'Pass &',
+          //     subtitle: 'Play',
+          //     type: '',
+          //     subtitleColor: const Color(0xFF8BC34A), // Light green
+          //     onTap: () {
+          //       Navigator.pop(context);
+          //       Navigator.of(
+          //         context,
+          //         rootNavigator: true,
+          //       ).push(OverTheBoardScreen.buildRoute(context));
+          //     },
+          //   ),
+          // ),
           const SizedBox(height: 10),
         ],
       ),
@@ -914,7 +931,6 @@ class GameTypeCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 160,
         height: 111,
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
         child: Stack(

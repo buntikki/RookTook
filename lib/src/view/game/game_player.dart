@@ -79,8 +79,8 @@ class GamePlayer extends StatelessWidget {
             children: [
               if (player.user != null) ...[
                 Icon(
-                  player.onGame == true ? Icons.cloud : Icons.cloud_off,
-                  color: player.onGame == true ? LichessColors.green : null,
+                  Icons.circle,
+                  color: player.onGame == true ? LichessColors.green : LichessColors.red,
                   size: 14,
                 ),
               ],
@@ -128,7 +128,7 @@ class GamePlayer extends StatelessWidget {
                   isActiveGameOfCurrentUser: game.me != null && !game.finished && !game.aborted,
                   child: Text.rich(
                     TextSpan(
-                      text: ' ${player.rating}${player.provisional == true ? '?' : ''}',
+                      text: ' ${player.rating}${player.provisional == true ? '' : ''}',
                       children: [
                         if (player.ratingDiff != null)
                           TextSpan(

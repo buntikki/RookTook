@@ -104,22 +104,22 @@ class RecentGamesWidget extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    if (nbOfGames > list.length)
-                      NoPaddingTextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            GameHistoryScreen.buildRoute(
-                              context,
-                              user: user,
-                              isOnline: connectivity.valueOrNull?.isOnline == true,
-                            ),
-                          );
-                        },
-                        child: Text(
-                          context.l10n.more,
-                          style: TextStyle(color: textColor ?? Colors.black),
-                        ),
-                      ),
+                    // if (nbOfGames > list.length)
+                    //   NoPaddingTextButton(
+                    //     onPressed: () {
+                    //       Navigator.of(context).push(
+                    //         GameHistoryScreen.buildRoute(
+                    //           context,
+                    //           user: user,
+                    //           isOnline: connectivity.valueOrNull?.isOnline == true,
+                    //         ),
+                    //       );
+                    //     },
+                    //     child: Text(
+                    //       context.l10n.more,
+                    //       style: TextStyle(color: textColor ?? Colors.black),
+                    //     ),
+                    //   ),
                   ],
                 ),
               ),
