@@ -51,7 +51,7 @@ android {
 
     defaultConfig {
         multiDexEnabled true
-        applicationId "com.buntikki.rooktook"
+        applicationId "com.rooktook"
         minSdkVersion 26
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

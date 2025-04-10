@@ -37,6 +37,59 @@
             {
               "client_id": "1035858141908-p1k575m728jsqf0ednh3lfrvb4qs6mtf.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1035858141908-07bp848sildi8mpscdqs9f9keeqatbi1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rooktook",
+                "app_store_id": "6744465194"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1035858141908:android:a38e771f3f07e86b1f9141",
+        "android_client_info": {
+          "package_name": "com.rooktook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1035858141908-5u93lu5b08tumep9lf9c6k6ab1ih6c1s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rooktook",
+            "certificate_hash": "2ef47c972db836156b4270ceb9f54bc3f27c08f8"
+          }
+        },
+        {
+          "client_id": "1035858141908-p1k575m728jsqf0ednh3lfrvb4qs6mtf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA27Hl4IMAvgq0EqQRqxMg0koLQ3duDJjs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1035858141908-p1k575m728jsqf0ednh3lfrvb4qs6mtf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1035858141908-07bp848sildi8mpscdqs9f9keeqatbi1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rooktook",
+                "app_store_id": "6744465194"
+              }
             }
           ]
         }
