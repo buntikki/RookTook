@@ -8,26 +8,39 @@ import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/navigation.dart';
 import 'package:lichess_mobile/src/utils/navigation.dart';
 
+enum RegistrationType {
+  email,
+  google,
+}
+
 class SetUsernameScreen extends ConsumerStatefulWidget {
   const SetUsernameScreen({
     super.key,
     required this.previousInput,
-    required this.password,
+    this.password,
+    this.registrationType = RegistrationType.email,
+    this.idToken,
   });
 
   final String previousInput;
-  final String password;
+  final String? password;
+  final RegistrationType registrationType;
+  final String? idToken;
 
   static Route<dynamic> buildRoute(
       BuildContext context, {
         required String previousInput,
-        required String password,
+        String? password,
+        RegistrationType registrationType = RegistrationType.email,
+        String? idToken,
       }) {
     return buildScreenRoute(
       context,
       screen: SetUsernameScreen(
         previousInput: previousInput,
         password: password,
+        registrationType: registrationType,
+        idToken: idToken,
       ),
     );
   }
@@ -40,15 +53,17 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
   final TextEditingController _inputController = TextEditingController();
   bool _isSubmitting = false;
   bool _isInputEmail = false;
+  late final bool _isGoogleSignIn;
 
   @override
   void initState() {
     super.initState();
+    _isGoogleSignIn = widget.registrationType == RegistrationType.google;
     _isInputEmail = _isEmail(widget.previousInput);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(authInputControllerProvider.notifier).setInputType(
-          _isInputEmail ? InputType.username : InputType.email
+          _isGoogleSignIn || _isInputEmail ? InputType.username : InputType.email
       );
     });
 
@@ -74,14 +89,27 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
       _isSubmitting = true;
     });
 
-    final email = _isInputEmail ? widget.previousInput : _inputController.text;
-    final username = _isInputEmail ? _inputController.text : widget.previousInput;
+    if (_isGoogleSignIn) {
+      // Handle Google sign-up with username
+      final email = widget.previousInput;
+      final username = _inputController.text;
 
-    ref.read(authControllerProvider.notifier).signUp(
-      email,
-      username,
-      widget.password,
-    );
+      ref.read(authControllerProvider.notifier).signUpWithGoogle(
+        email,
+        username,
+        widget.idToken!,
+      );
+    } else {
+      // Handle regular email/password sign-up
+      final email = _isInputEmail ? widget.previousInput : _inputController.text;
+      final username = _isInputEmail ? _inputController.text : widget.previousInput;
+
+      ref.read(authControllerProvider.notifier).signUp(
+        email,
+        username,
+        widget.password!,
+      );
+    }
   }
 
   @override
@@ -127,8 +155,24 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
       });
     }
 
-    final fieldLabel = _isInputEmail ? 'Username' : 'Email';
-    final hintText = _isInputEmail ? 'Create username' : 'Enter email';
+    String pageTitle;
+    String fieldLabel;
+    String hintText;
+    String helperText;
+
+    if (_isGoogleSignIn) {
+      pageTitle = 'Create\nYour Username';
+      fieldLabel = 'Username';
+      hintText = 'Create username';
+      helperText = 'Other players will see this when you play';
+    } else {
+      fieldLabel = _isInputEmail ? 'Username' : 'Email';
+      pageTitle = 'Enter\nYour $fieldLabel';
+      hintText = _isInputEmail ? 'Create username' : 'Enter email';
+      helperText = _isInputEmail
+          ? 'Other players will see this when you play'
+          : "We'll use this to contact you about your account";
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xff1C1E21),
@@ -159,38 +203,57 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                       ),
                       const SizedBox(height: 32),
                       Text(
-                        'Enter\nYour $fieldLabel',
+                        pageTitle,
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
 
                       const SizedBox(height: 16),
                       Text(
-                        _isInputEmail
-                            ? 'Other players will see this when you play'
-                            : "We'll use this to contact you about your account",
+                        helperText,
                         style: Theme.of(
                           context,
                         ).textTheme.labelMedium?.copyWith(color: const Color(0xff8F9193)),
                       ),
 
-                     /* const SizedBox(height: 32),
-
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: const Color(0xff2B2D30),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0x4DFFFFFF),
-                            width: 1,
-                            style: BorderStyle.solid,
+                      if (_isGoogleSignIn) ...[
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff2B2D30),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Google Account',
+                                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.grey),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  const CircleAvatar(
+                                    backgroundColor: Colors.green,
+                                    child: Icon(Icons.check, color: Colors.white),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      widget.previousInput,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        child: Center(
-                          child: SvgPicture.asset('assets/images/svg/select_avatar.svg', width: 48, height: 48),
-                        ),
-                      ),*/
+                      ],
+
                       const SizedBox(height: 32),
                       Container(
                         decoration: BoxDecoration(
@@ -208,8 +271,10 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                             suffixStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
                           ),
                           style: const TextStyle(color: Colors.white, fontSize: 18),
-                          maxLength: _isInputEmail? null :state.maxLength,
-                          keyboardType: _isInputEmail ? TextInputType.text : TextInputType.emailAddress,
+                          maxLength: state.maxLength,
+                          keyboardType: _isInputEmail || _isGoogleSignIn
+                              ? TextInputType.text
+                              : TextInputType.emailAddress,
                           buildCounter:
                               (context, {required currentLength, required isFocused, maxLength}) => null,
                         ),
@@ -226,7 +291,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                 color: const Color(0xff1C1E21),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.2),
+                    color: Colors.black.withOpacity(0.2),
                     blurRadius: 8,
                     offset: const Offset(0, -2),
                   ),

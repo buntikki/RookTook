@@ -1,55 +1,45 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:io';
 
+class GoogleSignInUserInfo {
+  final String idToken;
+  final String email;
+
+  GoogleSignInUserInfo({
+    required this.idToken,
+    required this.email,
+  });
+}
 
 class GoogleSignInService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Sign in with Google
-  Future<UserCredential?> signInWithGoogle() async {
+  /// Sign in with Google using Firebase Authentication
+  Future<GoogleSignInUserInfo> signInWithGoogle() async {
     try {
-      // Trigger the authentication flow
+      // Start the Google sign-in process
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      
-      // If user cancels sign-in, return null
-      if (googleUser == null) return null;
-      
-      // Obtain the auth details from the request
+
+      if (googleUser == null) {
+        throw Exception('Google sign in was cancelled');
+      }
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
+      if (googleAuth.idToken == null) {
+        throw Exception('Failed to get ID token from Google');
+      }
+      final idToken = googleAuth.idToken;
 
-
-      void printLongString(String text) {
-        const int chunkSize = 800;
-        for (var i = 0; i < text.length; i += chunkSize) {
-          final chunk = text.substring(i, i + chunkSize > text.length ? text.length : i + chunkSize);
-          print(chunk);
-        }
+      if (idToken == null) {
+        throw Exception('Failed to get Firebase ID token');
       }
 
-      printLongString("--- ----- -Access Token: ${googleAuth.accessToken}");
-      printLongString("--- ---- ----ID Token: ${googleAuth.idToken}");
-
-
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+      return GoogleSignInUserInfo(
+        idToken: idToken,
+        email: googleUser.email
       );
-      
-      // Sign in with the credential and return the user credential
-      return await _auth.signInWithCredential(credential);
-    } catch (e) {
-      print('Error signing in with Google: $e');
-      rethrow;
+    } catch (error) {
+      throw Exception('Google sign in failed: $error');
     }
-  }
-  
-  // Sign out
-  Future<void> signOut() async {
-    await _googleSignIn.signOut();
-    await _auth.signOut();
   }
 }
