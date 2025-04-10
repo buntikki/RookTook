@@ -291,7 +291,7 @@ class _Body extends ConsumerWidget {
                 queryParameters: {'subject': 'How may I help you', 'body': ''},
               );
               if (await canLaunchUrl(emailUri)) {
-                Theme.of(context).platform == TargetPlatform.iOS ? await launchUrl(emailUri, mode: LaunchMode.externalApplication) : await launchUrl(emailUri);
+                Theme.of(context).platform == TargetPlatform.iOS ? await launchUrl(emailUri, mode: LaunchMode.externalApplication) : await launchUrl(emailUri, mode: LaunchMode.externalApplication);
               await launchUrl(emailUri);
               } else {
               print('⚠️ Could not launch email client');
