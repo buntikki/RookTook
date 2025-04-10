@@ -83,6 +83,7 @@ class _Body extends ConsumerWidget {
 /// Optionaly Provide the [perfIcon] for the Variant of the List
 class LeaderboardListTile extends StatelessWidget {
   const LeaderboardListTile({required this.user, this.perfIcon, this.index});
+
   final LeaderboardUser user;
   final IconData? perfIcon;
   final int? index;
@@ -111,15 +112,18 @@ class LeaderboardListTile extends StatelessWidget {
               child: Row(
                 children: [
                   ClipOval(child: RandomAvatar(user.title!, height: 30, width: 30)),
-              
+
                   const SizedBox(width: 12),
-              
-                  Text(
-                    user.lightUser.name,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xffEFEDED),
-                      overflow: TextOverflow.ellipsis,
+
+                  Flexible(
+                    child: Text(
+                      user.lightUser.name,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xffEFEDED),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
                 ],
@@ -128,7 +132,8 @@ class LeaderboardListTile extends StatelessWidget {
 
             if (user.title != null) ...[
               Container(
-                width: 45, // Fixed width for all titles
+                width: 45,
+                // Fixed width for all titles
                 // height: 20,
                 // padding:EdgeInsets.all(2),
                 // padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -141,7 +146,8 @@ class LeaderboardListTile extends StatelessWidget {
                     user.title!,
                     maxLines: 1,
                     style: const TextStyle(fontSize: 12),
-                    overflow: TextOverflow.visible, // Ensures the text isn't cut off
+                    overflow: TextOverflow.visible,
+                    // Ensures the text isn't cut off
                     textAlign: TextAlign.center, // Centers the text within the container
                     // style: (style ?? const TextStyle()).copyWith(
                     //   color:
@@ -176,6 +182,7 @@ class LeaderboardListTile extends StatelessWidget {
 
 class _Progress extends StatelessWidget {
   const _Progress(this.progress);
+
   final int progress;
 
   @override
@@ -205,6 +212,7 @@ class _Progress extends StatelessWidget {
 
 class _Leaderboard extends StatelessWidget {
   const _Leaderboard(this.userList, this.iconData, this.title);
+
   final List<LeaderboardUser> userList;
   final String iconData;
   final String title;

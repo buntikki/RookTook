@@ -96,7 +96,7 @@ class NewProfileScreen extends ConsumerWidget {
               // const Text('@magnuscarlsen', style: TextStyle(color: Colors.grey, fontSize: 16)),
               const SizedBox(height: 30),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal:  8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -118,7 +118,7 @@ class NewProfileScreen extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(width: 10),
-                
+
                     Expanded(
                       child: _StatCard(
                         label: 'Games Drawn',
@@ -227,7 +227,14 @@ class _StatCard extends StatelessWidget {
             child: Text(labelIcon, style: const TextStyle(color: Colors.white)),
           ),
           const SizedBox(height: 10),
-          Text(label, style: const TextStyle(color: Colors.grey)),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ),
           const SizedBox(height: 5),
           Text(
             '$count',
