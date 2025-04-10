@@ -6,6 +6,7 @@ import 'package:lichess_mobile/src/model/auth/auth_input_controller.dart';
 import 'package:lichess_mobile/src/model/auth/auth_input_state.dart';
 import 'package:lichess_mobile/src/model/auth/auth_session.dart';
 import 'package:lichess_mobile/src/navigation.dart';
+import 'package:lichess_mobile/src/network/http.dart';
 import 'package:lichess_mobile/src/utils/navigation.dart';
 
 enum RegistrationType {
@@ -151,10 +152,16 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
       authControllerProvider,
           (previous, current) {
         if (previous?.isLoading == true && current.hasError) {
+          var errorMessage = '';
+          if(current.error is ServerException){
+            errorMessage = (current.error! as ServerException).message;
+          }else{
+            errorMessage = current.error.toString().replaceAll('Exception: ', '');
+          }
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Signup failed: ${current.error.toString().replaceAll('Exception: ', '')}',
+                'Signup failed: $errorMessage',
                 style: const TextStyle(color: Colors.white),
               ),
               backgroundColor: Colors.red.shade700,
