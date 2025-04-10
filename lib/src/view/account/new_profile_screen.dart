@@ -120,7 +120,7 @@ class NewProfileScreen extends ConsumerWidget {
 
                     _MenuItem(
                       icon: 'assets/images/profile.svg',
-                      title: 'My Profile',
+                      title: 'My Activity',
                       onTap: () {
                         ref.invalidate(accountActivityProvider);
                         Navigator.of(context).push(ProfileScreen.buildRoute(context));

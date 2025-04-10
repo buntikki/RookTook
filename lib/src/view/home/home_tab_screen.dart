@@ -754,14 +754,14 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   icon: Image.asset('assets/images/bullet_game.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Bullet',
-                  type: '2+1',
+                  type: '1+5',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context, rootNavigator: true).push(
                       GameScreen.buildRoute(
                         context,
-                        seek: GameSeek.fastPairing(const TimeIncrement(120, 1), session),
+                        seek: GameSeek.fastPairing(const TimeIncrement(60, 5), session),
                       ),
                     );
                   },
@@ -772,14 +772,14 @@ class GameTypeBottomSheet extends ConsumerWidget {
                   icon: Image.asset('assets/images/rapid_game.png', height: 33, width: 33),
                   title: 'Play',
                   subtitle: 'Rapid',
-                  type: '10+5',
+                  type: '10+0',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.of(context, rootNavigator: true).push(
                       GameScreen.buildRoute(
                         context,
-                        seek: GameSeek.fastPairing(const TimeIncrement(600, 5), session),
+                        seek: GameSeek.fastPairing(const TimeIncrement(600, 0), session),
                       ),
                     );
                   },
