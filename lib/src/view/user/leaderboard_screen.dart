@@ -107,21 +107,40 @@ class LeaderboardListTile extends StatelessWidget {
         padding: const EdgeInsets.only(right: 5.0),
         child: Row(
           children: [
-            ClipOval(child: RandomAvatar(user.title!, height: 30, width: 30)),
+            Expanded(
+              child: Row(
+                children: [
+                  ClipOval(child: RandomAvatar(user.title!, height: 30, width: 30)),
+              
+                  const SizedBox(width: 12),
+              
+                  Text(
+                    user.lightUser.name,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xffEFEDED),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-            const SizedBox(width: 12),
             if (user.title != null) ...[
               Container(
-                width: 60, // Fixed width for all titles
+                width: 45, // Fixed width for all titles
                 // height: 20,
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                // padding:EdgeInsets.all(2),
+                // padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(2),
                   color: const Color(0xff21B8E8),
                 ),
                 child: Center(
                   child: Text(
                     user.title!,
+                    maxLines: 1,
+                    style: const TextStyle(fontSize: 12),
                     overflow: TextOverflow.visible, // Ensures the text isn't cut off
                     textAlign: TextAlign.center, // Centers the text within the container
                     // style: (style ?? const TextStyle()).copyWith(
@@ -136,14 +155,6 @@ class LeaderboardListTile extends StatelessWidget {
               ),
               const SizedBox(width: 5),
             ],
-            Text(
-              user.lightUser.name,
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xffEFEDED),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
           ],
         ),
         //  UserFullNameWidget(user: user.lightUser),
@@ -207,7 +218,7 @@ class _Leaderboard extends StatelessWidget {
         hasLeading: false,
         header: Row(
           children: [
-            Image.asset(iconData, height: 20, width: 20,),
+            Image.asset(iconData, height: 20, width: 20),
             //Icon(iconData, color: context.lichessColors.brag),
             const SizedBox(width: 10.0),
             Text(title),

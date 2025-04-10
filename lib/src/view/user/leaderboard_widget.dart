@@ -78,19 +78,19 @@ class _LeaderboardWidgetState extends ConsumerState<LeaderboardWidget> {
             backgroundColor: Color(0xff2B2D30),
             hasLeading: true,
             header: const Text('World Rank'),
-            headerTrailing: NoPaddingTextButton(
-              onPressed: null,
-              child: Container(
-                height: 36,
-                width: 36, 
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white10),
-                ),
-                child: Icon(Icons.north_east,color: Colors.white,),
-              ),
-              // Text(context.l10n.more),
-            ),
+            // headerTrailing: NoPaddingTextButton(
+            //   onPressed: null,
+            //   child: Container(
+            //     height: 36,
+            //     width: 36, 
+            //     decoration: BoxDecoration(
+            //       shape: BoxShape.circle,
+            //       border: Border.all(color: Colors.white10),
+            //     ),
+            //     child: Icon(Icons.north_east,color: Colors.white,),
+            //   ),
+            //   // Text(context.l10n.more),
+            // ),
             children: [
               for (final (index, entry) in filteredData.indexed)
                 LeaderboardListTile(

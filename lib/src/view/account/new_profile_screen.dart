@@ -22,11 +22,7 @@ class NewProfileScreen extends ConsumerWidget {
   const NewProfileScreen({super.key});
 
   static Route<dynamic> buildRoute(BuildContext context) {
-    return buildScreenRoute(
-      context,
-      screen: const NewProfileScreen(),
-      title: context.l10n.profile,
-    );
+    return buildScreenRoute(context, screen: const NewProfileScreen(), title: context.l10n.profile);
   }
 
   void _refreshData(WidgetRef ref) {
@@ -99,13 +95,40 @@ class NewProfileScreen extends ConsumerWidget {
               // const SizedBox(height: 5),
               // const Text('@magnuscarlsen', style: TextStyle(color: Colors.grey, fontSize: 16)),
               const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _StatCard(label: 'Games Won', count: win, color: Colors.green, labelIcon: 'W'),
-                  _StatCard(label: 'Games Lost', count: loose, color: Colors.red, labelIcon: 'L'),
-                  _StatCard(label: 'Games Drawn', count: draw, color: Colors.blue, labelIcon: 'D'),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:  8.0),
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: _StatCard(
+                        label: 'Games Won',
+                        count: win,
+                        color: Colors.green,
+                        labelIcon: 'W',
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: _StatCard(
+                        label: 'Games Lost',
+                        count: loose,
+                        color: Colors.red,
+                        labelIcon: 'L',
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                
+                    Expanded(
+                      child: _StatCard(
+                        label: 'Games Drawn',
+                        count: draw,
+                        color: Colors.blue,
+                        labelIcon: 'D',
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 30),
               Container(
@@ -115,9 +138,7 @@ class NewProfileScreen extends ConsumerWidget {
                 ),
                 margin: EdgeInsets.all(16),
                 child: Column(
-
                   children: [
-
                     _MenuItem(
                       icon: 'assets/images/profile.svg',
                       title: 'My Profile',
@@ -126,13 +147,13 @@ class NewProfileScreen extends ConsumerWidget {
                         Navigator.of(context).push(ProfileScreen.buildRoute(context));
                       },
                     ),
-                    const Divider(color: Colors.white24,height: 1,),
+                    const Divider(color: Colors.white24, height: 1),
                     _MenuItem(
                       icon: 'assets/images/leaderboard.svg',
                       title: 'Leaderboard',
                       onTap: () => Navigator.of(context).push(PlayerScreen.buildRoute(context)),
                     ),
-                    const Divider(color: Colors.white24,height: 1,),
+                    const Divider(color: Colors.white24, height: 1),
 
                     // _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
                     // const Divider(color: Colors.white24),
@@ -193,7 +214,7 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xff464A4F),
         borderRadius: BorderRadius.circular(16),
@@ -219,7 +240,6 @@ class _StatCard extends StatelessWidget {
 }
 
 _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
-
   final authController = ref.read(authControllerProvider.notifier);
   if (Theme.of(context).platform == TargetPlatform.iOS) {
     return showCupertinoActionSheet(
@@ -228,22 +248,22 @@ _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
         BottomSheetAction(
           makeLabel: (context) => Text(context.l10n.logOut),
           isDestructiveAction: true,
-            onPressed: () async {
-              Navigator.of(context).pop(); // Dismiss the dialog
+          onPressed: () async {
+            Navigator.of(context).pop(); // Dismiss the dialog
 
-              await Future.delayed(Duration(milliseconds: 200)); // Let animation finish
+            await Future.delayed(Duration(milliseconds: 200)); // Let animation finish
 
-              authController.signOut();
+            authController.signOut();
 
-              // Reset current tab to avoid keeping state
-              ref.read(currentBottomTabProvider.notifier).state = BottomTab.home;
+            // Reset current tab to avoid keeping state
+            ref.read(currentBottomTabProvider.notifier).state = BottomTab.home;
 
-              // Navigate to login from root navigator
-              rootNavigatorKey.currentState?.pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
-                    (route) => false,
-              );
-            }
+            // Navigate to login from root navigator
+            rootNavigatorKey.currentState?.pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+              (route) => false,
+            );
+          },
         ),
       ],
     );
@@ -269,7 +289,7 @@ _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
                 authController.signOut();
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      (route) => false,
+                  (route) => false,
                 );
               },
             ),
@@ -291,9 +311,12 @@ class _MenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: SvgPicture.asset(icon),
-      title: Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(
-    color: Colors.white,
-    fontWeight: FontWeight.normal,)),
+      title: Text(
+        title,
+        style: Theme.of(
+          context,
+        ).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.normal),
+      ),
       trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white24, size: 16),
       onTap: onTap,
     );
