@@ -313,15 +313,8 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              decoration: BoxDecoration(
-                color: const Color(0xff1C1E21),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, -2),
-                  ),
-                ],
+              decoration: const BoxDecoration(
+                color: Color(0xff1C1E21),
               ),
               child: ElevatedButton(
                 onPressed: (_isSubmitting || !state.isValid) ? null : _handleSignUp,
