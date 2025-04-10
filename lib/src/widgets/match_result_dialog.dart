@@ -232,8 +232,8 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                           : game.me!.ratingDiff! < 0
                           ? '${game.me?.ratingDiff}'
                           : '+${game.me?.ratingDiff}',
-                          maxLines: 1,
-                           // Fixed string interpolation here
+                      maxLines: 1,
+                      // Fixed string interpolation here
                       style: TextStyle(
                         color:
                             game.me?.ratingDiff == null

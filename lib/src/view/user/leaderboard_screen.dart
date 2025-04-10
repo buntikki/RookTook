@@ -111,15 +111,19 @@ class LeaderboardListTile extends StatelessWidget {
               child: Row(
                 children: [
                   ClipOval(child: RandomAvatar(user.title!, height: 30, width: 30)),
-              
+
                   const SizedBox(width: 12),
-              
-                  Text(
-                    user.lightUser.name,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Color(0xffEFEDED),
-                      overflow: TextOverflow.ellipsis,
+
+                  Flexible(
+                    child: Text(
+                      user.lightUser.name,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 14,
+
+                        color: Color(0xffEFEDED),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
                 ],
