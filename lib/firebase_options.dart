@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA27Hl4IMAvgq0EqQRqxMg0koLQ3duDJjs',
-    appId: '1:1035858141908:android:60237f4a04d640ca1f9141',
+    appId: '1:1035858141908:android:a38e771f3f07e86b1f9141',
     messagingSenderId: '1035858141908',
     projectId: 'rooktook-ed217',
     storageBucket: 'rooktook-ed217.firebasestorage.app',
@@ -59,12 +59,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyA9rduP3DCN2FcnkaauxHYJkw0AxbXCaVw',
-    appId: '1:1035858141908:ios:40ddd9232ff4c61e1f9141',
+    appId: '1:1035858141908:ios:5b1e0b50cdf06d8a1f9141',
     messagingSenderId: '1035858141908',
     projectId: 'rooktook-ed217',
     storageBucket: 'rooktook-ed217.firebasestorage.app',
     iosClientId:
-        '1035858141908-al1kd7bu48flkrr3k3rq6q3fbcq090le.apps.googleusercontent.com',
-    iosBundleId: 'com.buntikki.rooktook',
+        '1035858141908-07bp848sildi8mpscdqs9f9keeqatbi1.apps.googleusercontent.com',
+    iosBundleId: 'com.rooktook',
   );
 }

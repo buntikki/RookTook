@@ -1,6 +1,7 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/l10n/l10n.dart';
 import 'package:lichess_mobile/src/db/database.dart';
@@ -177,7 +178,7 @@ class _Body extends ConsumerWidget {
         hasLeading: true,
         children: [
           SettingsListTile(
-            icon: SvgPicture.asset('assets/images/volume.svg',height: 24.0,),
+            icon: SvgPicture.asset('assets/images/volume.svg', height: 24.0),
             // icon: const Icon(Icons.music_note_outlined),
             settingsLabel: Text(context.l10n.sound),
             settingsValue:
@@ -285,20 +286,45 @@ class _Body extends ConsumerWidget {
             title: Text(context.l10n.mobileFeedbackButton),
             trailing: const _OpenInNewIcon(),
             onTap: () async {
+              // final Uri emailUri = Uri(
+              //   scheme: 'mailto',
+              //   path: 'hello@rooktook.com',
+              //   queryParameters: {'subject': 'How may I help you', 'body': ''},
+              // );
+              //
+              // if (await canLaunchUrl(emailUri)) {
+              //   await launchUrl(
+              //     emailUri,
+              //     mode: LaunchMode.externalApplication, // ✅ required on Android
+              //   );
+              // } else {
+              //   print('⚠️ Could not launch email client');
+              // }
+
               final Uri emailUri = Uri(
                 scheme: 'mailto',
                 path: 'hello@rooktook.com',
-                queryParameters: {'subject': 'How may I help you', 'body': ''},
+                queryParameters: {'subject': 'How may I help you?', 'body': ''},
               );
+
               if (await canLaunchUrl(emailUri)) {
-                Theme.of(context).platform == TargetPlatform.iOS ? await launchUrl(emailUri, mode: LaunchMode.externalApplication) : await launchUrl(emailUri, mode: LaunchMode.externalApplication);
-              await launchUrl(emailUri);
+                final bool launched = await launchUrl(
+                  emailUri,
+                  mode: LaunchMode.externalApplication,
+                );
+                if (!launched) {
+                  debugPrint('❌ launchUrl returned false');
+                }
               } else {
-              print('⚠️ Could not launch email client');
+                // Fallback: Copy email to clipboard and show a snackbar
+                await Clipboard.setData(const ClipboardData(text: 'hello@rooktook.com'));
+                showPlatformSnackbar(context, 'Email address copied. Kindly send us your feedback on the same.',type: SnackBarType.success);
+
+                debugPrint('⚠️ Could not launch email client');
               }
             },
           ),
-         /* PlatformListTile(
+          /* PlatformListTile(
             leading: SvgPicture.asset('assets/images/document.svg'),
             // leading: const Icon(Icons.article_outlined),
             title: Text(context.l10n.termsOfService),

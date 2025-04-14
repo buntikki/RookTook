@@ -802,23 +802,6 @@ class GameTypeBottomSheet extends ConsumerWidget {
             ),
           ),
 
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 32.0),
-          //   child: GameTypeCard(
-          //     icon: Image.asset('assets/images/pass&play.png', height: 33, width: 33),
-          //     title: 'Pass &',
-          //     subtitle: 'Play',
-          //     type: '',
-          //     subtitleColor: const Color(0xFF8BC34A), // Light green
-          //     onTap: () {
-          //       Navigator.pop(context);
-          //       Navigator.of(
-          //         context,
-          //         rootNavigator: true,
-          //       ).push(OverTheBoardScreen.buildRoute(context));
-          //     },
-          //   ),
-          // ),
           const SizedBox(height: 10),
         ],
       ),
