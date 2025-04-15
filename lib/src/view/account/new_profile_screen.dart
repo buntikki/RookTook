@@ -1,19 +1,20 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/db/database.dart';
-import 'package:lichess_mobile/src/model/account/account_repository.dart';
-import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/model/game/archived_game.dart';
-import 'package:lichess_mobile/src/model/game/game_history.dart';
-import 'package:lichess_mobile/src/navigation.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/utils/navigation.dart';
-import 'package:lichess_mobile/src/view/account/profile_screen.dart';
-import 'package:lichess_mobile/src/view/auth/presentation/pages/login_screen.dart';
-import 'package:lichess_mobile/src/view/user/player_screen.dart';
-import 'package:lichess_mobile/src/widgets/adaptive_action_sheet.dart';
+import 'package:rooktook/src/db/database.dart';
+import 'package:rooktook/src/model/account/account_repository.dart';
+import 'package:rooktook/src/model/auth/auth_controller.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/game/archived_game.dart';
+import 'package:rooktook/src/model/game/game_history.dart';
+import 'package:rooktook/src/navigation.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/account/profile_screen.dart';
+import 'package:rooktook/src/view/auth/presentation/pages/login_screen.dart';
+import 'package:rooktook/src/view/user/player_screen.dart';
+import 'package:rooktook/src/widgets/adaptive_action_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:random_avatar/random_avatar.dart';
@@ -46,7 +47,23 @@ class NewProfileScreen extends ConsumerWidget {
     });
     final recentGames = ref.watch(myRecentGamesProvider);
 
-    final draw = recentGames.value!.where((element) => element.game.winner == null).length;
+    final filteredGames = recentGames.value!
+        .where((element) =>
+    element.game.perf == Perf.rapid || element.game.perf == Perf.blitz)
+        .toList();
+
+    final draw = filteredGames.where((element) => element.game.winner == null).length;
+
+    final win = filteredGames
+        .where((element) => element.game.winner == getTotalGamer(element))
+        .length;
+
+    final loose = filteredGames
+        .where((element) =>
+    element.game.winner != null && element.game.winner != getTotalGamer(element))
+        .length;
+
+    /*final draw = recentGames.value!.where((element) => element.game.winner == null).length;
 
     final win =
         recentGames.value!.where((element) => element.game.winner == getTotalGamer(element)).length;
@@ -57,7 +74,7 @@ class NewProfileScreen extends ConsumerWidget {
               (element) =>
                   element.game.winner != null && element.game.winner != getTotalGamer(element),
             )
-            .length;
+            .length;*/
 
     final String avatarSeed = userSession?.user.name ?? 'default';
 

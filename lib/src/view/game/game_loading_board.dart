@@ -2,18 +2,18 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/constants.dart';
-import 'package:lichess_mobile/src/model/challenge/challenge.dart';
-import 'package:lichess_mobile/src/model/lobby/game_seek.dart';
-import 'package:lichess_mobile/src/model/lobby/lobby_numbers.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/widgets/board_table.dart';
-import 'package:lichess_mobile/src/widgets/bottom_bar.dart';
-import 'package:lichess_mobile/src/widgets/bottom_bar_button.dart';
-import 'package:lichess_mobile/src/widgets/feedback.dart';
-import 'package:lichess_mobile/src/widgets/platform.dart';
-import 'package:lichess_mobile/src/widgets/shimmer.dart';
-import 'package:lichess_mobile/src/widgets/user_full_name.dart';
+import 'package:rooktook/src/constants.dart';
+import 'package:rooktook/src/model/challenge/challenge.dart';
+import 'package:rooktook/src/model/lobby/game_seek.dart';
+import 'package:rooktook/src/model/lobby/lobby_numbers.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/widgets/board_table.dart';
+import 'package:rooktook/src/widgets/bottom_bar.dart';
+import 'package:rooktook/src/widgets/bottom_bar_button.dart';
+import 'package:rooktook/src/widgets/feedback.dart';
+import 'package:rooktook/src/widgets/platform.dart';
+import 'package:rooktook/src/widgets/shimmer.dart';
+import 'package:rooktook/src/widgets/user_full_name.dart';
 import 'package:lottie/lottie.dart';
 
 
@@ -57,7 +57,7 @@ class LobbyScreenLoadingContent extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (seek.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+                          if (seek.perf.title=='Blitz') Image.asset('assets/images/blitz.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
                           //Icon(seek.perf.icon, color: DefaultTextStyle.of(context).style.color),
                           const SizedBox(width: 8.0),
                           Text(
@@ -152,7 +152,7 @@ class ChallengeLoadingContent extends StatelessWidget {
                             challenge.perf.icon,
                             color: DefaultTextStyle.of(context).style.color,
                           ),*/
-                          if (challenge.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+                          if (challenge.perf.title=='Blitz') Image.asset('assets/images/blitz.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
                           const SizedBox(width: 8.0),
                           Text(
                             challenge.timeIncrement?.display ??

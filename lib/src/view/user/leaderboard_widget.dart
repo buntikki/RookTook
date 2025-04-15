@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/user/leaderboard.dart';
-import 'package:lichess_mobile/src/model/user/user_repository_providers.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/view/user/leaderboard_screen.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
-import 'package:lichess_mobile/src/widgets/shimmer.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/user/leaderboard.dart';
+import 'package:rooktook/src/model/user/user_repository_providers.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/view/user/leaderboard_screen.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/list.dart';
+import 'package:rooktook/src/widgets/shimmer.dart';
 
 /// Create a leaderboard list of the highest rated player for each perf.
 
@@ -51,7 +51,7 @@ class _LeaderboardWidgetState extends ConsumerState<LeaderboardWidget> {
         List<LeaderboardUser> filteredData = [];
 
         if (currentIndex == 0) {
-          filteredData = data.bullet.take(10).toList();
+          filteredData = data.blitz.take(10).toList();
         } else if (currentIndex == 1) {
           filteredData = data.rapid.take(10).toList();
         }
@@ -96,7 +96,7 @@ class _LeaderboardWidgetState extends ConsumerState<LeaderboardWidget> {
                 LeaderboardListTile(
                   index: index + 1,
                   user: entry,
-                  perfIcon: currentIndex == 0 ? Perf.bullet.icon : Perf.rapid.icon,
+                  perfIcon: currentIndex == 0 ? Perf.blitz.icon : Perf.rapid.icon,
                 ),
             ],
           ),

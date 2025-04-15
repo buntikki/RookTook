@@ -3,9 +3,9 @@ import 'dart:math' as math;
 
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/foundation.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
-import 'package:lichess_mobile/src/model/common/eval.dart';
-import 'package:lichess_mobile/src/model/engine/work.dart';
+import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/model/common/eval.dart';
+import 'package:rooktook/src/model/engine/work.dart';
 import 'package:logging/logging.dart';
 
 const minDepth = 6;

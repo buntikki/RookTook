@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:lichess_mobile/l10n/l10n.dart';
-import 'package:lichess_mobile/src/model/settings/general_preferences.dart';
+import 'package:rooktook/l10n/l10n.dart';
+import 'package:rooktook/src/model/settings/general_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'localizations.g.dart';

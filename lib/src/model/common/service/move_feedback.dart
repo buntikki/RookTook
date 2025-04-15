@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/common/service/sound_service.dart';
-import 'package:lichess_mobile/src/model/settings/board_preferences.dart';
+import 'package:rooktook/src/model/common/service/sound_service.dart';
+import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'move_feedback.g.dart';

@@ -1,11 +1,11 @@
 import 'dart:math' as math;
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/common/speed.dart';
-import 'package:lichess_mobile/src/model/common/time_increment.dart';
-import 'package:lichess_mobile/src/model/settings/preferences_storage.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
+import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/common/speed.dart';
+import 'package:rooktook/src/model/common/time_increment.dart';
+import 'package:rooktook/src/model/settings/preferences_storage.dart';
+import 'package:rooktook/src/model/user/user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'game_setup_preferences.freezed.dart';

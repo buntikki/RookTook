@@ -4,15 +4,15 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/constants.dart';
-import 'package:lichess_mobile/src/model/analysis/analysis_controller.dart';
-import 'package:lichess_mobile/src/model/analysis/analysis_preferences.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
-import 'package:lichess_mobile/src/model/common/eval.dart';
-import 'package:lichess_mobile/src/model/engine/evaluation_preferences.dart';
-import 'package:lichess_mobile/src/model/engine/evaluation_service.dart';
-import 'package:lichess_mobile/src/model/settings/board_preferences.dart';
-import 'package:lichess_mobile/src/widgets/pgn.dart';
+import 'package:rooktook/src/constants.dart';
+import 'package:rooktook/src/model/analysis/analysis_controller.dart';
+import 'package:rooktook/src/model/analysis/analysis_preferences.dart';
+import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/model/common/eval.dart';
+import 'package:rooktook/src/model/engine/evaluation_preferences.dart';
+import 'package:rooktook/src/model/engine/evaluation_service.dart';
+import 'package:rooktook/src/model/settings/board_preferences.dart';
+import 'package:rooktook/src/widgets/pgn.dart';
 
 class AnalysisBoard extends ConsumerStatefulWidget {
   const AnalysisBoard(

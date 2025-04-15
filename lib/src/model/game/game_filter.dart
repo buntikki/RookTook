@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/l10n/l10n.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
+import 'package:rooktook/l10n/l10n.dart';
+import 'package:rooktook/src/model/common/perf.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'game_filter.freezed.dart';

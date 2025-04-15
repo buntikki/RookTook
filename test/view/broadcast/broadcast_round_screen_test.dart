@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
 import 'package:intl/intl.dart';
-import 'package:lichess_mobile/src/model/broadcast/broadcast.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/view/broadcast/broadcast_round_screen.dart';
-import 'package:lichess_mobile/src/widgets/board_thumbnail.dart';
+import 'package:rooktook/src/model/broadcast/broadcast.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/view/broadcast/broadcast_round_screen.dart';
+import 'package:rooktook/src/widgets/board_thumbnail.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 
 import '../../test_helpers.dart';

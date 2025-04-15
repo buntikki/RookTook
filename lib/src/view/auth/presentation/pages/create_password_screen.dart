@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/model/auth/password/password_controller.dart';
-import 'package:lichess_mobile/src/navigation.dart';
-import 'package:lichess_mobile/src/utils/navigation.dart';
-import 'package:lichess_mobile/src/view/auth/presentation/pages/set_username_screen.dart';
+import 'package:rooktook/src/model/auth/auth_controller.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/model/auth/password/password_controller.dart';
+import 'package:rooktook/src/navigation.dart';
+import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/auth/presentation/pages/set_username_screen.dart';
 
 enum PasswordScreenMode {
   login,

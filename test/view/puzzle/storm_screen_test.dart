@@ -4,12 +4,12 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle_providers.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle_repository.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/view/puzzle/storm_screen.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/puzzle/puzzle.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_providers.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_repository.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/view/puzzle/storm_screen.dart';
 
 import '../../test_helpers.dart';
 import '../../test_provider_scope.dart';

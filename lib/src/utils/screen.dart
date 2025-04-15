@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/constants.dart';
+import 'package:rooktook/src/constants.dart';
 
 /// Returns the estimated height of screen after removing the height of the board
 double estimateRemainingHeightLeftBoard(BuildContext context) {

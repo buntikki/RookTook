@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/view/user/search_screen.dart';
-import 'package:lichess_mobile/src/widgets/user_list_tile.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/view/user/search_screen.dart';
+import 'package:rooktook/src/widgets/user_list_tile.dart';
 
 import '../../test_helpers.dart';
 import '../../test_provider_scope.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/utils/google_sign_in_service.dart';
+import 'package:rooktook/src/model/auth/auth_controller.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/utils/google_sign_in_service.dart';
 
 class GoogleSignInButton extends ConsumerWidget {
   final GoogleSignInService _googleSignInService = GoogleSignInService();

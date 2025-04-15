@@ -3,14 +3,14 @@ import 'dart:math';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/broadcast/broadcast.dart';
-import 'package:lichess_mobile/src/model/broadcast/broadcast_providers.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/theme.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/view/broadcast/broadcast_player_results_screen.dart';
-import 'package:lichess_mobile/src/view/broadcast/broadcast_player_widget.dart';
-import 'package:lichess_mobile/src/widgets/progression_widget.dart';
+import 'package:rooktook/src/model/broadcast/broadcast.dart';
+import 'package:rooktook/src/model/broadcast/broadcast_providers.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/theme.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/view/broadcast/broadcast_player_results_screen.dart';
+import 'package:rooktook/src/view/broadcast/broadcast_player_widget.dart';
+import 'package:rooktook/src/widgets/progression_widget.dart';
 
 /// A tab that displays the players participating in a broadcast tournament.
 class BroadcastPlayersTab extends ConsumerWidget {

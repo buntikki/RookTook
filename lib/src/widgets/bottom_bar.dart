@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/constants.dart';
+import 'package:rooktook/src/constants.dart';
 
 /// A container in the style of a bottom app bar, containg a [Row] of children widgets.
 ///

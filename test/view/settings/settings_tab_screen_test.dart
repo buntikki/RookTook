@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
-import 'package:lichess_mobile/src/db/database.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/view/settings/settings_tab_screen.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
+import 'package:rooktook/src/db/database.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/view/settings/settings_tab_screen.dart';
+import 'package:rooktook/src/widgets/list.dart';
 
 import '../../model/auth/fake_session_storage.dart';
 import '../../test_helpers.dart';

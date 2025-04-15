@@ -1,18 +1,18 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/account/account_repository.dart';
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/model/common/speed.dart';
-import 'package:lichess_mobile/src/model/common/time_increment.dart';
-import 'package:lichess_mobile/src/model/lobby/game_seek.dart';
-import 'package:lichess_mobile/src/network/connectivity.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/view/game/game_screen.dart';
-import 'package:lichess_mobile/src/view/play/create_custom_game_screen.dart';
-import 'package:lichess_mobile/src/view/play/playban.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
+import 'package:rooktook/src/model/account/account_repository.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/model/common/speed.dart';
+import 'package:rooktook/src/model/common/time_increment.dart';
+import 'package:rooktook/src/model/lobby/game_seek.dart';
+import 'package:rooktook/src/network/connectivity.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/view/game/game_screen.dart';
+import 'package:rooktook/src/view/play/create_custom_game_screen.dart';
+import 'package:rooktook/src/view/play/playban.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
 
 const _kMatrixSpacing = 8.0;
 

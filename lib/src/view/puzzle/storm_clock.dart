@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/constants.dart';
-import 'package:lichess_mobile/src/model/puzzle/storm_controller.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/widgets/clock.dart' show ClockStyle;
+import 'package:rooktook/src/constants.dart';
+import 'package:rooktook/src/model/puzzle/storm_controller.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/widgets/clock.dart' show ClockStyle;
 
 const _kClockFontSize = 26.0;
 

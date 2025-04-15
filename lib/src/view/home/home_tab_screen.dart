@@ -2,49 +2,49 @@ import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/constants.dart';
-import 'package:lichess_mobile/src/model/account/account_repository.dart';
-import 'package:lichess_mobile/src/model/account/ongoing_game.dart';
-import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/model/challenge/challenges.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/common/time_increment.dart';
-import 'package:lichess_mobile/src/model/correspondence/correspondence_game_storage.dart';
-import 'package:lichess_mobile/src/model/correspondence/offline_correspondence_game.dart';
-import 'package:lichess_mobile/src/model/game/archived_game.dart';
-import 'package:lichess_mobile/src/model/game/game_history.dart';
-import 'package:lichess_mobile/src/model/lobby/game_seek.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle_angle.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle_theme.dart';
-import 'package:lichess_mobile/src/model/settings/home_preferences.dart';
-import 'package:lichess_mobile/src/model/user/user_repository_providers.dart';
-import 'package:lichess_mobile/src/navigation.dart';
-import 'package:lichess_mobile/src/network/connectivity.dart';
-import 'package:lichess_mobile/src/styles/lichess_icons.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/utils/screen.dart';
-import 'package:lichess_mobile/src/view/account/new_profile_screen.dart';
-import 'package:lichess_mobile/src/view/account/profile_screen.dart';
-import 'package:lichess_mobile/src/view/correspondence/offline_correspondence_game_screen.dart';
-import 'package:lichess_mobile/src/view/game/game_screen.dart';
-import 'package:lichess_mobile/src/view/game/offline_correspondence_games_screen.dart';
-import 'package:lichess_mobile/src/view/home/games_carousel.dart';
-import 'package:lichess_mobile/src/view/over_the_board/over_the_board_screen.dart';
-import 'package:lichess_mobile/src/view/play/create_game_options.dart';
-import 'package:lichess_mobile/src/view/play/ongoing_games_screen.dart';
-import 'package:lichess_mobile/src/view/play/play_screen.dart';
-import 'package:lichess_mobile/src/view/play/quick_game_button.dart';
-import 'package:lichess_mobile/src/view/puzzle/puzzle_screen.dart';
-import 'package:lichess_mobile/src/view/user/challenge_requests_screen.dart';
-import 'package:lichess_mobile/src/view/user/player_screen.dart';
-import 'package:lichess_mobile/src/view/user/recent_games.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
-import 'package:lichess_mobile/src/widgets/feedback.dart';
-import 'package:lichess_mobile/src/widgets/match_result_popup.dart';
-import 'package:lichess_mobile/src/widgets/user_full_name.dart';
+import 'package:rooktook/src/constants.dart';
+import 'package:rooktook/src/model/account/account_repository.dart';
+import 'package:rooktook/src/model/account/ongoing_game.dart';
+import 'package:rooktook/src/model/auth/auth_controller.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/model/challenge/challenges.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/common/time_increment.dart';
+import 'package:rooktook/src/model/correspondence/correspondence_game_storage.dart';
+import 'package:rooktook/src/model/correspondence/offline_correspondence_game.dart';
+import 'package:rooktook/src/model/game/archived_game.dart';
+import 'package:rooktook/src/model/game/game_history.dart';
+import 'package:rooktook/src/model/lobby/game_seek.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_angle.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_theme.dart';
+import 'package:rooktook/src/model/settings/home_preferences.dart';
+import 'package:rooktook/src/model/user/user_repository_providers.dart';
+import 'package:rooktook/src/navigation.dart';
+import 'package:rooktook/src/network/connectivity.dart';
+import 'package:rooktook/src/styles/lichess_icons.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/utils/screen.dart';
+import 'package:rooktook/src/view/account/new_profile_screen.dart';
+import 'package:rooktook/src/view/account/profile_screen.dart';
+import 'package:rooktook/src/view/correspondence/offline_correspondence_game_screen.dart';
+import 'package:rooktook/src/view/game/game_screen.dart';
+import 'package:rooktook/src/view/game/offline_correspondence_games_screen.dart';
+import 'package:rooktook/src/view/home/games_carousel.dart';
+import 'package:rooktook/src/view/over_the_board/over_the_board_screen.dart';
+import 'package:rooktook/src/view/play/create_game_options.dart';
+import 'package:rooktook/src/view/play/ongoing_games_screen.dart';
+import 'package:rooktook/src/view/play/play_screen.dart';
+import 'package:rooktook/src/view/play/quick_game_button.dart';
+import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
+import 'package:rooktook/src/view/user/challenge_requests_screen.dart';
+import 'package:rooktook/src/view/user/player_screen.dart';
+import 'package:rooktook/src/view/user/recent_games.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/feedback.dart';
+import 'package:rooktook/src/widgets/match_result_popup.dart';
+import 'package:rooktook/src/widgets/user_full_name.dart';
 import 'package:random_avatar/random_avatar.dart';
 
 final editModeProvider = StateProvider<bool>((ref) => false);
@@ -61,6 +61,21 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
 
   bool wasOnline = true;
   bool hasRefreshed = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Listen for changes in session or account and refresh perf stats
+    Future.microtask(() {
+      final session = ref.read(authSessionProvider);
+      if (session != null) {
+        ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.rapid));
+        ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.blitz));
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +103,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         final session = ref.watch(authSessionProvider);
         final account = ref.watch(accountProvider);
 
-        const puzzlePerfsSet = {Perf.bullet, Perf.rapid};
+        const puzzlePerfsSet = {Perf.blitz, Perf.rapid};
 
         final userPerfs = puzzlePerfsSet;
 
@@ -103,13 +118,13 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                     perf: perf.where((e) => e.title == 'Rapid').first,
                   ),
                 );
-        final bullet =
+        final blitz =
             session == null
                 ? null
                 : ref.watch(
                   userPerfStatsProvider(
                     id: session!.user.id,
-                    perf: perf.where((e) => e.title == 'Bullet').first,
+                    perf: perf.where((e) => e.title == 'Blitz').first,
                   ),
                 );
 
@@ -136,10 +151,10 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                               ? rapid.value!.rating.toInt()
                               : 0
                           : 0,
-                  bulletRank:
+                  blitzRank:
                       session != null
-                          ? bullet!.value != null
-                              ? bullet.value!.rating.toInt()
+                          ? blitz!.value != null
+                              ? blitz.value!.rating.toInt()
                               : 0
                           : 0,
                   recentGames: recentGames,
@@ -161,10 +176,10 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                               ? rapid.value!.rating.toInt()
                               : 0
                           : 0,
-                  bulletRank:
+                  blitzRank:
                       session != null
-                          ? bullet!.value != null
-                              ? bullet.value!.rating.toInt()
+                          ? blitz!.value != null
+                              ? blitz.value!.rating.toInt()
                               : 0
                           : 0,
                   session: session,
@@ -419,7 +434,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required AsyncValue<IList<LightArchivedGameWithPov>> recentGames,
     required int nbOfGames,
     required int rapidRank,
-    required int bulletRank,
+    required int blitzRank,
   }) {
     // fetch the account user to be sure we have the latest data (flair, etc.)
     final accountUser = ref
@@ -541,7 +556,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           ],
         )
       else ...[
-        ChessRatingCards(rapidRank: '$rapidRank', bulletRank: '$bulletRank'),
+        ChessRatingCards(rapidRank: '$rapidRank', blitzRank: '$blitzRank'),
         // if (status.isOnline)
         //   const _EditableWidget(
         //     widget: HomeEditableWidget.quickPairing,
@@ -740,7 +755,52 @@ class GameTypeBottomSheet extends ConsumerWidget {
             ),
           ),
           const Divider(color: Colors.grey, height: 1),
-          const SizedBox(height: 10),
+          SizedBox(height: 25),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal:  22,),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child:  GameTypeCard(
+                    icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
+                    title: 'Play',
+                    subtitle: 'Blitz',
+                    type: '3+2',
+                    subtitleColor: const Color(0xFF8BC34A), // Light green
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.of(context, rootNavigator: true).push(
+                        GameScreen.buildRoute(
+                          context,
+                          seek: GameSeek.fastPairing(const TimeIncrement(180, 2), session),
+                        ),
+                      );
+                    },
+                  ),),
+                SizedBox(width: 25),
+                Expanded(
+                  child:  GameTypeCard(
+                    icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
+                    title: 'Play',
+                    subtitle: 'Blitz',
+                    type: '5+0',
+                    subtitleColor: const Color(0xFF8BC34A), // Light green
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.of(context, rootNavigator: true).push(
+                        GameScreen.buildRoute(
+                          context,
+                          seek: GameSeek.fastPairing(const TimeIncrement(300, 0), session),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           // Game options
           Padding(
             padding: const EdgeInsets.symmetric(horizontal:  22,vertical: 16),
@@ -749,11 +809,11 @@ class GameTypeBottomSheet extends ConsumerWidget {
               spacing: 25,
               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // Bullet option
-                GameTypeCard(
-                  icon: Image.asset('assets/images/bullet_game.png', height: 33, width: 33),
+                // Blitz option
+                /*GameTypeCard(
+                  icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
                   title: 'Play',
-                  subtitle: 'Bullet',
+                  subtitle: 'Blitz',
                   type: '1+5',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
@@ -765,7 +825,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
                       ),
                     );
                   },
-                ),
+                ),*/
 
                 // Rapid option
                 GameTypeCard(
@@ -810,10 +870,10 @@ class GameTypeBottomSheet extends ConsumerWidget {
 }
 
 class ChessRatingCards extends StatelessWidget {
-  final String bulletRank;
+  final String blitzRank;
   final String rapidRank;
 
-  const ChessRatingCards({super.key, required this.bulletRank, required this.rapidRank});
+  const ChessRatingCards({super.key, required this.blitzRank, required this.rapidRank});
 
   @override
   Widget build(BuildContext context) {
@@ -823,10 +883,10 @@ class ChessRatingCards extends StatelessWidget {
         children: [
           Expanded(
             child: _buildRatingCard(
-              icon: Image.asset('assets/images/bullet_game.png'),
+              icon: Image.asset('assets/images/blitz.png'),
               iconColor: const Color(0xffFFF9E5),
-              title: 'Bullet',
-              rating: bulletRank,
+              title: 'Blitz',
+              rating: blitzRank,
             ),
           ),
           const SizedBox(width: 8),
@@ -952,7 +1012,7 @@ class GameTypeCard extends StatelessWidget {
                         ),
                       ),
                       Spacer(),
-                      Text(type, style: TextStyle(color: Color(0xff959494))),
+                      Text(type, style: TextStyle(color: Color(0xff959494),fontWeight: FontWeight.bold,)),
                     ],
                   ),
                 ],

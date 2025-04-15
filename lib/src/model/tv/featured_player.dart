@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/game/player.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/game/player.dart';
+import 'package:rooktook/src/model/user/user.dart';
 
 part 'featured_player.freezed.dart';
 

@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/constants.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
-import 'package:lichess_mobile/src/styles/lichess_icons.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/view/account/rating_pref_aware.dart';
-import 'package:lichess_mobile/src/view/puzzle/dashboard_screen.dart';
-import 'package:lichess_mobile/src/view/puzzle/storm_dashboard.dart';
-import 'package:lichess_mobile/src/view/user/perf_stats_screen.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
-import 'package:lichess_mobile/src/widgets/platform.dart';
-import 'package:lichess_mobile/src/widgets/rating.dart';
+import 'package:rooktook/src/constants.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/user/user.dart';
+import 'package:rooktook/src/styles/lichess_icons.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/view/account/rating_pref_aware.dart';
+import 'package:rooktook/src/view/puzzle/dashboard_screen.dart';
+import 'package:rooktook/src/view/puzzle/storm_dashboard.dart';
+import 'package:rooktook/src/view/user/perf_stats_screen.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/platform.dart';
+import 'package:rooktook/src/widgets/rating.dart';
 
 /// A widget that displays the performance cards of a user.
 class PerfCards extends StatelessWidget {

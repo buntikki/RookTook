@@ -1,14 +1,14 @@
 import 'package:deep_pick/deep_pick.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/l10n/l10n.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
-import 'package:lichess_mobile/src/model/common/game.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/common/speed.dart';
-import 'package:lichess_mobile/src/model/common/time_increment.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
-import 'package:lichess_mobile/src/utils/json.dart';
+import 'package:rooktook/l10n/l10n.dart';
+import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/model/common/game.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/common/speed.dart';
+import 'package:rooktook/src/model/common/time_increment.dart';
+import 'package:rooktook/src/model/user/user.dart';
+import 'package:rooktook/src/utils/json.dart';
 
 part 'challenge.freezed.dart';
 part 'challenge.g.dart';

@@ -5,11 +5,11 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lichess_mobile/src/model/common/time_increment.dart';
-import 'package:lichess_mobile/src/model/over_the_board/over_the_board_clock.dart';
-import 'package:lichess_mobile/src/model/over_the_board/over_the_board_game_controller.dart';
-import 'package:lichess_mobile/src/view/over_the_board/over_the_board_screen.dart';
-import 'package:lichess_mobile/src/widgets/clock.dart';
+import 'package:rooktook/src/model/common/time_increment.dart';
+import 'package:rooktook/src/model/over_the_board/over_the_board_clock.dart';
+import 'package:rooktook/src/model/over_the_board/over_the_board_game_controller.dart';
+import 'package:rooktook/src/view/over_the_board/over_the_board_screen.dart';
+import 'package:rooktook/src/widgets/clock.dart';
 
 import '../../test_helpers.dart';
 import '../../test_provider_scope.dart';

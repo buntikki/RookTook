@@ -1,6 +1,6 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:lichess_mobile/src/model/user/user_repository_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rooktook/src/model/user/user_repository_providers.dart';
 
 part 'login_controller.g.dart';
 

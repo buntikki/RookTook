@@ -3,31 +3,31 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:lichess_mobile/src/model/account/account_service.dart';
-import 'package:lichess_mobile/src/model/analysis/analysis_controller.dart';
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/game/archived_game.dart';
-import 'package:lichess_mobile/src/model/game/game.dart';
-import 'package:lichess_mobile/src/model/game/game_filter.dart';
-import 'package:lichess_mobile/src/model/game/game_repository_providers.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/utils/navigation.dart';
-import 'package:lichess_mobile/src/view/analysis/analysis_screen.dart';
-import 'package:lichess_mobile/src/view/game/archived_game_screen_providers.dart';
-import 'package:lichess_mobile/src/view/game/game_common_widgets.dart';
-import 'package:lichess_mobile/src/view/game/game_player.dart';
-import 'package:lichess_mobile/src/view/game/game_result_dialog.dart';
-import 'package:lichess_mobile/src/view/settings/toggle_sound_button.dart';
-import 'package:lichess_mobile/src/widgets/adaptive_action_sheet.dart';
-import 'package:lichess_mobile/src/widgets/board_table.dart';
-import 'package:lichess_mobile/src/widgets/bottom_bar.dart';
-import 'package:lichess_mobile/src/widgets/bottom_bar_button.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
-import 'package:lichess_mobile/src/widgets/clock.dart';
-import 'package:lichess_mobile/src/widgets/platform_context_menu_button.dart';
-import 'package:lichess_mobile/src/widgets/platform_scaffold.dart';
+import 'package:rooktook/src/model/account/account_service.dart';
+import 'package:rooktook/src/model/analysis/analysis_controller.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/game/archived_game.dart';
+import 'package:rooktook/src/model/game/game.dart';
+import 'package:rooktook/src/model/game/game_filter.dart';
+import 'package:rooktook/src/model/game/game_repository_providers.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/analysis/analysis_screen.dart';
+import 'package:rooktook/src/view/game/archived_game_screen_providers.dart';
+import 'package:rooktook/src/view/game/game_common_widgets.dart';
+import 'package:rooktook/src/view/game/game_player.dart';
+import 'package:rooktook/src/view/game/game_result_dialog.dart';
+import 'package:rooktook/src/view/settings/toggle_sound_button.dart';
+import 'package:rooktook/src/widgets/adaptive_action_sheet.dart';
+import 'package:rooktook/src/widgets/board_table.dart';
+import 'package:rooktook/src/widgets/bottom_bar.dart';
+import 'package:rooktook/src/widgets/bottom_bar_button.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/clock.dart';
+import 'package:rooktook/src/widgets/platform_context_menu_button.dart';
+import 'package:rooktook/src/widgets/platform_scaffold.dart';
 
 /// Screen for viewing an archived game.
 class ArchivedGameScreen extends ConsumerWidget {
@@ -262,7 +262,7 @@ class _GameTitle extends ConsumerWidget {
         if (gameData.source == GameSource.import)
           Icon(Icons.cloud_upload, color: DefaultTextStyle.of(context).style.color)
         else
-          if (gameData.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+          if (gameData.perf.title=='Blitz') Image.asset('assets/images/blitz.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
           //Icon(gameData.perf.icon, color: DefaultTextStyle.of(context).style.color),
         const SizedBox(width: 4.0),
         if (gameData.source == GameSource.import)

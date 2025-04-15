@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/engine/evaluation_mixin.dart';
-import 'package:lichess_mobile/src/view/engine/engine_gauge.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/engine/evaluation_mixin.dart';
+import 'package:rooktook/src/view/engine/engine_gauge.dart';
 
 import 'test_engine_app.dart';
 

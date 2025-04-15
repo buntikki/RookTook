@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/widgets/background.dart';
+import 'package:rooktook/src/widgets/background.dart';
 
 /// A page route that always builds the same screen widget.
 ///

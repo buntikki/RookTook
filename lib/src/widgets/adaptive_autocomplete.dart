@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
 
 class AdaptiveAutoComplete<T extends Object> extends StatelessWidget {
   const AdaptiveAutoComplete({

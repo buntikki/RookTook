@@ -1,11 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/engine/evaluation_preferences.dart';
-import 'package:lichess_mobile/src/model/engine/evaluation_service.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
-import 'package:lichess_mobile/src/widgets/non_linear_slider.dart';
-import 'package:lichess_mobile/src/widgets/settings.dart';
+import 'package:rooktook/src/model/engine/evaluation_preferences.dart';
+import 'package:rooktook/src/model/engine/evaluation_service.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/widgets/list.dart';
+import 'package:rooktook/src/widgets/non_linear_slider.dart';
+import 'package:rooktook/src/widgets/settings.dart';
 
 class StockfishSettingsWidget extends ConsumerWidget {
   const StockfishSettingsWidget({

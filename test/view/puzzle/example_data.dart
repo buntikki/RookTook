@@ -1,9 +1,9 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle_batch_storage.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/puzzle/puzzle.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_batch_storage.dart';
 
 final puzzle = Puzzle(
   puzzle: PuzzleData(

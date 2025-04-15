@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/view/user/user_screen.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/user/user.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/view/user/user_screen.dart';
 
 import '../../model/user/user_repository_test.dart';
 import '../../test_helpers.dart';

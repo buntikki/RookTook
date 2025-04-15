@@ -3,29 +3,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:lichess_mobile/src/model/analysis/analysis_controller.dart';
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/game/archived_game.dart';
-import 'package:lichess_mobile/src/model/game/game_filter.dart';
-import 'package:lichess_mobile/src/model/game/game_share_service.dart';
-import 'package:lichess_mobile/src/model/game/game_status.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/styles/lichess_colors.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/utils/screen.dart';
-import 'package:lichess_mobile/src/utils/share.dart';
-import 'package:lichess_mobile/src/view/analysis/analysis_screen.dart';
-import 'package:lichess_mobile/src/view/game/game_common_widgets.dart';
-import 'package:lichess_mobile/src/view/game/status_l10n.dart';
-import 'package:lichess_mobile/src/widgets/adaptive_bottom_sheet.dart';
-import 'package:lichess_mobile/src/widgets/board_thumbnail.dart';
-import 'package:lichess_mobile/src/widgets/feedback.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
-import 'package:lichess_mobile/src/widgets/user_full_name.dart';
+import 'package:rooktook/src/model/analysis/analysis_controller.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/game/archived_game.dart';
+import 'package:rooktook/src/model/game/game_filter.dart';
+import 'package:rooktook/src/model/game/game_share_service.dart';
+import 'package:rooktook/src/model/game/game_status.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/styles/lichess_colors.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/utils/screen.dart';
+import 'package:rooktook/src/utils/share.dart';
+import 'package:rooktook/src/view/analysis/analysis_screen.dart';
+import 'package:rooktook/src/view/game/game_common_widgets.dart';
+import 'package:rooktook/src/view/game/status_l10n.dart';
+import 'package:rooktook/src/widgets/adaptive_bottom_sheet.dart';
+import 'package:rooktook/src/widgets/board_thumbnail.dart';
+import 'package:rooktook/src/widgets/feedback.dart';
+import 'package:rooktook/src/widgets/list.dart';
+import 'package:rooktook/src/widgets/user_full_name.dart';
 import 'package:random_avatar/random_avatar.dart';
 
 final _dateFormatter = DateFormat.yMMMd().add_Hm();
@@ -55,8 +55,11 @@ class GameListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (game: game, pov: youAre) = item;
+
+    final opponent = item.pov == Side.white ? item.game.black : item.game.white;
+    final opponentRating = opponent.rating! + opponent.ratingDiff!;
     final me = youAre == Side.white ? game.white : game.black;
-    final opponent = youAre == Side.white ? game.black : game.white;
+    //final opponent = youAre == Side.white ? game.black : game.white;
 
     Widget getResultIcon(LightArchivedGame game, Side mySide) {
       if (game.status == GameStatus.aborted || game.status == GameStatus.noStart) {
@@ -71,7 +74,7 @@ class GameListTile extends StatelessWidget {
             ? Container(
               decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
               child: const Padding(
-                padding: EdgeInsets.all(4.0),
+                padding: EdgeInsets.all(6.0),
                 child: Text('D', style: TextStyle(color: Colors.white, fontSize: 10)),
               ),
             )
@@ -79,7 +82,7 @@ class GameListTile extends StatelessWidget {
             ? Container(
               decoration: const BoxDecoration(color: Color(0xff54C339), shape: BoxShape.circle),
               child: const Padding(
-                padding: EdgeInsets.all(4.0),
+                padding: EdgeInsets.all(6.0),
                 child: Text('W', style: TextStyle(color: Colors.white, fontSize: 10)),
               ),
             )
@@ -117,14 +120,10 @@ class GameListTile extends StatelessWidget {
         style: TextStyle(color: titleColor ?? Colors.black),
       ),
       onPressedBookmark: onPressedBookmark,
-      subtitle: Text(rating==null?'N/A': '#$rating', style: TextStyle(color: Color(0xff959494))),
+      subtitle: Text(opponentRating==null?'N/A': '$opponentRating', style: TextStyle(color: Color(0xff959494))),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (me.analysis != null) ...[
-            Icon(CupertinoIcons.chart_bar_alt_fill, color: textShade(context, 0.5)),
-            const SizedBox(width: 5),
-          ],
           getResultIcon(game, youAre),
         ],
       ),
@@ -169,8 +168,8 @@ class _GameListTile extends StatelessWidget {
         tileColor: Colors.white12,
         shape: RoundedRectangleBorder(),
         leading:
-            icon == Perf.bullet.icon
-                ? Image.asset('assets/images/bullet_game.png', height: 20, width: 20)
+            icon == Perf.blitz.icon
+                ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
                 : icon == Perf.rapid.icon
                 ? Image.asset('assets/images/rapid_game.png', height: 20, width: 20)
                 : SizedBox(),

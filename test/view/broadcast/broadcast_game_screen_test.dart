@@ -2,10 +2,10 @@ import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/network/socket.dart';
-import 'package:lichess_mobile/src/view/broadcast/broadcast_game_screen.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/network/socket.dart';
+import 'package:rooktook/src/view/broadcast/broadcast_game_screen.dart';
 
 import '../../network/fake_websocket_channel.dart';
 import '../../test_helpers.dart';

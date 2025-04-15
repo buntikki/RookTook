@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/account/account_repository.dart';
-import 'package:lichess_mobile/src/network/connectivity.dart';
-import 'package:lichess_mobile/src/styles/lichess_icons.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/view/over_the_board/over_the_board_screen.dart';
-import 'package:lichess_mobile/src/view/play/create_custom_game_screen.dart';
-import 'package:lichess_mobile/src/view/play/online_bots_screen.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
+import 'package:rooktook/src/model/account/account_repository.dart';
+import 'package:rooktook/src/network/connectivity.dart';
+import 'package:rooktook/src/styles/lichess_icons.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/view/over_the_board/over_the_board_screen.dart';
+import 'package:rooktook/src/view/play/create_custom_game_screen.dart';
+import 'package:rooktook/src/view/play/online_bots_screen.dart';
+import 'package:rooktook/src/widgets/list.dart';
 
 /// A widget that displays the options for creating a game.
 class CreateGameOptions extends ConsumerWidget {

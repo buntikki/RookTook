@@ -1,7 +1,7 @@
 import 'package:dynamic_system_colors/dynamic_system_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
 import 'package:popover/popover.dart';
 
 const _kMenuWidth = 250.0;

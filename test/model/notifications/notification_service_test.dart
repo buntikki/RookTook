@@ -5,12 +5,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/correspondence/correspondence_service.dart';
-import 'package:lichess_mobile/src/model/game/playable_game.dart';
-import 'package:lichess_mobile/src/model/notifications/notification_service.dart';
-import 'package:lichess_mobile/src/model/notifications/notifications.dart';
-import 'package:lichess_mobile/src/network/http.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/correspondence/correspondence_service.dart';
+import 'package:rooktook/src/model/game/playable_game.dart';
+import 'package:rooktook/src/model/notifications/notification_service.dart';
+import 'package:rooktook/src/model/notifications/notifications.dart';
+import 'package:rooktook/src/network/http.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../binding.dart';

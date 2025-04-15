@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/widgets/bottom_bar.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/bottom_bar.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
 
 /// A bottom bar button.
 ///

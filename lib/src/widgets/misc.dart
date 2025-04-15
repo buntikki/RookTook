@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LichessMessage extends StatefulWidget {

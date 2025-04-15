@@ -2,17 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lichess_mobile/l10n/l10n.dart';
-import 'package:lichess_mobile/src/network/connectivity.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/view/home/home_tab_screen.dart';
-import 'package:lichess_mobile/src/view/puzzle/puzzle_tab_screen.dart';
-import 'package:lichess_mobile/src/view/settings/settings_tab_screen.dart';
-import 'package:lichess_mobile/src/view/tools/tools_tab_screen.dart';
-import 'package:lichess_mobile/src/view/tournament/tournament_screen.dart';
-import 'package:lichess_mobile/src/view/watch/watch_tab_screen.dart';
-import 'package:lichess_mobile/src/widgets/background.dart';
-import 'package:lichess_mobile/src/widgets/feedback.dart';
+import 'package:rooktook/l10n/l10n.dart';
+import 'package:rooktook/src/network/connectivity.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/view/home/home_tab_screen.dart';
+import 'package:rooktook/src/view/puzzle/puzzle_tab_screen.dart';
+import 'package:rooktook/src/view/settings/settings_tab_screen.dart';
+import 'package:rooktook/src/view/tools/tools_tab_screen.dart';
+import 'package:rooktook/src/view/tournament/tournament_screen.dart';
+import 'package:rooktook/src/view/watch/watch_tab_screen.dart';
+import 'package:rooktook/src/widgets/background.dart';
+import 'package:rooktook/src/widgets/feedback.dart';
 
 enum BottomTab {
   home,

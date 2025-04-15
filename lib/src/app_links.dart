@@ -1,13 +1,13 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/widgets.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle_angle.dart';
-import 'package:lichess_mobile/src/view/broadcast/broadcast_game_screen.dart';
-import 'package:lichess_mobile/src/view/broadcast/broadcast_round_screen.dart';
-import 'package:lichess_mobile/src/view/game/archived_game_screen.dart';
-import 'package:lichess_mobile/src/view/puzzle/puzzle_screen.dart';
-import 'package:lichess_mobile/src/view/study/study_screen.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_angle.dart';
+import 'package:rooktook/src/view/broadcast/broadcast_game_screen.dart';
+import 'package:rooktook/src/view/broadcast/broadcast_round_screen.dart';
+import 'package:rooktook/src/view/game/archived_game_screen.dart';
+import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
+import 'package:rooktook/src/view/study/study_screen.dart';
 
 Route<dynamic>? resolveAppLinkUri(BuildContext context, Uri appLinkUri) {
   if (appLinkUri.pathSegments.isEmpty) return null;
