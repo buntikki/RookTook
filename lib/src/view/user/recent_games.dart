@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lichess_mobile/src/model/account/account_repository.dart';
+import 'package:lichess_mobile/src/model/common/perf.dart';
 import 'package:lichess_mobile/src/model/game/archived_game.dart';
 import 'package:lichess_mobile/src/model/user/user.dart';
 import 'package:lichess_mobile/src/model/user/user_repository_providers.dart';
@@ -52,27 +53,27 @@ class RecentGamesWidget extends ConsumerWidget {
     // Safely extract ratings from activity
     List<int?> getRatingsFromActivity() {
       if (activity.valueOrNull == null) return [];
-      
-      final nonEmptyActivities = activity.valueOrNull!.where((entry) => 
+
+      final nonEmptyActivities = activity.valueOrNull!.where((entry) =>
         entry.isNotEmpty && entry.games != null).toList();
-      
+
       if (nonEmptyActivities.isEmpty) return [];
-      
+
       final ratings = <int?>[];
-      
+
       for (final activityEntry in nonEmptyActivities) {
         if (activityEntry.games == null) continue;
-        
+
         for (final gameEntry in activityEntry.games!.entries) {
           if (gameEntry.value.ratingAfter != null) {
             ratings.add(gameEntry.value.ratingAfter);
           }
         }
       }
-      
+
       return ratings;
     }
-    
+
     final ratings = getRatingsFromActivity();
 
     return recentGames.when(
@@ -80,8 +81,15 @@ class RecentGamesWidget extends ConsumerWidget {
         if (data.isEmpty) {
           return const SizedBox.shrink();
         }
-        final list = data.take(maxGamesToShow);
-        
+        //final list = data.take(maxGamesToShow);
+
+        final filtered = data.where((item) =>
+        item.game.perf == Perf.rapid || item.game.perf == Perf.blitz
+        ).toList();
+
+        final list = filtered.take(maxGamesToShow).toList();
+
+
         return Container(
           margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -123,13 +131,21 @@ class RecentGamesWidget extends ConsumerWidget {
                   ],
                 ),
               ),
-              for (int i = 0; i < list.length; i++)
+              ...List.generate(list.length, (i) {
+                return GameListTile(
+                  item: list[i],
+                  tileColor: tileColor,
+                  titleColor: titleColor,
+                  rating: i < ratings.length ? ratings[i] : null,
+                );
+              }),
+              /*for (int i = 0; i < list.length; i++)
                 GameListTile(
                   item: list.elementAt(i),
                   tileColor: tileColor,
                   titleColor: titleColor,
                   rating: i < ratings.length ? ratings[i] : null,
-                ),
+                ),*/
               const SizedBox(height: 10),
             ],
           ),

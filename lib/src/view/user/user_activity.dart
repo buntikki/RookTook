@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:lichess_mobile/src/model/account/account_repository.dart';
+import 'package:lichess_mobile/src/model/common/perf.dart';
 import 'package:lichess_mobile/src/model/user/user.dart';
 import 'package:lichess_mobile/src/model/user/user_repository_providers.dart';
 import 'package:lichess_mobile/src/styles/lichess_colors.dart';
@@ -29,16 +30,24 @@ class UserActivityWidget extends ConsumerWidget {
 
     return activity.when(
       data: (data) {
-        final nonEmptyActivities = data.where((entry) => entry.isNotEmpty);
-        if (nonEmptyActivities.isEmpty) {
+        //final nonEmptyActivities = data.where((entry) => entry.isNotEmpty);
+
+        final filteredActivities = data.where((entry) {
+          if (!entry.isNotEmpty || entry.games == null) return false;
+
+          return entry.games!.keys.any((perf) =>
+          perf == Perf.rapid || perf == Perf.blitz);
+        }).toList();
+
+        if (filteredActivities.isEmpty) {
           return const SizedBox.shrink();
         }
         return ListSection(
-          backgroundColor: Color(0xff2B2D30),
+          backgroundColor: const Color(0xff2B2D30),
           header: Text(context.l10n.activityActivity, style: Styles.sectionTitle),
           hasLeading: true,
           children:
-              nonEmptyActivities.take(10).map((entry) => UserActivityEntry(entry: entry)).toList(),
+          filteredActivities.take(10).map((entry) => UserActivityEntry(entry: entry)).toList(),
         );
       },
       error: (error, stackTrace) {
@@ -88,8 +97,8 @@ class UserActivityEntry extends ConsumerWidget {
                 leading:
                     gameEntry.key.title == 'Rapid'
                         ? Image.asset('assets/images/rapid_game.png', height: 20, width: 20)
-                        : gameEntry.key.title == 'Bullet'
-                        ? Image.asset('assets/images/bullet_game.png', height: 20, width: 20)
+                        : gameEntry.key.title == 'Blitz'
+                        ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
                         : SizedBox(),
 
                 title: context.l10n.activityPlayedNbGames(

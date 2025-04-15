@@ -51,7 +51,7 @@ class _LeaderboardWidgetState extends ConsumerState<LeaderboardWidget> {
         List<LeaderboardUser> filteredData = [];
 
         if (currentIndex == 0) {
-          filteredData = data.bullet.take(10).toList();
+          filteredData = data.blitz.take(10).toList();
         } else if (currentIndex == 1) {
           filteredData = data.rapid.take(10).toList();
         }
@@ -96,7 +96,7 @@ class _LeaderboardWidgetState extends ConsumerState<LeaderboardWidget> {
                 LeaderboardListTile(
                   index: index + 1,
                   user: entry,
-                  perfIcon: currentIndex == 0 ? Perf.bullet.icon : Perf.rapid.icon,
+                  perfIcon: currentIndex == 0 ? Perf.blitz.icon : Perf.rapid.icon,
                 ),
             ],
           ),

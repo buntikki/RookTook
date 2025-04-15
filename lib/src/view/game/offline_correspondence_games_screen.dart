@@ -73,7 +73,7 @@ class OfflineCorrespondenceGamePreview extends ConsumerWidget {
           if (game.myTimeLeft(lastModified) != null)
             Text(relativeDate(context.l10n, DateTime.now().add(game.myTimeLeft(lastModified)!))),
           //Icon(game.perf.icon, size: 40, color: DefaultTextStyle.of(context).style.color),
-          if (game.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+          if (game.perf.title=='Blitz') Image.asset('assets/images/blitz.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
         ],
       ),
       onTap: () {

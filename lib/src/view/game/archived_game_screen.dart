@@ -262,7 +262,7 @@ class _GameTitle extends ConsumerWidget {
         if (gameData.source == GameSource.import)
           Icon(Icons.cloud_upload, color: DefaultTextStyle.of(context).style.color)
         else
-          if (gameData.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+          if (gameData.perf.title=='Blitz') Image.asset('assets/images/blitz.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
           //Icon(gameData.perf.icon, color: DefaultTextStyle.of(context).style.color),
         const SizedBox(width: 4.0),
         if (gameData.source == GameSource.import)

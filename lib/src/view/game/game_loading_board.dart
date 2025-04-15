@@ -57,7 +57,7 @@ class LobbyScreenLoadingContent extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (seek.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+                          if (seek.perf.title=='Blitz') Image.asset('assets/images/blitz.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
                           //Icon(seek.perf.icon, color: DefaultTextStyle.of(context).style.color),
                           const SizedBox(width: 8.0),
                           Text(
@@ -152,7 +152,7 @@ class ChallengeLoadingContent extends StatelessWidget {
                             challenge.perf.icon,
                             color: DefaultTextStyle.of(context).style.color,
                           ),*/
-                          if (challenge.perf.title=='Bullet') Image.asset('assets/images/bullet_game.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
+                          if (challenge.perf.title=='Blitz') Image.asset('assets/images/blitz.png', height: 20, width: 20,) else Image.asset('assets/images/rapid_game.png', height: 20, width: 20,),
                           const SizedBox(width: 8.0),
                           Text(
                             challenge.timeIncrement?.display ??

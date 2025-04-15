@@ -42,7 +42,7 @@ class _Body extends ConsumerWidget {
     return leaderboard.when(
       data: (data) {
         final List<Widget> list = [
-          _Leaderboard(data.bullet, 'assets/images/bullet_game.png', 'BULLET'),
+          _Leaderboard(data.blitz, 'assets/images/blitz.png', 'BLITZ'),
           // _Leaderboard(data.blitz, LichessIcons.blitz, 'BLITZ'),
           _Leaderboard(data.rapid, 'assets/images/rapid_game.png', 'RAPID'),
           // _Leaderboard(data.classical, LichessIcons.classical, 'CLASSICAL'),

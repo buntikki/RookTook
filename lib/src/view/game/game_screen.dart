@@ -341,8 +341,8 @@ class _LobbyGameTitle extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (seek.perf.title == 'Bullet')
-          Image.asset('assets/images/bullet_game.png', height: 20, width: 20)
+        if (seek.perf.title == 'Blitz')
+          Image.asset('assets/images/blitz.png', height: 20, width: 20)
         else
           Image.asset('assets/images/rapid_game.png', height: 20, width: 20),
         //Icon(seek.perf.icon, color: DefaultTextStyle.of(context).style.color),
@@ -365,8 +365,8 @@ class _ChallengeGameTitle extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (challenge.perf.title == 'Bullet')
-          Image.asset('assets/images/bullet_game.png', height: 20, width: 20)
+        if (challenge.perf.title == 'Blitz')
+          Image.asset('assets/images/blitz.png', height: 20, width: 20)
         else
           Image.asset('assets/images/rapid_game.png', height: 20, width: 20),
         //Icon(challenge.perf.icon, color: DefaultTextStyle.of(context).style.color),
@@ -402,8 +402,8 @@ class _StandaloneGameTitle extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            if (meta.perf.title == 'Bullet')
-              Image.asset('assets/images/bullet_game.png', height: 20, width: 20)
+            if (meta.perf.title == 'Blitz')
+              Image.asset('assets/images/blitz.png', height: 20, width: 20)
             else
               Image.asset('assets/images/rapid_game.png', height: 20, width: 20),
             //Icon(meta.perf.icon, color: DefaultTextStyle.of(context).style.color),

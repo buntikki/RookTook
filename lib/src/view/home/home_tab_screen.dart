@@ -63,6 +63,21 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
   bool hasRefreshed = false;
 
   @override
+  void initState() {
+    super.initState();
+
+    // Listen for changes in session or account and refresh perf stats
+    Future.microtask(() {
+      final session = ref.read(authSessionProvider);
+      if (session != null) {
+        ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.rapid));
+        ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.blitz));
+      }
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     ref.listen(connectivityChangesProvider, (_, connectivity) {
       // Refresh the data only once if it was offline and is now online
@@ -88,7 +103,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         final session = ref.watch(authSessionProvider);
         final account = ref.watch(accountProvider);
 
-        const puzzlePerfsSet = {Perf.bullet, Perf.rapid};
+        const puzzlePerfsSet = {Perf.blitz, Perf.rapid};
 
         final userPerfs = puzzlePerfsSet;
 
@@ -103,13 +118,13 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                     perf: perf.where((e) => e.title == 'Rapid').first,
                   ),
                 );
-        final bullet =
+        final blitz =
             session == null
                 ? null
                 : ref.watch(
                   userPerfStatsProvider(
                     id: session!.user.id,
-                    perf: perf.where((e) => e.title == 'Bullet').first,
+                    perf: perf.where((e) => e.title == 'Blitz').first,
                   ),
                 );
 
@@ -136,10 +151,10 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                               ? rapid.value!.rating.toInt()
                               : 0
                           : 0,
-                  bulletRank:
+                  blitzRank:
                       session != null
-                          ? bullet!.value != null
-                              ? bullet.value!.rating.toInt()
+                          ? blitz!.value != null
+                              ? blitz.value!.rating.toInt()
                               : 0
                           : 0,
                   recentGames: recentGames,
@@ -161,10 +176,10 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                               ? rapid.value!.rating.toInt()
                               : 0
                           : 0,
-                  bulletRank:
+                  blitzRank:
                       session != null
-                          ? bullet!.value != null
-                              ? bullet.value!.rating.toInt()
+                          ? blitz!.value != null
+                              ? blitz.value!.rating.toInt()
                               : 0
                           : 0,
                   session: session,
@@ -419,7 +434,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required AsyncValue<IList<LightArchivedGameWithPov>> recentGames,
     required int nbOfGames,
     required int rapidRank,
-    required int bulletRank,
+    required int blitzRank,
   }) {
     // fetch the account user to be sure we have the latest data (flair, etc.)
     final accountUser = ref
@@ -541,7 +556,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           ],
         )
       else ...[
-        ChessRatingCards(rapidRank: '$rapidRank', bulletRank: '$bulletRank'),
+        ChessRatingCards(rapidRank: '$rapidRank', blitzRank: '$blitzRank'),
         // if (status.isOnline)
         //   const _EditableWidget(
         //     widget: HomeEditableWidget.quickPairing,
@@ -740,7 +755,52 @@ class GameTypeBottomSheet extends ConsumerWidget {
             ),
           ),
           const Divider(color: Colors.grey, height: 1),
-          const SizedBox(height: 10),
+          SizedBox(height: 25),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal:  22,),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child:  GameTypeCard(
+                    icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
+                    title: 'Play',
+                    subtitle: 'Blitz',
+                    type: '3+2',
+                    subtitleColor: const Color(0xFF8BC34A), // Light green
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.of(context, rootNavigator: true).push(
+                        GameScreen.buildRoute(
+                          context,
+                          seek: GameSeek.fastPairing(const TimeIncrement(180, 2), session),
+                        ),
+                      );
+                    },
+                  ),),
+                SizedBox(width: 25),
+                Expanded(
+                  child:  GameTypeCard(
+                    icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
+                    title: 'Play',
+                    subtitle: 'Blitz',
+                    type: '5+0',
+                    subtitleColor: const Color(0xFF8BC34A), // Light green
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.of(context, rootNavigator: true).push(
+                        GameScreen.buildRoute(
+                          context,
+                          seek: GameSeek.fastPairing(const TimeIncrement(300, 0), session),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           // Game options
           Padding(
             padding: const EdgeInsets.symmetric(horizontal:  22,vertical: 16),
@@ -749,11 +809,11 @@ class GameTypeBottomSheet extends ConsumerWidget {
               spacing: 25,
               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // Bullet option
-                GameTypeCard(
-                  icon: Image.asset('assets/images/bullet_game.png', height: 33, width: 33),
+                // Blitz option
+                /*GameTypeCard(
+                  icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
                   title: 'Play',
-                  subtitle: 'Bullet',
+                  subtitle: 'Blitz',
                   type: '1+5',
                   subtitleColor: const Color(0xFF8BC34A), // Light green
                   onTap: () {
@@ -765,7 +825,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
                       ),
                     );
                   },
-                ),
+                ),*/
 
                 // Rapid option
                 GameTypeCard(
@@ -810,10 +870,10 @@ class GameTypeBottomSheet extends ConsumerWidget {
 }
 
 class ChessRatingCards extends StatelessWidget {
-  final String bulletRank;
+  final String blitzRank;
   final String rapidRank;
 
-  const ChessRatingCards({super.key, required this.bulletRank, required this.rapidRank});
+  const ChessRatingCards({super.key, required this.blitzRank, required this.rapidRank});
 
   @override
   Widget build(BuildContext context) {
@@ -823,10 +883,10 @@ class ChessRatingCards extends StatelessWidget {
         children: [
           Expanded(
             child: _buildRatingCard(
-              icon: Image.asset('assets/images/bullet_game.png'),
+              icon: Image.asset('assets/images/blitz.png'),
               iconColor: const Color(0xffFFF9E5),
-              title: 'Bullet',
-              rating: bulletRank,
+              title: 'Blitz',
+              rating: blitzRank,
             ),
           ),
           const SizedBox(width: 8),
@@ -952,7 +1012,7 @@ class GameTypeCard extends StatelessWidget {
                         ),
                       ),
                       Spacer(),
-                      Text(type, style: TextStyle(color: Color(0xff959494))),
+                      Text(type, style: TextStyle(color: Color(0xff959494),fontWeight: FontWeight.bold,)),
                     ],
                   ),
                 ],

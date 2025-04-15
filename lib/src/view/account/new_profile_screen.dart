@@ -5,6 +5,7 @@ import 'package:lichess_mobile/src/db/database.dart';
 import 'package:lichess_mobile/src/model/account/account_repository.dart';
 import 'package:lichess_mobile/src/model/auth/auth_controller.dart';
 import 'package:lichess_mobile/src/model/auth/auth_session.dart';
+import 'package:lichess_mobile/src/model/common/perf.dart';
 import 'package:lichess_mobile/src/model/game/archived_game.dart';
 import 'package:lichess_mobile/src/model/game/game_history.dart';
 import 'package:lichess_mobile/src/navigation.dart';
@@ -46,7 +47,23 @@ class NewProfileScreen extends ConsumerWidget {
     });
     final recentGames = ref.watch(myRecentGamesProvider);
 
-    final draw = recentGames.value!.where((element) => element.game.winner == null).length;
+    final filteredGames = recentGames.value!
+        .where((element) =>
+    element.game.perf == Perf.rapid || element.game.perf == Perf.blitz)
+        .toList();
+
+    final draw = filteredGames.where((element) => element.game.winner == null).length;
+
+    final win = filteredGames
+        .where((element) => element.game.winner == getTotalGamer(element))
+        .length;
+
+    final loose = filteredGames
+        .where((element) =>
+    element.game.winner != null && element.game.winner != getTotalGamer(element))
+        .length;
+
+    /*final draw = recentGames.value!.where((element) => element.game.winner == null).length;
 
     final win =
         recentGames.value!.where((element) => element.game.winner == getTotalGamer(element)).length;
@@ -57,7 +74,7 @@ class NewProfileScreen extends ConsumerWidget {
               (element) =>
                   element.game.winner != null && element.game.winner != getTotalGamer(element),
             )
-            .length;
+            .length;*/
 
     final String avatarSeed = userSession?.user.name ?? 'default';
 

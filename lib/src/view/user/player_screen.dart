@@ -104,8 +104,8 @@ class _PlayerScreenState extends ConsumerState<PlayerScreen> with SingleTickerPr
                     children: [
                       _buildTabButton(
                         0,
-                        'Bullet',
-                        Image.asset('assets/images/bullet_game.png',height: 20,width: 20,),
+                        'Blitz',
+                        Image.asset('assets/images/blitz.png',height: 20,width: 20,),
                       ),
                       _buildTabButton(
                         1,
@@ -268,8 +268,8 @@ class _BodyState extends ConsumerState<_Body> with SingleTickerProviderStateMixi
                       children: [
                         _buildTabButton(
                           0,
-                          'Bullet',
-                          Image.asset('assets/images/bullet_game.png',height: 20,width: 20,),
+                          'Blitz',
+                          Image.asset('assets/images/blitz.png',height: 20,width: 20,),
                         ),
                         _buildTabButton(
                           1,
