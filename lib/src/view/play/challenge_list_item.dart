@@ -5,20 +5,20 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/model/challenge/challenge.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
-import 'package:lichess_mobile/src/model/common/game.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/common/speed.dart';
-import 'package:lichess_mobile/src/model/lobby/correspondence_challenge.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/widgets/board_thumbnail.dart';
-import 'package:lichess_mobile/src/widgets/feedback.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
-import 'package:lichess_mobile/src/widgets/user_full_name.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/model/challenge/challenge.dart';
+import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/model/common/game.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/common/speed.dart';
+import 'package:rooktook/src/model/lobby/correspondence_challenge.dart';
+import 'package:rooktook/src/model/user/user.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/widgets/board_thumbnail.dart';
+import 'package:rooktook/src/widgets/feedback.dart';
+import 'package:rooktook/src/widgets/list.dart';
+import 'package:rooktook/src/widgets/user_full_name.dart';
 
 class ChallengeListItem extends ConsumerWidget {
   const ChallengeListItem({

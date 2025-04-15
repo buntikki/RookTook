@@ -4,11 +4,11 @@ import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/src/db/database.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle_angle.dart';
-import 'package:lichess_mobile/src/model/puzzle/puzzle_theme.dart';
+import 'package:rooktook/src/db/database.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/puzzle/puzzle.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_angle.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_theme.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sqflite/sqflite.dart';
 

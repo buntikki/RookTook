@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:lichess_mobile/src/model/account/account_repository.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
-import 'package:lichess_mobile/src/model/user/user_repository_providers.dart';
-import 'package:lichess_mobile/src/styles/lichess_colors.dart';
-import 'package:lichess_mobile/src/styles/lichess_icons.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/view/account/rating_pref_aware.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
-import 'package:lichess_mobile/src/widgets/rating.dart';
-import 'package:lichess_mobile/src/widgets/shimmer.dart';
+import 'package:rooktook/src/model/account/account_repository.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/user/user.dart';
+import 'package:rooktook/src/model/user/user_repository_providers.dart';
+import 'package:rooktook/src/styles/lichess_colors.dart';
+import 'package:rooktook/src/styles/lichess_icons.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/view/account/rating_pref_aware.dart';
+import 'package:rooktook/src/widgets/list.dart';
+import 'package:rooktook/src/widgets/rating.dart';
+import 'package:rooktook/src/widgets/shimmer.dart';
 
 final _dateFormatter = DateFormat.yMMMd();
 

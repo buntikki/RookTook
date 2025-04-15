@@ -1,6 +1,6 @@
 import 'package:dartchess/src/models.dart';
-import 'package:lichess_mobile/src/model/analysis/opening_service.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
+import 'package:rooktook/src/model/analysis/opening_service.dart';
+import 'package:rooktook/src/model/common/chess.dart';
 
 class FakeOpeningService implements OpeningService {
   @override

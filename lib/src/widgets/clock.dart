@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/constants.dart';
-import 'package:lichess_mobile/src/utils/screen.dart';
+import 'package:rooktook/src/constants.dart';
+import 'package:rooktook/src/utils/screen.dart';
 
 const _kClockFontSize = 26.0;
 const _kClockTenthFontSize = 20.0;

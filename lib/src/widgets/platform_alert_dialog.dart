@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/widgets/platform.dart';
+import 'package:rooktook/src/widgets/platform.dart';
 
 /// Displays an [AlertDialog] for Android and a [CupertinoAlertDialog] for iOS.
 class PlatformAlertDialog extends StatelessWidget {

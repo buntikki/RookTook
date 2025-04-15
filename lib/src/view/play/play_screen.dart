@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/account/account_repository.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/utils/navigation.dart';
-import 'package:lichess_mobile/src/view/play/create_game_options.dart';
-import 'package:lichess_mobile/src/view/play/playban.dart';
-import 'package:lichess_mobile/src/view/play/quick_game_button.dart';
-import 'package:lichess_mobile/src/widgets/platform_scaffold.dart';
+import 'package:rooktook/src/model/account/account_repository.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/play/create_game_options.dart';
+import 'package:rooktook/src/view/play/playban.dart';
+import 'package:rooktook/src/view/play/quick_game_button.dart';
+import 'package:rooktook/src/widgets/platform_scaffold.dart';
 
 class PlayScreen extends ConsumerWidget {
   const PlayScreen();

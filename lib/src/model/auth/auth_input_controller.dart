@@ -1,5 +1,5 @@
-import 'package:lichess_mobile/src/model/auth/auth_input_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rooktook/src/model/auth/auth_input_state.dart';
 
 part 'auth_input_controller.g.dart';
 

@@ -1,11 +1,11 @@
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/broadcast/broadcast.dart';
-import 'package:lichess_mobile/src/model/broadcast/broadcast_repository.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/utils/image.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rooktook/src/model/broadcast/broadcast.dart';
+import 'package:rooktook/src/model/broadcast/broadcast_repository.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/utils/image.dart';
 
 part 'broadcast_providers.g.dart';
 

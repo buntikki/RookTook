@@ -4,14 +4,14 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/game/game.dart';
-import 'package:lichess_mobile/src/model/game/game_controller.dart';
-import 'package:lichess_mobile/src/model/game/game_status.dart';
-import 'package:lichess_mobile/src/model/game/playable_game.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/view/game/status_l10n.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/game/game.dart';
+import 'package:rooktook/src/model/game/game_controller.dart';
+import 'package:rooktook/src/model/game/game_status.dart';
+import 'package:rooktook/src/model/game/playable_game.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/view/game/status_l10n.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
 import 'package:random_avatar/random_avatar.dart';
 
 class MatchResultDialog extends ConsumerStatefulWidget {

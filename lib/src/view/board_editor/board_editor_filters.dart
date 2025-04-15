@@ -4,14 +4,14 @@ import 'package:dartchess/dartchess.dart' hide Position;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/board_editor/board_editor_controller.dart';
-import 'package:lichess_mobile/src/model/board_editor/position.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/utils/navigation.dart';
-import 'package:lichess_mobile/src/widgets/adaptive_bottom_sheet.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
-import 'package:lichess_mobile/src/widgets/platform.dart';
+import 'package:rooktook/src/model/board_editor/board_editor_controller.dart';
+import 'package:rooktook/src/model/board_editor/position.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/widgets/adaptive_bottom_sheet.dart';
+import 'package:rooktook/src/widgets/list.dart';
+import 'package:rooktook/src/widgets/platform.dart';
 
 class BoardEditorFilters extends ConsumerWidget {
   const BoardEditorFilters({required this.initialFen, super.key});

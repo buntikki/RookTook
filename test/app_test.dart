@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
-import 'package:lichess_mobile/src/app.dart';
-import 'package:lichess_mobile/src/navigation.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/view/home/home_tab_screen.dart';
+import 'package:rooktook/src/app.dart';
+import 'package:rooktook/src/navigation.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/view/home/home_tab_screen.dart';
 
 import 'model/auth/fake_session_storage.dart';
 import 'network/fake_http_client_factory.dart';

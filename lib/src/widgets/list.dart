@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/widgets/platform.dart' show PlatformCard;
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/widgets/platform.dart' show PlatformCard;
 
 /// A platform agnostic list section.
 ///

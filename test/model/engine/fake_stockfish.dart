@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/src/foundation/change_notifier.dart';
-import 'package:lichess_mobile/src/model/engine/engine.dart';
+import 'package:rooktook/src/model/engine/engine.dart';
 import 'package:stockfish/stockfish.dart';
 
 class FakeStockfishFactory extends StockfishFactory {

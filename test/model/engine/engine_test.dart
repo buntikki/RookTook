@@ -1,10 +1,10 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
-import 'package:lichess_mobile/src/model/common/uci.dart';
-import 'package:lichess_mobile/src/model/engine/engine.dart';
-import 'package:lichess_mobile/src/model/engine/work.dart';
+import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/model/common/uci.dart';
+import 'package:rooktook/src/model/engine/engine.dart';
+import 'package:rooktook/src/model/engine/work.dart';
 
 import '../../binding.dart';
 

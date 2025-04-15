@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:dartchess/dartchess.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:http/http.dart';
-import 'package:lichess_mobile/src/constants.dart';
-import 'package:lichess_mobile/src/model/common/speed.dart';
-import 'package:lichess_mobile/src/model/opening_explorer/opening_explorer.dart';
-import 'package:lichess_mobile/src/model/opening_explorer/opening_explorer_preferences.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/utils/riverpod.dart';
+import 'package:rooktook/src/constants.dart';
+import 'package:rooktook/src/model/common/speed.dart';
+import 'package:rooktook/src/model/opening_explorer/opening_explorer.dart';
+import 'package:rooktook/src/model/opening_explorer/opening_explorer_preferences.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/utils/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'opening_explorer_repository.g.dart';

@@ -1,15 +1,15 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
-import 'package:lichess_mobile/src/model/opening_explorer/opening_explorer.dart';
-import 'package:lichess_mobile/src/model/opening_explorer/opening_explorer_preferences.dart';
-import 'package:lichess_mobile/src/model/opening_explorer/opening_explorer_repository.dart';
-import 'package:lichess_mobile/src/network/connectivity.dart';
-import 'package:lichess_mobile/src/theme.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/view/opening_explorer/opening_explorer_widgets.dart';
-import 'package:lichess_mobile/src/widgets/shimmer.dart';
+import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/model/opening_explorer/opening_explorer.dart';
+import 'package:rooktook/src/model/opening_explorer/opening_explorer_preferences.dart';
+import 'package:rooktook/src/model/opening_explorer/opening_explorer_repository.dart';
+import 'package:rooktook/src/network/connectivity.dart';
+import 'package:rooktook/src/theme.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/view/opening_explorer/opening_explorer_widgets.dart';
+import 'package:rooktook/src/widgets/shimmer.dart';
 
 /// Displays an opening explorer for the given position.
 ///

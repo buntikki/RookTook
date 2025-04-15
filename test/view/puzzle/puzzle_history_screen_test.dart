@@ -2,10 +2,10 @@ import 'dart:math' as math;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
 import 'package:intl/intl.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/view/puzzle/puzzle_history_screen.dart';
-import 'package:lichess_mobile/src/view/puzzle/puzzle_screen.dart';
-import 'package:lichess_mobile/src/widgets/board_thumbnail.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/view/puzzle/puzzle_history_screen.dart';
+import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
+import 'package:rooktook/src/widgets/board_thumbnail.dart';
 
 import '../../model/auth/fake_session_storage.dart';
 import '../../model/puzzle/mock_server_responses.dart';

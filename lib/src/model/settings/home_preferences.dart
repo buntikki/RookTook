@@ -1,7 +1,7 @@
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/l10n/l10n.dart';
-import 'package:lichess_mobile/src/model/settings/preferences_storage.dart';
+import 'package:rooktook/l10n/l10n.dart';
+import 'package:rooktook/src/model/settings/preferences_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_preferences.freezed.dart';

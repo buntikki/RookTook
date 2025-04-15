@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/widgets/list.dart';
 
 /// A platform agnostic tappable list tile that represents a settings value.
 class SettingsListTile extends StatelessWidget {

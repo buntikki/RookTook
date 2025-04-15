@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
-import 'package:lichess_mobile/src/model/tv/tv_channel.dart';
-import 'package:lichess_mobile/src/model/tv/tv_repository.dart';
+import 'package:rooktook/src/model/tv/tv_channel.dart';
+import 'package:rooktook/src/model/tv/tv_repository.dart';
 
 import '../../test_helpers.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
+import 'package:rooktook/src/widgets/list.dart';
 
 /// A modal bottom sheet that adapts to the platform (Android/iOS).
 Future<T?> showAdaptiveBottomSheet<T>({

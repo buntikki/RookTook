@@ -1,13 +1,13 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/model/common/time_increment.dart';
-import 'package:lichess_mobile/src/model/lobby/game_setup_preferences.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/widgets/adaptive_bottom_sheet.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
-import 'package:lichess_mobile/src/widgets/non_linear_slider.dart';
+import 'package:rooktook/src/model/common/time_increment.dart';
+import 'package:rooktook/src/model/lobby/game_setup_preferences.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/widgets/adaptive_bottom_sheet.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/list.dart';
+import 'package:rooktook/src/widgets/non_linear_slider.dart';
 
 class CustomClockSettings extends StatefulWidget {
   const CustomClockSettings({required this.onSubmit, required this.player, required this.clock});

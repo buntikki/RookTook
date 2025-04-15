@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:lichess_mobile/src/model/broadcast/broadcast.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/utils/share.dart';
-import 'package:lichess_mobile/src/widgets/adaptive_action_sheet.dart';
+import 'package:rooktook/src/model/broadcast/broadcast.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/utils/share.dart';
+import 'package:rooktook/src/widgets/adaptive_action_sheet.dart';
 
 Future<void> showBroadcastShareMenu(
   BuildContext context,

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/model/settings/board_preferences.dart';
-import 'package:lichess_mobile/src/model/settings/general_preferences.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/color_palette.dart';
+import 'package:rooktook/src/model/settings/board_preferences.dart';
+import 'package:rooktook/src/model/settings/general_preferences.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/color_palette.dart';
 
 const kPageTransitionsTheme = PageTransitionsTheme(
   builders: {

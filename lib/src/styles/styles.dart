@@ -2,7 +2,7 @@ import 'package:dynamic_system_colors/dynamic_system_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lichess_mobile/src/styles/lichess_colors.dart';
+import 'package:rooktook/src/styles/lichess_colors.dart';
 
 // ignore: avoid_classes_with_only_static_members
 abstract class Styles {

@@ -1,9 +1,9 @@
-import 'package:lichess_mobile/src/model/auth/auth_repository.dart';
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/model/notifications/notification_service.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/network/socket.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rooktook/src/model/auth/auth_repository.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/model/notifications/notification_service.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/network/socket.dart';
 
 part 'auth_controller.g.dart';
 

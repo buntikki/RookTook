@@ -3,12 +3,12 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
-import 'package:lichess_mobile/src/model/opening_explorer/opening_explorer.dart';
-import 'package:lichess_mobile/src/theme.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/view/game/archived_game_screen.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
+import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/model/opening_explorer/opening_explorer.dart';
+import 'package:rooktook/src/theme.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/view/game/archived_game_screen.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 const _kTableRowVerticalPadding = 10.0;

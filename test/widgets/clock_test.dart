@@ -1,7 +1,7 @@
 import 'package:clock/clock.dart' as clock;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lichess_mobile/src/widgets/clock.dart';
+import 'package:rooktook/src/widgets/clock.dart';
 
 void main() {
   group('Clock', () {

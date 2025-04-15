@@ -1,7 +1,7 @@
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/model/auth/session_storage.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/model/auth/session_storage.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/user/user.dart';
 
 class FakeSessionStorage implements SessionStorage {
   FakeSessionStorage([AuthSessionState? initial]) : _session = initial;

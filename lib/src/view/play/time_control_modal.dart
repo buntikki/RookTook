@@ -1,16 +1,16 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/common/time_increment.dart';
-import 'package:lichess_mobile/src/model/lobby/game_setup_preferences.dart';
-import 'package:lichess_mobile/src/styles/lichess_icons.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/widgets/adaptive_bottom_sheet.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
-import 'package:lichess_mobile/src/widgets/non_linear_slider.dart';
-import 'package:lichess_mobile/src/widgets/platform.dart';
-import 'package:lichess_mobile/src/widgets/settings.dart';
+import 'package:rooktook/src/model/common/time_increment.dart';
+import 'package:rooktook/src/model/lobby/game_setup_preferences.dart';
+import 'package:rooktook/src/styles/lichess_icons.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/widgets/adaptive_bottom_sheet.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/non_linear_slider.dart';
+import 'package:rooktook/src/widgets/platform.dart';
+import 'package:rooktook/src/widgets/settings.dart';
 
 class TimeControlModal extends ConsumerWidget {
   const TimeControlModal({

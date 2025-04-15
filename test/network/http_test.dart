@@ -5,11 +5,11 @@ import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:lichess_mobile/src/model/auth/auth_session.dart';
-import 'package:lichess_mobile/src/model/auth/bearer.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
-import 'package:lichess_mobile/src/network/http.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/model/auth/bearer.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/user/user.dart';
+import 'package:rooktook/src/network/http.dart';
 
 import '../test_container.dart';
 import 'fake_http_client_factory.dart';

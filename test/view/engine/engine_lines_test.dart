@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lichess_mobile/src/model/engine/evaluation_mixin.dart';
-import 'package:lichess_mobile/src/view/engine/engine_lines.dart';
+import 'package:rooktook/src/model/engine/evaluation_mixin.dart';
+import 'package:rooktook/src/view/engine/engine_lines.dart';
 
 import 'test_engine_app.dart';
 

@@ -79,7 +79,7 @@
 		<string>zh_TW</string>
 	</array>
 	<key>CFBundleName</key>
-	<string>lichess_mobile</string>
+	<string>RookTook</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -93,7 +93,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.1035858141908-al1kd7bu48flkrr3k3rq6q3fbcq090le</string>
+				<string>com.googleusercontent.apps.1035858141908-07bp848sildi8mpscdqs9f9keeqatbi1</string>
 			</array>
 		</dict>
 	</array>

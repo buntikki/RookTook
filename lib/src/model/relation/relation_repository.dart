@@ -1,8 +1,8 @@
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:http/http.dart' as http;
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
-import 'package:lichess_mobile/src/network/http.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/user/user.dart';
+import 'package:rooktook/src/network/http.dart';
 
 class RelationRepository {
   const RelationRepository(this.client);

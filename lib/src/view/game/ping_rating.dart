@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/network/socket.dart';
-import 'package:lichess_mobile/src/widgets/feedback.dart';
+import 'package:rooktook/src/network/socket.dart';
+import 'package:rooktook/src/widgets/feedback.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 @riverpod

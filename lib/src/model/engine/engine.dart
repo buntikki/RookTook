@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:lichess_mobile/src/binding.dart';
-import 'package:lichess_mobile/src/model/engine/uci_protocol.dart';
-import 'package:lichess_mobile/src/model/engine/work.dart';
+import 'package:rooktook/src/binding.dart';
+import 'package:rooktook/src/model/engine/uci_protocol.dart';
+import 'package:rooktook/src/model/engine/work.dart';
 import 'package:logging/logging.dart';
 import 'package:stockfish/stockfish.dart';
 

@@ -2,11 +2,11 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/testing.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/utils/navigation.dart';
-import 'package:lichess_mobile/src/view/puzzle/streak_screen.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
-import 'package:lichess_mobile/src/widgets/platform_scaffold.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/puzzle/streak_screen.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/platform_scaffold.dart';
 
 import '../../test_helpers.dart';
 import '../../test_provider_scope.dart';

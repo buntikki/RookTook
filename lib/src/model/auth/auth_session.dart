@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/src/model/auth/session_storage.dart';
-import 'package:lichess_mobile/src/model/common/preloaded_data.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rooktook/src/model/auth/session_storage.dart';
+import 'package:rooktook/src/model/common/preloaded_data.dart';
+import 'package:rooktook/src/model/user/user.dart';
 
 part 'auth_session.freezed.dart';
 part 'auth_session.g.dart';

@@ -1,4 +1,4 @@
-import 'package:lichess_mobile/src/constants.dart';
+import 'package:rooktook/src/constants.dart';
 
 String lichessFlagSrc(String country) {
   return '$kLichessCDNHost/assets/images/flags/$country.png';

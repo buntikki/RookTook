@@ -3,12 +3,12 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/common/eval.dart';
-import 'package:lichess_mobile/src/model/engine/engine.dart';
-import 'package:lichess_mobile/src/model/engine/evaluation_service.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
+import 'package:rooktook/src/model/common/eval.dart';
+import 'package:rooktook/src/model/engine/engine.dart';
+import 'package:rooktook/src/model/engine/evaluation_service.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/list.dart';
 import 'package:popover/popover.dart';
 
 class EngineDepth extends ConsumerWidget {

@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:deep_pick/deep_pick.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:lichess_mobile/l10n/l10n.dart';
-import 'package:lichess_mobile/src/model/challenge/challenge.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/game/playable_game.dart';
-import 'package:lichess_mobile/src/model/user/user.dart' show TemporaryBan;
-import 'package:lichess_mobile/src/utils/json.dart';
+import 'package:rooktook/l10n/l10n.dart';
+import 'package:rooktook/src/model/challenge/challenge.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/game/playable_game.dart';
+import 'package:rooktook/src/model/user/user.dart' show TemporaryBan;
+import 'package:rooktook/src/utils/json.dart';
 import 'package:meta/meta.dart';
 
 /// FCM Messages

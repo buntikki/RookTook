@@ -1,16 +1,16 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/clock/clock_tool_controller.dart';
-import 'package:lichess_mobile/src/model/common/time_increment.dart';
-import 'package:lichess_mobile/src/utils/immersive_mode.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/utils/navigation.dart';
-import 'package:lichess_mobile/src/view/clock/clock_settings.dart';
-import 'package:lichess_mobile/src/view/clock/custom_clock_settings.dart';
-import 'package:lichess_mobile/src/widgets/adaptive_bottom_sheet.dart';
-import 'package:lichess_mobile/src/widgets/buttons.dart';
-import 'package:lichess_mobile/src/widgets/clock.dart';
+import 'package:rooktook/src/model/clock/clock_tool_controller.dart';
+import 'package:rooktook/src/model/common/time_increment.dart';
+import 'package:rooktook/src/utils/immersive_mode.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/clock/clock_settings.dart';
+import 'package:rooktook/src/view/clock/custom_clock_settings.dart';
+import 'package:rooktook/src/widgets/adaptive_bottom_sheet.dart';
+import 'package:rooktook/src/widgets/buttons.dart';
+import 'package:rooktook/src/widgets/clock.dart';
 
 class ClockToolScreen extends StatelessWidget {
   const ClockToolScreen({super.key});

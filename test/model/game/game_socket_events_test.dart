@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
+import 'package:rooktook/src/model/common/chess.dart';
 
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/common/speed.dart';
-import 'package:lichess_mobile/src/model/game/game.dart';
-import 'package:lichess_mobile/src/model/game/game_socket_events.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/common/speed.dart';
+import 'package:rooktook/src/model/game/game.dart';
+import 'package:rooktook/src/model/game/game_socket_events.dart';
 
 void main() {
   test('decode game full event from websocket json', () {

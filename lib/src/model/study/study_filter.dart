@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/l10n/l10n.dart';
+import 'package:rooktook/l10n/l10n.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'study_filter.freezed.dart';

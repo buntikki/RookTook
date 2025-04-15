@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:deep_pick/deep_pick.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/user/leaderboard.dart';
-import 'package:lichess_mobile/src/model/user/streamer.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/utils/json.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/user/leaderboard.dart';
+import 'package:rooktook/src/model/user/streamer.dart';
+import 'package:rooktook/src/model/user/user.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/utils/json.dart';
 
 class UserRepository {
   UserRepository(this.client);

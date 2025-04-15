@@ -1,15 +1,15 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/common/perf.dart';
-import 'package:lichess_mobile/src/model/common/speed.dart';
-import 'package:lichess_mobile/src/model/game/archived_game.dart';
-import 'package:lichess_mobile/src/model/game/game.dart';
-import 'package:lichess_mobile/src/model/game/game_status.dart';
-import 'package:lichess_mobile/src/model/game/material_diff.dart';
-import 'package:lichess_mobile/src/model/game/player.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
+import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/common/speed.dart';
+import 'package:rooktook/src/model/game/archived_game.dart';
+import 'package:rooktook/src/model/game/game.dart';
+import 'package:rooktook/src/model/game/game_status.dart';
+import 'package:rooktook/src/model/game/material_diff.dart';
+import 'package:rooktook/src/model/game/player.dart';
+import 'package:rooktook/src/model/user/user.dart';
 
 List<ArchivedGame> generateArchivedGames({int count = 100, String? username}) {
   return List.generate(count, (index) {

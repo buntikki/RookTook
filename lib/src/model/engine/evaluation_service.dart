@@ -7,12 +7,12 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/src/model/common/chess.dart';
-import 'package:lichess_mobile/src/model/common/eval.dart';
-import 'package:lichess_mobile/src/model/common/preloaded_data.dart';
-import 'package:lichess_mobile/src/model/common/uci.dart';
-import 'package:lichess_mobile/src/model/engine/engine.dart';
-import 'package:lichess_mobile/src/model/engine/work.dart';
+import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/model/common/eval.dart';
+import 'package:rooktook/src/model/common/preloaded_data.dart';
+import 'package:rooktook/src/model/common/uci.dart';
+import 'package:rooktook/src/model/engine/engine.dart';
+import 'package:rooktook/src/model/engine/work.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 

@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
-import 'package:lichess_mobile/src/model/game/archived_game.dart';
-import 'package:lichess_mobile/src/model/game/playable_game.dart';
+import 'package:rooktook/src/model/game/archived_game.dart';
+import 'package:rooktook/src/model/game/playable_game.dart';
 
 void main() {
   final dateFormat = DateFormat('yyyy.MM.dd');

@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' show Response;
-import 'package:lichess_mobile/src/constants.dart';
-import 'package:lichess_mobile/src/model/common/id.dart';
-import 'package:lichess_mobile/src/model/game/archived_game.dart';
-import 'package:lichess_mobile/src/model/game/game_repository.dart';
-import 'package:lichess_mobile/src/model/settings/board_preferences.dart';
-import 'package:lichess_mobile/src/network/http.dart';
+import 'package:rooktook/src/constants.dart';
+import 'package:rooktook/src/model/common/id.dart';
+import 'package:rooktook/src/model/game/archived_game.dart';
+import 'package:rooktook/src/model/game/game_repository.dart';
+import 'package:rooktook/src/model/settings/board_preferences.dart';
+import 'package:rooktook/src/network/http.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:share_plus/share_plus.dart';
 

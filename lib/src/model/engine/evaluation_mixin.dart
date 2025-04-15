@@ -4,16 +4,16 @@ import 'package:dartchess/dartchess.dart';
 import 'package:deep_pick/deep_pick.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lichess_mobile/src/model/common/eval.dart';
-import 'package:lichess_mobile/src/model/common/node.dart';
-import 'package:lichess_mobile/src/model/common/socket.dart';
-import 'package:lichess_mobile/src/model/common/uci.dart';
-import 'package:lichess_mobile/src/model/engine/evaluation_preferences.dart';
-import 'package:lichess_mobile/src/model/engine/evaluation_service.dart';
-import 'package:lichess_mobile/src/model/engine/work.dart';
-import 'package:lichess_mobile/src/network/socket.dart';
-import 'package:lichess_mobile/src/utils/json.dart';
-import 'package:lichess_mobile/src/utils/rate_limit.dart';
+import 'package:rooktook/src/model/common/eval.dart';
+import 'package:rooktook/src/model/common/node.dart';
+import 'package:rooktook/src/model/common/socket.dart';
+import 'package:rooktook/src/model/common/uci.dart';
+import 'package:rooktook/src/model/engine/evaluation_preferences.dart';
+import 'package:rooktook/src/model/engine/evaluation_service.dart';
+import 'package:rooktook/src/model/engine/work.dart';
+import 'package:rooktook/src/network/socket.dart';
+import 'package:rooktook/src/utils/json.dart';
+import 'package:rooktook/src/utils/rate_limit.dart';
 import 'package:meta/meta.dart';
 
 /// The debounce delay for sending `evalGet` to the server.

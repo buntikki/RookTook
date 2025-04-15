@@ -3,19 +3,19 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:lichess_mobile/src/model/relation/online_friends.dart';
-import 'package:lichess_mobile/src/model/relation/relation_repository.dart';
-import 'package:lichess_mobile/src/model/relation/relation_repository_providers.dart';
-import 'package:lichess_mobile/src/model/user/user.dart';
-import 'package:lichess_mobile/src/network/http.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/l10n_context.dart';
-import 'package:lichess_mobile/src/utils/navigation.dart';
-import 'package:lichess_mobile/src/view/user/user_screen.dart';
-import 'package:lichess_mobile/src/widgets/feedback.dart';
-import 'package:lichess_mobile/src/widgets/list.dart';
-import 'package:lichess_mobile/src/widgets/platform_scaffold.dart';
-import 'package:lichess_mobile/src/widgets/user_list_tile.dart';
+import 'package:rooktook/src/model/relation/online_friends.dart';
+import 'package:rooktook/src/model/relation/relation_repository.dart';
+import 'package:rooktook/src/model/relation/relation_repository_providers.dart';
+import 'package:rooktook/src/model/user/user.dart';
+import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/user/user_screen.dart';
+import 'package:rooktook/src/widgets/feedback.dart';
+import 'package:rooktook/src/widgets/list.dart';
+import 'package:rooktook/src/widgets/platform_scaffold.dart';
+import 'package:rooktook/src/widgets/user_list_tile.dart';
 
 final _getFollowingAndOnlinesProvider = FutureProvider.autoDispose<(IList<User>, IList<LightUser>)>(
   (ref) async {

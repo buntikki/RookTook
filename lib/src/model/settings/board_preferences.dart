@@ -2,10 +2,10 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/l10n/l10n.dart';
-import 'package:lichess_mobile/src/model/settings/preferences_storage.dart';
-import 'package:lichess_mobile/src/styles/styles.dart';
-import 'package:lichess_mobile/src/utils/color_palette.dart';
+import 'package:rooktook/l10n/l10n.dart';
+import 'package:rooktook/src/model/settings/preferences_storage.dart';
+import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/color_palette.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'board_preferences.freezed.dart';

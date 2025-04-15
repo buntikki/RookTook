@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:lichess_mobile/src/model/settings/preferences_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rooktook/src/model/settings/preferences_storage.dart';
 
 part 'analysis_preferences.freezed.dart';
 part 'analysis_preferences.g.dart';
