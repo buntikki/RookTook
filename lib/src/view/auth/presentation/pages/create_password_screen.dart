@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:random_avatar/random_avatar.dart';
 import 'package:rooktook/src/model/auth/auth_controller.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/auth/password/password_controller.dart';
@@ -32,13 +33,20 @@ class CreatePasswordScreen extends ConsumerStatefulWidget {
 
 class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
-
+  bool _isInputEmail = false;
   @override
   void initState() {
     super.initState();
     _passwordController.addListener(() {
       ref.read(passwordControllerProvider.notifier).updatePassword(_passwordController.text.trim());
     });
+
+    _isInputEmail = _isEmail(widget.username);
+  }
+
+  bool _isEmail(String input) {
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(input);
   }
 
   @override
@@ -127,7 +135,46 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                         titleText,
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(height: 32),
+
+                      const SizedBox(height: 16),
+
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff2B2D30),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                "Your ${_isInputEmail ? 'Email': 'Username'}"
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 16,
+                                  backgroundColor: Colors.green,
+                                  child: _isInputEmail?const Icon(
+                                    Icons.email,
+                                    color: Colors.white,
+                                    size: 12,
+                                  ): RandomAvatar(widget.username),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    widget.username,
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: const Color(0xff4CAF50)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
                       TextField(
                         controller: _passwordController,
                         obscureText: !state.isPasswordVisible,
