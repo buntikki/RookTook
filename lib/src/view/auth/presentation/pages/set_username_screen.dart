@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rooktook/src/model/auth/auth_controller.dart';
 import 'package:rooktook/src/model/auth/auth_input_controller.dart';
 import 'package:rooktook/src/model/auth/auth_input_state.dart';
@@ -262,7 +263,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                                     backgroundColor: Colors.green,
                                     child: Icon(
                                       widget.registrationType == RegistrationType.google
-                                          ? Icons.android
+                                          ? FontAwesomeIcons.google
                                           : Icons.apple,
                                       color: Colors.white,
                                     ),
