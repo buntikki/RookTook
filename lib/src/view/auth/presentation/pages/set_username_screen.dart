@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:random_avatar/random_avatar.dart';
 import 'package:rooktook/src/model/auth/auth_controller.dart';
 import 'package:rooktook/src/model/auth/auth_input_controller.dart';
 import 'package:rooktook/src/model/auth/auth_input_state.dart';
@@ -201,7 +202,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xff1C1E21),
+      backgroundColor: const Color(0xFF13191D),
       body: SafeArea(
         child: Column(
           children: [
@@ -283,9 +284,47 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                             ],
                           ),
                         ),
+                      ] else ...[
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff2B2D30),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  "Your ${_isInputEmail ? 'Email': 'Username'}"
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 16,
+                                    backgroundColor: Colors.green,
+                                    child: _isInputEmail?const Icon(
+                                      Icons.email,
+                                      color: Colors.white,
+                                      size: 12,
+                                    ): RandomAvatar(widget.previousInput),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      widget.previousInput,
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: const Color(0xff4CAF50)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
                       ],
 
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 16),
                       Container(
                         decoration: BoxDecoration(
                           color: const Color(0xff2B2D30),
