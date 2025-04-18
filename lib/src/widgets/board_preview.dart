@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 import 'package:rooktook/src/widgets/buttons.dart';
 
 /// A board preview with a description.
@@ -76,7 +77,7 @@ class SmallBoardPreview extends ConsumerWidget {
                     fen: fen,
                     orientation: orientation,
                     lastMove: lastMove as NormalMove?,
-                    pieceAssets: boardPrefs.pieceSet.assets,
+                    pieceAssets: PieceAssets(CustomPieceSet.assets),
                     colorScheme: const ChessboardColorScheme(
                       darkSquare: darkSquare,
                       lightSquare: lightSquare,

@@ -12,6 +12,7 @@ import 'package:rooktook/src/model/common/eval.dart';
 import 'package:rooktook/src/model/engine/evaluation_preferences.dart';
 import 'package:rooktook/src/model/engine/evaluation_service.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 import 'package:rooktook/src/widgets/pgn.dart';
 
 class AnalysisBoard extends ConsumerStatefulWidget {
@@ -64,7 +65,7 @@ class AnalysisBoardState extends ConsumerState<AnalysisBoard> {
             ? computeBestMoveShapes(
               bestMoves,
               currentNode.position.turn,
-              boardPrefs.pieceSet.assets,
+          PieceAssets(CustomPieceSet.assets),
             )
             : ISet();
 

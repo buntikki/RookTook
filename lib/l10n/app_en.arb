@@ -69,7 +69,7 @@
       }
     }
   },
-  "activitySignedUp": "Signed up to lichess.org",
+  "activitySignedUp": "Signed up to RookTook",
   "activitySupportedNbMonths": "{count, plural, =1{Supported lichess.org for {count} month as a {param2}} other{Supported lichess.org for {count} months as a {param2}}}",
   "@activitySupportedNbMonths": {
     "placeholders": {

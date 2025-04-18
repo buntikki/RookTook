@@ -657,7 +657,7 @@ class ChessPuzzleScreen extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Image.asset('assets/images/board.png'),
+                    child: Image.asset('assets/images/puzzle_board.png'),
                   ),
                 ),
 

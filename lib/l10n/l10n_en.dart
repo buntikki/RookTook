@@ -153,7 +153,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get activitySignedUp => 'Signed up to lichess.org';
+  String get activitySignedUp => 'Signed up to RookTook';
 
   @override
   String activitySupportedNbMonths(int count, String param2) {

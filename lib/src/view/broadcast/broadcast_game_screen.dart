@@ -16,6 +16,7 @@ import 'package:rooktook/src/model/engine/evaluation_service.dart';
 import 'package:rooktook/src/model/game/game_share_service.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 import 'package:rooktook/src/utils/duration.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/navigation.dart';
@@ -337,7 +338,7 @@ class _BroadcastBoardState extends ConsumerState<_BroadcastBoard> {
             ? computeBestMoveShapes(
               bestMoves,
               currentNode.position.turn,
-              boardPrefs.pieceSet.assets,
+          PieceAssets(CustomPieceSet.assets),
             )
             : ISet();
 

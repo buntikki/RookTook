@@ -5,6 +5,7 @@ import 'package:rooktook/src/model/puzzle/puzzle.dart';
 import 'package:rooktook/src/model/puzzle/puzzle_controller.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/string.dart';
 import 'package:rooktook/src/view/account/rating_pref_aware.dart';
@@ -48,7 +49,6 @@ class PuzzleFeedbackWidget extends ConsumerWidget {
                         : context.l10n.puzzlePuzzleComplete,
                     overflow: TextOverflow.ellipsis,
                   ),
-
         );
       case PuzzleMode.load:
       case PuzzleMode.play:
@@ -73,19 +73,16 @@ class PuzzleFeedbackWidget extends ConsumerWidget {
             leading: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4.0),
-                color:
-                    brightness == Brightness.light
-                        ? boardTheme.colors.lightSquare
-                        : boardTheme.colors.darkSquare,
+                color: state.pov == Side.white ? Colors.white : const Color(0xffD0D7DD),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: Image.asset(
-                  asset.assetName,
+                  state.pov == Side.white
+                      ? 'assets/pieces/custom/whiteKing.png'
+                      : 'assets/pieces/custom/blackKing.png',
                   width: 48,
                   height: 48,
-                  bundle: asset.bundle,
-                  package: asset.package,
                 ),
               ),
             ),

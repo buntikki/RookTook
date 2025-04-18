@@ -7,6 +7,7 @@ import 'package:rooktook/src/model/settings/preferences_storage.dart';
 import 'package:rooktook/src/styles/styles.dart';
 import 'package:rooktook/src/utils/color_palette.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 
 part 'board_preferences.freezed.dart';
 part 'board_preferences.g.dart';
@@ -167,7 +168,7 @@ class BoardPrefs with _$BoardPrefs implements Serializable {
     final darkSquare = Color(0xffD0D7DD);
     final lightSquare = Colors.white;
     return ChessboardSettings(
-      pieceAssets: pieceSet.assets,
+      pieceAssets: PieceAssets(CustomPieceSet.assets),
       colorScheme: ChessboardColorScheme(
         darkSquare: darkSquare,
         lightSquare: lightSquare,

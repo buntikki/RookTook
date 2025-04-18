@@ -9,6 +9,7 @@ import 'package:rooktook/src/model/board_editor/board_editor_controller.dart';
 import 'package:rooktook/src/model/common/chess.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/utils/screen.dart';
@@ -219,7 +220,7 @@ class _PieceMenuState extends ConsumerState<_PieceMenu> {
               final pieceWidget = PieceWidget(
                 piece: piece,
                 size: squareSize,
-                pieceAssets: boardPrefs.pieceSet.assets,
+                pieceAssets: PieceAssets(CustomPieceSet.assets),
               );
 
               return ColoredBox(
@@ -235,7 +236,7 @@ class _PieceMenuState extends ConsumerState<_PieceMenu> {
                     feedback: PieceDragFeedback(
                       piece: piece,
                       squareSize: squareSize,
-                      pieceAssets: boardPrefs.pieceSet.assets,
+                      pieceAssets: PieceAssets(CustomPieceSet.assets),
                     ),
                     child: pieceWidget,
                     onDragEnd:
