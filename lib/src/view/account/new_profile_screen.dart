@@ -119,7 +119,7 @@ class NewProfileScreen extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: _StatCard(
-                        label: 'Games Won',
+                        label: 'Wins',
                         count: win,
                         color: Colors.green,
                         labelIcon: 'W',
@@ -128,7 +128,7 @@ class NewProfileScreen extends ConsumerWidget {
                     SizedBox(width: 10),
                     Expanded(
                       child: _StatCard(
-                        label: 'Games Lost',
+                        label: 'Losses',
                         count: loose,
                         color: Colors.red,
                         labelIcon: 'L',
@@ -138,7 +138,7 @@ class NewProfileScreen extends ConsumerWidget {
 
                     Expanded(
                       child: _StatCard(
-                        label: 'Games Drawn',
+                        label: 'Draws',
                         count: draw,
                         color: Colors.blue,
                         labelIcon: 'D',
@@ -248,6 +248,7 @@ class _StatCard extends StatelessWidget {
             fit: BoxFit.scaleDown,
             child: Text(
               label,
+              maxLines: 1,
               style: const TextStyle(color: Colors.grey),
               textAlign: TextAlign.center,
             ),
