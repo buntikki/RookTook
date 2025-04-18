@@ -19,6 +19,7 @@ import 'package:rooktook/src/model/study/study_controller.dart';
 import 'package:rooktook/src/model/study/study_preferences.dart';
 import 'package:rooktook/src/model/study/study_repository.dart';
 import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/utils/share.dart';
@@ -527,7 +528,7 @@ class _StudyBoardState extends ConsumerState<_StudyBoard> {
             ? computeBestMoveShapes(
               bestMoves,
               currentNode.position!.turn,
-              boardPrefs.pieceSet.assets,
+          PieceAssets(CustomPieceSet.assets),
             )
             : ISet();
 

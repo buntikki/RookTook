@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 import 'package:rooktook/src/view/engine/engine_gauge.dart';
 
 /// A board thumbnail widget
@@ -95,7 +96,7 @@ class _BoardThumbnailState extends ConsumerState<BoardThumbnail> {
               ? Styles.boardBorderRadius.copyWith(topRight: Radius.zero, bottomRight: Radius.zero)
               : Styles.boardBorderRadius,
       boxShadow: (widget.showEvaluationBar) ? [] : boardShadows,
-      pieceAssets: boardPrefs.pieceSet.assets,
+      pieceAssets: PieceAssets(CustomPieceSet.assets),
       colorScheme: boardPrefs.boardTheme.colors,
       animationDuration: widget.animationDuration,
       hue: boardPrefs.hue,

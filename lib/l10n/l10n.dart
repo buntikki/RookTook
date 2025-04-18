@@ -483,7 +483,7 @@ abstract class AppLocalizations {
   /// No description provided for @activitySignedUp.
   ///
   /// In en, this message translates to:
-  /// **'Signed up to lichess.org'**
+  /// **'Signed up to RookTook'**
   String get activitySignedUp;
 
   /// No description provided for @activitySupportedNbMonths.

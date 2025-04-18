@@ -8,6 +8,7 @@ import 'package:rooktook/src/model/common/speed.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 import 'package:rooktook/src/utils/l10n.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/widgets/buttons.dart';
@@ -258,7 +259,7 @@ class _BoardCarouselItem extends ConsumerWidget {
                     topLeft: Radius.circular(10.0),
                     topRight: Radius.circular(10.0),
                   ),
-                  pieceAssets: boardPrefs.pieceSet.assets,
+                  pieceAssets: PieceAssets(CustomPieceSet.assets),
                   colorScheme: boardPrefs.boardTheme.colors,
                 ),
               ),

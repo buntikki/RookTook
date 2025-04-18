@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 import 'package:rooktook/src/utils/screen.dart';
 import 'package:rooktook/src/view/engine/engine_gauge.dart';
 import 'package:rooktook/src/widgets/move_list.dart';
@@ -488,7 +489,7 @@ class BoardSettingsOverrides {
  
       drawShape: drawShape,
       pieceOrientationBehavior: pieceOrientationBehavior,
-      pieceAssets: pieceAssets,
+      pieceAssets: PieceAssets(CustomPieceSet.assets),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rooktook/src/model/common/chess.dart';
+import 'package:rooktook/src/utils/custom_piece_set.dart';
 
 part 'eval.freezed.dart';
 part 'eval.g.dart';
@@ -265,7 +266,7 @@ ISet<Shape> computeBestMoveShapes(
                   PieceShape(
                     color: color,
                     orig: move.to,
-                    pieceAssets: pieceAssets,
+                    pieceAssets: PieceAssets(CustomPieceSet.assets),
                     piece: Piece(color: sideToMove, role: promRole),
                   ),
               ];
@@ -274,7 +275,7 @@ ISet<Shape> computeBestMoveShapes(
                 PieceShape(
                   color: color,
                   orig: move.to,
-                  pieceAssets: pieceAssets,
+                  pieceAssets: PieceAssets(CustomPieceSet.assets),
                   opacity: 0.5,
                   piece: Piece(color: sideToMove, role: role),
                 ),

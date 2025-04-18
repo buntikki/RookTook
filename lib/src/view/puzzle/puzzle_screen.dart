@@ -477,7 +477,7 @@ class _BottomBarState extends ConsumerState<_BottomBar> {
                   puzzleState.mode == PuzzleMode.view && puzzleState.nextContext != null
                       ? () => ref.read(ctrlProvider.notifier).onLoadPuzzle(puzzleState.nextContext!)
                       : null,
-              label: Row(
+              label: const Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
