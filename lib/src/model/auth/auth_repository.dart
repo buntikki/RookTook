@@ -333,6 +333,14 @@ class AuthRepository {
       throw http.ClientException('Failed to delete token: ${response.statusCode}', url);
     }
   }
+
+  Future<void> deleteAccount() async {
+    final url = Uri(path: '/api/account/delete');
+    final response = await _client.delete(url);
+    if (response.statusCode >= 400) {
+      throw http.ClientException('Failed to delete account: ${response.statusCode}', url);
+    }
+  }
 }
 
 

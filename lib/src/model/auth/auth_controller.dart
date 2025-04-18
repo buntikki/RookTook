@@ -228,4 +228,17 @@ class AuthController extends _$AuthController {
       state = AsyncValue.error(e, st);
     }
   }
+
+  Future<void> deleteAccount() async {
+    state = const AsyncLoading();
+    final appAuth = ref.read(appAuthProvider);
+
+    try {
+      await ref.withClient((client) => AuthRepository(client, appAuth).deleteAccount());
+      await signOut();
+      state = const AsyncValue.data(null);
+    } catch (e, st) {
+      state = AsyncValue.error(e, st);
+    }
+  }
 }
