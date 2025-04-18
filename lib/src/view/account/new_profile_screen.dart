@@ -47,21 +47,23 @@ class NewProfileScreen extends ConsumerWidget {
     });
     final recentGames = ref.watch(myRecentGamesProvider);
 
-    final filteredGames = recentGames.value!
-        .where((element) =>
-    element.game.perf == Perf.rapid || element.game.perf == Perf.blitz)
-        .toList();
+    final filteredGames =
+        recentGames.value!
+            .where((element) => element.game.perf == Perf.rapid || element.game.perf == Perf.blitz)
+            .toList();
 
     final draw = filteredGames.where((element) => element.game.winner == null).length;
 
-    final win = filteredGames
-        .where((element) => element.game.winner == getTotalGamer(element))
-        .length;
+    final win =
+        filteredGames.where((element) => element.game.winner == getTotalGamer(element)).length;
 
-    final loose = filteredGames
-        .where((element) =>
-    element.game.winner != null && element.game.winner != getTotalGamer(element))
-        .length;
+    final loose =
+        filteredGames
+            .where(
+              (element) =>
+                  element.game.winner != null && element.game.winner != getTotalGamer(element),
+            )
+            .length;
 
     /*final draw = recentGames.value!.where((element) => element.game.winner == null).length;
 
@@ -199,6 +201,27 @@ class NewProfileScreen extends ConsumerWidget {
                 ),
               ),
 
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () => _showDeleteAccountConfirmSheet(context, ref),
+                  child: const Text(
+                    'Delete Account',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
               // Padding(
               //   padding: const EdgeInsets.symmetric(vertical: 10.0),
               //   child: TextButton.icon(
@@ -214,6 +237,151 @@ class NewProfileScreen extends ConsumerWidget {
     );
   }
 }
+
+void _showDeleteAccountConfirmSheet(BuildContext context, WidgetRef ref) {
+  final authController = ref.read(authControllerProvider.notifier);
+  bool isLoading = false;
+
+  showModalBottomSheet<void>(
+    context: context,
+    useRootNavigator: true,
+    isDismissible: true,
+    enableDrag: true,
+    backgroundColor: const Color(0xFF1A1F24),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return PopScope(
+            // Prevent back button from dismissing while loading
+            canPop: !isLoading,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[600],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Icon(
+                      Icons.warning_amber_rounded,
+                      color: Colors.red,
+                      size: 50,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Delete Account',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      'This action cannot be undone. Once your account is deleted, you cannot create a new account with the same username and email.',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[300],
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    if (isLoading) Column(
+                      children: [
+                        const CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Deleting account',
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ) else Column(
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size.fromHeight(50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+
+                            try {
+                              await authController.deleteAccount();
+                              if (context.mounted) {
+                                Navigator.of(context).pop(); // Close the sheet
+                                ref.read(currentBottomTabProvider.notifier).state = BottomTab.home;
+                                rootNavigatorKey.currentState?.pushAndRemoveUntil(
+                                  MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
+                                      (route) => false,
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('$e'),
+                                    backgroundColor: Colors.red,
+                                    duration: const Duration(seconds: 4),
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                          child: const Text(
+                            'Delete My Account',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.grey[300],
+                            minimumSize: const Size.fromHeight(50),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(context.l10n.cancel),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 
 class _StatCard extends StatelessWidget {
   final String label;
