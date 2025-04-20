@@ -444,7 +444,7 @@ _showSignOutConfirmDialog(BuildContext context, WidgetRef ref) {
           onPressed: () async {
             Navigator.of(context).pop(); // Dismiss the dialog
 
-            await Future.delayed(Duration(milliseconds: 200)); // Let animation finish
+            await Future.delayed(const Duration(milliseconds: 200)); // Let animation finish
 
             authController.signOut();
 

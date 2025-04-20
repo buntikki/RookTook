@@ -20,6 +20,7 @@ import 'package:rooktook/src/view/account/profile_screen.dart';
 import 'package:rooktook/src/view/settings/account_preferences_screen.dart';
 import 'package:rooktook/src/view/settings/app_background_mode_screen.dart';
 import 'package:rooktook/src/view/settings/board_settings_screen.dart';
+import 'package:rooktook/src/view/settings/faq_screen.dart';
 import 'package:rooktook/src/view/settings/sound_settings_screen.dart';
 import 'package:rooktook/src/view/settings/theme_settings_screen.dart';
 import 'package:rooktook/src/widgets/adaptive_action_sheet.dart';
@@ -281,6 +282,15 @@ class _Body extends ConsumerWidget {
             },
           ),*/
           PlatformListTile(
+            leading: SvgPicture.asset('assets/images/document.svg'),
+            // leading: const Icon(Icons.article_outlined),
+            title: const Text('FAQs'),
+            trailing: const _OpenInNewIcon(),
+            onTap: () {
+              Navigator.of(context).push(FAQScreen.buildRoute(context));
+            },
+          ),
+          PlatformListTile(
             leading: SvgPicture.asset('assets/images/chat.svg'),
             // leading: const Icon(Icons.feedback_outlined),
             title: Text(context.l10n.mobileFeedbackButton),
@@ -303,7 +313,7 @@ class _Body extends ConsumerWidget {
 
               final Uri emailUri = Uri(
                 scheme: 'mailto',
-                path: 'hello@rooktook.com',
+                path: 'support@rooktook.com',
                 queryParameters: {'subject': 'How may I help you?', 'body': ''},
               );
 
@@ -324,15 +334,7 @@ class _Body extends ConsumerWidget {
               }
             },
           ),
-          /* PlatformListTile(
-            leading: SvgPicture.asset('assets/images/document.svg'),
-            // leading: const Icon(Icons.article_outlined),
-            title: Text(context.l10n.termsOfService),
-            trailing: const _OpenInNewIcon(),
-            onTap: () {
-              launchUrl(Uri.parse('https://www.rooktook.com/'));
-            },
-          ),*/
+
           PlatformListTile(
             leading: SvgPicture.asset('assets/images/shieldDone.svg'),
             // leading: const Icon(Icons.privacy_tip_outlined),
