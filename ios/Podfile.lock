@@ -233,6 +233,9 @@ PODS:
     - Flutter
   - wakelock_plus (0.0.1):
     - Flutter
+  - webview_flutter_wkwebview (0.0.1):
+    - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
@@ -262,6 +265,7 @@ DEPENDENCIES:
   - stockfish (from `.symlinks/plugins/stockfish/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - wakelock_plus (from `.symlinks/plugins/wakelock_plus/ios`)
+  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -345,6 +349,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   wakelock_plus:
     :path: ".symlinks/plugins/wakelock_plus/ios"
+  webview_flutter_wkwebview:
+    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
   app_settings: 58017cd26b604ae98c3e65acbdd8ba173703cc82
@@ -398,6 +404,7 @@ SPEC CHECKSUMS:
   stockfish: d00cf6b95579f1d7032cbfd8e4fe874972fe2ff9
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   wakelock_plus: 373cfe59b235a6dd5837d0fb88791d2f13a90d56
+  webview_flutter_wkwebview: a4af96a051138e28e29f60101d094683b9f82188
 
 PODFILE CHECKSUM: 66791031430cdcb0135ea4c6d612990a0f405ca5
 

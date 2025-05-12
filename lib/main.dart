@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -8,9 +10,13 @@ import 'package:rooktook/src/init.dart';
 import 'package:rooktook/src/intl.dart';
 import 'package:rooktook/src/log.dart';
 import 'package:rooktook/src/model/common/service/sound_service.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+
 
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
   final lichessBinding = AppLichessBinding.ensureInitialized();
 
   // Show splash screen until app is ready
@@ -18,6 +24,10 @@ Future<void> main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await lichessBinding.preloadSharedPreferences();
+
+  if (Platform.isAndroid) {
+    WebViewPlatform.instance = AndroidWebViewPlatform();
+  }
 
   if (defaultTargetPlatform == TargetPlatform.android) {
     await androidDisplayInitialization(widgetsBinding);
