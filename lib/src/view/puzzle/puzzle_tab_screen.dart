@@ -389,59 +389,59 @@ class _PuzzleMenu extends ConsumerWidget {
     final connectivity = ref.watch(connectivityChangesProvider);
     final bool isOnline = connectivity.value?.isOnline ?? false;
 
-    return SizedBox();
-    // ListSection(
-    //   hasLeading: true,
-    //   children: [
-    //     // _PuzzleMenuListTile(
-    //     //   icon: PuzzleIcons.opening,
-    //     //   title: context.l10n.puzzlePuzzleThemes,
-    //     //   subtitle: context.l10n.mobilePuzzleThemesSubtitle,
-    //     //   onTap: () {
-    //     //     Navigator.of(context).push(PuzzleThemesScreen.buildRoute(context));
-    //     //   },
-    //     // ),
-    //     // Opacity(
-    //     //   opacity: isOnline ? 1 : 0.5,
-    //     //   child: _PuzzleMenuListTile(
-    //     //     icon: LichessIcons.streak,
-    //     //     title: 'Puzzle Streak',
-    //     //     subtitle:
-    //     //         context.l10n.puzzleStreakDescription.characters
-    //     //             .takeWhile((c) => c != '.')
-    //     //             .toString() +
-    //     //         (context.l10n.puzzleStreakDescription.contains('.') ? '.' : ''),
-    //     //     onTap:
-    //     //         isOnline
-    //     //             ? () {
-    //     //               Navigator.of(
-    //     //                 context,
-    //     //                 rootNavigator: true,
-    //     //               ).push(StreakScreen.buildRoute(context));
-    //     //             }
-    //     //             : null,
-    //     //   ),
-    //     // ),
-    //     // Opacity(
-    //     //   opacity: isOnline ? 1 : 0.5,
-    //     //   child: _PuzzleMenuListTile(
-    //     //     icon: LichessIcons.storm,
-    //     //     title: 'Puzzle Storm',
-    //     //     subtitle: context.l10n.mobilePuzzleStormSubtitle,
-    //     //     onTap:
-    //     //         isOnline
-    //     //             ? () {
-    //     //               Navigator.of(
-    //     //                 context,
-    //     //                 rootNavigator: true,
-    //     //               ).push(StormScreen.buildRoute(context));
-    //     //             }
-    //     //             : null,
-    //     //   ),
-    //     // ),
+    return
+    ListSection(
+      hasLeading: true,
+      children: [
+        // _PuzzleMenuListTile(
+        //   icon: PuzzleIcons.opening,
+        //   title: context.l10n.puzzlePuzzleThemes,
+        //   subtitle: context.l10n.mobilePuzzleThemesSubtitle,
+        //   onTap: () {
+        //     Navigator.of(context).push(PuzzleThemesScreen.buildRoute(context));
+        //   },
+        // ),
+        // Opacity(
+        //   opacity: isOnline ? 1 : 0.5,
+        //   child: _PuzzleMenuListTile(
+        //     icon: LichessIcons.streak,
+        //     title: 'Puzzle Streak',
+        //     subtitle:
+        //         context.l10n.puzzleStreakDescription.characters
+        //             .takeWhile((c) => c != '.')
+        //             .toString() +
+        //         (context.l10n.puzzleStreakDescription.contains('.') ? '.' : ''),
+        //     onTap:
+        //         isOnline
+        //             ? () {
+        //               Navigator.of(
+        //                 context,
+        //                 rootNavigator: true,
+        //               ).push(StreakScreen.buildRoute(context));
+        //             }
+        //             : null,
+        //   ),
+        // ),
+        Opacity(
+          opacity: isOnline ? 1 : 0.5,
+          child: _PuzzleMenuListTile(
+            icon: LichessIcons.storm,
+            title: 'Puzzle Storm',
+            subtitle: context.l10n.mobilePuzzleStormSubtitle,
+            onTap:
+                isOnline
+                    ? () {
+                      Navigator.of(
+                        context,
+                        rootNavigator: true,
+                      ).push(StormScreen.buildRoute(context));
+                    }
+                    : null,
+          ),
+        ),
   
-    //   ],
-    // );
+      ],
+    );
 
   }
 }
