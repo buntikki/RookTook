@@ -180,7 +180,7 @@ class NewProfileScreen extends ConsumerWidget {
                       icon: 'assets/images/star.svg',
                       title: 'Rate this App',
                       onTap: () {
-                        launchUrl(Uri.parse('https://rooktook.com'));
+                        launchUrl(Uri.parse('https://onelink.to/u9ktwp'));
                       },
                     ),
                   ],
