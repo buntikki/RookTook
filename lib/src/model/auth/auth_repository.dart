@@ -105,8 +105,8 @@ class AuthRepository {
 
   Future<AuthSessionState> signInWithPassword(String username, String password) async {
     final body = {
-      "username": username,
-      "password": password
+      'username': username,
+      'password': password
     };
 
     // Make the login API call

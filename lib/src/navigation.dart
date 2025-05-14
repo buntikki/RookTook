@@ -18,7 +18,7 @@ enum BottomTab {
   home,
   puzzles,
   // tools,
-  //tournament,
+  tournament,
   //watch,
   settings;
 
@@ -30,8 +30,8 @@ enum BottomTab {
         return strings.mobilePuzzlesTab;
       // case BottomTab.tools:
       //   return strings.mobileToolsTab;
-      // case BottomTab.tournament:
-      //   return strings.tournament;
+      case BottomTab.tournament:
+        return strings.tournament;
       // case BottomTab.watch:
       //   return strings.mobileWatchTab;
       case BottomTab.settings:
@@ -48,8 +48,8 @@ enum BottomTab {
         return 'assets/images/puzzle.svg';
 
       // return Icons.extension_outlined;
-      // case BottomTab.tournament:
-      //   return 'assets/images/tournament.svg';
+      case BottomTab.tournament:
+        return 'assets/images/tournament.svg';
 
       // return Icons.emoji_events_outlined;
       // case BottomTab.tools:
@@ -69,8 +69,8 @@ enum BottomTab {
         return Icons.home;
       case BottomTab.puzzles:
         return Icons.extension;
-      // case BottomTab.tournament:
-      //   return Icons.emoji_events;
+      case BottomTab.tournament:
+        return Icons.emoji_events;
       // case BottomTab.tools:
       //   return Icons.handyman;
       // case BottomTab.watch:
@@ -90,8 +90,8 @@ final currentNavigatorKeyProvider = Provider<GlobalKey<NavigatorState>>((ref) {
       return homeNavigatorKey;
     case BottomTab.puzzles:
       return puzzlesNavigatorKey;
-    // case BottomTab.tournament:
-    //   return toolsNavigatorKey;
+    case BottomTab.tournament:
+      return toolsNavigatorKey;
     // case BottomTab.tools:
     //   return toolsNavigatorKey;
     // case BottomTab.watch:
@@ -108,8 +108,8 @@ final currentRootScrollControllerProvider = Provider<ScrollController>((ref) {
       return homeScrollController;
     case BottomTab.puzzles:
       return puzzlesScrollController;
-    // case BottomTab.tournament:
-    //   return toolsScrollController;
+    case BottomTab.tournament:
+      return toolsScrollController;
     // case BottomTab.watch:
     //   return watchScrollController;
     case BottomTab.settings:
@@ -119,13 +119,13 @@ final currentRootScrollControllerProvider = Provider<ScrollController>((ref) {
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 final puzzlesNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'puzzles');
-//final toolsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tools');
+final toolsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tools');
 //final watchNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'watch');
 final settingsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'settings');
 
 final homeScrollController = ScrollController(debugLabel: 'HomeScroll');
 final puzzlesScrollController = ScrollController(debugLabel: 'PuzzlesScroll');
-//final toolsScrollController = ScrollController(debugLabel: 'ToolsScroll');
+final toolsScrollController = ScrollController(debugLabel: 'ToolsScroll');
 //final watchScrollController = ScrollController(debugLabel: 'WatchScroll');
 final settingsScrollController = ScrollController(debugLabel: 'SettingsScroll');
 
@@ -143,7 +143,7 @@ final puzzlesTabInteraction = _BottomTabInteraction();
 
 /// A [ChangeNotifier] that can be used to notify when the Tools tab is tapped, and all the built interactions
 /// (pop stack, scroll to top) are done.
-//final toolsTabInteraction = _BottomTabInteraction();
+final toolsTabInteraction = _BottomTabInteraction();
 
 /// A [ChangeNotifier] that can be used to notify when the Watch tab is tapped, and all the built in
 /// interactions (pop stack, scroll to top) are done.
@@ -184,10 +184,10 @@ class BottomNavScaffold extends ConsumerWidget {
                 return NavigationBar(
                   labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>((states) {
                     return TextStyle(
-                      color: states.contains(MaterialState.selected) ? Color(0xff54C339) : null,
+                      color: states.contains(MaterialState.selected) ? const Color(0xff54C339) : null,
                     );
                   }),
-                  backgroundColor: Color(0xFF13191D),
+                  backgroundColor: const Color(0xFF13191D),
                   indicatorColor: Colors.transparent,
                   selectedIndex: currentTab.index,
                   destinations: [
@@ -197,7 +197,7 @@ class BottomNavScaffold extends ConsumerWidget {
                           tab.icon,
                           height: 24,
                           width: 24,
-                          color: tab == currentTab ? Color(0xff54C339) : null,
+                          color: tab == currentTab ? const Color(0xff54C339) : null,
                         ),
                         // Icon(
                         //   tab == currentTab ? tab.activeIcon : tab.icon,
@@ -219,7 +219,7 @@ class BottomNavScaffold extends ConsumerWidget {
             tabBuilder: _iOSTabBuilder,
             controller: _cupertinoTabController,
             tabBar: CupertinoTabBar(
-              activeColor: Color(0xff54C339),
+              activeColor: const Color(0xff54C339),
               currentIndex: currentTab.index,
               items: [
                 for (final tab in BottomTab.values)
@@ -228,7 +228,7 @@ class BottomNavScaffold extends ConsumerWidget {
                       tab.icon,
                       height: 24,
                       width: 25,
-                      color: tab == currentTab ? Color(0xff54C339) : null,
+                      color: tab == currentTab ? const Color(0xff54C339) : null,
                     ),
                     // Icon(tab == currentTab ? tab.activeIcon : tab.icon),
                     label: tab.label(context.l10n),
@@ -276,8 +276,8 @@ class BottomNavScaffold extends ConsumerWidget {
             homeTabInteraction.notifyItemTapped();
           case BottomTab.puzzles:
             puzzlesTabInteraction.notifyItemTapped();
-          // case BottomTab.tournament:
-          //   toolsTabInteraction.notifyItemTapped();
+          case BottomTab.tournament:
+            toolsTabInteraction.notifyItemTapped();
           /*case BottomTab.watch:
             watchTabInteraction.notifyItemTapped();*/
           case BottomTab.settings:
@@ -304,20 +304,20 @@ Widget _androidTabBuilder(BuildContext context, int index) {
         tab: BottomTab.puzzles,
         builder: (context) => const PuzzleTabScreen(),
       );
-    // case 2:
-    //   return _MaterialTabView(
-    //     navigatorKey: toolsNavigatorKey,
-    //     tab: BottomTab.tournament,
-    //     builder: (context) => TournamentScreen(),
-    //     // builder: (context) => const ToolsTabScreen(),
-    //   );
+    case 2:
+      return _MaterialTabView(
+        navigatorKey: toolsNavigatorKey,
+        tab: BottomTab.tournament,
+        builder: (context) => const TournamentScreen(),
+        // builder: (context) => const ToolsTabScreen(),
+      );
     // case 3:
     //   return _MaterialTabView(
     //     navigatorKey: watchNavigatorKey,
     //     tab: BottomTab.watch,
     //     builder: (context) => const WatchTabScreen(),
     //   );
-    case 2:
+    case 3:
       return _MaterialTabView(
         navigatorKey: settingsNavigatorKey,
         tab: BottomTab.settings,
@@ -343,20 +343,20 @@ Widget _iOSTabBuilder(BuildContext context, int index) {
         navigatorKey: puzzlesNavigatorKey,
         builder: (context) => const PuzzleTabScreen(),
       );
-    // case 2:
-    //   return CupertinoTabView(
-    //     defaultTitle: context.l10n.mobileToolsTab,
-    //     navigatorKey: toolsNavigatorKey,
-    //     // builder: (context) => const ToolsTabScreen(),
-    //     builder: (context) => TournamentScreen(),
-    //   );
+    case 2:
+      return CupertinoTabView(
+        defaultTitle: context.l10n.mobileToolsTab,
+        navigatorKey: toolsNavigatorKey,
+        // builder: (context) => const ToolsTabScreen(),
+        builder: (context) => const TournamentScreen(),
+      );
     // case 3:
     //   return CupertinoTabView(
     //     defaultTitle: context.l10n.mobileWatchTab,
     //     navigatorKey: watchNavigatorKey,
     //     builder: (context) => const WatchTabScreen(),
     //   );
-    case 2:
+    case 3:
       return CupertinoTabView(
         defaultTitle: context.l10n.mobileSettingsTab,
         navigatorKey: settingsNavigatorKey,

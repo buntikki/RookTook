@@ -233,7 +233,6 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                         pageTitle,
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
-
                       const SizedBox(height: 16),
                       Text(
                         helperText,

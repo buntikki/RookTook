@@ -15,9 +15,14 @@ import 'package:rooktook/src/model/correspondence/offline_correspondence_game.da
 import 'package:rooktook/src/model/game/archived_game.dart';
 import 'package:rooktook/src/model/game/game_history.dart';
 import 'package:rooktook/src/model/lobby/game_seek.dart';
+import 'package:rooktook/src/model/puzzle/puzzle.dart';
 import 'package:rooktook/src/model/puzzle/puzzle_angle.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_controller.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_providers.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_service.dart';
 import 'package:rooktook/src/model/puzzle/puzzle_theme.dart';
 import 'package:rooktook/src/model/settings/home_preferences.dart';
+import 'package:rooktook/src/model/user/user.dart';
 import 'package:rooktook/src/model/user/user_repository_providers.dart';
 import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/network/connectivity.dart';
@@ -28,6 +33,7 @@ import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/screen.dart';
 import 'package:rooktook/src/view/account/new_profile_screen.dart';
 import 'package:rooktook/src/view/account/profile_screen.dart';
+import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/correspondence/offline_correspondence_game_screen.dart';
 import 'package:rooktook/src/view/game/game_screen.dart';
 import 'package:rooktook/src/view/game/offline_correspondence_games_screen.dart';
@@ -76,7 +82,6 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     ref.listen(connectivityChangesProvider, (_, connectivity) {
@@ -103,12 +108,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         final session = ref.watch(authSessionProvider);
         final account = ref.watch(accountProvider);
 
-        const puzzlePerfsSet = {Perf.blitz, Perf.rapid};
+        const puzzlePerfsSet = {Perf.blitz, Perf.rapid, Perf.puzzle};
 
-        final userPerfs = puzzlePerfsSet;
+        const userPerfs = puzzlePerfsSet;
 
-        final perf = userPerfs;
-
+        const perf = userPerfs;
+        // print(userPerfs);
         final rapid =
             session == null
                 ? null
@@ -118,6 +123,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                     perf: perf.where((e) => e.title == 'Rapid').first,
                   ),
                 );
+        final puzzle = account.value?.perfs[Perf.puzzle];
         final blitz =
             session == null
                 ? null
@@ -138,10 +144,16 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         final shouldShowWelcomeScreen =
             session == null &&
             recentGames.maybeWhen(data: (data) => data.isEmpty, orElse: () => false);
+        // final puzzlePr = ref.watch(nextPuzzleProvider(const PuzzleTheme(PuzzleThemeKey.mix)));
 
+        // final ctrlProvider = puzzleControllerProvider(puzzlePr.value!);
+        // final puzzleState = ref.watch(ctrlProvider);
+        final puzzleRank = puzzle?.rating ?? 1500;
+        // final puzzleRank = 1750;
         final widgets =
             shouldShowWelcomeScreen
                 ? _welcomeScreenWidgets(
+                  puzzleRank: puzzleRank,
                   session: session,
                   status: status,
                   isTablet: isTablet,
@@ -170,6 +182,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   nbOfGames: nbOfGames,
                 )
                 : _welcomeScreenWidgets(
+                  puzzleRank: puzzleRank,
                   rapidRank:
                       session != null
                           ? rapid!.value != null
@@ -341,7 +354,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-        /*  floatingActionButton:
+          /*  floatingActionButton:
               isTablet
                   ? null
                   : FloatingActionButton.extended(
@@ -435,6 +448,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required int nbOfGames,
     required int rapidRank,
     required int blitzRank,
+    required int puzzleRank,
   }) {
     // fetch the account user to be sure we have the latest data (flair, etc.)
     final accountUser = ref
@@ -458,9 +472,9 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ElevatedButton.icon(
-          label: Text(
+          label: const Text(
             'PLAY NOW',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14.0,),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14.0),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xff54C339),
@@ -488,7 +502,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
             rootNavigator: true,
           ).push(PuzzleScreen.buildRoute(context, angle: const PuzzleTheme(PuzzleThemeKey.mix)));
         },
-        child: const ChessPuzzleScreen(),
+        child: ChessPuzzleScreen(puzzleRank: puzzleRank),
       ),
       RecentGamesWidget(
         recentGames: recentGames,
@@ -638,7 +652,8 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
 }
 
 class ChessPuzzleScreen extends StatelessWidget {
-  const ChessPuzzleScreen({super.key});
+  const ChessPuzzleScreen({super.key, required this.puzzleRank});
+  final int puzzleRank;
 
   @override
   Widget build(BuildContext context) {
@@ -662,12 +677,12 @@ class ChessPuzzleScreen extends StatelessWidget {
                 ),
 
                 // Right side - Information
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'Solve Puzzles',
                         style: TextStyle(
                           fontSize: 16,
@@ -675,9 +690,17 @@ class ChessPuzzleScreen extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      Text(
+                      const Text(
                         'Continue Your Journey!',
                         style: TextStyle(fontSize: 12, color: Color(0xFF7E8899)),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        spacing: 8,
+                        children: [
+                          Image.asset('assets/images/flip.png', height: 24),
+                          Text('$puzzleRank', style: const TextStyle(color: Colors.white)),
+                        ],
                       ),
                     ],
                   ),
@@ -755,14 +778,14 @@ class GameTypeBottomSheet extends ConsumerWidget {
             ),
           ),
           const Divider(color: Colors.grey, height: 1),
-          SizedBox(height: 25),
+          const SizedBox(height: 25),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:  22,),
+            padding: const EdgeInsets.symmetric(horizontal: 22),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child:  GameTypeCard(
+                  child: GameTypeCard(
                     icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
                     title: 'Play',
                     subtitle: 'Blitz',
@@ -777,10 +800,11 @@ class GameTypeBottomSheet extends ConsumerWidget {
                         ),
                       );
                     },
-                  ),),
-                SizedBox(width: 25),
+                  ),
+                ),
+                const SizedBox(width: 25),
                 Expanded(
-                  child:  GameTypeCard(
+                  child: GameTypeCard(
                     icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
                     title: 'Play',
                     subtitle: 'Blitz',
@@ -803,7 +827,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
 
           // Game options
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:  22,vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
             child: Wrap(
               runSpacing: 10,
               spacing: 25,
@@ -910,42 +934,45 @@ class ChessRatingCards extends StatelessWidget {
     required String title,
     required String rating,
   }) {
-    return Container(
-      // width: 140,
-      // height: 135,
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.0)),
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: iconColor,
-              // borderRadius: BorderRadius.circular(8.0),
-              shape: BoxShape.circle,
-            ),
-            padding: const EdgeInsets.all(8.0),
-            child: icon,
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
-              Text(
-                rating,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+    return ClipPath(
+      clipper: ContainerClipper(),
+      child: Container(
+        // width: 140,
+        // height: 135,
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.0)),
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: iconColor,
+                // borderRadius: BorderRadius.circular(8.0),
+                shape: BoxShape.circle,
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
-        ],
+              padding: const EdgeInsets.all(8.0),
+              child: icon,
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                Text(
+                  rating,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+          ],
+        ),
       ),
     );
   }
@@ -973,14 +1000,17 @@ class GameTypeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: 111,
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-        child: Stack(
-          children: [
-            // Content
-            Padding(
+      child: Stack(
+        children: [
+          ClipPath(
+            clipper: ContainerClipper(),
+            child: Container(
+              height: 111,
               padding: const EdgeInsets.only(left: 16, top: 16, right: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1011,33 +1041,35 @@ class GameTypeCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Spacer(),
-                      Text(type, style: TextStyle(color: Color(0xff959494),fontWeight: FontWeight.bold,)),
+                      const Spacer(),
+                      Text(
+                        type,
+                        style: const TextStyle(
+                          color: Color(0xff959494),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
-
-            // Arrow button
-            Positioned(
-              top: 8,
-              right: 8,
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
-                  ],
-                ),
-                child: const Icon(Icons.arrow_outward, color: Colors.black, size: 20),
+          ),
+          Positioned(
+            top: 0,
+            right: 12,
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
               ),
+              child: const Icon(Icons.arrow_outward, color: Colors.black, size: 20),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

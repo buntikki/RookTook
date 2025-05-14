@@ -31,14 +31,12 @@ class UserActivityWidget extends ConsumerWidget {
     return activity.when(
       data: (data) {
         //final nonEmptyActivities = data.where((entry) => entry.isNotEmpty);
+        final filteredActivities =
+            data.where((entry) {
+              if (!entry.isNotEmpty || entry.games == null) return false;
 
-        final filteredActivities = data.where((entry) {
-          if (!entry.isNotEmpty || entry.games == null) return false;
-
-          return entry.games!.keys.any((perf) =>
-          perf == Perf.rapid || perf == Perf.blitz);
-        }).toList();
-
+              return entry.games!.keys.any((perf) => perf == Perf.rapid || perf == Perf.blitz);
+            }).toList();
         if (filteredActivities.isEmpty) {
           return const SizedBox.shrink();
         }
@@ -47,7 +45,7 @@ class UserActivityWidget extends ConsumerWidget {
           header: Text(context.l10n.activityActivity, style: Styles.sectionTitle),
           hasLeading: true,
           children:
-          filteredActivities.take(10).map((entry) => UserActivityEntry(entry: entry)).toList(),
+              filteredActivities.take(10).map((entry) => UserActivityEntry(entry: entry)).toList(),
         );
       },
       error: (error, stackTrace) {
@@ -82,7 +80,6 @@ class UserActivityEntry extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-
         Padding(
           padding: const EdgeInsets.only(left: 14.0, top: 16.0, right: 14.0, bottom: 4.0),
           child: Text(
@@ -99,7 +96,7 @@ class UserActivityEntry extends ConsumerWidget {
                         ? Image.asset('assets/images/rapid_game.png', height: 20, width: 20)
                         : gameEntry.key.title == 'Blitz'
                         ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
-                        : SizedBox(),
+                        : const SizedBox(),
 
                 title: context.l10n.activityPlayedNbGames(
                   gameEntry.value.win + gameEntry.value.draw + gameEntry.value.loss,

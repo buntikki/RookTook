@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/common/perf.dart';
+import 'package:rooktook/src/model/game/game_bookmarks.dart';
 import 'package:rooktook/src/model/user/user.dart';
 import 'package:rooktook/src/styles/lichess_icons.dart';
 import 'package:rooktook/src/styles/styles.dart';
@@ -37,7 +38,6 @@ class PerfCards extends StatelessWidget {
           return p != null && p.numberOfGamesOrRuns > 0 && p.ratingDeviation < kClueLessDeviation;
         })
         .toList(growable: false);
-
     gamePerfs.sort(
       (p1, p2) =>
           user.perfs[p2]!.numberOfGamesOrRuns.compareTo(user.perfs[p1]!.numberOfGamesOrRuns),
@@ -77,6 +77,7 @@ class PerfCards extends StatelessWidget {
               final perf = userPerfs[index];
               final userPerf = user.perfs[perf]!;
               final bool isPerfWithoutStats = Perf.streak == perf;
+              print(user.perfs);
               return SizedBox(
                 height: 100,
                 width: 100,
