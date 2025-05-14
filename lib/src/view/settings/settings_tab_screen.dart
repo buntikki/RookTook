@@ -293,7 +293,7 @@ class _Body extends ConsumerWidget {
           PlatformListTile(
             leading: SvgPicture.asset('assets/images/chat.svg'),
             // leading: const Icon(Icons.feedback_outlined),
-            title: Text(context.l10n.mobileFeedbackButton),
+            title: Text('Support'),
             trailing: const _OpenInNewIcon(),
             onTap: () async {
               // final Uri emailUri = Uri(

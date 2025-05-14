@@ -44,7 +44,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         loading: () => const SizedBox.shrink(),
         error: (error, _) => const SizedBox.shrink(),
       ),
-   /*   appBarActions: [
+      /*   appBarActions: [
         AppBarIconButton(
           icon: const Icon(Icons.edit),
           semanticsLabel: context.l10n.editProfile,
@@ -90,7 +90,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     : ListView(
                       children: [
                         // UserProfileWidget(user: user),
-                        // const AccountPerfCards(),
+                        const AccountPerfCards(),
                         if (user.count != null && user.count!.bookmark > 0)
                           ListSection(
                             hasLeading: true,
@@ -112,9 +112,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         const UserActivityWidget(),
                         RecentGamesWidget(
                           textColor: Colors.white,
-                          color: Color(0xff2B2D30),
+                          color: const Color(0xff2B2D30),
                           titleColor: Colors.white,
-                          tileColor: Color(0xff2B2D30),
+                          tileColor: const Color(0xff2B2D30),
                           recentGames: recentGames,
                           nbOfGames: nbOfGames,
                           user: null,

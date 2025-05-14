@@ -112,7 +112,7 @@ class _Title extends ConsumerWidget {
       PuzzleTheme(themeKey: final key) =>
       // key == PuzzleThemeKey.mix
       // ?
-      Text('Puzzles'),
+      const Text('Puzzles'),
       // : Text(key.l10n(context.l10n).name),
       PuzzleOpening(key: final key) => ref
           .watch(puzzleOpeningNameProvider(key))
@@ -343,7 +343,7 @@ class _Body extends ConsumerWidget {
                   onStreak: false,
                 ),
               ),
-              bottomTable: Column(
+              bottomTable: const Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // if (puzzleState.glicko != null)
@@ -462,13 +462,13 @@ class _BottomBarState extends ConsumerState<_BottomBar> {
             height: 54,
             width: 140,
             decoration: BoxDecoration(
-              color: Color(0xff54C339),
+              color: const Color(0xff54C339),
               borderRadius: BorderRadius.circular(12),
             ),
             child: ElevatedButton.icon(
               iconAlignment: IconAlignment.end, // Changed to center
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xff54C339),
+                backgroundColor: const Color(0xff54C339),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 alignment: Alignment.center, // Added alignment center
               ),
@@ -481,7 +481,7 @@ class _BottomBarState extends ConsumerState<_BottomBar> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Next', style: TextStyle(color: Colors.white,fontWeight: FontWeight.w800)),
+                  Text('Next', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
                   SizedBox(width: 10),
                   Icon(Icons.arrow_forward, color: Colors.white),
                 ],
@@ -566,7 +566,8 @@ class _BottomBarState extends ConsumerState<_BottomBar> {
             //   BottomBarButton(
             //     onTap:
             //         puzzleState.mode == PuzzleMode.view && puzzleState.nextContext != null
-            //             ? () => ref.read(ctrlProvider.notifier).onLoadPuzzle(puzzleState.nextContext!)
+            //             ? () =>
+            //                 ref.read(ctrlProvider.notifier).onLoadPuzzle(puzzleState.nextContext!)
             //             : null,
             //     highlighted: true,
             //     label: context.l10n.puzzleContinueTraining,

@@ -223,7 +223,7 @@ Future<void> _stormInfoDialogBuilder(BuildContext context) {
               TextSpan(text: '• 12 moves: +5s\n'),
               TextSpan(text: '• 20 moves: +7s\n'),
               TextSpan(text: '• 30 moves: +10s\n'),
-              TextSpan(text: '• Then +10s every 10 other moves.\n'),
+              TextSpan(text: '\n'),
               TextSpan(text: '\n'),
               TextSpan(
                 text:

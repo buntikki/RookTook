@@ -94,10 +94,10 @@ extension CustomThemeBuildContext on BuildContext {
   final boardTheme = boardPrefs.boardTheme;
   final systemScheme = getDynamicColorSchemes();
   final hasSystemColors = systemScheme != null && generalPrefs.systemColors == true;
-  final defaultLight = ColorScheme.fromSeed(seedColor: Color(0xffD0D7DD));
+  final defaultLight = ColorScheme.fromSeed(seedColor: const Color(0xffD0D7DD));
   //  boardTheme.colors.darkSquare);
   final defaultDark = ColorScheme.fromSeed(
-    seedColor: Color(0xffD0D7DD),
+    seedColor: const Color(0xffD0D7DD),
     // boardTheme.colors.darkSquare,
     brightness: Brightness.dark,
   );
@@ -116,7 +116,7 @@ extension CustomThemeBuildContext on BuildContext {
     primaryColor: themeLight.colorScheme.primary,
     primaryContrastingColor: themeLight.colorScheme.onPrimary,
     brightness: Brightness.light,
-    scaffoldBackgroundColor: Color(0xFF13191D),
+    scaffoldBackgroundColor: const Color(0xFF13191D),
     // scaffoldBackgroundColor: Colors.green,
     barBackgroundColor: const Color(0xE6F9F9F9),
     textTheme: cupertinoTextTheme(themeLight.colorScheme),
@@ -127,8 +127,8 @@ extension CustomThemeBuildContext on BuildContext {
     primaryColor: Colors.white,
     primaryContrastingColor: themeDark.colorScheme.onPrimary,
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: Color(0xFF13191D),
-    barBackgroundColor: Color(0xFF13191D),
+    scaffoldBackgroundColor: const Color(0xFF13191D),
+    barBackgroundColor: const Color(0xFF13191D),
     textTheme: cupertinoTextTheme(themeDark.colorScheme),
   );
 
@@ -206,7 +206,7 @@ extension CustomThemeBuildContext on BuildContext {
     primaryContrastingColor: onPrimary,
     brightness: Brightness.dark,
     textTheme: cupertinoTextTheme(baseTheme.colorScheme),
-    scaffoldBackgroundColor: Color(0xFF13191D),
+    scaffoldBackgroundColor: const Color(0xFF13191D),
     barBackgroundColor: baseTheme.colorScheme.surface.withValues(alpha: 0.6),
     applyThemeToAll: true,
   );
@@ -256,7 +256,7 @@ extension CustomThemeBuildContext on BuildContext {
                 ),
               ),
             ),
-    scaffoldBackgroundColor: Color(0xFF13191D),
+    scaffoldBackgroundColor: const Color(0xFF13191D),
     appBarTheme: baseTheme.appBarTheme.copyWith(backgroundColor: seedColor.withValues(alpha: 0.5)),
     splashFactory: isIOS ? NoSplash.splashFactory : null,
     pageTransitionsTheme: PageTransitionsTheme(

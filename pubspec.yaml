@@ -2,7 +2,7 @@ name: rooktook
 description: RookTook
 publish_to: "none"
 
-version: 0.1.0+2 # See README.md for details about versioning
+version: 0.1.0+3 # See README.md for details about versioning
 
 environment:
   sdk: '^3.8.0-70.0'
@@ -91,6 +91,8 @@ dependencies:
   random_avatar: ^0.0.8
   lottie: ^3.3.1
   font_awesome_flutter:
+  webview_flutter: ^4.11.0
+  webview_flutter_android: ^4.4.1
 
 dev_dependencies:
   build_runner: ^2.3.2
