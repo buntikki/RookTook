@@ -1,6 +1,10 @@
+import 'dart:ffi';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rooktook/src/view/wallet/wallet_add_coins_page.dart';
+import 'package:rooktook/src/view/wallet/wallet_ledger_page.dart';
 
 class WalletPage extends StatelessWidget {
   const WalletPage({super.key});
@@ -35,7 +39,7 @@ class WalletPage extends StatelessWidget {
                       spacing: 16,
                       children: [
                         SvgPicture.asset(
-                          'assets/images/svg/silver_coin.svg',
+                          'assets/images/svg/${index == 0 ? 'silver' : 'gold'}_coin.svg',
                           height: 40,
                           width: 40,
                         ),
@@ -50,7 +54,7 @@ class WalletPage extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'Silver coins'.toUpperCase(),
+                              '${index == 0 ? 'silver' : 'gold'} coins'.toUpperCase(),
                               style: const TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12,
@@ -61,15 +65,29 @@ class WalletPage extends StatelessWidget {
                         ),
                         MaterialButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const WalletAddCoinsPage()),
-                            );
+                            if (index == 0) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const WalletAddCoinsPage()),
+                              );
+                            } else {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) {
+                                  return const ConvertCoinsSheet();
+                                },
+                              );
+                            }
                           },
                           minWidth: double.infinity,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           color: const Color(0xff54C339),
-                          child: const Text('Add Coins'),
+                          child: Text(
+                            (index == 0 ? 'Add Coins' : 'Convert Coins').toUpperCase(),
+                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
+                          ),
                         ),
                       ],
                     ),
@@ -78,77 +96,317 @@ class WalletPage extends StatelessWidget {
               }),
             ),
             Expanded(
-              child: Container(
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  color: const Color(0xffF4F4F4),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-                      child: Text(
-                        'Ledger',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18,
-                          color: Color(0xff222222),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const WalletLedgerPage()),
+                  );
+                },
+                child: Container(
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffF4F4F4),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Ledger',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18,
+                                color: Color(0xff222222),
+                              ),
+                            ),
+                            Container(
+                              width: 36,
+                              height: 36,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(Icons.arrow_outward, color: Colors.black, size: 20),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: 10,
-                        shrinkWrap: true,
-                        separatorBuilder: (context, index) => const SizedBox(height: 8),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            color: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Versus Game', style: TextStyle(color: Color(0xff222222))),
-                                    Text(
-                                      '5 min ago',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff959494),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  spacing: 4,
-                                  children: [
-                                    const Text(
-                                      '+ 500',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xff54C339),
-                                      ),
-                                    ),
-                                    SvgPicture.asset('assets/images/svg/gold_coin.svg'),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                      Expanded(
+                        child: ListView.separated(
+                          itemCount: 10,
+                          shrinkWrap: true,
+                          separatorBuilder: (context, index) => const SizedBox(height: 8),
+                          itemBuilder: (BuildContext context, int index) {
+                            return const LedgerTile();
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ConvertCoinsSheet extends StatelessWidget {
+  const ConvertCoinsSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            margin: const EdgeInsets.only(bottom: 16),
+            decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xff2B2D30)),
+            child: const Icon(Icons.close),
+          ),
+        ),
+
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 24),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: const Color(0xff2B2D30),
+            border: Border.all(color: const Color(0xff464A4F), width: .5),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+          ),
+          child: const Text('Convert', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+        ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(color: Color(0xff2B2D30)),
+          child: Column(
+            spacing: 30,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Available Gold Coins',
+                            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
+                          ),
+                          Row(
+                            spacing: 8,
+                            children: [
+                              const Text(
+                                '+100',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xff54C339),
+                                ),
+                              ),
+                              SvgPicture.asset('assets/images/svg/gold_coin.svg'),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                        color: Color(0xffFCEABD),
+                      ),
+                      child: const Text(
+                        '1 Gold Coin = 25 Silver Coins',
+                        style: TextStyle(color: Color(0xff926C0D)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Row(
+                    spacing: 80,
+                    children: List.generate(2, (index) {
+                      return Expanded(
+                        child: Column(
+                          spacing: 12,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/svg/${index == 0 ? 'gold' : 'silver'}_coin.svg',
+                              height: 24,
+                              width: 24,
+                            ),
+                            Text(
+                              '${index == 0 ? 'Gold' : 'Silver'} Coins',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: const Color(0xff464A4F)),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment:
+                                    index == 0
+                                        ? MainAxisAlignment.spaceBetween
+                                        : MainAxisAlignment.center,
+                                children: [
+                                  if (index == 0)
+                                    Container(
+                                      width: 32,
+                                      height: 32,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xff666666),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Icon(CupertinoIcons.minus, size: 20),
+                                    ),
+                                  const SizedBox(
+                                    height: 32,
+                                    child: Center(
+                                      child: Text(
+                                        '0',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16,
+                                          color: Color(0xff666666),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  if (index == 0)
+                                    Container(
+                                      width: 32,
+                                      height: 32,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xff54C339),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: const Icon(CupertinoIcons.add, size: 20),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 8,
+                    child: Container(
+                      height: 24,
+                      width: 24,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: const Color(0xff464A4F)),
+                      ),
+                      alignment: Alignment.center,
+                      child: const Icon(CupertinoIcons.equal, size: 16),
+                    ),
+                  ),
+                ],
+              ),
+              MaterialButton(
+                color: const Color(0xff54C339),
+                minWidth: double.infinity,
+                height: 54,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                onPressed: () {},
+                child: const Text('CONVERT', style: TextStyle(fontWeight: FontWeight.w800)),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class LedgerTile extends StatelessWidget {
+  const LedgerTile({super.key, this.radius = 0, this.isBorder = false});
+  final double radius;
+  final bool isBorder;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: isBorder ? const Color(0xff2B2D30) : Colors.white,
+        borderRadius: BorderRadius.circular(radius),
+        border: isBorder ? Border.all(color: const Color(0xff464A4F), width: .5) : null,
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Versus Game',
+                style: TextStyle(
+                  color: isBorder ? const Color(0xffEFEDED) : const Color(0xff222222),
+                ),
+              ),
+              const Text(
+                '5 min ago',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Color(0xff959494),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            spacing: 4,
+            children: [
+              const Text(
+                '+ 500',
+                style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff54C339)),
+              ),
+              SvgPicture.asset('assets/images/svg/gold_coin.svg'),
+            ],
+          ),
+        ],
       ),
     );
   }

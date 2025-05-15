@@ -12,7 +12,7 @@ class WalletAddCoinsPage extends StatelessWidget {
         title: const Text('Wallet', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 24)),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           spacing: 40,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,6 +82,7 @@ class WalletAddCoinsPage extends StatelessWidget {
                 Row(
                   spacing: 8,
                   children: List.generate(4, (index) {
+                    List<int> values = [10, 20, 50, 100];
                     return Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(16),
@@ -90,17 +91,21 @@ class WalletAddCoinsPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: const Color(0xff464A4F)),
                         ),
-                        child: const Column(
+                        child: Column(
                           children: [
-                            Text(
-                              '+',
+                            const Text(
+                              '₹',
                               style: TextStyle(fontSize: 24, color: Color(0xff54C339), height: 0),
                             ),
                             Text(
-                              '10',
-                              style: TextStyle(fontSize: 24, color: Color(0xffEFEDED), height: 0),
+                              values[index].toString(),
+                              style: const TextStyle(
+                                fontSize: 24,
+                                color: Color(0xffEFEDED),
+                                height: 0,
+                              ),
                             ),
-                            Text(
+                            const Text(
                               'COINS',
                               style: TextStyle(
                                 fontSize: 12,
@@ -150,19 +155,27 @@ class WalletAddCoinsPage extends StatelessWidget {
                     ),
                   ),
                   ListView.separated(
-                    itemCount: 10,
+                    itemCount: 5,
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     separatorBuilder: (context, index) => const SizedBox(height: 8),
                     itemBuilder: (BuildContext context, int index) {
+                      final List<String> titles = [
+                        'Deposit Amount',
+                        'Govt. Tax (28% GST)',
+                        'Total',
+                        'Discount',
+                        'Total Pay',
+                      ];
+                      final String title = titles[index];
                       return Container(
                         color: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Deposit Amount', style: TextStyle(color: Color(0xff222222))),
-                            Text(
+                            Text(title, style: const TextStyle(color: Color(0xff222222))),
+                            const Text(
                               '₹ 500',
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,

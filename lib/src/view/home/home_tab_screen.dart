@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/account/account_repository.dart';
 import 'package:rooktook/src/model/account/ongoing_game.dart';
@@ -299,15 +300,14 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               //   icon: Icon(isEditing ? Icons.save_outlined : Icons.app_registration),
               //   tooltip: isEditing ? 'Save' : 'Edit',
               // ),
-              // const _ChallengeScreenButton(),
-              IconButton(
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const WalletPage()),
                   );
                 },
-                icon: const Icon(Icons.wallet),
+                child: SvgPicture.asset('assets/images/svg/wallet.svg', height: 36),
               ),
               // const _PlayerScreenButton(),
               Padding(
