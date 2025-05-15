@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rooktook/src/model/tournament/Tournament.dart';
-import 'package:rooktook/src/view/tournament/tournament_card.dart';
-import 'package:rooktook/src/view/tournament/tournament_detail_screen.dart';
+// import 'package:rooktook/src/model/tournament/Tournament.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_card.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
+import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 class TournamentScreen extends ConsumerStatefulWidget {
   const TournamentScreen({super.key});
@@ -17,16 +18,6 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
   late TabController _tabController;
   int _selectedIndex = 0;
 
-  final List<Map<String, dynamic>> tournaments = List.generate(6, (index) {
-    return {
-      'title': 'Chess Tournament ',
-      'entryFee': 200,
-      'userCoins': 1000,
-      'date': 'Apr 11, 2025',
-      'seats': '12/20 Seats Left',
-    };
-  });
-
   final List<String> tabs = ['All Events', 'My Events'];
 
   @override
@@ -37,6 +28,7 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
 
   @override
   Widget build(BuildContext context) {
+    final fetchPr = ref.watch(fetchTournamentsProvider);
     return Scaffold(
       backgroundColor: const Color(0xFF13191D),
       appBar: AppBar(
@@ -49,42 +41,47 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
         //   child: Text('Tournament', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         // ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 8,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0).copyWith(top: 0),
-            child: const Text(
-              'Tournament',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            padding: const EdgeInsets.all(4.0),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2B2D30),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xff464a4f), width: .5),
-            ),
-            child: Row(
-              children: List.generate(tabs.length, (index) {
-                final String tab = tabs[index];
-                return Expanded(child: _buildTabButton(index, tab));
-              }),
-            ),
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
+      body: fetchPr.when(
+        data:
+            (data) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8,
               children: [
-                _buildTournamentList(),
-                _buildTournamentList(), // duplicate for now
+                Padding(
+                  padding: const EdgeInsets.all(16.0).copyWith(top: 0),
+                  child: const Text(
+                    'Tournament',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2B2D30),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xff464a4f), width: .5),
+                  ),
+                  child: Row(
+                    children: List.generate(tabs.length, (index) {
+                      final String tab = tabs[index];
+                      return Expanded(child: _buildTabButton(index, tab));
+                    }),
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildTournamentList(data),
+                      _buildTournamentList([]), // duplicate for now
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
+        error: (error, stackTrace) => Text(error.toString()),
+        loading: () => const Center(child: const CircularProgressIndicator()),
       ),
     );
   }
@@ -96,6 +93,7 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
       onTap: () {
         setState(() {
           _selectedIndex = index;
+          _tabController.animateTo(_selectedIndex);
           // filterData(index);
         });
       },
@@ -117,7 +115,7 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
     );
   }
 
-  Widget _buildTournamentList() {
+  Widget _buildTournamentList(List<Tournament> tournaments) {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: tournaments.length,

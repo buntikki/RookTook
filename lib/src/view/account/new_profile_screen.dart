@@ -13,6 +13,7 @@ import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/view/account/profile_screen.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/login_screen.dart';
+import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/widgets/adaptive_action_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -208,17 +209,12 @@ class NewProfileScreen extends ConsumerWidget {
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     minimumSize: const Size.fromHeight(50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
                   onPressed: () => _showDeleteAccountConfirmSheet(context, ref),
                   child: const Text(
                     'Delete Account',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -273,11 +269,7 @@ void _showDeleteAccountConfirmSheet(BuildContext context, WidgetRef ref) {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Icon(
-                      Icons.warning_amber_rounded,
-                      color: Colors.red,
-                      size: 50,
-                    ),
+                    const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 50),
                     const SizedBox(height: 20),
                     Text(
                       'Delete Account',
@@ -290,86 +282,85 @@ void _showDeleteAccountConfirmSheet(BuildContext context, WidgetRef ref) {
                     Text(
                       'This action cannot be undone. Once your account is deleted, you cannot create a new account with the same username and email.',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[300],
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[300]),
                     ),
                     const SizedBox(height: 30),
-                    if (isLoading) Column(
-                      children: [
-                        const CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Deleting account',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white,
+                    if (isLoading)
+                      Column(
+                        children: [
+                          const CircularProgressIndicator(color: Colors.white),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Deleting account',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(color: Colors.white),
                           ),
-                        ),
-                      ],
-                    ) else Column(
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size.fromHeight(50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                        ],
+                      )
+                    else
+                      Column(
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                              minimumSize: const Size.fromHeight(50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                          ),
-                          onPressed: () async {
-                            setState(() {
-                              isLoading = true;
-                            });
+                            onPressed: () async {
+                              setState(() {
+                                isLoading = true;
+                              });
 
-                            try {
-                              await authController.deleteAccount();
-                              if (context.mounted) {
-                                Navigator.of(context).pop(); // Close the sheet
-                                ref.read(currentBottomTabProvider.notifier).state = BottomTab.home;
-                                rootNavigatorKey.currentState?.pushAndRemoveUntil(
-                                  MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
-                                      (route) => false,
-                                );
+                              try {
+                                await authController.deleteAccount();
+                                if (context.mounted) {
+                                  Navigator.of(context).pop(); // Close the sheet
+                                  ref.read(currentBottomTabProvider.notifier).state =
+                                      BottomTab.home;
+                                  rootNavigatorKey.currentState?.pushAndRemoveUntil(
+                                    MaterialPageRoute<void>(builder: (_) => const LoginScreen()),
+                                    (route) => false,
+                                  );
+                                }
+                              } catch (e) {
+                                if (context.mounted) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('$e'),
+                                      backgroundColor: Colors.red,
+                                      duration: const Duration(seconds: 4),
+                                    ),
+                                  );
+                                }
                               }
-                            } catch (e) {
-                              if (context.mounted) {
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('$e'),
-                                    backgroundColor: Colors.red,
-                                    duration: const Duration(seconds: 4),
-                                  ),
-                                );
-                              }
-                            }
-                          },
-                          child: const Text(
-                            'Delete My Account',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                            },
+                            child: const Text(
+                              'Delete My Account',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 15),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.grey[300],
-                            minimumSize: const Size.fromHeight(50),
+                          const SizedBox(height: 15),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.grey[300],
+                              minimumSize: const Size.fromHeight(50),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(context.l10n.cancel),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(context.l10n.cancel),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
                     const SizedBox(height: 10),
                   ],
                 ),
@@ -381,7 +372,6 @@ void _showDeleteAccountConfirmSheet(BuildContext context, WidgetRef ref) {
     },
   );
 }
-
 
 class _StatCard extends StatelessWidget {
   final String label;
@@ -398,35 +388,43 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xff464A4F),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          CircleAvatar(
-            backgroundColor: color,
-            radius: 12,
-            child: Text(labelIcon, style: const TextStyle(color: Colors.white)),
-          ),
-          const SizedBox(height: 10),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              label,
-              maxLines: 1,
-              style: const TextStyle(color: Colors.grey),
-              textAlign: TextAlign.center,
+    return ClipPath(
+      clipper: ContainerClipper(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24).copyWith(bottom: 10),
+        decoration: BoxDecoration(
+          color: const Color(0xff464A4F),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              backgroundColor: color,
+              radius: 12,
+              child: Text(labelIcon, style: const TextStyle(color: Colors.white)),
             ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            '$count',
-            style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ],
+            const SizedBox(height: 10),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                maxLines: 1,
+                style: const TextStyle(color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              '$count',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

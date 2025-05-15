@@ -10,6 +10,7 @@ import 'package:rooktook/src/model/user/user_repository_providers.dart';
 import 'package:rooktook/src/network/connectivity.dart';
 import 'package:rooktook/src/styles/styles.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
+import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/game/game_list_tile.dart';
 import 'package:rooktook/src/view/user/game_history_screen.dart';
 import 'package:rooktook/src/widgets/buttons.dart';
@@ -54,8 +55,8 @@ class RecentGamesWidget extends ConsumerWidget {
     List<int?> getRatingsFromActivity() {
       if (activity.valueOrNull == null) return [];
 
-      final nonEmptyActivities = activity.valueOrNull!.where((entry) =>
-        entry.isNotEmpty && entry.games != null).toList();
+      final nonEmptyActivities =
+          activity.valueOrNull!.where((entry) => entry.isNotEmpty && entry.games != null).toList();
 
       if (nonEmptyActivities.isEmpty) return [];
 
@@ -78,18 +79,17 @@ class RecentGamesWidget extends ConsumerWidget {
 
     return recentGames.when(
       data: (data) {
-        if (data.isEmpty) {
-          return const SizedBox.shrink();
-        }
         //final list = data.take(maxGamesToShow);
 
-        final filtered = data.where((item) =>
-        item.game.perf == Perf.rapid || item.game.perf == Perf.blitz
-        ).toList();
+        final filtered =
+            data
+                .where((item) => item.game.perf == Perf.rapid || item.game.perf == Perf.blitz)
+                .toList();
 
         final list = filtered.take(maxGamesToShow).toList();
-
-
+        if (list.isEmpty) {
+          return const SizedBox.shrink();
+        }
         return Container(
           margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -101,34 +101,13 @@ class RecentGamesWidget extends ConsumerWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0, bottom: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Recent Games',
-                      style: TextStyle(
-                        color: textColor ?? Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    // if (nbOfGames > list.length)
-                    //   NoPaddingTextButton(
-                    //     onPressed: () {
-                    //       Navigator.of(context).push(
-                    //         GameHistoryScreen.buildRoute(
-                    //           context,
-                    //           user: user,
-                    //           isOnline: connectivity.valueOrNull?.isOnline == true,
-                    //         ),
-                    //       );
-                    //     },
-                    //     child: Text(
-                    //       context.l10n.more,
-                    //       style: TextStyle(color: textColor ?? Colors.black),
-                    //     ),
-                    //   ),
-                  ],
+                child: Text(
+                  'Recent Games',
+                  style: TextStyle(
+                    color: textColor ?? Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               ...List.generate(list.length, (i) {
@@ -158,12 +137,13 @@ class RecentGamesWidget extends ConsumerWidget {
           child: Text('Could not load recent games.'),
         );
       },
-      loading: () => Shimmer(
-        child: ShimmerLoading(
-          isLoading: true,
-          child: ListSection.loading(itemsNumber: 10, header: true, hasLeading: true),
-        ),
-      ),
+      loading:
+          () => Shimmer(
+            child: ShimmerLoading(
+              isLoading: true,
+              child: ListSection.loading(itemsNumber: 10, header: true, hasLeading: true),
+            ),
+          ),
     );
   }
 }

@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rooktook/src/model/tournament/Tournament.dart';
-import 'package:rooktook/src/view/tournament/tournament_detail_screen.dart';
+import 'package:intl/intl.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
+import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 class TournamentCard extends StatelessWidget {
   const TournamentCard({
@@ -12,7 +12,7 @@ class TournamentCard extends StatelessWidget {
     this.backgroundColor,
   });
 
-  final Map<String, dynamic> tournament;
+  final Tournament tournament;
   final int index;
   final Color? backgroundColor;
   @override
@@ -22,17 +22,7 @@ class TournamentCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute<TournamentDetailScreen>(
-            builder:
-                (_) => TournamentDetailScreen(
-                  tournament: Tournament(
-                    title: 'Tournament $index',
-                    entryFee: 100 + index,
-                    reward: 250 + index,
-                    date: 'Apr 1$index, 2025',
-                    seatsLeft: '1$index/20 Seats Left',
-                    bannerImage: 'assets/images/chess_tournament_banner.png',
-                  ),
-                ),
+            builder: (_) => TournamentDetailScreen(tournament: tournament),
           ),
         );
       },
@@ -60,7 +50,7 @@ class TournamentCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '${tournament['title']} $index',
+                          tournament.name,
                           maxLines: 2,
                           style: const TextStyle(
                             fontSize: 14,
@@ -73,16 +63,19 @@ class TournamentCard extends StatelessWidget {
                             SvgPicture.asset('assets/images/svg/silver_coin.svg', height: 18.0),
                             const SizedBox(width: 4),
                             Text(
-                              "${tournament['entryFee']} ",
+                              '${tournament.entryCost}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
-                                fontSize: 14.0,
                               ),
                             ),
                             const Text(
-                              'Coin (Entry Fee)',
-                              style: TextStyle(color: Colors.white70, fontWeight: FontWeight.w400),
+                              ' Coin (Entry Fee)',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color(0xff7D8082),
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
                           ],
                         ),
@@ -118,7 +111,7 @@ class TournamentCard extends StatelessWidget {
                           children: [
                             SvgPicture.asset('assets/images/svg/gold_coin.svg', height: 14.0),
                             Text(
-                              "${tournament['userCoins']}",
+                              '${tournament.entryCost}',
                               style: const TextStyle(
                                 color: Color(0xffD4AA40),
                                 fontSize: 12,
@@ -133,7 +126,7 @@ class TournamentCard extends StatelessWidget {
                         children: [
                           SvgPicture.asset('assets/images/svg/tournament_clock.svg', height: 18.0),
                           Text(
-                            tournament['date'] as String,
+                            DateFormat('MMM dd, yyyy').format(DateTime.parse(tournament.startTime)),
                             style: const TextStyle(color: Colors.white70, fontSize: 12),
                           ),
                         ],
@@ -143,7 +136,7 @@ class TournamentCard extends StatelessWidget {
                         children: [
                           SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
                           Text(
-                            tournament['seats'] as String,
+                            '${tournament.maxParticipants}/20 Seats Left',
                             style: const TextStyle(color: Colors.white70, fontSize: 12),
                           ),
                         ],

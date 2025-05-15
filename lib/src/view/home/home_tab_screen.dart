@@ -485,7 +485,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           onPressed: () async {
             showModalBottomSheet(
               context: context,
-              backgroundColor: const Color(0xff464A4F),
+              backgroundColor: const Color(0xff2B2D30),
               isScrollControlled: true,
               showDragHandle: true,
               useSafeArea: true,
@@ -663,7 +663,8 @@ class ChessPuzzleScreen extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xff464A4F),
+              color: const Color(0xff2B2D30),
+              border: Border.all(color: Color(0xff464A4F), width: .5),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -736,7 +737,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
     final session = ref.watch(authSessionProvider);
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xff464A4F),
+        color: const Color(0xff2B2D30),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),

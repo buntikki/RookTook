@@ -9,7 +9,7 @@ import 'package:rooktook/src/view/home/home_tab_screen.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_tab_screen.dart';
 import 'package:rooktook/src/view/settings/settings_tab_screen.dart';
 import 'package:rooktook/src/view/tools/tools_tab_screen.dart';
-import 'package:rooktook/src/view/tournament/tournament_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_screen.dart';
 import 'package:rooktook/src/view/watch/watch_tab_screen.dart';
 import 'package:rooktook/src/widgets/background.dart';
 import 'package:rooktook/src/widgets/feedback.dart';

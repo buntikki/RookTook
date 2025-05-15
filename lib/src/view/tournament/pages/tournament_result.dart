@@ -92,27 +92,14 @@ class TournamentResultCard extends StatelessWidget {
                       ),
                       child: Image.asset('assets/images/profile.png'),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          isUserCard ? 'You are here' : 'MagnusCarlsen Flag',
-                          maxLines: 2,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: isUserCard ? const Color(0xff222222) : Colors.white,
-                          ),
-                        ),
-                        const Text(
-                          '@magnusCarl',
-                          style: TextStyle(
-                            color: Color(0xff959494),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      isUserCard ? 'You are here' : 'MagnusCarlsen',
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: isUserCard ? const Color(0xff222222) : Colors.white,
+                      ),
                     ),
                   ],
                 ),

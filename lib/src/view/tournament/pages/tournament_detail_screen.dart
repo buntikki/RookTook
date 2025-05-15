@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rooktook/src/model/tournament/Tournament.dart';
+import 'package:intl/intl.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/puzzle/storm_screen.dart';
-import 'package:rooktook/src/view/tournament/tournament_result.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_result.dart';
+import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 class TournamentDetailScreen extends StatefulWidget {
   final Tournament tournament;
@@ -47,14 +48,14 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
           spacing: 8,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (tournament.bannerImage != null)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset(tournament.bannerImage!, height: 200, fit: BoxFit.cover),
-              ),
+            // if (tournament.bannerImage != null)
+            //   ClipRRect(
+            //     borderRadius: BorderRadius.circular(12),
+            //     child: Image.asset(tournament.bannerImage!, height: 200, fit: BoxFit.cover),
+            //   ),
             const SizedBox(height: 8),
             Text(
-              tournament.title,
+              tournament.name,
               style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
@@ -68,12 +69,12 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                 _coinCard(
                   icon: 'assets/images/svg/gold_coin.svg',
                   label: 'Reward',
-                  value: '${tournament.reward} C',
+                  value: '${tournament.entryCost} C',
                 ),
                 _coinCard(
                   icon: 'assets/images/svg/silver_coin.svg',
                   label: 'Entry Fee',
-                  value: '${tournament.entryFee} C',
+                  value: '${tournament.entryCost} C',
                 ),
               ],
             ),
@@ -88,21 +89,33 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                 spacing: 24,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    spacing: 4,
-                    children: [
-                      SvgPicture.asset('assets/images/svg/tournament_clock.svg', height: 18.0),
-                      Text(tournament.date, style: const TextStyle(color: Color(0xff7D8082))),
-                    ],
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 4,
+                      children: [
+                        SvgPicture.asset('assets/images/svg/tournament_clock.svg', height: 18.0),
+                        Text(
+                          DateFormat('MMM dd, yyyy').format(DateTime.parse(tournament.startTime)),
+                          style: const TextStyle(color: Color(0xff7D8082)),
+                        ),
+                      ],
+                    ),
                   ),
                   // Vertical divider
                   Container(width: 1, height: 16, color: const Color(0xff464A4F)),
-                  Row(
-                    spacing: 4,
-                    children: [
-                      SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
-                      Text(tournament.seatsLeft, style: const TextStyle(color: Color(0xff7D8082))),
-                    ],
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 4,
+                      children: [
+                        SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
+                        Text(
+                          '${tournament.maxParticipants}/20 Seats Left',
+                          style: const TextStyle(color: Color(0xff7D8082)),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -118,7 +131,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                 Navigator.of(context, rootNavigator: true).push(StormScreen.buildRoute(context));
               },
               child: Text(
-                'JOIN NOW WITH ${tournament.entryFee} COINS',
+                'JOIN NOW WITH ${tournament.entryCost} COINS',
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
               ),
             ),
@@ -130,6 +143,12 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
               ),
               child: Column(
                 children: [
+                  _MenuItem(
+                    icon: 'assets/images/svg/tournament_rules.svg',
+                    title: 'Reward System',
+                    onTap: () => _showHowToPlaySheet(context),
+                  ),
+                  const Divider(color: Colors.white24, height: 1),
                   _MenuItem(
                     icon: 'assets/images/svg/tournament_rules.svg',
                     title: 'Tournament Rules',
