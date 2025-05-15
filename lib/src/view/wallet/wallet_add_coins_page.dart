@@ -7,10 +7,7 @@ class WalletAddCoinsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        title: const Text('Wallet', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 24)),
-      ),
+      appBar: AppBar(surfaceTintColor: Colors.transparent, title: const Text('Add Silver Coin')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -82,10 +79,10 @@ class WalletAddCoinsPage extends StatelessWidget {
                 Row(
                   spacing: 8,
                   children: List.generate(4, (index) {
-                    List<int> values = [10, 20, 50, 100];
+                    final List<int> values = [10, 20, 50, 100];
                     return Expanded(
                       child: Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: const Color(0xff2B2D30),
                           borderRadius: BorderRadius.circular(12),
@@ -94,25 +91,25 @@ class WalletAddCoinsPage extends StatelessWidget {
                         child: Column(
                           children: [
                             const Text(
-                              '₹',
+                              '+',
                               style: TextStyle(fontSize: 24, color: Color(0xff54C339), height: 0),
                             ),
                             Text(
-                              values[index].toString(),
+                              '₹${values[index]}',
                               style: const TextStyle(
                                 fontSize: 24,
                                 color: Color(0xffEFEDED),
                                 height: 0,
                               ),
                             ),
-                            const Text(
-                              'COINS',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Color(0xff7D8082),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            // const Text(
+                            //   'COINS',
+                            //   style: TextStyle(
+                            //     fontSize: 12,
+                            //     color: Color(0xff7D8082),
+                            //     fontWeight: FontWeight.w500,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -123,15 +120,117 @@ class WalletAddCoinsPage extends StatelessWidget {
             ),
             Container(
               clipBehavior: Clip.hardEdge,
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: const Color(0xffF4F4F4),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
+                spacing: 16,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text(
+                    'Summary',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                  ),
+                  Column(
+                    spacing: 4,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('You Pay', style: TextStyle(color: Colors.black)),
+                            Text(
+                              '₹20',
+                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('GST (28%)', style: TextStyle(color: Colors.black)),
+                            Text('₹ -5.6', style: TextStyle(color: Color(0xffF77178))),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Text(
+                    'You Get',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                  ),
+                  Column(
+                    spacing: 4,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Silver Coins', style: TextStyle(color: Color(0xff9A710A))),
+                            Row(
+                              spacing: 4,
+                              children: [
+                                SvgPicture.asset('assets/images/svg/silver_coin.svg'),
+                                const Text(
+                                  '1440',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Bonus Silver Coins', style: TextStyle(color: Colors.black)),
+                            Row(
+                              spacing: 4,
+                              children: [
+                                SvgPicture.asset('assets/images/svg/silver_coin.svg'),
+                                const Text(
+                                  '560',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xff54C339),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                   Container(
-                    margin: const EdgeInsets.all(16),
                     padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                     decoration: BoxDecoration(
                       color: const Color(0xffFCEABD),
@@ -141,56 +240,42 @@ class WalletAddCoinsPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Add to current coins ',
-                          style: TextStyle(color: Color(0xff926C0D)),
+                          'Total Silver Coins',
+                          style: TextStyle(color: Color(0xff222222), fontWeight: FontWeight.w600),
                         ),
                         Row(
                           spacing: 4,
                           children: [
-                            const Text('2000', style: TextStyle(color: Color(0xff222222))),
                             SvgPicture.asset('assets/images/svg/silver_coin.svg'),
+                            const Text(
+                              '2000',
+                              style: TextStyle(
+                                color: Color(0xff222222),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  ListView.separated(
-                    itemCount: 5,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    separatorBuilder: (context, index) => const SizedBox(height: 8),
-                    itemBuilder: (BuildContext context, int index) {
-                      final List<String> titles = [
-                        'Deposit Amount',
-                        'Govt. Tax (28% GST)',
-                        'Total',
-                        'Discount',
-                        'Total Pay',
-                      ];
-                      final String title = titles[index];
-                      return Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(title, style: const TextStyle(color: Color(0xff222222))),
-                            const Text(
-                              '₹ 500',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xff222222),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: MaterialButton(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          height: 54,
+          color: const Color(0xff54C339),
+          onPressed: () {},
+          child: Text(
+            'Proceed to pay'.toUpperCase(),
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
         ),
       ),
     );

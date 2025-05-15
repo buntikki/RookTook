@@ -12,10 +12,7 @@ class WalletPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
-        title: const Text('Wallet', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 24)),
-      ),
+      appBar: AppBar(surfaceTintColor: Colors.transparent, title: const Text('Wallet')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
