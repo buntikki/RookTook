@@ -47,6 +47,7 @@ import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
 import 'package:rooktook/src/view/user/challenge_requests_screen.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/view/user/recent_games.dart';
+import 'package:rooktook/src/view/wallet/wallet_page.dart';
 import 'package:rooktook/src/widgets/buttons.dart';
 import 'package:rooktook/src/widgets/feedback.dart';
 import 'package:rooktook/src/widgets/match_result_popup.dart';
@@ -299,7 +300,15 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               //   tooltip: isEditing ? 'Save' : 'Edit',
               // ),
               // const _ChallengeScreenButton(),
-              // IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const WalletPage()),
+                  );
+                },
+                icon: const Icon(Icons.wallet),
+              ),
               // const _PlayerScreenButton(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
