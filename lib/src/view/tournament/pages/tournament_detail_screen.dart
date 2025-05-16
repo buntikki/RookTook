@@ -314,8 +314,8 @@ class _MenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      splashColor: Colors.red,
-      focusColor: Colors.blueAccent,
+      splashColor: Colors.transparent,
+      focusColor: Colors.transparent,
       leading: SvgPicture.asset(icon),
       title: Text(
         title,

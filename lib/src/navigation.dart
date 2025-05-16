@@ -152,6 +152,12 @@ final toolsTabInteraction = _BottomTabInteraction();
 /// A [ChangeNotifier] that can be used to notify when the Settings tab is tapped, and all the built in
 /// interactions (pop stack, scroll to top) are done.
 final settingsTabInteraction = _BottomTabInteraction();
+final List<Widget> tabs = [
+  HomeTabScreen(),
+  PuzzleTabScreen(),
+  TournamentScreen(),
+  SettingsTabScreen(),
+];
 
 class _BottomTabInteraction extends ChangeNotifier {
   void notifyItemTapped() {
@@ -176,7 +182,7 @@ class BottomNavScaffold extends ConsumerWidget {
       case TargetPlatform.android:
         return FullScreenBackground(
           child: Scaffold(
-            body: _TabSwitchingView(currentTab: currentTab, tabBuilder: _androidTabBuilder),
+            body: IndexedStack(index: currentTab.index, children: tabs),
             bottomNavigationBar: Consumer(
               builder: (context, ref, _) {
                 final isOnline =
@@ -184,7 +190,8 @@ class BottomNavScaffold extends ConsumerWidget {
                 return NavigationBar(
                   labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>((states) {
                     return TextStyle(
-                      color: states.contains(MaterialState.selected) ? const Color(0xff54C339) : null,
+                      color:
+                          states.contains(MaterialState.selected) ? const Color(0xff54C339) : null,
                     );
                   }),
                   backgroundColor: const Color(0xFF13191D),
@@ -216,7 +223,7 @@ class BottomNavScaffold extends ConsumerWidget {
         final isOnline = ref.watch(connectivityChangesProvider).valueOrNull?.isOnline ?? true;
         return FullScreenBackground(
           child: CupertinoTabScaffold(
-            tabBuilder: _iOSTabBuilder,
+            tabBuilder: (context, index) => tabs[index],
             controller: _cupertinoTabController,
             tabBar: CupertinoTabBar(
               activeColor: const Color(0xff54C339),
