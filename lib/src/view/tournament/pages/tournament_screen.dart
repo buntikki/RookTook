@@ -116,14 +116,19 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
   }
 
   Widget _buildTournamentList(List<Tournament> tournaments) {
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemCount: tournaments.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        final tournament = tournaments[index];
-        return TournamentCard(tournament: tournament, index: index);
+    return RefreshIndicator.adaptive(
+      onRefresh: () async {
+        ref.read(fetchTournamentsProvider);
       },
+      child: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: tournaments.length,
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          final tournament = tournaments[index];
+          return TournamentCard(tournament: tournament, index: index);
+        },
+      ),
     );
   }
 }

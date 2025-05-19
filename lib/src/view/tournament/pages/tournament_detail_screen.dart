@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
@@ -6,20 +10,22 @@ import 'package:rooktook/src/view/puzzle/storm_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_result.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
-class TournamentDetailScreen extends StatefulWidget {
+class TournamentDetailScreen extends ConsumerStatefulWidget {
   final Tournament tournament;
 
   const TournamentDetailScreen({super.key, required this.tournament});
 
   @override
-  State<TournamentDetailScreen> createState() => _TournamentDetailScreenState();
+  ConsumerState<TournamentDetailScreen> createState() => _TournamentDetailScreenState();
 }
 
-class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
+class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final tournament = widget.tournament;
-
+    final Duration durationLeft = DateTime.fromMillisecondsSinceEpoch(
+      tournament.startTime,
+    ).difference(DateTime.now());
     return Scaffold(
       backgroundColor: const Color(0xFF13191D),
       appBar: AppBar(
@@ -69,12 +75,12 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                 _coinCard(
                   icon: 'assets/images/svg/gold_coin.svg',
                   label: 'Reward',
-                  value: '${tournament.entryCost} C',
+                  value: '${tournament.rewardGoldCoins} C',
                 ),
                 _coinCard(
                   icon: 'assets/images/svg/silver_coin.svg',
                   label: 'Entry Fee',
-                  value: '${tournament.entryCost} C',
+                  value: '${tournament.entrySilverCoins} C',
                 ),
               ],
             ),
@@ -96,7 +102,9 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                       children: [
                         SvgPicture.asset('assets/images/svg/tournament_clock.svg', height: 18.0),
                         Text(
-                          DateFormat('MMM dd, yyyy').format(DateTime.parse(tournament.startTime)),
+                          DateFormat(
+                            'hh:mm a, MMM dd',
+                          ).format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime)),
                           style: const TextStyle(color: Color(0xff7D8082)),
                         ),
                       ],
@@ -111,7 +119,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                       children: [
                         SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
                         Text(
-                          '${tournament.maxParticipants}/20 Seats Left',
+                          '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
                           style: const TextStyle(color: Color(0xff7D8082)),
                         ),
                       ],
@@ -127,14 +135,59 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
                 minimumSize: const Size.fromHeight(50),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).push(StormScreen.buildRoute(context));
+              onPressed: () async {
+                // showModalBottomSheet(
+                //   context: context,
+                //   backgroundColor: const Color(0xFF1A1F23),
+                //   shape: const RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                //   ),
+                //   isScrollControlled: true,
+                //   builder: (context) {
+                //     return const InviteCodeSheet();
+                //   },
+                // );
+                final data = await ref
+                    .read(tournamentProvider.notifier)
+                    .joinTournament(id: tournament.id);
+                if (data == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Error joining tournamnet',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Tournamnet joined successfully'),
+                      backgroundColor: Color(0xFF54C339),
+                    ),
+                  );
+                }
               },
-              child: Text(
-                'JOIN NOW WITH ${tournament.entryCost} COINS',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+              child: Row(
+                spacing: 4,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'JOIN NOW',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+                  ),
+                  if (tournament.access == 'invite') Icon(Icons.lock_rounded, color: Colors.white),
+                ],
               ),
             ),
+            if (durationLeft.inMinutes < 1)
+              Center(
+                child: TournamentTimerWidget(
+                  startTime: tournament.startTime,
+                  durationLeft: durationLeft,
+                ),
+              ),
             const SizedBox(height: 16),
             Container(
               decoration: BoxDecoration(
@@ -218,6 +271,107 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen> {
         ),
       ),
     );
+  }
+}
+
+class InviteCodeSheet extends StatelessWidget {
+  const InviteCodeSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(color: Colors.grey),
+    );
+    return Padding(
+      padding: const EdgeInsets.all(
+        16.0,
+      ).copyWith(bottom: MediaQuery.of(context).viewInsets.bottom + 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: 20,
+        children: [
+          Container(
+            height: 4,
+            width: 40,
+            decoration: BoxDecoration(
+              color: Colors.grey[600],
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const Text('Invite Code', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
+          TextField(
+            decoration: InputDecoration(
+              border: border,
+              enabledBorder: border,
+              errorBorder: border,
+              focusedBorder: border,
+              focusedErrorBorder: border,
+            ),
+            inputFormatters: [AlphanumericInputFormatter()],
+          ),
+          MaterialButton(
+            minWidth: double.infinity,
+            color: const Color(0xFF54C339),
+            onPressed: () {},
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: const Text(
+              'PROCEED',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AlphanumericInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    // Regular expression to allow only alphanumeric characters (no emoji, special chars)
+    final regExp = RegExp(r'^[a-zA-Z0-9]*$');
+
+    // Check if input matches the allowed pattern and does not exceed length 6
+    if (regExp.hasMatch(newValue.text) && newValue.text.length <= 6) {
+      return newValue;
+    }
+    // Revert to the old value if invalid
+    return oldValue;
+  }
+}
+
+class TournamentTimerWidget extends StatefulWidget {
+  const TournamentTimerWidget({super.key, required this.startTime, required this.durationLeft});
+
+  final int startTime;
+  final Duration durationLeft;
+  @override
+  State<TournamentTimerWidget> createState() => _TournamentTimerWidgetState();
+}
+
+class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
+  int timeLeft = 00;
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    // if (durationLeft.inMinutes < 1) {
+    Timer.periodic(const Duration(seconds: 1), (timeStamp) {
+      setState(() {
+        timeLeft = widget.durationLeft.inSeconds - timeStamp.tick;
+      });
+    });
+    // }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('Starting in 00:${timeLeft.toString().padLeft(2, '0')} sec');
   }
 }
 

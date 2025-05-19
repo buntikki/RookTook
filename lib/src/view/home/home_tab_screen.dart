@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/account/account_repository.dart';
 import 'package:rooktook/src/model/account/ongoing_game.dart';
@@ -699,7 +700,7 @@ class ChessPuzzleScreen extends StatelessWidget {
                       Row(
                         spacing: 8,
                         children: [
-                          Image.asset('assets/images/flip.png', height: 24),
+                          SvgPicture.asset('assets/images/svg/puzzle_rating.svg', height: 24),
                           Text('$puzzleRank', style: const TextStyle(color: Colors.white)),
                         ],
                       ),

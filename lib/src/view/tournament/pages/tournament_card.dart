@@ -60,18 +60,22 @@ class TournamentCard extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            SvgPicture.asset('assets/images/svg/silver_coin.svg', height: 18.0),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${tournament.entryCost}',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
+                            if (tournament.entrySilverCoins > 0)
+                              SvgPicture.asset('assets/images/svg/silver_coin.svg', height: 18.0),
+                            if (tournament.entrySilverCoins > 0) const SizedBox(width: 4),
+                            if (tournament.entrySilverCoins > 0)
+                              Text(
+                                '${tournament.entrySilverCoins}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
-                            ),
-                            const Text(
-                              ' Coin (Entry Fee)',
-                              style: TextStyle(
+                            Text(
+                              tournament.entrySilverCoins > 0
+                                  ? ' Coin (Entry Fee)'
+                                  : 'Free To Join',
+                              style: const TextStyle(
                                 fontSize: 12,
                                 color: Color(0xff7D8082),
                                 fontWeight: FontWeight.w400,
@@ -111,7 +115,7 @@ class TournamentCard extends StatelessWidget {
                           children: [
                             SvgPicture.asset('assets/images/svg/gold_coin.svg', height: 14.0),
                             Text(
-                              '${tournament.entryCost}',
+                              '${tournament.rewardGoldCoins}',
                               style: const TextStyle(
                                 color: Color(0xffD4AA40),
                                 fontSize: 12,
@@ -126,7 +130,9 @@ class TournamentCard extends StatelessWidget {
                         children: [
                           SvgPicture.asset('assets/images/svg/tournament_clock.svg', height: 18.0),
                           Text(
-                            DateFormat('MMM dd, yyyy').format(DateTime.parse(tournament.startTime)),
+                            DateFormat(
+                              'hh:mm a, MMM dd',
+                            ).format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime)),
                             style: const TextStyle(color: Colors.white70, fontSize: 12),
                           ),
                         ],
