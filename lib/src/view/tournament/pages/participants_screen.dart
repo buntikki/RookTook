@@ -50,14 +50,14 @@ class ParticipantsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text(
-                  (player.score ?? 0).toString(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    color: Color(0xffEFEDED),
-                  ),
-                ),
+                // Text(
+                //   (player.score ?? 0).toString(),
+                //   style: const TextStyle(
+                //     fontWeight: FontWeight.w700,
+                //     fontSize: 14,
+                //     color: Color(0xffEFEDED),
+                //   ),
+                // ),
               ],
             ),
           );

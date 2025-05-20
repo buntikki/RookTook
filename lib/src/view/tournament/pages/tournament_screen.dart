@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-// import 'package:rooktook/src/model/tournament/Tournament.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_card.dart';
-import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 class TournamentScreen extends ConsumerStatefulWidget {
@@ -22,13 +19,15 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final fetchPr = ref.watch(fetchTournamentsProvider);
+    final fetchUserPr = ref.watch(fetchUserTournamentsProvider);
     return Scaffold(
       backgroundColor: const Color(0xFF13191D),
       appBar: AppBar(
@@ -41,47 +40,57 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
         //   child: Text('Tournament', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         // ),
       ),
-      body: fetchPr.when(
-        data:
-            (data) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 8,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 8,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0).copyWith(top: 0),
+            child: const Text(
+              'Tournament',
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.all(4.0),
+            decoration: BoxDecoration(
+              color: const Color(0xFF2B2D30),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xff464a4f), width: .5),
+            ),
+            child: Row(
+              children: List.generate(tabs.length, (index) {
+                final String tab = tabs[index];
+                return Expanded(child: _buildTabButton(index, tab));
+              }),
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0).copyWith(top: 0),
-                  child: const Text(
-                    'Tournament',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
-                  ),
+                fetchPr.when(
+                  data:
+                      (data) => _buildTournamentList(data, () {
+                        ref.invalidate(fetchTournamentsProvider);
+                      }),
+                  error: (error, stackTrace) => Text(error.toString()),
+                  loading: () => const Center(child: CircularProgressIndicator()),
                 ),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.all(4.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2B2D30),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xff464a4f), width: .5),
-                  ),
-                  child: Row(
-                    children: List.generate(tabs.length, (index) {
-                      final String tab = tabs[index];
-                      return Expanded(child: _buildTabButton(index, tab));
-                    }),
-                  ),
+                fetchUserPr.when(
+                  data:
+                      (data) => _buildTournamentList(data, () {
+                        ref.invalidate(fetchUserTournamentsProvider);
+                      }),
+                  error: (error, stackTrace) => Text(error.toString()),
+                  loading: () => const Center(child: CircularProgressIndicator()),
                 ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildTournamentList(data),
-                      _buildTournamentList([]), // duplicate for now
-                    ],
-                  ),
-                ),
+                // duplicate for now
               ],
             ),
-        error: (error, stackTrace) => Text(error.toString()),
-        loading: () => const Center(child: const CircularProgressIndicator()),
+          ),
+        ],
       ),
     );
   }
@@ -115,10 +124,10 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
     );
   }
 
-  Widget _buildTournamentList(List<Tournament> tournaments) {
+  Widget _buildTournamentList(List<Tournament> tournaments, VoidCallback onRefresh) {
     return RefreshIndicator.adaptive(
       onRefresh: () async {
-        ref.read(tournamentProvider.notifier).fetchTournaments();
+        onRefresh();
       },
       child:
           tournaments.isEmpty

@@ -1,11 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:rooktook/src/constants.dart';
-import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/network/http.dart';
@@ -17,13 +14,17 @@ final fetchTournamentsProvider = FutureProvider<List<Tournament>>((ref) async {
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
   return await tournamentNotifier.fetchTournaments();
 });
+final fetchUserTournamentsProvider = FutureProvider<List<Tournament>>((ref) async {
+  final tournamentNotifier = ref.read(tournamentProvider.notifier);
+  return await tournamentNotifier.fetchUserTournaments();
+});
 
 class TournamentNotifier extends StateNotifier<List<Tournament>> {
   TournamentNotifier() : super([]);
   Future<List<Tournament>> fetchTournaments() async {
     const storage = SessionStorage();
     final data = await storage.read();
-    var headers = {
+    final headers = {
       'Access-Control-Allow-Origin': '*',
       'Origin': 'https://lichess.dev',
       'Authorization': 'Bearer ${signBearerToken(data!.token)}',
@@ -32,6 +33,34 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
     try {
       final response = await http.get(
         lichessUri('/api/rt-tournament-with-players/active'),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        log(response.body);
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+        return (decodedResponse['rtTournaments'] as List<dynamic>)
+            .map((x) => Tournament.fromMap(x as Map<String, dynamic>))
+            .toList();
+      }
+    } catch (e) {
+      log('Error fetching tournaments: $e');
+    }
+    return [];
+  }
+
+  Future<List<Tournament>> fetchUserTournaments() async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+    };
+
+    try {
+      final response = await http.get(
+        lichessUri('/api/rt-tournament-with-players/active/participated'),
         headers: headers,
       );
       if (response.statusCode == 200) {
@@ -62,13 +91,13 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
       final response = await http.post(
         lichessUri('/api/rt-tournament/join/$id'),
         headers: headers,
-        body: inviteCode != null ? jsonEncode({'inviteCode': inviteCode}) : null,
+        body: jsonEncode({'inviteCode': inviteCode ?? ''}),
       );
       log(response.body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedResponse =
             jsonDecode(response.body) as Map<String, dynamic>;
-        return Tournament.fromMap(decodedResponse);
+        return Tournament.fromMap(decodedResponse['rtTournament'] as Map<String, dynamic>);
       }
     } catch (e) {
       log('Error joining tournaments: $e');

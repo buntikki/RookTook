@@ -21,7 +21,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'storm_controller.freezed.dart';
 part 'storm_controller.g.dart';
 
-const malus = Duration(seconds: 10);
+const malus = Duration.zero;
 const moveDelay = Duration(milliseconds: 200);
 const startTime = Duration(minutes: 3);
 
@@ -88,7 +88,8 @@ class StormController extends _$StormController {
     _addMove(move, ComboState.noChange, runStarted: true, userMove: true);
     state = state.copyWith(moves: state.moves + 1);
     if (state.position.isGameOver || move == expected) {
-      final bonus = state.combo.bonus(getNext: true);
+      const bonus = Duration.zero;
+
       if (bonus != null) {
         state.clock.addTime(bonus);
       }

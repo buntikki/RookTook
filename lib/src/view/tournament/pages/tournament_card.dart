@@ -52,6 +52,7 @@ class TournamentCard extends StatelessWidget {
                         Text(
                           tournament.name,
                           maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
