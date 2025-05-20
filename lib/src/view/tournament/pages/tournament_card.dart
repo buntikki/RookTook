@@ -142,7 +142,7 @@ class TournamentCard extends StatelessWidget {
                         children: [
                           SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
                           Text(
-                            '${tournament.maxParticipants}/20 Seats Left',
+                            '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
                             style: const TextStyle(color: Colors.white70, fontSize: 12),
                           ),
                         ],

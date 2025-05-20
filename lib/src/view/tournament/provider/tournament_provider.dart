@@ -30,7 +30,10 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
     };
 
     try {
-      final response = await http.get(lichessUri('/api/rt-tournament/active'), headers: headers);
+      final response = await http.get(
+        lichessUri('/api/rt-tournament-with-players/active'),
+        headers: headers,
+      );
       if (response.statusCode == 200) {
         log(response.body);
         final Map<String, dynamic> decodedResponse =
@@ -54,12 +57,12 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${signBearerToken(data!.token)}',
     };
-    print(signBearerToken(data!.token));
+    // print(signBearerToken(data!.token));
     try {
       final response = await http.post(
         lichessUri('/api/rt-tournament/join/$id'),
         headers: headers,
-        body: inviteCode != null ? jsonEncode({}) : null,
+        body: inviteCode != null ? jsonEncode({'inviteCode': inviteCode}) : null,
       );
       log(response.body);
       if (response.statusCode == 200) {
@@ -133,10 +136,9 @@ class Tournament {
       oneTime: map['oneTime'] as bool,
       players:
           (map['players'] != null
-              ? (map['players'] as List<dynamic>).map(
-                    (x) => Player.fromMap(x as Map<String, dynamic>),
-                  )
-                  as List<Player>
+              ? (map['players'] as List<dynamic>)
+                  .map((x) => Player.fromMap(x as Map<String, dynamic>))
+                  .toList()
               : []),
     );
   }
@@ -146,7 +148,7 @@ class Player {
   final String id;
   final String userId;
   final bool active;
-  final int rating;
+  final int? puzzles;
   final int? score;
   final bool? withdraw;
 
@@ -154,7 +156,7 @@ class Player {
     required this.id,
     required this.userId,
     required this.active,
-    required this.rating,
+    required this.puzzles,
     required this.score,
     required this.withdraw,
   });
@@ -164,8 +166,8 @@ class Player {
       id: map['id'] as String,
       userId: map['userId'] as String,
       active: map['active'] as bool,
-      rating: map['rating'] as int,
-      score: map['score'] != null ? map['score'] as int : null,
+      puzzles: map['puzzles'] != null ? map['puzzles'] as int? : null,
+      score: map['score'] != null ? map['score'] as int? : null,
       withdraw: map['withdraw'] != null ? map['withdraw'] as bool : null,
     );
   }

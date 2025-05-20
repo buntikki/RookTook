@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
-import 'package:rooktook/src/view/puzzle/storm_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/participants_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_result.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
@@ -20,6 +20,27 @@ class TournamentDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen> {
+  Future<void> handleJoinTournament({required String id, String? inviteCode}) async {
+    final data = await ref
+        .read(tournamentProvider.notifier)
+        .joinTournament(id: id, inviteCode: inviteCode);
+    if (data == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error joining tournamnet', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Tournamnet joined successfully'),
+          backgroundColor: Color(0xFF54C339),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final tournament = widget.tournament;
@@ -136,37 +157,26 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               onPressed: () async {
-                // showModalBottomSheet(
-                //   context: context,
-                //   backgroundColor: const Color(0xFF1A1F23),
-                //   shape: const RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                //   ),
-                //   isScrollControlled: true,
-                //   builder: (context) {
-                //     return const InviteCodeSheet();
-                //   },
-                // );
-                final data = await ref
-                    .read(tournamentProvider.notifier)
-                    .joinTournament(id: tournament.id);
-                if (data == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Error joining tournamnet',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      backgroundColor: Colors.red,
+                if (tournament.access.toLowerCase() == 'invite') {
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: const Color(0xFF1A1F23),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                     ),
+                    isScrollControlled: true,
+                    builder: (_) {
+                      return InviteCodeSheet(
+                        onPressed: (code) {
+                          handleJoinTournament(id: tournament.id, inviteCode: code);
+                          Navigator.pop(context);
+                        },
+                        scaffoldContext: context,
+                      );
+                    },
                   );
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Tournamnet joined successfully'),
-                      backgroundColor: Color(0xFF54C339),
-                    ),
-                  );
+                  await handleJoinTournament(id: tournament.id);
                 }
               },
               child: Row(
@@ -177,7 +187,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                     'JOIN NOW',
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
                   ),
-                  if (tournament.access == 'invite') Icon(Icons.lock_rounded, color: Colors.white),
+                  if (tournament.access == 'invite')
+                    const Icon(Icons.lock_rounded, color: Colors.white),
                 ],
               ),
             ),
@@ -199,7 +210,14 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                   _MenuItem(
                     icon: 'assets/images/svg/tournament_rules.svg',
                     title: 'Reward System',
-                    onTap: () => _showHowToPlaySheet(context),
+                    onTap:
+                        () => showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return RewardSystemSheet();
+                          },
+                        ),
                   ),
                   const Divider(color: Colors.white24, height: 1),
                   _MenuItem(
@@ -211,7 +229,13 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                   _MenuItem(
                     icon: 'assets/images/svg/participants_list.svg',
                     title: 'Participants',
-                    onTap: () => _showHowToPlaySheet(context),
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ParticipantsScreen(players: tournament.players),
+                          ),
+                        ),
                   ),
                   const Divider(color: Colors.white24, height: 1),
 
@@ -274,8 +298,53 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
   }
 }
 
-class InviteCodeSheet extends StatelessWidget {
-  const InviteCodeSheet({super.key});
+class RewardSystemSheet extends StatelessWidget {
+  const RewardSystemSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text("Reward System", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+          ListView.separated(
+            itemCount: 10,
+            shrinkWrap: true,
+            separatorBuilder: (context, index) => SizedBox(height: 8),
+            itemBuilder: (BuildContext context, int index) {
+              return Row(
+                children: [SvgPicture.asset('assets/images/svg/gold_medal.svg', height: 48)],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class InviteCodeSheet extends StatefulWidget {
+  const InviteCodeSheet({super.key, required this.onPressed, required this.scaffoldContext});
+  final void Function(String code) onPressed;
+  final BuildContext scaffoldContext;
+
+  @override
+  State<InviteCodeSheet> createState() => _InviteCodeSheetState();
+}
+
+class _InviteCodeSheetState extends State<InviteCodeSheet> {
+  final codeController = TextEditingController();
+
+  @override
+  void dispose() {
+    codeController.dispose();
+    super.dispose();
+  }
+
+  final _formkey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -287,41 +356,55 @@ class InviteCodeSheet extends StatelessWidget {
       padding: const EdgeInsets.all(
         16.0,
       ).copyWith(bottom: MediaQuery.of(context).viewInsets.bottom + 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 20,
-        children: [
-          Container(
-            height: 4,
-            width: 40,
-            decoration: BoxDecoration(
-              color: Colors.grey[600],
-              borderRadius: BorderRadius.circular(2),
+      child: Form(
+        key: _formkey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 20,
+          children: [
+            Container(
+              height: 4,
+              width: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[600],
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
-          const Text('Invite Code', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
-          TextField(
-            decoration: InputDecoration(
-              border: border,
-              enabledBorder: border,
-              errorBorder: border,
-              focusedBorder: border,
-              focusedErrorBorder: border,
+            const Text('Invite Code', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
+            TextFormField(
+              decoration: InputDecoration(
+                border: border,
+                enabledBorder: border,
+                errorBorder: border,
+                focusedBorder: border,
+                focusedErrorBorder: border,
+                hintText: 'Enter invite code',
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Code can't be empty";
+                }
+                return null;
+              },
+              inputFormatters: [AlphanumericInputFormatter()],
             ),
-            inputFormatters: [AlphanumericInputFormatter()],
-          ),
-          MaterialButton(
-            minWidth: double.infinity,
-            color: const Color(0xFF54C339),
-            onPressed: () {},
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: const Text(
-              'PROCEED',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+            MaterialButton(
+              minWidth: double.infinity,
+              color: const Color(0xFF54C339),
+              onPressed: () {
+                if (_formkey.currentState!.validate()) {
+                  widget.onPressed(codeController.text.trim());
+                }
+              },
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: const Text(
+                'PROCEED',
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

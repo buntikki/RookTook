@@ -118,17 +118,20 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
   Widget _buildTournamentList(List<Tournament> tournaments) {
     return RefreshIndicator.adaptive(
       onRefresh: () async {
-        ref.read(fetchTournamentsProvider);
+        ref.read(tournamentProvider.notifier).fetchTournaments();
       },
-      child: ListView.separated(
-        padding: const EdgeInsets.all(16),
-        itemCount: tournaments.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 12),
-        itemBuilder: (context, index) {
-          final tournament = tournaments[index];
-          return TournamentCard(tournament: tournament, index: index);
-        },
-      ),
+      child:
+          tournaments.isEmpty
+              ? const Center(child: Text('No tournaments right now'))
+              : ListView.separated(
+                padding: const EdgeInsets.all(16),
+                itemCount: tournaments.length,
+                separatorBuilder: (context, index) => const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final tournament = tournaments[index];
+                  return TournamentCard(tournament: tournament, index: index);
+                },
+              ),
     );
   }
 }
