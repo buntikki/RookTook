@@ -79,11 +79,19 @@ class WalletPage extends StatelessWidget {
                             }
                           },
                           minWidth: double.infinity,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          color: const Color(0xff54C339),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: const BorderSide(color: Color(0xff54C339)),
+                          ),
+                          color: index == 0 ? const Color(0xff54C339) : Colors.transparent,
                           child: Text(
                             (index == 0 ? 'Add Coins' : 'Convert Coins').toUpperCase(),
-                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                              color: index == 0 ? null : const Color(0xff54C339),
+                            ),
                           ),
                         ),
                       ],
