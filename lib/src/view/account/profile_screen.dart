@@ -90,7 +90,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     : ListView(
                       children: [
                         // UserProfileWidget(user: user),
-                        const AccountPerfCards(),
+                        // const AccountPerfCards(),
                         if (user.count != null && user.count!.bookmark > 0)
                           ListSection(
                             hasLeading: true,

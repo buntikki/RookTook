@@ -52,7 +52,7 @@ class _ClockState extends State<StormClockWidget> with SingleTickerProviderState
           });
         }
       });
-
+    widget.clock.start();
     time = widget.clock.timeLeft;
 
     _subscribeToStream();
@@ -113,62 +113,60 @@ class _ClockState extends State<StormClockWidget> with SingleTickerProviderState
         maxScaleFactor: kMaxClockTextScaleFactor,
         child: Stack(
           children: [
-            if (currentBonusSeconds != null)
-              Positioned.fill(
-                child: FadeTransition(
-                  opacity: _bonusFadeAnimation,
-                  child: SlideTransition(
-                    position: _bonusSlideAnimation,
-                    child: Text(
-                      '${currentBonusSeconds! > 0 ? '+' : ''}$currentBonusSeconds',
-                      style: TextStyle(
-                        color:
-                            currentBonusSeconds! < 0
-                                ? context.lichessColors.error
-                                : context.lichessColors.good,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                      ),
-                    ),
-                  ),
-                ),
+            // if (currentBonusSeconds != null)
+            //   Positioned.fill(
+            //     child: FadeTransition(
+            //       opacity: _bonusFadeAnimation,
+            //       child: SlideTransition(
+            //         position: _bonusSlideAnimation,
+            //         child: Text(
+            //           '${currentBonusSeconds! > 0 ? '+' : ''}$currentBonusSeconds',
+            //           style: TextStyle(
+            //             color:
+            //                 currentBonusSeconds! < 0
+            //                     ? context.lichessColors.error
+            //                     : context.lichessColors.good,
+            //             fontWeight: FontWeight.bold,
+            //             fontSize: 20,
+            //             fontFeatures: const [FontFeature.tabularFigures()],
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // if (currentBonusSeconds != null)
+            //   TweenAnimationBuilder(
+            //     tween: Tween<Duration>(
+            //       begin: time - Duration(seconds: currentBonusSeconds!),
+            //       end: time,
+            //     ),
+            //     duration: const Duration(milliseconds: 500),
+            //     builder: (context, Duration value, _) {
+            //       final minutes = value.inMinutes.remainder(60).toString().padLeft(2, '0');
+            //       final seconds = value.inSeconds.remainder(60).toString().padLeft(2, '0');
+            //       return Text(
+            //         '$minutes:$seconds',
+            //         style: TextStyle(
+            //           color:
+            //               currentBonusSeconds! < 0
+            //                   ? context.lichessColors.error
+            //                   : context.lichessColors.good,
+            //           fontSize: _kClockFontSize,
+            //           fontFeatures: const [FontFeature.tabularFigures()],
+            //         ),
+            //       );
+            //     },
+            //   )
+            // else
+            Text(
+              '$minutes:$seconds',
+              style: TextStyle(
+                color:
+                    isActive ? effectiveClockStyle.activeTextColor : effectiveClockStyle.textColor,
+                fontSize: _kClockFontSize,
+                fontFeatures: const [FontFeature.tabularFigures()],
               ),
-            if (currentBonusSeconds != null)
-              TweenAnimationBuilder(
-                tween: Tween<Duration>(
-                  begin: time - Duration(seconds: currentBonusSeconds!),
-                  end: time,
-                ),
-                duration: const Duration(milliseconds: 500),
-                builder: (context, Duration value, _) {
-                  final minutes = value.inMinutes.remainder(60).toString().padLeft(2, '0');
-                  final seconds = value.inSeconds.remainder(60).toString().padLeft(2, '0');
-                  return Text(
-                    '$minutes:$seconds',
-                    style: TextStyle(
-                      color:
-                          currentBonusSeconds! < 0
-                              ? context.lichessColors.error
-                              : context.lichessColors.good,
-                      fontSize: _kClockFontSize,
-                      fontFeatures: const [FontFeature.tabularFigures()],
-                    ),
-                  );
-                },
-              )
-            else
-              Text(
-                '$minutes:$seconds',
-                style: TextStyle(
-                  color:
-                      isActive
-                          ? effectiveClockStyle.activeTextColor
-                          : effectiveClockStyle.textColor,
-                  fontSize: _kClockFontSize,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                ),
-              ),
+            ),
           ],
         ),
       ),

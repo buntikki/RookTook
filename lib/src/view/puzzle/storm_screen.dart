@@ -22,6 +22,8 @@ import 'package:rooktook/src/view/puzzle/puzzle_history_screen.dart';
 import 'package:rooktook/src/view/puzzle/storm_clock.dart';
 import 'package:rooktook/src/view/puzzle/storm_dashboard.dart';
 import 'package:rooktook/src/view/settings/toggle_sound_button.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_result.dart';
+import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 import 'package:rooktook/src/widgets/board_table.dart';
 import 'package:rooktook/src/widgets/bottom_bar.dart';
 import 'package:rooktook/src/widgets/bottom_bar_button.dart';
@@ -34,10 +36,16 @@ import 'package:rooktook/src/widgets/platform_scaffold.dart';
 import 'package:rooktook/src/widgets/yes_no_dialog.dart';
 
 class StormScreen extends ConsumerStatefulWidget {
-  const StormScreen({super.key});
+  const StormScreen({super.key, required this.tournamentId, required this.startTime});
+  final String tournamentId;
+  final Duration startTime;
 
-  static Route<dynamic> buildRoute(BuildContext context) {
-    return buildScreenRoute(context, screen: const StormScreen(), title: 'Puzzle Storm');
+  static Route<dynamic> buildRoute(BuildContext context, String tournamentId, Duration startTime) {
+    return buildScreenRoute(
+      context,
+      screen: StormScreen(tournamentId: tournamentId, startTime: startTime),
+      title: 'Puzzle Storm',
+    );
   }
 
   @override
@@ -51,25 +59,35 @@ class _StormScreenState extends ConsumerState<StormScreen> {
   Widget build(BuildContext context) {
     return WakelockWidget(
       child: PlatformScaffold(
-        appBarActions: [_StormDashboardButton(), const ToggleSoundButton()],
+        appBarActions: [
+          // _StormDashboardButton(),
+          const ToggleSoundButton(),
+        ],
         appBarTitle: const Text('Puzzle Storm'),
-        body: _Load(_boardKey),
+        body: _Load(_boardKey, widget.tournamentId, widget.startTime),
       ),
     );
   }
 }
 
 class _Load extends ConsumerWidget {
-  const _Load(this.boardKey);
+  const _Load(this.boardKey, this.tournamentId, this.startTime);
 
   final GlobalKey boardKey;
+  final String tournamentId;
+  final Duration startTime;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final storm = ref.watch(stormProvider);
     return storm.when(
       data: (data) {
-        return _Body(data: data, boardKey: boardKey);
+        return _Body(
+          data: data,
+          boardKey: boardKey,
+          tournamentId: tournamentId,
+          startTime: startTime,
+        );
       },
       loading: () => const CenterLoadingIndicator(),
       error: (e, s) {
@@ -89,23 +107,29 @@ class _Load extends ConsumerWidget {
 }
 
 class _Body extends ConsumerWidget {
-  const _Body({required this.data, required this.boardKey});
+  const _Body({
+    required this.data,
+    required this.boardKey,
+    required this.tournamentId,
+    required this.startTime,
+  });
 
   final PuzzleStormResponse data;
-
+  final String tournamentId;
   final GlobalKey boardKey;
+  final Duration startTime;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ctrlProvider = stormControllerProvider(data.puzzles, data.timestamp);
+    final ctrlProvider = stormControllerProvider(data.puzzles, data.timestamp, startTime);
     final boardPreferences = ref.watch(boardPreferencesProvider);
     final stormState = ref.watch(ctrlProvider);
 
     ref.listen(ctrlProvider, (prev, state) {
       if (prev?.mode != StormMode.ended && state.mode == StormMode.ended) {
-        Future.delayed(const Duration(milliseconds: 200), () {
+        Future.delayed(const Duration(milliseconds: 200), () async {
           if (context.mounted) {
-            _showStats(context, ref.read(ctrlProvider).stats!);
+            await _showStats(context, ref.read(ctrlProvider).stats!, ref, tournamentId);
           }
         });
       }
@@ -168,7 +192,7 @@ class _Body extends ConsumerWidget {
                     onPromotionSelection:
                         (role) => ref.read(ctrlProvider.notifier).onPromotionSelection(role),
                   ),
-                  topTable: _TopTable(data),
+                  topTable: _TopTable(data, startTime),
                   bottomTable: _Combo(stormState.combo),
                 ),
               ),
@@ -248,51 +272,67 @@ Future<void> _stormInfoDialogBuilder(BuildContext context) {
   );
 }
 
-void _showStats(BuildContext context, StormRunStats stats) {
-  Navigator.of(context, rootNavigator: true).push(_RunStats.buildRoute(context, stats));
+Future<void> _showStats(
+  BuildContext context,
+  StormRunStats stats,
+  WidgetRef ref,
+  String tournamentId,
+) async {
+  final data = await ref
+      .read(tournamentProvider.notifier)
+      .fetchTournamentResult(id: tournamentId, stats: stats);
+  // print(stats.slowPuzzleIds.length);
+  // print(stats.highest);
+  // print(stats.history.length);
+  print(data);
+  if (data) {
+    Navigator.pushReplacement(context, TournamentResult.route(tournamentId));
+  }
 }
 
 class _TopTable extends ConsumerWidget {
-  const _TopTable(this.data);
+  const _TopTable(this.data, this.startTime);
 
   final PuzzleStormResponse data;
+  final Duration startTime;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stormState = ref.watch(stormControllerProvider(data.puzzles, data.timestamp));
+    final stormState = ref.watch(stormControllerProvider(data.puzzles, data.timestamp, startTime));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (stormState.mode == StormMode.initial)
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.stormMoveToStart,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      stormState.pov == Side.white
-                          ? context.l10n.stormYouPlayTheWhitePiecesInAllPuzzles
-                          : context.l10n.stormYouPlayTheBlackPiecesInAllPuzzles,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          else ...[
+          // if (stormState.mode == StormMode.initial)
+          //   Expanded(
+          //     child: Padding(
+          //       padding: const EdgeInsets.only(right: 16.0),
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           Text(
+          //             context.l10n.stormMoveToStart,
+          //             maxLines: 1,
+          //             overflow: TextOverflow.ellipsis,
+          //             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          //           ),
+          //           Text(
+          //             stormState.pov == Side.white
+          //                 ? context.l10n.stormYouPlayTheWhitePiecesInAllPuzzles
+          //                 : context.l10n.stormYouPlayTheBlackPiecesInAllPuzzles,
+          //             maxLines: 2,
+          //             overflow: TextOverflow.ellipsis,
+          //             style: const TextStyle(fontSize: 12),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   )
+          // else
+          ...[
             PlatformCard(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -420,72 +460,72 @@ class _ComboState extends ConsumerState<_Combo> with SingleTickerProviderStateMi
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: constraints.maxWidth * 0.65,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 25,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              boxShadow:
-                                  _controller.value == 1.0
-                                      ? [
-                                        BoxShadow(
-                                          color: indicatorColor.withValues(alpha: 0.3),
-                                          blurRadius: 10.0,
-                                          spreadRadius: 2.0,
-                                        ),
-                                      ]
-                                      : [],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(3.0)),
-                              child: LinearProgressIndicator(
-                                value: _controller.value,
-                                valueColor: AlwaysStoppedAnimation<Color>(indicatorColor),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:
-                              StormCombo.levelBonus.mapIndexed((index, level) {
-                                final isCurrentLevel = index < lvl;
-                                return AnimatedContainer(
-                                  alignment: Alignment.center,
-                                  curve: Curves.easeIn,
-                                  duration: const Duration(milliseconds: 1000),
-                                  width: 28 * MediaQuery.textScalerOf(context).scale(14) / 14,
-                                  height: 24 * MediaQuery.textScalerOf(context).scale(14) / 14,
-                                  decoration:
-                                      isCurrentLevel
-                                          ? BoxDecoration(
-                                            color: comboShades[index],
-                                            borderRadius: const BorderRadius.all(
-                                              Radius.circular(3.0),
-                                            ),
-                                          )
-                                          : null,
-                                  child: Text(
-                                    '${level}s',
-                                    style: TextStyle(
-                                      color:
-                                          isCurrentLevel
-                                              ? ColorScheme.of(context).onSecondary
-                                              : null,
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // SizedBox(
+                  //   width: constraints.maxWidth * 0.65,
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       SizedBox(
+                  //         height: 25,
+                  //         child: Container(
+                  //           decoration: BoxDecoration(
+                  //             boxShadow:
+                  //                 _controller.value == 1.0
+                  //                     ? [
+                  //                       BoxShadow(
+                  //                         color: indicatorColor.withValues(alpha: 0.3),
+                  //                         blurRadius: 10.0,
+                  //                         spreadRadius: 2.0,
+                  //                       ),
+                  //                     ]
+                  //                     : [],
+                  //           ),
+                  //           child: ClipRRect(
+                  //             borderRadius: const BorderRadius.all(Radius.circular(3.0)),
+                  //             child: LinearProgressIndicator(
+                  //               value: _controller.value,
+                  //               valueColor: AlwaysStoppedAnimation<Color>(indicatorColor),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       const SizedBox(height: 4),
+                  //       Row(
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         children:
+                  //             StormCombo.levelBonus.mapIndexed((index, level) {
+                  //               final isCurrentLevel = index < lvl;
+                  //               return AnimatedContainer(
+                  //                 alignment: Alignment.center,
+                  //                 curve: Curves.easeIn,
+                  //                 duration: const Duration(milliseconds: 1000),
+                  //                 width: 28 * MediaQuery.textScalerOf(context).scale(14) / 14,
+                  //                 height: 24 * MediaQuery.textScalerOf(context).scale(14) / 14,
+                  //                 decoration:
+                  //                     isCurrentLevel
+                  //                         ? BoxDecoration(
+                  //                           color: comboShades[index],
+                  //                           borderRadius: const BorderRadius.all(
+                  //                             Radius.circular(3.0),
+                  //                           ),
+                  //                         )
+                  //                         : null,
+                  //                 child: Text(
+                  //                   '${level}s',
+                  //                   style: TextStyle(
+                  //                     color:
+                  //                         isCurrentLevel
+                  //                             ? ColorScheme.of(context).onSecondary
+                  //                             : null,
+                  //                   ),
+                  //                 ),
+                  //               );
+                  //             }).toList(),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   const SizedBox(width: 10.0),
                 ],
               );
@@ -553,7 +593,7 @@ class _BottomBar extends ConsumerWidget {
             icon: Icons.open_in_new,
             label: 'Result',
             showLabel: true,
-            onTap: () => _showStats(context, stormState.stats!),
+            onTap: () => _showStats(context, stormState.stats!, ref, ''),
           ),
       ],
     );

@@ -65,15 +65,15 @@ Widget _buildMainListItem(
     case 0:
       return const _PuzzleMenu();
     case 1:
-      return SizedBox();
-      // Padding(
-      //   padding: Styles.horizontalBodyPadding.add(
-      //     Theme.of(context).platform == TargetPlatform.iOS
-      //         ? Styles.sectionTopPadding
-      //         : EdgeInsets.zero,
-      //   ),
-      //   child: Text(context.l10n.puzzleDesc, style: Styles.sectionTitle),
-      // );
+      return const SizedBox();
+    // Padding(
+    //   padding: Styles.horizontalBodyPadding.add(
+    //     Theme.of(context).platform == TargetPlatform.iOS
+    //         ? Styles.sectionTopPadding
+    //         : EdgeInsets.zero,
+    //   ),
+    //   child: Text(context.l10n.puzzleDesc, style: Styles.sectionTitle),
+    // );
     case 2:
       return const DailyPuzzle();
     case 3:
@@ -389,8 +389,7 @@ class _PuzzleMenu extends ConsumerWidget {
     final connectivity = ref.watch(connectivityChangesProvider);
     final bool isOnline = connectivity.value?.isOnline ?? false;
 
-    return
-    ListSection(
+    return ListSection(
       hasLeading: true,
       children: [
         // _PuzzleMenuListTile(
@@ -434,15 +433,13 @@ class _PuzzleMenu extends ConsumerWidget {
                       Navigator.of(
                         context,
                         rootNavigator: true,
-                      ).push(StormScreen.buildRoute(context));
+                      ).push(StormScreen.buildRoute(context, '', const Duration(minutes: 3)));
                     }
                     : null,
           ),
         ),
-  
       ],
     );
-
   }
 }
 

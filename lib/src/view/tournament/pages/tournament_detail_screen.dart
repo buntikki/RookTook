@@ -31,6 +31,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
   void initState() {
     super.initState();
     fetchSession();
+
+    // ref.read(tournamentProvider.notifier).fetchTournamentResult(id: widget.tournament.id);
   }
 
   Future<void> fetchSession() async {
@@ -130,19 +132,15 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     },
   ];
 
+  final rules =
+      '<h3><strong>1. Tournament Format</strong></h3><ul><li>Each player gets the <strong>same puzzle set</strong>.</li><li>The tournament runs for a <strong>fixed time duration</strong> (e.g. 3 minutes).</li><li>Your objective is to <strong>solve as many puzzles as possible</strong> in the given time.</li></ul><h3><strong>2. Scoring System</strong></h3><ul><li><strong>Correct Answer</strong>: +1 point.</li><li><strong>Wrong Answer</strong>: No points deducted, but your <strong>streak breaks</strong>.</li></ul><h3><strong>3. Participation Rules</strong></h3><ul><li>You can only join <strong>one tournament per time slot</strong>.</li><li>You must join the tournament <strong>before it starts</strong>.</li><li>Once joined, you <strong>cannot cancel</strong> and <strong>entry fees are non-refundable</strong>.</li><li>You must have sufficient <strong>Silver Coins</strong> to join if the tournament requires it.</li></ul><h3><strong>4. Eligibility</strong></h3><ul><li>Some tournaments may require a <strong>minimum puzzle rating</strong>.</li><li>You must meet all entry criteria shown on the tournament detail page.</li></ul><h3><strong>5. Winner Selection</strong></h3><ul><li>Players are ranked by <strong>highest score</strong>.</li><li>In case of a tie, the <strong>puzzle combo</strong> gets a higher rank.</li><li>The winners will receive <strong>Gold Coins</strong> as per the defined reward split.</li></ul><h3><strong>6. Prizes</strong></h3><ul><li>All rewards are in <strong>Gold Coins</strong>.</li><li>Gold Coins can be used to <strong>redeem gifts</strong> from the RookTook Store.</li><li>Gold Coins <strong>cannot be exchanged for real money</strong>.</li></ul><h3><strong>7. Fair Play &amp; Penalties</strong></h3><ul><li>Cheating, automation, or unfair gameplay will result in <strong>immediate disqualification</strong>.</li><li>Suspicious behavior is logged and reviewed by our moderation team.</li><li>Multiple offenses may result in <strong>account suspension</strong>.</li></ul><h3><strong>8. Missed Tournament</strong></h3><ul><li>If you miss the start time after joining, you <strong>forfeit your entry</strong>.</li><li>No refunds for missed or incomplete participation.</li></ul><p><br></p>';
+  final howToPlay =
+      '<p><strong>Game rules</strong></p><p>Each puzzle grants one point. The goal is to get as many points as you can before the time runs out.</p><p>You always play the same colour during a storm run.</p><p><strong>Combo bar</strong></p><p>Each correct move fills the combo bar. When the bar is full, you get a time bonus, and you increase the value of the next bonus.</p><p>When you play a wrong move, the combo bar is depleted.</p>';
+
   @override
   Widget build(BuildContext context) {
     final tournament = _tournament ?? widget.tournament;
-    final Duration durationLeft = DateTime.fromMillisecondsSinceEpoch(
-      tournament.startTime,
-    ).difference(DateTime.now());
-    final bool isTournamentStarted = durationLeft.inMinutes < 0;
-    final bool isTournamentEnded =
-        DateTime.fromMillisecondsSinceEpoch(
-          tournament.endTime,
-        ).difference(DateTime.now()).inMinutes <
-        0;
-    final bool isUserJoined = tournament.players.any((element) => element.userId == userId);
+    final bool isUserJoined = tournament.haveParticipated;
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
@@ -253,93 +251,124 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                 ),
               ),
               const SizedBox(height: 8),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF54C339),
-                  minimumSize: const Size.fromHeight(50),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                onPressed:
-                    isUserJoined
-                        ? isTournamentStarted
-                            ? () {
-                              if (isTournamentEnded) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    backgroundColor: Colors.red,
-                                    content: Text(
-                                      'Event has ended',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 16,
-                                        color: Colors.white,
+              Consumer(
+                builder: (context, ref, child) {
+                  final status = ref.watch(
+                    tournamentStatusProvider((tournament.startTime, tournament.endTime)),
+                  );
+                  final bool isTournamentStarted = status.isStarted;
+                  final bool isTournamentEnded = status.isEnded;
+                  // print(
+                  //   DateTime.fromMillisecondsSinceEpoch(
+                  //     tournament.endTime,
+                  //   ).difference(DateTime.now()),
+                  // );
+                  // print(Duration(seconds: 10));
+                  return Column(
+                    spacing: 8,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF54C339),
+                          minimumSize: const Size.fromHeight(50),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        onPressed:
+                            isUserJoined
+                                ? isTournamentStarted
+                                    ? () {
+                                      if (isTournamentEnded) {
+                                        // ScaffoldMessenger.of(context).showSnackBar(
+                                        //   const SnackBar(
+                                        //     backgroundColor: Colors.red,
+                                        //     content: Text(
+                                        //       'Event has ended',
+                                        //       style: TextStyle(
+                                        //         fontWeight: FontWeight.w700,
+                                        //         fontSize: 16,
+                                        //         color: Colors.white,
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // );
+                                        Navigator.push(
+                                          context,
+                                          TournamentResult.route(tournament.id),
+                                        );
+                                      } else {
+                                        Navigator.of(context).push(
+                                          StormScreen.buildRoute(
+                                            context,
+                                            tournament.id,
+                                            // Duration(seconds: 10),
+                                            Duration(
+                                              seconds:
+                                                  DateTime.fromMillisecondsSinceEpoch(
+                                                    tournament.endTime,
+                                                  ).difference(DateTime.now()).inSeconds,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                    : null
+                                : () {
+                                  if (tournament.access.toLowerCase() == 'invite') {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      backgroundColor: const Color(0xFF1A1F23),
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                Navigator.of(
-                                  context,
-                                  rootNavigator: true,
-                                ).push(StormScreen.buildRoute(context));
-                              }
-                            }
-                            : null
-                        : () async {
-                          if (tournament.access.toLowerCase() == 'invite') {
-                            showModalBottomSheet(
-                              context: context,
-                              backgroundColor: const Color(0xFF1A1F23),
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                      isScrollControlled: true,
+                                      builder: (_) {
+                                        return InviteCodeSheet(
+                                          onPressed: (code) {
+                                            handleJoinTournament(
+                                              id: tournament.id,
+                                              inviteCode: code,
+                                            );
+                                            Navigator.pop(context);
+                                          },
+                                          scaffoldContext: context,
+                                        );
+                                      },
+                                    );
+                                  } else {
+                                    handleJoinTournament(id: tournament.id);
+                                  }
+                                },
+                        child: Row(
+                          spacing: 4,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              isTournamentEnded
+                                  ? 'View Results'
+                                  : isUserJoined
+                                  ? isTournamentStarted
+                                      ? 'PLAY NOW'
+                                      : 'JOINED'
+                                  : 'JOIN NOW',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
                               ),
-                              isScrollControlled: true,
-                              builder: (_) {
-                                return InviteCodeSheet(
-                                  onPressed: (code) {
-                                    print(code);
-                                    handleJoinTournament(id: tournament.id, inviteCode: code);
-                                    Navigator.pop(context);
-                                  },
-                                  scaffoldContext: context,
-                                );
-                              },
-                            );
-                          } else {
-                            handleJoinTournament(id: tournament.id);
-                          }
-                        },
-                child: Row(
-                  spacing: 4,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      isUserJoined
-                          ? isTournamentStarted
-                              ? 'PLAY NOW'
-                              : 'JOINED'
-                          : 'JOIN NOW',
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
-                    ),
-                    if (tournament.access == 'invite' && !isUserJoined)
-                      const Icon(Icons.lock_rounded, color: Colors.white),
-                  ],
-                ),
+                            ),
+                            if (tournament.access == 'invite' && !isUserJoined)
+                              const Icon(Icons.lock_rounded, color: Colors.white),
+                          ],
+                        ),
+                      ),
+                      if (!isTournamentStarted)
+                        Center(child: TournamentTimerWidget(startTime: tournament.startTime)),
+                    ],
+                  );
+                },
               ),
-              if (!isTournamentStarted)
-                if (durationLeft.inMinutes < 1)
-                  Center(
-                    child: TournamentTimerWidget(
-                      startTime: tournament.startTime,
-                      durationLeft: durationLeft,
-                    ),
-                  )
-                else
-                  Text(
-                    'Event starts at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime))}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Color(0xff7D8082)),
-                  ),
+
               const SizedBox(height: 16),
               Container(
                 decoration: BoxDecoration(
@@ -369,12 +398,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                     _MenuItem(
                       icon: 'assets/images/svg/tournament_rules.svg',
                       title: 'Tournament Rules',
-                      onTap:
-                          () => _showHowToPlaySheet(
-                            context,
-                            tournament.customRules,
-                            'Tournament Rules',
-                          ),
+                      onTap: () => _showHowToPlaySheet(context, rules, 'Tournament Rules'),
                     ),
                     const Divider(color: Colors.white24, height: 1),
                     _MenuItem(
@@ -395,8 +419,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                     _MenuItem(
                       icon: 'assets/images/svg/how_to_play.svg',
                       title: 'How to Play',
-                      onTap:
-                          () => _showHowToPlaySheet(context, tournament.howToPlay, 'How To Play'),
+                      onTap: () => _showHowToPlaySheet(context, howToPlay, 'How To Play'),
                     ),
                     const Divider(color: Colors.white24, height: 1),
                     _MenuItem(
@@ -638,10 +661,9 @@ class AlphanumericInputFormatter extends TextInputFormatter {
 }
 
 class TournamentTimerWidget extends StatefulWidget {
-  const TournamentTimerWidget({super.key, required this.startTime, required this.durationLeft});
+  const TournamentTimerWidget({super.key, required this.startTime});
 
   final int startTime;
-  final Duration durationLeft;
   @override
   State<TournamentTimerWidget> createState() => _TournamentTimerWidgetState();
 }
@@ -657,9 +679,8 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
   }
 
   void scheduleTimerForTargetTime() {
-    final now = DateTime.now();
-    final targetTime = DateTime.fromMillisecondsSinceEpoch(widget.startTime);
-    final timeUntilEvent = targetTime.difference(now);
+    final startTime = DateTime.fromMillisecondsSinceEpoch(widget.startTime);
+    final timeUntilEvent = getLeftDuration(startTime);
 
     // Schedule 1 min before start
     final delayUntilStart = timeUntilEvent - const Duration(minutes: 1);
@@ -669,10 +690,13 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
       startTimer();
     } else {
       scheduledTimer = Timer(delayUntilStart, () {
-        print('🎯 Target time reached: ${DateTime.now()}');
         startTimer();
       });
     }
+  }
+
+  Duration getLeftDuration(DateTime startTime) {
+    return startTime.difference(DateTime.now());
   }
 
   void startTimer() {
@@ -699,7 +723,15 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Text('Starting in 00:${timeLeft.toString().padLeft(2, '0')} sec');
+    if (eventTimer?.isActive ?? false) {
+      return Text('Starting in 00:${timeLeft.toString().padLeft(2, '0')} sec');
+    } else {
+      return Text(
+        'Event starts at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(widget.startTime))}',
+        textAlign: TextAlign.center,
+        style: const TextStyle(color: Color(0xff7D8082)),
+      );
+    }
   }
 }
 
