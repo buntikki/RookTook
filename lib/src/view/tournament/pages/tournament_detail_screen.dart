@@ -379,7 +379,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                   children: [
                     _MenuItem(
                       icon: 'assets/images/svg/reward_logo.svg',
-                      title: 'Reward System',
+                      title: 'Reward Distribution',
                       onTap:
                           () => showModalBottomSheet(
                             useSafeArea: true,
@@ -388,7 +388,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                             backgroundColor: const Color(0xFF1A1F23),
                             isScrollControlled: true,
                             builder: (context) {
-                              return RewardSystemSheet(
+                              return RewardDistributionSheet(
                                 rewards: tournament.rewardPool.split(',').toList(),
                               );
                             },
@@ -398,7 +398,12 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                     _MenuItem(
                       icon: 'assets/images/svg/tournament_rules.svg',
                       title: 'Tournament Rules',
-                      onTap: () => _showHowToPlaySheet(context, rules, 'Tournament Rules'),
+                      onTap:
+                          () => _showHowToPlaySheet(
+                            context,
+                            tournament.customRules.isEmpty ? rules : tournament.customRules,
+                            'Tournament Rules',
+                          ),
                     ),
                     const Divider(color: Colors.white24, height: 1),
                     _MenuItem(
@@ -419,7 +424,12 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                     _MenuItem(
                       icon: 'assets/images/svg/how_to_play.svg',
                       title: 'How to Play',
-                      onTap: () => _showHowToPlaySheet(context, howToPlay, 'How To Play'),
+                      onTap:
+                          () => _showHowToPlaySheet(
+                            context,
+                            tournament.howToPlay.isEmpty ? howToPlay : tournament.howToPlay,
+                            'How To Play',
+                          ),
                     ),
                     const Divider(color: Colors.white24, height: 1),
                     _MenuItem(
@@ -475,8 +485,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
   }
 }
 
-class RewardSystemSheet extends StatelessWidget {
-  const RewardSystemSheet({super.key, required this.rewards});
+class RewardDistributionSheet extends StatelessWidget {
+  const RewardDistributionSheet({super.key, required this.rewards});
   final List<String> rewards;
 
   @override
@@ -499,7 +509,7 @@ class RewardSystemSheet extends StatelessWidget {
               ),
             ),
             const Text(
-              'Reward System',
+              'Reward Distribution',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             ListView.separated(
@@ -515,7 +525,7 @@ class RewardSystemSheet extends StatelessWidget {
                     border: Border.all(color: const Color(0xff464A4F)),
                   ),
                   child: Row(
-                    spacing: 16,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       if (index < 3)
                         SvgPicture.asset(
@@ -543,10 +553,15 @@ class RewardSystemSheet extends StatelessWidget {
                             ),
                           ),
                         ),
-                      // SvgPicture.asset('assets/images/svg/gold_coin.svg', height: 32),
-                      Text(
-                        '${rewards[index]} C',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                      Row(
+                        spacing: 8,
+                        children: [
+                          Text(
+                            rewards[index],
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                          SvgPicture.asset('assets/images/svg/gold_coin.svg', height: 24),
+                        ],
                       ),
                     ],
                   ),

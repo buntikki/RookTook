@@ -1,4 +1,6 @@
 PODS:
+  - app_links (0.0.2):
+    - Flutter
   - app_settings (5.1.1):
     - Flutter
   - AppAuth (1.7.6):
@@ -238,6 +240,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - app_links (from `.symlinks/plugins/app_links/ios`)
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - cupertino_http (from `.symlinks/plugins/cupertino_http/darwin`)
@@ -295,6 +298,8 @@ SPEC REPOS:
     - RecaptchaInterop
 
 EXTERNAL SOURCES:
+  app_links:
+    :path: ".symlinks/plugins/app_links/ios"
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
   connectivity_plus:
@@ -353,6 +358,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
+  app_links: 76b66b60cc809390ca1ad69bfd66b998d2387ac7
   app_settings: 5127ae0678de1dcc19f2293271c51d37c89428b2
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd

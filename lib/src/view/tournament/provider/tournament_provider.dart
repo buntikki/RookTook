@@ -179,17 +179,8 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
   }
 
   Future<List<Player>> sortLeaderboard(List<Player> players) async {
-    await Future.delayed(const Duration(milliseconds: 100));
-
     players.sort((a, b) {
-      if (a.puzzles != b.puzzles) {
-        return b.puzzles.compareTo(a.puzzles);
-      }
-      // if (a.score != b.score) {
-      //   return b.score.compareTo(a.score);
-      // }
-      return b.score.compareTo(a.score);
-      // return a..compareTo(b.timeTaken);
+      return b.rank.compareTo(a.rank);
     });
 
     return players;

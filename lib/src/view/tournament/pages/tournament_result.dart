@@ -25,6 +25,7 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
   Widget build(BuildContext context) {
     final leaderboardPr = ref.watch(fetchLeaderboardProvider(widget.tournamentId));
     return leaderboardPr.when(
+      skipLoadingOnRefresh: false,
       data:
           (players) => Scaffold(
             appBar: AppBar(
@@ -233,8 +234,8 @@ class TournamentResultCard extends StatelessWidget {
                       spacing: 8,
                       children: [
                         SvgPicture.asset(
-                          'assets/images/svg/${isUserCard ? 'tournament_clock_light' : 'tournament_clock'}.svg',
-                          height: 18.0,
+                          'assets/images/svg/${isUserCard ? 'tournament_clock_light' : 'error'}.svg',
+                          height: 16.0,
                         ),
                         Text(
                           '${player.errors}',
