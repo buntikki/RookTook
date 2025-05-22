@@ -97,7 +97,7 @@ class _Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ctrlProvider = stormControllerProvider(data.puzzles, data.timestamp);
+    final ctrlProvider = stormControllerProvider(data.puzzles, data.timestamp, startTime);
     final boardPreferences = ref.watch(boardPreferencesProvider);
     final stormState = ref.watch(ctrlProvider);
 
@@ -259,7 +259,7 @@ class _TopTable extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final stormState = ref.watch(stormControllerProvider(data.puzzles, data.timestamp));
+    final stormState = ref.watch(stormControllerProvider(data.puzzles, data.timestamp, startTime));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
