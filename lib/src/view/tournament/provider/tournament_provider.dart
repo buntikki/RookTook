@@ -22,7 +22,15 @@ final fetchUserTournamentsProvider = FutureProvider<List<Tournament>>((ref) asyn
 });
 final fetchLeaderboardProvider = FutureProvider.family<List<Player>, String>((ref, id) async {
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
-  await Future.delayed(const Duration(seconds: 10)); // Delay the whole future
+  final tournament = await tournamentNotifier.fetchSingleTournament(id);
+  return await tournamentNotifier.sortLeaderboard(tournament?.players ?? []);
+});
+final fetchLeaderboardProviderWithLoading = FutureProvider.family<List<Player>, String>((
+  ref,
+  id,
+) async {
+  final tournamentNotifier = ref.read(tournamentProvider.notifier);
+  await Future.delayed(const Duration(seconds: 10));
   final tournament = await tournamentNotifier.fetchSingleTournament(id);
   return await tournamentNotifier.sortLeaderboard(tournament?.players ?? []);
 });

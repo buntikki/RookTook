@@ -286,7 +286,10 @@ Future<void> _showStats(
   // print(stats.history.length);
   print(data);
   if (data) {
-    Navigator.pushReplacement(context, TournamentResult.route(tournamentId));
+    Navigator.pushReplacement(
+      context,
+      TournamentResult.route(tournamentId: tournamentId, isShowLoading: true),
+    );
   }
 }
 

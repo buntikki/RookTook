@@ -5,10 +5,14 @@ import 'package:random_avatar/random_avatar.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 class TournamentResult extends ConsumerStatefulWidget {
-  const TournamentResult({super.key, required this.tournamentId});
+  const TournamentResult({super.key, required this.tournamentId, required this.isShowLoading});
   final String tournamentId;
-  static MaterialPageRoute route(String tournamentId) =>
-      MaterialPageRoute(builder: (context) => TournamentResult(tournamentId: tournamentId));
+  final bool isShowLoading;
+  static MaterialPageRoute route({required String tournamentId, required bool isShowLoading}) =>
+      MaterialPageRoute(
+        builder:
+            (context) => TournamentResult(tournamentId: tournamentId, isShowLoading: isShowLoading),
+      );
 
   @override
   ConsumerState<TournamentResult> createState() => _TournamentResultState();
@@ -18,12 +22,20 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    ref.invalidate(fetchLeaderboardProvider(widget.tournamentId));
+    if (widget.isShowLoading) {
+      ref.invalidate(fetchLeaderboardProviderWithLoading(widget.tournamentId));
+    } else {
+      ref.invalidate(fetchLeaderboardProvider(widget.tournamentId));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final leaderboardPr = ref.watch(fetchLeaderboardProvider(widget.tournamentId));
+    final leaderboardPr = ref.watch(
+      widget.isShowLoading
+          ? fetchLeaderboardProviderWithLoading(widget.tournamentId)
+          : fetchLeaderboardProvider(widget.tournamentId),
+    );
     return leaderboardPr.when(
       skipLoadingOnRefresh: false,
       data:
@@ -226,7 +238,7 @@ class TournamentResultCard extends StatelessWidget {
                         ),
                         Text(
                           '${player.combo}',
-                          style: TextStyle(color: Color(0xff7D8082), fontSize: 12),
+                          style: const TextStyle(color: Color(0xff7D8082), fontSize: 12),
                         ),
                       ],
                     ),
@@ -239,7 +251,7 @@ class TournamentResultCard extends StatelessWidget {
                         ),
                         Text(
                           '${player.errors}',
-                          style: TextStyle(color: Color(0xff7D8082), fontSize: 12),
+                          style: const TextStyle(color: Color(0xff7D8082), fontSize: 12),
                         ),
                       ],
                     ),

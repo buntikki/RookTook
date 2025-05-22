@@ -293,7 +293,18 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                                         // );
                                         Navigator.push(
                                           context,
-                                          TournamentResult.route(tournament.id),
+                                          TournamentResult.route(
+                                            tournamentId: tournament.id,
+                                            isShowLoading:
+                                                DateTime.now()
+                                                    .difference(
+                                                      DateTime.fromMillisecondsSinceEpoch(
+                                                        tournament.endTime,
+                                                      ),
+                                                    )
+                                                    .inMinutes <
+                                                2,
+                                          ),
                                         );
                                       } else {
                                         Navigator.of(context).push(

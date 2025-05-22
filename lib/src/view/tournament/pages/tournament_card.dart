@@ -12,11 +12,13 @@ class TournamentCard extends StatelessWidget {
     required this.tournament,
     required this.index,
     this.backgroundColor,
+    this.isShowJoinedTag = true,
   });
 
   final Tournament tournament;
   final int index;
   final Color? backgroundColor;
+  final bool isShowJoinedTag;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -171,7 +173,7 @@ class TournamentCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (tournament.haveParticipated)
+            if (tournament.haveParticipated && isShowJoinedTag)
               Positioned(
                 right: -24,
                 top: 8,
