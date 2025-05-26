@@ -89,10 +89,11 @@ class StormController extends _$StormController {
     _addMove(move, ComboState.noChange, runStarted: true, userMove: true);
     state = state.copyWith(moves: state.moves + 1);
     if (state.position.isGameOver || move == expected) {
-      const bonus = Duration.zero;
+      final bonus = state.combo.bonus(getNext: true);
 
       if (bonus != null) {
-        state.clock.addTime(bonus);
+        state.clock.addTime(Duration.zero);
+        state = state.copyWith(numSolved: state.numSolved + bonus.inSeconds);
       }
       if (state.position.isGameOver || state.isOver) {
         if (!_isNextPuzzleAvailable()) {

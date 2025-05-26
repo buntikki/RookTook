@@ -463,72 +463,71 @@ class _ComboState extends ConsumerState<_Combo> with SingleTickerProviderStateMi
                       ],
                     ),
                   ),
-                  // SizedBox(
-                  //   width: constraints.maxWidth * 0.65,
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: [
-                  //       SizedBox(
-                  //         height: 25,
-                  //         child: Container(
-                  //           decoration: BoxDecoration(
-                  //             boxShadow:
-                  //                 _controller.value == 1.0
-                  //                     ? [
-                  //                       BoxShadow(
-                  //                         color: indicatorColor.withValues(alpha: 0.3),
-                  //                         blurRadius: 10.0,
-                  //                         spreadRadius: 2.0,
-                  //                       ),
-                  //                     ]
-                  //                     : [],
-                  //           ),
-                  //           child: ClipRRect(
-                  //             borderRadius: const BorderRadius.all(Radius.circular(3.0)),
-                  //             child: LinearProgressIndicator(
-                  //               value: _controller.value,
-                  //               valueColor: AlwaysStoppedAnimation<Color>(indicatorColor),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       const SizedBox(height: 4),
-                  //       Row(
-                  //         crossAxisAlignment: CrossAxisAlignment.center,
-                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //         children:
-                  //             StormCombo.levelBonus.mapIndexed((index, level) {
-                  //               final isCurrentLevel = index < lvl;
-                  //               return AnimatedContainer(
-                  //                 alignment: Alignment.center,
-                  //                 curve: Curves.easeIn,
-                  //                 duration: const Duration(milliseconds: 1000),
-                  //                 width: 28 * MediaQuery.textScalerOf(context).scale(14) / 14,
-                  //                 height: 24 * MediaQuery.textScalerOf(context).scale(14) / 14,
-                  //                 decoration:
-                  //                     isCurrentLevel
-                  //                         ? BoxDecoration(
-                  //                           color: comboShades[index],
-                  //                           borderRadius: const BorderRadius.all(
-                  //                             Radius.circular(3.0),
-                  //                           ),
-                  //                         )
-                  //                         : null,
-                  //                 child: Text(
-                  //                   '${level}s',
-                  //                   style: TextStyle(
-                  //                     color:
-                  //                         isCurrentLevel
-                  //                             ? ColorScheme.of(context).onSecondary
-                  //                             : null,
-                  //                   ),
-                  //                 ),
-                  //               );
-                  //             }).toList(),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+                  SizedBox(
+                    width: constraints.maxWidth * 0.65,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 25,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              boxShadow:
+                                  _controller.value == 1.0
+                                      ? [
+                                        BoxShadow(
+                                          color: indicatorColor.withValues(alpha: 0.3),
+                                          blurRadius: 10.0,
+                                          spreadRadius: 2.0,
+                                        ),
+                                      ]
+                                      : [],
+                            ),
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.all(Radius.circular(3.0)),
+                              child: LinearProgressIndicator(
+                                value: _controller.value,
+                                valueColor: AlwaysStoppedAnimation<Color>(indicatorColor),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children:
+                              StormCombo.levelBonus.mapIndexed((index, level) {
+                                final isCurrentLevel = index < lvl;
+
+                                return AnimatedContainer(
+                                  alignment: Alignment.center,
+                                  curve: Curves.easeIn,
+                                  duration: const Duration(milliseconds: 1000),
+                                  width: 28 * MediaQuery.textScalerOf(context).scale(14) / 14,
+                                  height: 24 * MediaQuery.textScalerOf(context).scale(14) / 14,
+                                  decoration:
+                                      isCurrentLevel
+                                          ? const BoxDecoration(
+                                            color: Color(0xff54C339),
+                                            borderRadius: BorderRadius.all(Radius.circular(3.0)),
+                                          )
+                                          : null,
+                                  child: Text(
+                                    '$level',
+                                    style: TextStyle(
+                                      color:
+                                          isCurrentLevel
+                                              ? ColorScheme.of(context).onSecondary
+                                              : null,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(width: 10.0),
                 ],
               );
