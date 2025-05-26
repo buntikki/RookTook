@@ -51,6 +51,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     ref.read(loginControllerProvider.notifier).checkUsername(usernameOrEmail);
   }
+
   void _handleNewGoogleUser(String email, String idToken) {
     // Navigate to username selection screen for Google sign-up
     Navigator.of(context).push(
@@ -75,26 +76,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  void _handleGoogleSignInError(dynamic error) {
+  void _handleGoogleSignInError(String error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          'Google sign-in failed: ${error.toString().replaceAll('Exception: ', '')}',
-          style: const TextStyle(color: Colors.white),
-        ),
+        content: Text(error, style: const TextStyle(color: Colors.white)),
         backgroundColor: Colors.red.shade700,
         behavior: SnackBarBehavior.floating,
       ),
     );
   }
 
-  void _handleAppleSignInError(dynamic error) {
+  void _handleAppleSignInError(String error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          'Apple sign-in failed: ${error.toString().replaceAll('Exception: ', '')}',
-          style: const TextStyle(color: Colors.white),
-        ),
+        content: Text(error, style: const TextStyle(color: Colors.white)),
         backgroundColor: Colors.red.shade700,
         behavior: SnackBarBehavior.floating,
       ),
@@ -119,9 +114,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             );
             ref.read(loginControllerProvider.notifier).reset();
           case LoginState.userDoesNotExist:
-            Navigator.of(
-              context,
-            ).push(CreatePasswordScreen.buildRoute(context, PasswordScreenMode.create, result.usernameOrEmail));
+            Navigator.of(context).push(
+              CreatePasswordScreen.buildRoute(
+                context,
+                PasswordScreenMode.create,
+                result.usernameOrEmail,
+              ),
+            );
             ref.read(loginControllerProvider.notifier).reset();
           default:
             break;
@@ -137,23 +136,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
         Future.delayed(
           const Duration(seconds: 3),
-              () => ref.read(loginControllerProvider.notifier).reset(),
+          () => ref.read(loginControllerProvider.notifier).reset(),
         );
       }
     });
 
-    ref.listen<AuthSessionState?>(
-      authSessionProvider,
-          (previous, current) {
-        if (previous == null && current != null) {
-          // Navigate to main screen
-          Navigator.of(context).pushAndRemoveUntil(
-            buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-                (route) => false,
-          );
-        }
-      },
-    );
+    ref.listen<AuthSessionState?>(authSessionProvider, (previous, current) {
+      if (previous == null && current != null) {
+        // Navigate to main screen
+        Navigator.of(context).pushAndRemoveUntil(
+          buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+          (route) => false,
+        );
+      }
+    });
 
     return Scaffold(
       backgroundColor: const Color(0xFF13191D),
@@ -227,9 +223,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Username or Email text field
                 TextField(
                   controller: _usernameController,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                   decoration: InputDecoration(
                     hintText: 'Username or Email',
                     hintStyle: const TextStyle(color: Colors.grey),
@@ -247,9 +241,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Continue button with loading state
                 ElevatedButton(
                   onPressed:
-                  loginState.isLoading
-                      ? null // Disable button when loading
-                      : _handleContinueWithEmail,
+                      loginState.isLoading
+                          ? null // Disable button when loading
+                          : _handleContinueWithEmail,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
@@ -258,19 +252,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     disabledBackgroundColor: Colors.green.withOpacity(0.5),
                   ),
                   child:
-                  loginState.isLoading
-                      ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                  )
-                      : Text(
-                    'CONTINUE',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                      loginState.isLoading
+                          ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                          : Text(
+                            'CONTINUE',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                 ),
               ],
             ),

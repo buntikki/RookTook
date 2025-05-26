@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +18,7 @@ import 'package:rooktook/src/widgets/feedback.dart';
 
 enum BottomTab {
   home,
-  puzzles,
+  // puzzles,
   // tools,
   tournament,
   //watch,
@@ -26,8 +28,8 @@ enum BottomTab {
     switch (this) {
       case BottomTab.home:
         return strings.mobileHomeTab;
-      case BottomTab.puzzles:
-        return strings.mobilePuzzlesTab;
+      // case BottomTab.puzzles:
+      //   return strings.mobilePuzzlesTab;
       // case BottomTab.tools:
       //   return strings.mobileToolsTab;
       case BottomTab.tournament:
@@ -44,8 +46,8 @@ enum BottomTab {
       case BottomTab.home:
         return 'assets/images/home.svg';
       // Icons.home_outlined;
-      case BottomTab.puzzles:
-        return 'assets/images/puzzle.svg';
+      // case BottomTab.puzzles:
+      //   return 'assets/images/puzzle.svg';
 
       // return Icons.extension_outlined;
       case BottomTab.tournament:
@@ -67,8 +69,8 @@ enum BottomTab {
     switch (this) {
       case BottomTab.home:
         return Icons.home;
-      case BottomTab.puzzles:
-        return Icons.extension;
+      // case BottomTab.puzzles:
+      //   return Icons.extension;
       case BottomTab.tournament:
         return Icons.emoji_events;
       // case BottomTab.tools:
@@ -88,8 +90,8 @@ final currentNavigatorKeyProvider = Provider<GlobalKey<NavigatorState>>((ref) {
   switch (currentTab) {
     case BottomTab.home:
       return homeNavigatorKey;
-    case BottomTab.puzzles:
-      return puzzlesNavigatorKey;
+    // case BottomTab.puzzles:
+    // return puzzlesNavigatorKey;
     case BottomTab.tournament:
       return toolsNavigatorKey;
     // case BottomTab.tools:
@@ -106,8 +108,8 @@ final currentRootScrollControllerProvider = Provider<ScrollController>((ref) {
   switch (currentTab) {
     case BottomTab.home:
       return homeScrollController;
-    case BottomTab.puzzles:
-      return puzzlesScrollController;
+    // case BottomTab.puzzles:
+    //   return puzzlesScrollController;
     case BottomTab.tournament:
       return toolsScrollController;
     // case BottomTab.watch:
@@ -118,13 +120,13 @@ final currentRootScrollControllerProvider = Provider<ScrollController>((ref) {
 });
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
-final puzzlesNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'puzzles');
+// final puzzlesNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'puzzles');
 final toolsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tools');
 //final watchNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'watch');
 final settingsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'settings');
 
 final homeScrollController = ScrollController(debugLabel: 'HomeScroll');
-final puzzlesScrollController = ScrollController(debugLabel: 'PuzzlesScroll');
+// final puzzlesScrollController = ScrollController(debugLabel: 'PuzzlesScroll');
 final toolsScrollController = ScrollController(debugLabel: 'ToolsScroll');
 //final watchScrollController = ScrollController(debugLabel: 'WatchScroll');
 final settingsScrollController = ScrollController(debugLabel: 'SettingsScroll');
@@ -153,10 +155,10 @@ final toolsTabInteraction = _BottomTabInteraction();
 /// interactions (pop stack, scroll to top) are done.
 final settingsTabInteraction = _BottomTabInteraction();
 final List<Widget> tabs = [
-  HomeTabScreen(),
-  PuzzleTabScreen(),
-  TournamentScreen(),
-  SettingsTabScreen(),
+  const HomeTabScreen(),
+  // const PuzzleTabScreen(),
+  const TournamentScreen(),
+  const SettingsTabScreen(),
 ];
 
 class _BottomTabInteraction extends ChangeNotifier {
@@ -281,8 +283,8 @@ class BottomNavScaffold extends ConsumerWidget {
         switch (tappedTab) {
           case BottomTab.home:
             homeTabInteraction.notifyItemTapped();
-          case BottomTab.puzzles:
-            puzzlesTabInteraction.notifyItemTapped();
+          // case BottomTab.puzzles:
+          //   puzzlesTabInteraction.notifyItemTapped();
           case BottomTab.tournament:
             toolsTabInteraction.notifyItemTapped();
           /*case BottomTab.watch:
@@ -297,6 +299,13 @@ class BottomNavScaffold extends ConsumerWidget {
   }
 }
 
+void handleTournamentBannerNavigation(WidgetRef ref) {
+  ref.read(currentBottomTabProvider.notifier).state = BottomTab.tournament;
+  if (Platform.isIOS) {
+    _cupertinoTabController.index = BottomTab.tournament.index;
+  }
+}
+
 Widget _androidTabBuilder(BuildContext context, int index) {
   switch (index) {
     case 0:
@@ -305,13 +314,13 @@ Widget _androidTabBuilder(BuildContext context, int index) {
         tab: BottomTab.home,
         builder: (context) => const HomeTabScreen(),
       );
+    // case 1:
+    //   return _MaterialTabView(
+    //     navigatorKey: puzzlesNavigatorKey,
+    //     tab: BottomTab.puzzles,
+    //     builder: (context) => const PuzzleTabScreen(),
+    // );
     case 1:
-      return _MaterialTabView(
-        navigatorKey: puzzlesNavigatorKey,
-        tab: BottomTab.puzzles,
-        builder: (context) => const PuzzleTabScreen(),
-      );
-    case 2:
       return _MaterialTabView(
         navigatorKey: toolsNavigatorKey,
         tab: BottomTab.tournament,
@@ -324,7 +333,7 @@ Widget _androidTabBuilder(BuildContext context, int index) {
     //     tab: BottomTab.watch,
     //     builder: (context) => const WatchTabScreen(),
     //   );
-    case 3:
+    case 2:
       return _MaterialTabView(
         navigatorKey: settingsNavigatorKey,
         tab: BottomTab.settings,
@@ -344,13 +353,13 @@ Widget _iOSTabBuilder(BuildContext context, int index) {
         navigatorKey: homeNavigatorKey,
         builder: (context) => const HomeTabScreen(),
       );
+    // case 1:
+    //   return CupertinoTabView(
+    //     defaultTitle: context.l10n.mobilePuzzlesTab,
+    //     navigatorKey: puzzlesNavigatorKey,
+    //     builder: (context) => const PuzzleTabScreen(),
+    //   );
     case 1:
-      return CupertinoTabView(
-        defaultTitle: context.l10n.mobilePuzzlesTab,
-        navigatorKey: puzzlesNavigatorKey,
-        builder: (context) => const PuzzleTabScreen(),
-      );
-    case 2:
       return CupertinoTabView(
         defaultTitle: context.l10n.mobileToolsTab,
         navigatorKey: toolsNavigatorKey,
@@ -363,7 +372,7 @@ Widget _iOSTabBuilder(BuildContext context, int index) {
     //     navigatorKey: watchNavigatorKey,
     //     builder: (context) => const WatchTabScreen(),
     //   );
-    case 3:
+    case 2:
       return CupertinoTabView(
         defaultTitle: context.l10n.mobileSettingsTab,
         navigatorKey: settingsNavigatorKey,

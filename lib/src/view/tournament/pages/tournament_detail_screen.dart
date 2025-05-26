@@ -25,23 +25,15 @@ class TournamentDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen> {
-  String userId = '';
   Tournament? _tournament;
   @override
   void initState() {
     super.initState();
-    fetchSession();
 
     // ref.read(tournamentProvider.notifier).fetchTournamentResult(id: widget.tournament.id);
   }
 
-  Future<void> fetchSession() async {
-    const SessionStorage session = SessionStorage();
-    final data = await session.read();
-    setState(() {
-      userId = data!.user.name;
-    });
-  }
+  
 
   Future<void> handleJoinTournament({required String id, String? inviteCode}) async {
     final data = await ref

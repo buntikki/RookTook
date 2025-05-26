@@ -173,7 +173,7 @@ class _CupertinoTabBodyState extends ConsumerState<_CupertinoTabBody> {
           Expanded(
             child: CupertinoPageScaffold(
               child: CustomScrollView(
-                controller: puzzlesScrollController,
+                // controller: puzzlesScrollController,
                 slivers: [
                   CupertinoSliverNavigationBar(
                     padding: const EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
@@ -217,7 +217,7 @@ class _CupertinoTabBodyState extends ConsumerState<_CupertinoTabBody> {
 
     return CupertinoPageScaffold(
       child: CustomScrollView(
-        controller: puzzlesScrollController,
+        // controller: puzzlesScrollController,
         slivers: [
           CupertinoSliverNavigationBar(
             padding: const EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
@@ -320,7 +320,7 @@ class _MaterialTabBodyState extends ConsumerState<_MaterialTabBody> {
                       child: AnimatedList(
                         key: _listKey,
                         initialItemCount: _angles.length,
-                        controller: puzzlesScrollController,
+                        // controller: puzzlesScrollController,
                         itemBuilder: buildItem,
                       ),
                     ),
@@ -333,7 +333,7 @@ class _MaterialTabBodyState extends ConsumerState<_MaterialTabBody> {
                     Expanded(
                       child: AnimatedList(
                         key: _listKey,
-                        controller: puzzlesScrollController,
+                        // controller: puzzlesScrollController,
                         initialItemCount: _angles.length,
                         itemBuilder: buildItem,
                       ),

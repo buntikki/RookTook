@@ -7,28 +7,20 @@ import 'package:rooktook/src/utils/google_sign_in_service.dart';
 class GoogleSignInButton extends ConsumerWidget {
   final GoogleSignInService _googleSignInService = GoogleSignInService();
   final void Function(String email, String idToken) onNewUserVerified;
-  final void Function(dynamic) onSignInError;
+  final void Function(String error) onSignInError;
 
-  GoogleSignInButton({
-    required this.onNewUserVerified,
-    required this.onSignInError,
-  });
+  GoogleSignInButton({required this.onNewUserVerified, required this.onSignInError});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton.icon(
-      icon: Image.asset(
-        'assets/images/googleimage.png',
-        height: 24.0,
-      ),
+      icon: Image.asset('assets/images/googleimage.png', height: 24.0),
       label: Text('Continue with Google', style: Theme.of(context).textTheme.titleMedium),
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xff464A4F),
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       onPressed: () async {
         // Show loading indicator
@@ -42,8 +34,7 @@ class GoogleSignInButton extends ConsumerWidget {
           final authController = ref.read(authControllerProvider.notifier);
 
           // Verify with server
-          final result = await authController.verifyGoogleSignIn(
-            googleSignInInfo.idToken);
+          final result = await authController.verifyGoogleSignIn(googleSignInInfo.idToken);
 
           // Hide loading indicator
 
@@ -57,10 +48,11 @@ class GoogleSignInButton extends ConsumerWidget {
             loadingOverlay.remove();
           }
         } catch (e) {
+          print(e);
           // Make sure to remove the loading overlay on error
           loadingOverlay.remove();
           // Call the error handler
-          onSignInError(e);
+          onSignInError(e.toString());
         }
       },
     );
@@ -68,12 +60,11 @@ class GoogleSignInButton extends ConsumerWidget {
 
   OverlayEntry _showLoadingOverlay(BuildContext context) {
     final overlay = OverlayEntry(
-      builder: (context) => Container(
-        color: Colors.black.withOpacity(0.5),
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
+      builder:
+          (context) => Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(child: CircularProgressIndicator()),
+          ),
     );
 
     Overlay.of(context).insert(overlay);

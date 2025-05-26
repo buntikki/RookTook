@@ -9,12 +9,9 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 class AppleSignInButton extends ConsumerWidget {
   final AppleSignInService _appleSignInService = AppleSignInService();
   final void Function(String email, String appleUserId) onNewUserVerified;
-  final void Function(dynamic) onSignInError;
+  final void Function(String error) onSignInError;
 
-  AppleSignInButton({
-    required this.onNewUserVerified,
-    required this.onSignInError,
-  });
+  AppleSignInButton({required this.onNewUserVerified, required this.onSignInError});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,9 +27,7 @@ class AppleSignInButton extends ConsumerWidget {
               backgroundColor: const Color(0xff464A4F),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             onPressed: () async {
               // Show loading indicator
@@ -56,11 +51,14 @@ class AppleSignInButton extends ConsumerWidget {
                   loadingOverlay.remove();
                 } else {
                   loadingOverlay.remove();
-                  onNewUserVerified(appleUserInfo.email.isNotEmpty?appleUserInfo.email:'', appleUserInfo.userId);
+                  onNewUserVerified(
+                    appleUserInfo.email.isNotEmpty ? appleUserInfo.email : '',
+                    appleUserInfo.userId,
+                  );
                 }
               } catch (e) {
                 loadingOverlay.remove();
-                onSignInError(e);
+                onSignInError(e.toString());
               }
             },
           );
@@ -72,12 +70,11 @@ class AppleSignInButton extends ConsumerWidget {
 
   OverlayEntry _showLoadingOverlay(BuildContext context) {
     final overlay = OverlayEntry(
-      builder: (context) => Container(
-        color: Colors.black.withOpacity(0.5),
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
+      builder:
+          (context) => Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(child: CircularProgressIndicator()),
+          ),
     );
 
     Overlay.of(context).insert(overlay);

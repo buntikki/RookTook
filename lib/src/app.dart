@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -24,6 +25,8 @@ import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/utils/screen.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
+import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 /// Application initialization and main entry point.
 class AppInitializationScreen extends ConsumerWidget {
@@ -126,6 +129,53 @@ class _AppState extends ConsumerState<Application> {
     });
 
     super.initState();
+    initDeepLinkListener();
+  }
+
+  bool _handledInitialLink = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_handledInitialLink) {
+      _handledInitialLink = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final applinks = AppLinks();
+        final uri = await applinks.getInitialLink();
+        if (uri != null) {
+          handleIncomingLink(uri);
+        }
+      });
+    }
+  }
+
+  void initDeepLinkListener() {
+    final applinks = AppLinks();
+    applinks.uriLinkStream.listen((uri) {
+      if (uri != null) {
+        handleIncomingLink(uri);
+      }
+    });
+  }
+
+  void handleIncomingLink(Uri uri) async {
+    debugPrint('Received deep link: $uri');
+    if (uri.path == '/tournament') {
+      final tournament = await ref
+          .read(tournamentProvider.notifier)
+          .fetchSingleTournament('682f0c72a879a6ff56744429');
+
+      if (tournament != null) {
+        // Wait until WidgetsBinding is done and Navigator is ready
+        if (rootNavigatorKey.currentState?.mounted ?? false) {
+          rootNavigatorKey.currentState!.push(
+            MaterialPageRoute(builder: (context) => TournamentDetailScreen(tournament: tournament)),
+          );
+        } else {
+          debugPrint('Navigator not yet mounted.');
+        }
+      }
+    }
   }
 
   @override
@@ -182,15 +232,19 @@ class _AppState extends ConsumerState<Application> {
                 child: Material(color: Colors.transparent, child: child),
               )
               : null,
-      onGenerateRoute:
-          (settings) =>
-              settings.name != null ? resolveAppLinkUri(context, Uri.parse(settings.name!)) : null,
-      onGenerateInitialRoutes: (initialRoute) {
-        final homeRoute = userSession!=null ?  buildScreenRoute<void>(context, screen: const BottomNavScaffold()) : buildScreenRoute<void>(context, screen: const LoginScreen());
-        return <Route<dynamic>?>[
-          homeRoute,
-          resolveAppLinkUri(context, Uri.parse(initialRoute)),
-        ].nonNulls.toList(growable: false);
+      // onGenerateRoute:
+      //     (settings) =>
+      //         settings.name != null ? resolveAppLinkUri(context, Uri.parse(settings.name!)) : null,
+      onGenerateRoute: (initialRoute) {
+        final homeRoute =
+            userSession != null
+                ? buildScreenRoute<void>(context, screen: const BottomNavScaffold())
+                : buildScreenRoute<void>(context, screen: const LoginScreen());
+        return homeRoute;
+        // return <Route<dynamic>?>[
+        //   homeRoute,
+        //   // resolveAppLinkUri(context, Uri.parse(initialRoute)),
+        // ].nonNulls.toList(growable: false);
       },
       navigatorObservers: [rootNavPageRouteObserver],
     );

@@ -198,7 +198,7 @@ class _Body extends ConsumerWidget {
               ),
             ),
           ),
-          _BottomBar(ctrlProvider),
+          // _BottomBar(ctrlProvider),
         ],
       ),
     );

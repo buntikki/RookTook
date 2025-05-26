@@ -15,6 +15,7 @@ import 'package:rooktook/src/view/account/profile_screen.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/login_screen.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
+import 'package:rooktook/src/view/user/refer_and_earn_screen.dart';
 import 'package:rooktook/src/widgets/adaptive_action_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -166,6 +167,13 @@ class NewProfileScreen extends ConsumerWidget {
                         ref.invalidate(accountActivityProvider);
                         Navigator.of(context).push(ProfileScreen.buildRoute(context));
                       },
+                    ),
+                    const Divider(color: Colors.white24, height: 1),
+                    _MenuItem(
+                      icon: 'assets/images/leaderboard.svg',
+                      title: 'Refer & Earn',
+                      onTap:
+                          () => Navigator.of(context).push(ReferAndEarnScreen.buildRoute(context)),
                     ),
                     const Divider(color: Colors.white24, height: 1),
                     _MenuItem(

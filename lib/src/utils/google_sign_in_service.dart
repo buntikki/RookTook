@@ -5,10 +5,7 @@ class GoogleSignInUserInfo {
   final String idToken;
   final String email;
 
-  GoogleSignInUserInfo({
-    required this.idToken,
-    required this.email,
-  });
+  GoogleSignInUserInfo({required this.idToken, required this.email});
 }
 
 class GoogleSignInService {
@@ -21,7 +18,7 @@ class GoogleSignInService {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
-        throw Exception('Google sign in was cancelled');
+        throw Exception('Sign in with Google cancelled');
       }
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
@@ -34,12 +31,11 @@ class GoogleSignInService {
         throw Exception('Failed to get Firebase ID token');
       }
 
-      return GoogleSignInUserInfo(
-        idToken: idToken,
-        email: googleUser.email
-      );
+      return GoogleSignInUserInfo(idToken: idToken, email: googleUser.email);
     } catch (error) {
-      throw Exception('Google sign in failed: $error');
+      // throw Exception('Google sign in failed: $error');
+     
+      rethrow;
     }
   }
 }

@@ -45,6 +45,7 @@ import 'package:rooktook/src/view/play/ongoing_games_screen.dart';
 import 'package:rooktook/src/view/play/play_screen.dart';
 import 'package:rooktook/src/view/play/quick_game_button.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_screen.dart';
 import 'package:rooktook/src/view/user/challenge_requests_screen.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/view/user/recent_games.dart';
@@ -291,6 +292,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         return Scaffold(
           appBar: AppBar(
             title: const Text(''),
+            automaticallyImplyLeading: false,
             actions: [
               // IconButton(
               //   onPressed: () {
@@ -338,16 +340,16 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   child: ListView(
                     controller: homeScrollController,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Text(
-                          'A Platform for\nNext Level Chess',
-                          textAlign: TextAlign.start,
-                          style: Theme.of(context).textTheme.headlineMedium!.merge(
-                            const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(12.0),
+                      //   child: Text(
+                      //     'A Platform for\nNext Level Chess',
+                      //     textAlign: TextAlign.start,
+                      //     style: Theme.of(context).textTheme.headlineMedium!.merge(
+                      //       const TextStyle(fontWeight: FontWeight.w600),
+                      //     ),
+                      //   ),
+                      // ),
                       ...widgets,
                     ],
                   ),
@@ -468,13 +470,13 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           textAlign: TextAlign.center,
         ),
       ),*/
-      const SizedBox(height: 24.0),
+      const SizedBox(height: 8.0),
       Container(
         height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ElevatedButton.icon(
           label: const Text(
-            'PLAY NOW',
+            'QUICK PLAY',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14.0),
           ),
           style: ElevatedButton.styleFrom(
@@ -496,6 +498,8 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         ),
       ),
       const SizedBox(height: 24),
+      const HomeTournamentContainer(),
+      const SizedBox(height: 8),
       InkWell(
         onTap: () {
           Navigator.of(
@@ -505,12 +509,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         },
         child: ChessPuzzleScreen(puzzleRank: puzzleRank),
       ),
-      RecentGamesWidget(
-        recentGames: recentGames,
-        nbOfGames: nbOfGames,
-        user: session?.user,
-        maxGamesToShow: 5,
-      ),
+      // RecentGamesWidget(
+      //   recentGames: recentGames,
+      //   nbOfGames: nbOfGames,
+      //   user: session?.user,
+      //   maxGamesToShow: 5,
+      // ),
       // if (session == null) ...[
       //   const Center(child: _SignInWidget()),
       //   const SizedBox(height: 16.0),
@@ -624,20 +628,20 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-          Flexible(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8.0),
-                RecentGamesWidget(
-                  recentGames: recentGames,
-                  nbOfGames: nbOfGames,
-                  user: session?.user,
-                ),
-              ],
-            ),
-          ),
+          // Flexible(
+          //   child: Column(
+          //     mainAxisSize: MainAxisSize.max,
+          //     mainAxisAlignment: MainAxisAlignment.start,
+          //     children: [
+          //       const SizedBox(height: 8.0),
+          //       RecentGamesWidget(
+          //         recentGames: recentGames,
+          //         nbOfGames: nbOfGames,
+          //         user: session?.user,
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     ];
@@ -649,6 +653,23 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       if (isOnline) ref.refresh(accountProvider.future),
       if (isOnline) ref.refresh(ongoingGamesProvider.future),
     ]);
+  }
+}
+
+class HomeTournamentContainer extends ConsumerWidget {
+  const HomeTournamentContainer({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () {
+        handleTournamentBannerNavigation(ref);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Image.asset('assets/images/home_tournament.png', fit: BoxFit.cover),
+      ),
+    );
   }
 }
 
@@ -665,7 +686,7 @@ class ChessPuzzleScreen extends StatelessWidget {
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: const Color(0xff2B2D30),
-              border: Border.all(color: Color(0xff464A4F), width: .5),
+              border: Border.all(color: const Color(0xff464A4F), width: .5),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
