@@ -45,6 +45,7 @@ import 'package:rooktook/src/view/play/ongoing_games_screen.dart';
 import 'package:rooktook/src/view/play/play_screen.dart';
 import 'package:rooktook/src/view/play/quick_game_button.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
+import 'package:rooktook/src/view/puzzle/puzzle_tab_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_screen.dart';
 import 'package:rooktook/src/view/user/challenge_requests_screen.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
@@ -505,7 +506,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           Navigator.of(
             context,
             rootNavigator: true,
-          ).push(PuzzleScreen.buildRoute(context, angle: const PuzzleTheme(PuzzleThemeKey.mix)));
+          ).push(MaterialPageRoute(builder: (context) => const PuzzleTabScreen()));
         },
         child: ChessPuzzleScreen(puzzleRank: puzzleRank),
       ),
