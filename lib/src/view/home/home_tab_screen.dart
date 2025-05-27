@@ -307,7 +307,15 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                     MaterialPageRoute(builder: (context) => const WalletPage()),
                   );
                 },
-                child: SvgPicture.asset('assets/images/svg/wallet.svg', height: 36),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xff2B2D30),
+                    border: Border.all(color: const Color(0xff464A4F)),
+                  ),
+                  child: SvgPicture.asset('assets/images/svg/wallet1.svg', height: 20),
+                ),
               ),
               // const _PlayerScreenButton(),
               Padding(

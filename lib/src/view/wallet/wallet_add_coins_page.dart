@@ -1,11 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class WalletAddCoinsPage extends StatelessWidget {
+class WalletAddCoinsPage extends StatefulWidget {
   const WalletAddCoinsPage({super.key});
 
   @override
+  State<WalletAddCoinsPage> createState() => _WalletAddCoinsPageState();
+}
+
+class _WalletAddCoinsPageState extends State<WalletAddCoinsPage> {
+  final amountController = TextEditingController(text: '500');
+  int amount = 500;
+  @override
+  void initState() {
+    super.initState();
+    amountController.addListener(() {
+      amount = int.parse(amountController.text.trim().isEmpty ? '0' : amountController.text.trim());
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    amountController.dispose();
+    super.dispose();
+  }
+
+  double calculateGst() {
+    return (amount * 28) / 100;
+  }
+
+  int getCoinsWithoutGST() {
+    return ((amount - calculateGst()) * 100).toInt();
+  }
+
+  int getTotalCoins() {
+    return amount * 100;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(color: Colors.grey),
+    );
     return Scaffold(
       appBar: AppBar(surfaceTintColor: Colors.transparent, title: const Text('Add Silver Coin')),
       body: SingleChildScrollView(
@@ -76,41 +115,52 @@ class WalletAddCoinsPage extends StatelessWidget {
                   'Select no. of coins',
                   style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xffEFEDED)),
                 ),
+                TextField(
+                  controller: amountController,
+                  style: const TextStyle(fontSize: 16),
+                  onChanged: (value) {
+                    final int parsedValue = int.parse(value.isEmpty ? '0' : value.trim());
+                    amountController.text = parsedValue > 1000 ? '1000' : value;
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    border: border,
+                    enabledBorder: border,
+                    errorBorder: border,
+                    focusedBorder: border,
+                    focusedErrorBorder: border,
+                    hintText: 'Enter the amount',
+                  ),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                ),
                 Row(
                   spacing: 8,
                   children: List.generate(4, (index) {
                     final List<int> values = [10, 20, 50, 100];
+                    final value = values[index];
                     return Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xff2B2D30),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xff464A4F)),
-                        ),
-                        child: Column(
-                          children: [
-                            const Text(
-                              '+',
-                              style: TextStyle(fontSize: 24, color: Color(0xff54C339), height: 0),
+                      child: GestureDetector(
+                        onTap: () {
+                          amountController.text = '$value';
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff2B2D30),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: const Color(0xff464A4F)),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            '₹$value',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Color(0xffEFEDED),
+                              height: 0,
                             ),
-                            Text(
-                              '₹${values[index]}',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                color: Color(0xffEFEDED),
-                                height: 0,
-                              ),
-                            ),
-                            // const Text(
-                            //   'COINS',
-                            //   style: TextStyle(
-                            //     fontSize: 12,
-                            //     color: Color(0xff7D8082),
-                            //     fontWeight: FontWeight.w500,
-                            //   ),
-                            // ),
-                          ],
+                            textScaler: TextScaler.noScaling,
+                          ),
                         ),
                       ),
                     );
@@ -142,13 +192,16 @@ class WalletAddCoinsPage extends StatelessWidget {
                           color: Colors.white,
                           borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('You Pay', style: TextStyle(color: Colors.black)),
+                            const Text('You Pay', style: TextStyle(color: Colors.black)),
                             Text(
-                              '₹20',
-                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                              '₹$amount',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ],
                         ),
@@ -159,11 +212,14 @@ class WalletAddCoinsPage extends StatelessWidget {
                           color: Colors.white,
                           borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('GST (28%)', style: TextStyle(color: Colors.black)),
-                            Text('₹ -5.6', style: TextStyle(color: Color(0xffF77178))),
+                            const Text('GST (28%)', style: TextStyle(color: Colors.black)),
+                            Text(
+                              '₹ -${calculateGst()}',
+                              style: const TextStyle(color: Color(0xffF77178)),
+                            ),
                           ],
                         ),
                       ),
@@ -190,9 +246,9 @@ class WalletAddCoinsPage extends StatelessWidget {
                               spacing: 4,
                               children: [
                                 SvgPicture.asset('assets/images/svg/silver_coin.svg'),
-                                const Text(
-                                  '1440',
-                                  style: TextStyle(
+                                Text(
+                                  '${getCoinsWithoutGST()}',
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: Colors.black,
                                   ),
@@ -216,9 +272,9 @@ class WalletAddCoinsPage extends StatelessWidget {
                               spacing: 4,
                               children: [
                                 SvgPicture.asset('assets/images/svg/silver_coin.svg'),
-                                const Text(
-                                  '560',
-                                  style: TextStyle(
+                                Text(
+                                  '${getTotalCoins() - getCoinsWithoutGST()}',
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: Color(0xff54C339),
                                   ),
@@ -247,9 +303,9 @@ class WalletAddCoinsPage extends StatelessWidget {
                           spacing: 4,
                           children: [
                             SvgPicture.asset('assets/images/svg/silver_coin.svg'),
-                            const Text(
-                              '2000',
-                              style: TextStyle(
+                            Text(
+                              '${getTotalCoins()}',
+                              style: const TextStyle(
                                 color: Color(0xff222222),
                                 fontWeight: FontWeight.w700,
                               ),

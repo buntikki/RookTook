@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rooktook/src/view/wallet/wallet_add_coins_page.dart';
 import 'package:rooktook/src/view/wallet/wallet_ledger_page.dart';
@@ -171,8 +172,47 @@ class WalletPage extends StatelessWidget {
   }
 }
 
-class ConvertCoinsSheet extends StatelessWidget {
+class ConvertCoinsSheet extends StatefulWidget {
   const ConvertCoinsSheet({super.key});
+
+  @override
+  State<ConvertCoinsSheet> createState() => _ConvertCoinsSheetState();
+}
+
+class _ConvertCoinsSheetState extends State<ConvertCoinsSheet> {
+  int goldCoins = 100;
+  final goldCoinController = TextEditingController(text: '100');
+  void updateGoldCoins([int? value]) {
+    if (value == null) {
+      final int parsedValue = int.parse(
+        goldCoinController.text.isEmpty ? '0' : goldCoinController.text.trim(),
+      );
+      goldCoins = parsedValue > 1000 ? 1000 : parsedValue;
+    } else {
+      goldCoins = value;
+      goldCoinController.text = '$value';
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    goldCoinController.addListener(() {
+      final int parsedValue = int.parse(
+        goldCoinController.text.isEmpty ? '0' : goldCoinController.text.trim(),
+      );
+      goldCoins = parsedValue > 1000 ? 1000 : parsedValue;
+
+      updateGoldCoins();
+    });
+  }
+
+  @override
+  void dispose() {
+    goldCoinController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -285,43 +325,90 @@ class ConvertCoinsSheet extends StatelessWidget {
                               ),
                               alignment: Alignment.center,
                               child: Row(
+                                spacing: 8,
                                 mainAxisAlignment:
                                     index == 0
                                         ? MainAxisAlignment.spaceBetween
                                         : MainAxisAlignment.center,
                                 children: [
                                   if (index == 0)
-                                    Container(
-                                      width: 32,
-                                      height: 32,
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xff666666),
-                                        borderRadius: BorderRadius.circular(6),
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (goldCoins > 0) {
+                                          updateGoldCoins(goldCoins - 1);
+                                        }
+                                      },
+                                      child: Container(
+                                        width: 32,
+                                        height: 32,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xff666666),
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        child: const Icon(CupertinoIcons.minus, size: 20),
                                       ),
-                                      child: const Icon(CupertinoIcons.minus, size: 20),
                                     ),
-                                  const SizedBox(
-                                    height: 32,
-                                    child: Center(
-                                      child: Text(
-                                        '0',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16,
-                                          color: Color(0xff666666),
+                                  if (index == 0)
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: 32,
+                                        child: Center(
+                                          child: TextField(
+                                            controller: goldCoinController,
+                                            onChanged: (value) {
+                                              final int parsedValue = int.parse(
+                                                value.isEmpty ? '0' : value.trim(),
+                                              );
+                                              goldCoinController.text =
+                                                  parsedValue > 1000 ? '1000' : value;
+                                            },
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.digitsOnly,
+                                            ],
+                                            cursorHeight: 16,
+                                            style: const TextStyle(fontSize: 16),
+                                            decoration: const InputDecoration(
+                                              fillColor: Color(0xff2B2D30),
+                                              // fillColor: Colors.white,
+                                              filled: true,
+                                              // isDense: true,
+                                              isCollapsed: true,
+                                              contentPadding: EdgeInsets.symmetric(horizontal: 4),
+                                              border: InputBorder.none,
+                                              enabledBorder: InputBorder.none,
+                                              errorBorder: InputBorder.none,
+                                              focusedBorder: InputBorder.none,
+                                              focusedErrorBorder: InputBorder.none,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    SizedBox(
+                                      height: 32,
+                                      child: Center(
+                                        child: Text(
+                                          '${goldCoins * 25}',
+                                          style: const TextStyle(fontSize: 16),
                                         ),
                                       ),
                                     ),
-                                  ),
                                   if (index == 0)
-                                    Container(
-                                      width: 32,
-                                      height: 32,
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xff54C339),
-                                        borderRadius: BorderRadius.circular(6),
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (goldCoins < 1000) updateGoldCoins(goldCoins + 1);
+                                      },
+                                      child: Container(
+                                        width: 32,
+                                        height: 32,
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xff54C339),
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        child: const Icon(CupertinoIcons.add, size: 20),
                                       ),
-                                      child: const Icon(CupertinoIcons.add, size: 20),
                                     ),
                                 ],
                               ),
