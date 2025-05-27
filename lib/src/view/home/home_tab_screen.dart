@@ -983,7 +983,11 @@ class ChessRatingCards extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                Text(
+                  title,
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  textScaler: TextScaler.noScaling,
+                ),
                 Text(
                   rating,
                   style: const TextStyle(
@@ -991,6 +995,7 @@ class ChessRatingCards extends StatelessWidget {
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
+                  textScaler: TextScaler.noScaling,
                 ),
               ],
             ),
@@ -1043,8 +1048,8 @@ class GameTypeCard extends StatelessWidget {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      RichText(
-                        text: TextSpan(
+                      Text.rich(
+                        TextSpan(
                           children: [
                             TextSpan(
                               text: '$title ',
@@ -1064,6 +1069,7 @@ class GameTypeCard extends StatelessWidget {
                             ),
                           ],
                         ),
+                        textScaler: TextScaler.noScaling,
                       ),
                       const Spacer(),
                       Text(
@@ -1072,6 +1078,7 @@ class GameTypeCard extends StatelessWidget {
                           color: Color(0xff959494),
                           fontWeight: FontWeight.bold,
                         ),
+                        textScaler: TextScaler.noScaling,
                       ),
                     ],
                   ),

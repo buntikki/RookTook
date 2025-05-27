@@ -148,6 +148,7 @@ class TournamentCard extends StatelessWidget {
                                   DateFormat('hh:mm a, MMM dd').format(
                                     DateTime.fromMillisecondsSinceEpoch(tournament.startTime),
                                   ),
+                                  textScaler: TextScaler.noScaling,
                                   style: const TextStyle(color: Colors.white70, fontSize: 12),
                                 ),
                               ],
@@ -161,6 +162,7 @@ class TournamentCard extends StatelessWidget {
                                 ),
                                 Text(
                                   '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
+                                  textScaler: TextScaler.noScaling,
                                   style: const TextStyle(color: Colors.white70, fontSize: 12),
                                 ),
                               ],

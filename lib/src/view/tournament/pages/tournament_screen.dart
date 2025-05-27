@@ -179,64 +179,70 @@ class BuildMyTournamentList extends StatelessWidget {
       child:
           tournaments.isEmpty
               ? const Center(child: Text('No tournaments right now'))
-              : SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  spacing: 16,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (activeTournaments.isNotEmpty)
-                      Column(
-                        spacing: 16,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Active Events',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
-                          ListView.separated(
-                            itemCount: activeTournaments.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            separatorBuilder: (context, index) => const SizedBox(height: 12),
-                            itemBuilder: (context, index) {
-                              final tournament = activeTournaments[index];
-                              return TournamentCard(
-                                tournament: tournament,
-                                index: index,
-                                isShowJoinedTag: false,
-                              );
-                            },
-                          ),
-                          const Divider(color: Color(0xFF2B2D30), thickness: .5),
-                        ],
-                      ),
-                    if (endedTournaments.isNotEmpty)
-                      Column(
-                        spacing: 16,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Past Events',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                          ),
-                          ListView.separated(
-                            itemCount: endedTournaments.length > 10 ? 10 : endedTournaments.length,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            separatorBuilder: (context, index) => const SizedBox(height: 12),
-                            itemBuilder: (context, index) {
-                              final tournament = endedTournaments[index];
-                              return TournamentCard(
-                                tournament: tournament,
-                                index: index,
-                                isShowJoinedTag: false,
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                  ],
+              : SizedBox(
+                height: double.infinity,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    spacing: 16,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (activeTournaments.isNotEmpty)
+                        Column(
+                          spacing: 16,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Active Events',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                            ),
+                            ListView.separated(
+                              itemCount: activeTournaments.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              separatorBuilder: (context, index) => const SizedBox(height: 12),
+                              itemBuilder: (context, index) {
+                                final tournament = activeTournaments[index];
+                                return TournamentCard(
+                                  tournament: tournament,
+                                  index: index,
+                                  isShowJoinedTag: false,
+                                );
+                              },
+                            ),
+                            const Divider(color: Color(0xFF2B2D30), thickness: .5),
+                          ],
+                        ),
+                      if (endedTournaments.isNotEmpty)
+                        Column(
+                          spacing: 16,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Past Events',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                            ),
+                            ListView.separated(
+                              itemCount:
+                                  endedTournaments.length > 10 ? 10 : endedTournaments.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              separatorBuilder: (context, index) => const SizedBox(height: 12),
+                              itemBuilder: (context, index) {
+                                final tournament = endedTournaments[index];
+                                return TournamentCard(
+                                  tournament: tournament,
+                                  index: index,
+                                  isShowJoinedTag: false,
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
                 ),
               ),
     );

@@ -33,8 +33,6 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     // ref.read(tournamentProvider.notifier).fetchTournamentResult(id: widget.tournament.id);
   }
 
-  
-
   Future<void> handleJoinTournament({required String id, String? inviteCode}) async {
     final data = await ref
         .read(tournamentProvider.notifier)
@@ -206,11 +204,12 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
-                  spacing: 24,
+                  spacing: 8,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 4,
                         children: [
@@ -219,7 +218,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                             DateFormat(
                               'hh:mm a, MMM dd',
                             ).format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime)),
-                            style: const TextStyle(color: Color(0xff7D8082)),
+                            style: const TextStyle(color: Color(0xff7D8082), fontSize: 14),
+                            textScaler: TextScaler.noScaling,
                           ),
                         ],
                       ),
@@ -228,13 +228,16 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                     Container(width: 1, height: 16, color: const Color(0xff464A4F)),
                     Expanded(
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         spacing: 4,
                         children: [
                           SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
                           Text(
                             '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(color: Color(0xff7D8082)),
+                            textScaler: TextScaler.noScaling,
                           ),
                         ],
                       ),
@@ -468,7 +471,11 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label, style: const TextStyle(color: Color(0xff7D8082), fontSize: 12)),
+                    Text(
+                      label,
+                      style: const TextStyle(color: Color(0xff7D8082), fontSize: 12),
+                      textScaler: TextScaler.noScaling,
+                    ),
                     Text(
                       value,
                       style: const TextStyle(
@@ -476,6 +483,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
                       ),
+                      textScaler: TextScaler.noScaling,
                     ),
                   ],
                 ),
