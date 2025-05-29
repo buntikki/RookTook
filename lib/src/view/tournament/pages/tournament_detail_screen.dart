@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
+import 'package:rooktook/src/model/notifications/notification_service.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/puzzle/storm_screen.dart';
 import 'package:rooktook/src/view/settings/faq_screen.dart';
@@ -48,6 +49,48 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
       setState(() {
         _tournament = data;
       });
+      final baseId = int.tryParse(data.id) ?? 0;
+      final service = ref.read(notificationServiceProvider);
+
+      await service.scheduleNotification(
+        id: baseId + 1,
+        title: data.name,
+        body: '${data.name} starts in 1 minute!',
+        scheduledTime: DateTime.fromMillisecondsSinceEpoch(
+          data.startTime,
+        ).subtract(const Duration(minutes: 1)),
+      );
+
+      await service.scheduleNotification(
+        id: baseId + 2,
+        title: data.name,
+        body: '${data.name} starts in 2 minutes!',
+        scheduledTime: DateTime.fromMillisecondsSinceEpoch(
+          data.startTime,
+        ).subtract(const Duration(minutes: 2)),
+      );
+
+      await service.scheduleNotification(
+        id: baseId + 5,
+        title: data.name,
+        body: '${data.name} starts in 5 minutes!',
+        scheduledTime: DateTime.fromMillisecondsSinceEpoch(
+          data.startTime,
+        ).subtract(const Duration(minutes: 5)),
+      );
+      await service.scheduleNotification(
+        id: baseId + 10,
+        title: data.name,
+        body: '${data.name} has ended. Check your results.!',
+        scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.endTime),
+      );
+      await service.scheduleNotification(
+        id: baseId,
+        title: data.name,
+        body: '${data.name} started!',
+        scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.startTime),
+      );
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Tournamnet joined successfully', style: TextStyle(color: Colors.white)),

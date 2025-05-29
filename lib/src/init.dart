@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:rooktook/l10n/l10n.dart';
 import 'package:rooktook/src/binding.dart';
 import 'package:rooktook/src/constants.dart';
@@ -23,6 +24,9 @@ import 'package:logging/logging.dart';
 import 'package:material_color_utilities/palettes/core_palette.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pub_semver/pub_semver.dart';
+
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 final _logger = Logger('Init');
 
@@ -88,6 +92,9 @@ Future<void> _migrateThemeSettings() async {
 
 Future<void> initializeLocalNotifications(Locale locale) async {
   final l10n = await AppLocalizations.delegate.load(locale);
+  tz.initializeTimeZones();
+  final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(timeZoneName));
   await FlutterLocalNotificationsPlugin().initialize(
     InitializationSettings(
       android: const AndroidInitializationSettings('logo_black'),
@@ -102,6 +109,7 @@ Future<void> initializeLocalNotifications(Locale locale) async {
     onDidReceiveNotificationResponse: NotificationService.onDidReceiveNotificationResponse,
     // onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
   );
+  
 }
 
 Future<void> preloadPieceImages() async {

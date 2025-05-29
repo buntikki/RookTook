@@ -16,6 +16,8 @@ import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/utils/badge_service.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 part 'notification_service.g.dart';
 
@@ -169,6 +171,34 @@ class NotificationService {
     );
 
     return id;
+  }
+
+  Future<void> scheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledTime,
+  }) async {
+    const androidDetails = AndroidNotificationDetails(
+      'tournament_channel', // static channel ID
+      'Tournament Notifications',
+      channelDescription: 'Channel for tournament alerts',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    const iosDetails = DarwinNotificationDetails();
+
+    const notificationDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
+    await _notificationDisplay.zonedSchedule(
+      id,
+      title,
+      body,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      tz.TZDateTime.from(scheduledTime, tz.local),
+      notificationDetails,
+      matchDateTimeComponents: null,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+    );
   }
 
   /// Cancels/removes a notification.
