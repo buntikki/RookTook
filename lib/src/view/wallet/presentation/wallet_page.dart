@@ -1,11 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rooktook/src/view/wallet/wallet_add_coins_page.dart';
-import 'package:rooktook/src/view/wallet/wallet_ledger_page.dart';
+import 'package:rooktook/src/view/wallet/presentation/wallet_add_coins_page.dart';
+import 'package:rooktook/src/view/wallet/presentation/wallet_ledger_page.dart';
 
 class WalletPage extends StatelessWidget {
   const WalletPage({super.key});

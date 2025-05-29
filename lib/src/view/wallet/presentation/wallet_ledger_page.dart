@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rooktook/src/view/wallet/wallet_page.dart';
+import 'package:rooktook/src/view/wallet/presentation/wallet_page.dart';
 
 class WalletLedgerPage extends StatelessWidget {
   const WalletLedgerPage({super.key});

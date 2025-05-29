@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 
-class WalletAddCoinsPage extends StatefulWidget {
+class WalletAddCoinsPage extends ConsumerStatefulWidget {
   const WalletAddCoinsPage({super.key});
 
   @override
-  State<WalletAddCoinsPage> createState() => _WalletAddCoinsPageState();
+  ConsumerState<WalletAddCoinsPage> createState() => _WalletAddCoinsPageState();
 }
 
-class _WalletAddCoinsPageState extends State<WalletAddCoinsPage> {
+class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
   final amountController = TextEditingController(text: '500');
   int amount = 500;
   @override
@@ -327,7 +329,9 @@ class _WalletAddCoinsPageState extends State<WalletAddCoinsPage> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           height: 54,
           color: const Color(0xff54C339),
-          onPressed: () {},
+          onPressed: () {
+            ref.read(walletProvider.notifier).createPaymentGateway();
+          },
           child: Text(
             'Proceed to pay'.toUpperCase(),
             style: const TextStyle(fontWeight: FontWeight.w800),

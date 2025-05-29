@@ -7,6 +7,15 @@ PODS:
   - AppAuth/Core (1.7.6)
   - AppAuth/ExternalUserAgent (1.7.6):
     - AppAuth/Core
+  - CashfreeAnalyticsSDK (2.2.0):
+    - CFNetworkSDK (= 2.2.0)
+  - CashfreePG (2.2.1):
+    - CashfreePGUISDK (= 2.2.1)
+  - CashfreePGCoreSDK (2.2.1):
+    - CashfreeAnalyticsSDK (= 2.2.0)
+  - CashfreePGUISDK (2.2.1):
+    - CashfreePGCoreSDK (= 2.2.1)
+  - CFNetworkSDK (2.2.0)
   - connectivity_plus (0.0.1):
     - Flutter
   - cupertino_http (0.0.1):
@@ -122,6 +131,9 @@ PODS:
   - Flutter (1.0.0)
   - flutter_appauth (0.0.1):
     - AppAuth (= 1.7.6)
+    - Flutter
+  - flutter_cashfree_pg_sdk (0.0.1):
+    - CashfreePG (= 2.2.1)
     - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
@@ -249,6 +261,7 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_appauth (from `.symlinks/plugins/flutter_appauth/ios`)
+  - flutter_cashfree_pg_sdk (from `.symlinks/plugins/flutter_cashfree_pg_sdk/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
@@ -270,6 +283,11 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - AppAuth
+    - CashfreeAnalyticsSDK
+    - CashfreePG
+    - CashfreePGCoreSDK
+    - CashfreePGUISDK
+    - CFNetworkSDK
     - Firebase
     - FirebaseAnalytics
     - FirebaseAppCheckInterop
@@ -317,6 +335,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_appauth:
     :path: ".symlinks/plugins/flutter_appauth/ios"
+  flutter_cashfree_pg_sdk:
+    :path: ".symlinks/plugins/flutter_cashfree_pg_sdk/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_native_splash:
@@ -355,6 +375,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   app_settings: 5127ae0678de1dcc19f2293271c51d37c89428b2
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
+  CashfreeAnalyticsSDK: ae25b71a54607c920d519103d154d9727ca2c15a
+  CashfreePG: 194b2346624350c5bac27ae3ede7e481ca404ea9
+  CashfreePGCoreSDK: 67dd05e930c6ca03632a7cf92606718002675f68
+  CashfreePGUISDK: 74f9af785d215b24bb675b330347b3e0c44c4f67
+  CFNetworkSDK: 4e431b55f607544f5ca45bc1a36a13e602f51841
   connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   cupertino_http: 94ac07f5ff090b8effa6c5e2c47871d48ab7c86c
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
@@ -378,6 +403,7 @@ SPEC CHECKSUMS:
   FirebaseSessions: 9b3b30947b97a15370e0902ee7a90f50ef60ead6
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_appauth: 914057fda669db5073d3ca9d94ea932e7df3c964
+  flutter_cashfree_pg_sdk: a5227425f7d58e63e8f6df295b826b944b6adeaf
   flutter_local_notifications: 395056b3175ba4f08480a7c5de30cd36d69827e4
   flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
   flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
