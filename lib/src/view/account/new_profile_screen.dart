@@ -1,6 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:random_avatar/random_avatar.dart';
 import 'package:rooktook/src/db/database.dart';
 import 'package:rooktook/src/model/account/account_repository.dart';
 import 'package:rooktook/src/model/auth/auth_controller.dart';
@@ -18,8 +20,6 @@ import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/view/user/refer_and_earn_screen.dart';
 import 'package:rooktook/src/widgets/adaptive_action_sheet.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:random_avatar/random_avatar.dart';
 
 class NewProfileScreen extends ConsumerWidget {
   const NewProfileScreen({super.key});
@@ -170,7 +170,7 @@ class NewProfileScreen extends ConsumerWidget {
                     ),
                     const Divider(color: Colors.white24, height: 1),
                     _MenuItem(
-                      icon: 'assets/images/leaderboard.svg',
+                      icon: 'assets/images/svg/refer.svg',
                       title: 'Refer & Earn',
                       onTap:
                           () => Navigator.of(context).push(ReferAndEarnScreen.buildRoute(context)),

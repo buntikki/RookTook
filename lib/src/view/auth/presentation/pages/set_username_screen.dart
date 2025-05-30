@@ -7,15 +7,11 @@ import 'package:rooktook/src/model/auth/auth_controller.dart';
 import 'package:rooktook/src/model/auth/auth_input_controller.dart';
 import 'package:rooktook/src/model/auth/auth_input_state.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
-import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/auth/presentation/pages/referral_code_screen.dart';
 
-enum RegistrationType {
-  email,
-  google,
-  apple,
-}
+enum RegistrationType { email, google, apple }
 
 class SetUsernameScreen extends ConsumerStatefulWidget {
   const SetUsernameScreen({
@@ -34,13 +30,13 @@ class SetUsernameScreen extends ConsumerStatefulWidget {
   final String? appleUserId;
 
   static Route<dynamic> buildRoute(
-      BuildContext context, {
-        required String previousInput,
-        String? password,
-        RegistrationType registrationType = RegistrationType.email,
-        String? idToken,
-        String? appleUserId,
-      }) {
+    BuildContext context, {
+    required String previousInput,
+    String? password,
+    RegistrationType registrationType = RegistrationType.email,
+    String? idToken,
+    String? appleUserId,
+  }) {
     return buildScreenRoute(
       context,
       screen: SetUsernameScreen(
@@ -67,15 +63,16 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
   @override
   void initState() {
     super.initState();
-    _isSocialSignIn = widget.registrationType == RegistrationType.google ||
+    _isSocialSignIn =
+        widget.registrationType == RegistrationType.google ||
         widget.registrationType == RegistrationType.apple;
     _socialAccountType = widget.registrationType == RegistrationType.google ? 'Google' : 'Apple';
     _isInputEmail = _isEmail(widget.previousInput);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(authInputControllerProvider.notifier).setInputType(
-          _isSocialSignIn || _isInputEmail ? InputType.username : InputType.email
-      );
+      ref
+          .read(authInputControllerProvider.notifier)
+          .setInputType(_isSocialSignIn || _isInputEmail ? InputType.username : InputType.email);
     });
 
     _inputController.addListener(() {
@@ -105,31 +102,21 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
       final email = widget.previousInput;
       final username = _inputController.text.trim();
 
-      ref.read(authControllerProvider.notifier).signUpWithGoogle(
-        email,
-        username,
-        widget.idToken!,
-      );
+      ref.read(authControllerProvider.notifier).signUpWithGoogle(email, username, widget.idToken!);
     } else if (widget.registrationType == RegistrationType.apple) {
       // Handle Apple sign-up with username
       final email = widget.previousInput;
       final username = _inputController.text.trim();
 
-      ref.read(authControllerProvider.notifier).signUpWithApple(
-        email,
-        username,
-        widget.appleUserId!,
-      );
+      ref
+          .read(authControllerProvider.notifier)
+          .signUpWithApple(email, username, widget.appleUserId!);
     } else {
       // Handle regular email/password sign-up
       final email = _isInputEmail ? widget.previousInput : _inputController.text.trim();
       final username = _isInputEmail ? _inputController.text.trim() : widget.previousInput;
 
-      ref.read(authControllerProvider.notifier).signUp(
-        email,
-        username,
-        widget.password!,
-      );
+      ref.read(authControllerProvider.notifier).signUp(email, username, widget.password!);
     }
   }
 
@@ -138,41 +125,39 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
     final state = ref.watch(authInputControllerProvider);
     final authState = ref.watch(authControllerProvider);
 
-    ref.listen<AuthSessionState?>(
-        authSessionProvider,
-            (previous, current) {
-          if (previous == null && current != null) {
-            Navigator.of(context).pushAndRemoveUntil(
-              buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-                  (route) => false,
-            );
-          }
-        }
-    );
+    ref.listen<AuthSessionState?>(authSessionProvider, (previous, current) {
+      if (previous == null && current != null) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const ReferralCodeScreen()),
+          (route) => false,
+        );
+        // Navigator.of(context).pushAndRemoveUntil(
+        //   buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+        //   (route) => false,
+        // );
+      }
+    });
 
-    ref.listen<AsyncValue<void>>(
-      authControllerProvider,
-          (previous, current) {
-        if (previous?.isLoading == true && current.hasError) {
-          var errorMessage = '';
-          if(current.error is ServerException){
-            errorMessage = (current.error! as ServerException).message;
-          }else{
-            errorMessage = current.error.toString().replaceAll('Exception: ', '');
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Signup failed: $errorMessage',
-                style: const TextStyle(color: Colors.white),
-              ),
-              backgroundColor: Colors.red.shade700,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
+    ref.listen<AsyncValue<void>>(authControllerProvider, (previous, current) {
+      if (previous?.isLoading == true && current.hasError) {
+        var errorMessage = '';
+        if (current.error is ServerException) {
+          errorMessage = (current.error! as ServerException).message;
+        } else {
+          errorMessage = current.error.toString().replaceAll('Exception: ', '');
         }
-      },
-    );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Signup failed: $errorMessage',
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red.shade700,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    });
 
     if (authState.isLoading != _isSubmitting) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -196,9 +181,10 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
       fieldLabel = _isInputEmail ? 'Username' : 'Email';
       pageTitle = 'Enter\nYour $fieldLabel';
       hintText = _isInputEmail ? 'Create username' : 'Enter email';
-      helperText = _isInputEmail
-          ? 'Other players will see this when you play'
-          : "We'll use this to contact you about your account";
+      helperText =
+          _isInputEmail
+              ? 'Other players will see this when you play'
+              : "We'll use this to contact you about your account";
     }
 
     return Scaffold(
@@ -231,7 +217,9 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                       const SizedBox(height: 32),
                       Text(
                         pageTitle,
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       Text(
@@ -254,7 +242,9 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                             children: [
                               Text(
                                 '$_socialAccountType Account',
-                                style: Theme.of(context).textTheme.labelLarge?.copyWith(color: Colors.grey),
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.labelLarge?.copyWith(color: Colors.grey),
                               ),
                               const SizedBox(height: 8),
                               Row(
@@ -294,33 +284,32 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                  "Your ${_isInputEmail ? 'Email': 'Username'}"
-                              ),
+                              Text("Your ${_isInputEmail ? 'Email' : 'Username'}"),
                               const SizedBox(height: 8),
                               Row(
                                 children: [
                                   CircleAvatar(
                                     radius: 16,
                                     backgroundColor: Colors.green,
-                                    child: _isInputEmail?const Icon(
-                                      Icons.email,
-                                      color: Colors.white,
-                                      size: 12,
-                                    ): RandomAvatar(widget.previousInput),
+                                    child:
+                                        _isInputEmail
+                                            ? const Icon(Icons.email, color: Colors.white, size: 12)
+                                            : RandomAvatar(widget.previousInput),
                                   ),
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
                                       widget.previousInput,
-                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: const Color(0xff4CAF50)),
+                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                        color: const Color(0xff4CAF50),
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                        )
+                        ),
                       ],
 
                       const SizedBox(height: 16),
@@ -330,25 +319,28 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: TextField(
-                          inputFormatters: [
-                            FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                           controller: _inputController,
                           decoration: InputDecoration(
                             hintText: hintText,
                             hintStyle: TextStyle(color: Colors.grey.shade500),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 16,
+                            ),
                             border: InputBorder.none,
                             suffixText: '${state.value.length}/${state.maxLength}',
                             suffixStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
                           ),
                           style: const TextStyle(color: Colors.white, fontSize: 18),
                           maxLength: state.maxLength,
-                          keyboardType: _isInputEmail || _isSocialSignIn
-                              ? TextInputType.text
-                              : TextInputType.emailAddress,
+                          keyboardType:
+                              _isInputEmail || _isSocialSignIn
+                                  ? TextInputType.text
+                                  : TextInputType.emailAddress,
                           buildCounter:
-                              (context, {required currentLength, required isFocused, maxLength}) => null,
+                              (context, {required currentLength, required isFocused, maxLength}) =>
+                                  null,
                         ),
                       ),
                       const SizedBox(height: 100),
@@ -359,9 +351,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              decoration: const BoxDecoration(
-                color: Color(0xff1C1E21),
-              ),
+              decoration: const BoxDecoration(color: Color(0xff1C1E21)),
               child: ElevatedButton(
                 onPressed: (_isSubmitting || !state.isValid) ? null : _handleSignUp,
                 style: ElevatedButton.styleFrom(
@@ -370,26 +360,22 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                   disabledBackgroundColor: Colors.grey.shade800,
                   disabledForegroundColor: Colors.grey,
                   minimumSize: const Size(double.infinity, 56),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: _isSubmitting
-                    ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    )
-                )
-                    : Text(
-                  'SIGN UP',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
+                child:
+                    _isSubmitting
+                        ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        )
+                        : Text(
+                          'SIGN UP',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
               ),
             ),
           ],

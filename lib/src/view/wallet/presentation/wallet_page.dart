@@ -1,104 +1,134 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rooktook/src/view/wallet/presentation/wallet_add_coins_page.dart';
 import 'package:rooktook/src/view/wallet/presentation/wallet_ledger_page.dart';
+import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 
-class WalletPage extends StatelessWidget {
+class WalletPage extends ConsumerStatefulWidget {
   const WalletPage({super.key});
 
   @override
+  ConsumerState<WalletPage> createState() => _WalletPageState();
+}
+
+class _WalletPageState extends ConsumerState<WalletPage> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.invalidate(fetchWalletPageDetails);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final provider = ref.watch(fetchWalletPageDetails);
     return Scaffold(
       appBar: AppBar(surfaceTintColor: Colors.transparent, title: const Text('Wallet')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          spacing: 24,
-          children: [
-            Row(
-              spacing: 8,
-              children: List.generate(2, (index) {
-                return Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ).copyWith(top: 32),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff2B2D30),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xff464A4F), width: 0.5),
-                    ),
-                    child: Column(
-                      spacing: 16,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/images/svg/${index == 0 ? 'silver' : 'gold'}_coin.svg',
-                          height: 40,
-                          width: 40,
-                        ),
-                        Column(
-                          children: [
-                            const Text(
-                              '2500',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 22,
-                                color: Color(0xffEFEDED),
-                              ),
-                            ),
-                            Text(
-                              '${index == 0 ? 'silver' : 'gold'} coins'.toUpperCase(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
-                                color: Color(0xff7D8082),
-                              ),
-                            ),
-                          ],
-                        ),
-                        MaterialButton(
-                          onPressed: () {
-                            if (index == 0) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const WalletAddCoinsPage()),
-                              );
-                            } else {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                builder: (context) {
-                                  return const ConvertCoinsSheet();
-                                },
-                              );
-                            }
-                          },
-                          minWidth: double.infinity,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Color(0xff54C339)),
-                          ),
-                          color: index == 0 ? const Color(0xff54C339) : Colors.transparent,
-                          child: Text(
-                            (index == 0 ? 'Add Coins' : 'Convert Coins').toUpperCase(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 12,
-                              color: index == 0 ? null : const Color(0xff54C339),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+      body: provider.when(
+        data: (data) {
+          return const WalletPageBodyWidget();
+        },
+        error: (error, stackTrace) => Center(child: Text('$error')),
+        loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+      ),
+    );
+  }
+}
+
+class WalletPageBodyWidget extends ConsumerWidget {
+  const WalletPageBodyWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(walletProvider);
+    final walletInfo = state.walletInfo;
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        spacing: 24,
+        children: [
+          Row(
+            spacing: 8,
+            children: List.generate(2, (index) {
+              return Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4).copyWith(top: 32),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff2B2D30),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xff464A4F), width: 0.5),
                   ),
-                );
-              }),
-            ),
+                  child: Column(
+                    spacing: 16,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/images/svg/${index == 0 ? 'silver' : 'gold'}_coin.svg',
+                        height: 40,
+                        width: 40,
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            '${index == 0 ? walletInfo.silverCoins : walletInfo.goldCoins}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 22,
+                              color: Color(0xffEFEDED),
+                            ),
+                          ),
+                          Text(
+                            '${index == 0 ? 'silver' : 'gold'} coins'.toUpperCase(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                              color: Color(0xff7D8082),
+                            ),
+                          ),
+                        ],
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          if (index == 0) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const WalletAddCoinsPage()),
+                            );
+                          } else {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) {
+                                return const ConvertCoinsSheet();
+                              },
+                            );
+                          }
+                        },
+                        minWidth: double.infinity,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: Color(0xff54C339)),
+                        ),
+                        color: index == 0 ? const Color(0xff54C339) : Colors.transparent,
+                        child: Text(
+                          (index == 0 ? 'Add Coins' : 'Convert Coins').toUpperCase(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 12,
+                            color: index == 0 ? null : const Color(0xff54C339),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
+          if (state.ledgerList.isNotEmpty)
             Expanded(
               child: GestureDetector(
                 onTap: () {
@@ -150,7 +180,7 @@ class WalletPage extends StatelessWidget {
                       ),
                       Expanded(
                         child: ListView.separated(
-                          itemCount: 10,
+                          itemCount: state.ledgerList.length,
                           shrinkWrap: true,
                           separatorBuilder: (context, index) => const SizedBox(height: 8),
                           itemBuilder: (BuildContext context, int index) {
@@ -163,8 +193,7 @@ class WalletPage extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

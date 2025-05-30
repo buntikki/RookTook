@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfwebcheckoutpayment.dart';
@@ -9,65 +11,25 @@ import 'package:flutter_cashfree_pg_sdk/utils/cfexceptions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:rooktook/src/model/auth/bearer.dart';
+import 'package:rooktook/src/model/auth/session_storage.dart';
+import 'package:rooktook/src/network/http.dart';
+
 final walletProvider = StateNotifierProvider<WalletNotifier, WalletState>((ref) {
   return WalletNotifier();
+});
+final fetchWalletPageDetails = FutureProvider((ref) async {
+  final provider = ref.read(walletProvider.notifier);
+  await provider.getUserWalletInfo();
+  await provider.getUserLedger();
 });
 
 class WalletNotifier extends StateNotifier<WalletState> {
   WalletNotifier() : super(WalletState.initial());
-  Future<void> getOrderIdAndSessionId() async {
-    final response = await http.post(
-      Uri.parse('https://sandbox.cashfree.com/pg/orders'),
-      headers: {
-        'X-Client-Secret': '',
-        'X-Client-Id': '',
-        'x-api-version': '2023-08-01',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'order_amount': 100,
-        'order_currency': 'INR',
-        'customer_details': {
-          'customer_id': 'USER123',
-          'customer_name': 'joe',
-          'customer_email': 'joe.s@cashfree.com',
-          'customer_phone': '+919876543210',
-        },
-        'order_meta': {'return_url': 'https://b8af79f41056.eu.ngrok.io?order_id=order_123'},
-      }),
-    );
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      state = state.copyWith(
-        orderId: decodedResponse['order_id'] as String,
-        paymentSessionId: decodedResponse['payment_session_id'] as String,
-      );
-    }
-  }
 
-  CFSession? createSession() {
-    try {
-      final session =
-          CFSessionBuilder()
-              .setEnvironment(CFEnvironment.SANDBOX)
-              .setOrderId('order_1733112xl4KFYufFHMsXp9FoSONZmOzHC')
-              .setPaymentSessionId(
-                'session_8nwCjiUzPxW6qS9aMIeXLGzXhVgvoztz50xB9n3593djflj72tZWNWx-z-va705_areJJKJj0g6ICLPYvTanBCTieT2IsHHv4D5xL3jwaalMR7JlB-irJjilO9kpayment',
-              )
-              .build();
-      return session;
-    } on CFException catch (e) {
-      print(e.message);
-    }
-    return null;
-  }
-
-  CFWebCheckoutPayment createWebCheckout() {
-    return CFWebCheckoutPaymentBuilder().setSession(createSession()!).build();
-  }
-
-  void verifyPayment(String orderId) {
+  Future<void> verifyPayment(String orderId) async {
     print('Verify Payment of order id $orderId');
+    await verifyPaymentStatus(orderId: orderId);
   }
 
   void paymentError(CFErrorResponse errorResponse, String orderId) {
@@ -75,23 +37,306 @@ class WalletNotifier extends StateNotifier<WalletState> {
     print('Error while making payment of order id $orderId');
   }
 
-  void createPaymentGateway() {
-    final cfPaymentGatewayService = CFPaymentGatewayService();
-    cfPaymentGatewayService.setCallback(verifyPayment, paymentError);
-    cfPaymentGatewayService.doPayment(createWebCheckout());
+  Future<void> createPaymentGateway({required int amount}) async {
+    try {
+      final result = await createPaymentOrder(amount: amount);
+      if (result != null) {
+        final session =
+            CFSessionBuilder()
+                .setEnvironment(CFEnvironment.SANDBOX)
+                .setOrderId(result.$1)
+                .setPaymentSessionId(result.$2)
+                .build();
+        final cfWebCheckout = CFWebCheckoutPaymentBuilder().setSession(session).build();
+        final cfPaymentGatewayService = CFPaymentGatewayService();
+        cfPaymentGatewayService.setCallback(verifyPayment, paymentError);
+        cfPaymentGatewayService.doPayment(cfWebCheckout);
+      } else {
+        Exception('An error occured!');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getUserWalletInfo() async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+    };
+    try {
+      final response = await http.get(lichessUri('/api/rt-wallet/info'), headers: headers);
+      log(response.body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+
+        state = state.copyWith(
+          walletInfo: WalletInfoModel.fromMap(
+            decodedResponse['walletInfo'] as Map<String, dynamic>,
+          ),
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getUserLedger() async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+    };
+    try {
+      final response = await http.get(lichessUri('/api/rt-wallet/coin-ledger'), headers: headers);
+      log(response.body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+
+        state = state.copyWith(
+          ledgerList: List.from(
+            (decodedResponse['coinLedger'] as List<dynamic>)
+                .map((e) => LedgerModel.fromMap(e as Map<String, dynamic>))
+                .toList(),
+          ),
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> convertGoldToSilver({required int goldCoins}) async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+    };
+    try {
+      final response = await http.put(
+        lichessUri('/api/rt-wallet/convert-gold-to-silver'),
+        headers: headers,
+        body: jsonEncode({'goldCoins': goldCoins}),
+      );
+      log(response.body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+
+        print(decodedResponse);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> verifyPaymentStatus({required String orderId}) async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+    };
+    try {
+      final response = await http.put(
+        lichessUri('/api/rt-wallet/verify-payment-status'),
+        headers: headers,
+        body: jsonEncode({'orderId': orderId.trim()}),
+      );
+      log(response.body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+
+        print(decodedResponse);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<(String, String)?> createPaymentOrder({required int amount}) async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+    };
+    try {
+      final response = await http.post(
+        lichessUri('/api/rt-wallet/create-payment-order'),
+        headers: headers,
+        body: jsonEncode({
+          'orderAmount': amount,
+          'orderCurrency': 'INR',
+          'customerPhone': '+919313096065',
+          'note': 'Buying silver coins for rooktook chess app',
+        }),
+      );
+      log(response.body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+
+        print(decodedResponse);
+        return (
+          decodedResponse['order_id'] as String,
+          decodedResponse['payment_session_id'] as String,
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+    return null;
   }
 }
 
 class WalletState {
-  String? orderId;
-  String? paymentSessionId;
-  WalletState({this.orderId, this.paymentSessionId});
-  factory WalletState.initial() => WalletState();
+  final WalletInfoModel walletInfo;
+  final List<LedgerModel> ledgerList;
 
-  WalletState copyWith({String? orderId, String? paymentSessionId}) {
+  factory WalletState.initial() =>
+      WalletState(walletInfo: WalletInfoModel.initial(), ledgerList: []);
+
+  WalletState({required this.walletInfo, required this.ledgerList});
+
+  WalletState copyWith({WalletInfoModel? walletInfo, List<LedgerModel>? ledgerList}) {
     return WalletState(
-      orderId: orderId ?? this.orderId,
-      paymentSessionId: paymentSessionId ?? this.paymentSessionId,
+      walletInfo: walletInfo ?? this.walletInfo,
+      ledgerList: ledgerList ?? this.ledgerList,
     );
+  }
+}
+
+class LedgerModel {
+  final String id;
+  final String userId;
+  final String coinType;
+  final String transactionType;
+  final String reason;
+  final int createdAt;
+  final int updatedAt;
+  final int amount;
+  final int balanceBefore;
+  final int balanceAfter;
+  final WalletUserModel user;
+
+  LedgerModel({
+    required this.id,
+    required this.userId,
+    required this.coinType,
+    required this.transactionType,
+    required this.reason,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.amount,
+    required this.balanceBefore,
+    required this.balanceAfter,
+    required this.user,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'userId': userId,
+      'coinType': coinType,
+      'transactionType': transactionType,
+      'reason': reason,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'amount': amount,
+      'balanceBefore': balanceBefore,
+      'balanceAfter': balanceAfter,
+      'user': user.toMap(),
+    };
+  }
+
+  factory LedgerModel.fromMap(Map<String, dynamic> map) {
+    return LedgerModel(
+      id: map['id'] as String,
+      userId: map['userId'] as String,
+      coinType: map['coinType'] as String,
+      transactionType: map['transactionType'] as String,
+      reason: map['reason'] as String,
+      createdAt: map['createdAt'] as int,
+      updatedAt: map['updatedAt'] as int,
+      amount: map['amount'] as int,
+      balanceBefore: map['balanceBefore'] as int,
+      balanceAfter: map['balanceAfter'] as int,
+      user: WalletUserModel.fromMap(map['user'] as Map<String, dynamic>),
+    );
+  }
+}
+
+class WalletInfoModel {
+  final String id;
+  final String userId;
+  final int silverCoins;
+  final int goldCoins;
+  final WalletUserModel user;
+
+  WalletInfoModel({
+    required this.id,
+    required this.userId,
+    required this.silverCoins,
+    required this.goldCoins,
+    required this.user,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'userId': userId,
+      'silverCoins': silverCoins,
+      'goldCoins': goldCoins,
+      'user': user.toMap(),
+    };
+  }
+
+  factory WalletInfoModel.initial() {
+    return WalletInfoModel(
+      id: '',
+      userId: '',
+      silverCoins: 0,
+      goldCoins: 0,
+      user: WalletUserModel(id: '', name: ''),
+    );
+  }
+  factory WalletInfoModel.fromMap(Map<String, dynamic> map) {
+    return WalletInfoModel(
+      id: map['id'] as String,
+      userId: map['userId'] as String,
+      silverCoins: map['silverCoins'] as int,
+      goldCoins: map['goldCoins'] as int,
+      user: WalletUserModel.fromMap(map['user'] as Map<String, dynamic>),
+    );
+  }
+}
+
+class WalletUserModel {
+  final String id;
+  final String name;
+
+  WalletUserModel({required this.id, required this.name});
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{'id': id, 'name': name};
+  }
+
+  factory WalletUserModel.fromMap(Map<String, dynamic> map) {
+    return WalletUserModel(id: map['id'] as String, name: map['name'] as String);
   }
 }

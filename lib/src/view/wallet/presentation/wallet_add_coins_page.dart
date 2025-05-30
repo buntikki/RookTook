@@ -330,7 +330,7 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
           height: 54,
           color: const Color(0xff54C339),
           onPressed: () {
-            ref.read(walletProvider.notifier).createPaymentGateway();
+            ref.read(walletProvider.notifier).createPaymentGateway(amount: amount);
           },
           child: Text(
             'Proceed to pay'.toUpperCase(),
