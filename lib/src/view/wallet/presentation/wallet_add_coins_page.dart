@@ -1,0 +1,343 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
+
+class WalletAddCoinsPage extends ConsumerStatefulWidget {
+  const WalletAddCoinsPage({super.key});
+
+  @override
+  ConsumerState<WalletAddCoinsPage> createState() => _WalletAddCoinsPageState();
+}
+
+class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
+  final amountController = TextEditingController(text: '500');
+  int amount = 500;
+  @override
+  void initState() {
+    super.initState();
+    amountController.addListener(() {
+      amount = int.parse(amountController.text.trim().isEmpty ? '0' : amountController.text.trim());
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    amountController.dispose();
+    super.dispose();
+  }
+
+  double calculateGst() {
+    return (amount * 28) / 100;
+  }
+
+  int getCoinsWithoutGST() {
+    return ((amount - calculateGst()) * 100).toInt();
+  }
+
+  int getTotalCoins() {
+    return amount * 100;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(color: Colors.grey),
+    );
+    return Scaffold(
+      appBar: AppBar(surfaceTintColor: Colors.transparent, title: const Text('Add Silver Coin')),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          spacing: 40,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xff2B2D30),
+                border: Border.all(color: const Color(0xff464A4F), width: .5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      spacing: 16,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/images/svg/silver_coin.svg',
+                          height: 40,
+                          width: 40,
+                        ),
+                        const Column(
+                          children: [
+                            Text(
+                              '2500',
+                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
+                            ),
+                            Text(
+                              'Current Silver coins',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: Color(0xff7D8082),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: const BoxDecoration(
+                      color: Color(0xff2B291F),
+                      borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                      border: Border(top: BorderSide(color: Color(0xff464A4F), width: .5)),
+                    ),
+                    alignment: Alignment.center,
+                    child: const Text(
+                      '₹1 = 100 Silver Coins',
+                      style: TextStyle(color: Color(0xff959494)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              spacing: 16,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Select no. of coins',
+                  style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xffEFEDED)),
+                ),
+                TextField(
+                  controller: amountController,
+                  style: const TextStyle(fontSize: 16),
+                  onChanged: (value) {
+                    final int parsedValue = int.parse(value.isEmpty ? '0' : value.trim());
+                    amountController.text = parsedValue > 1000 ? '1000' : value;
+                  },
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    border: border,
+                    enabledBorder: border,
+                    errorBorder: border,
+                    focusedBorder: border,
+                    focusedErrorBorder: border,
+                    hintText: 'Enter the amount',
+                  ),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                ),
+                Row(
+                  spacing: 8,
+                  children: List.generate(4, (index) {
+                    final List<int> values = [10, 20, 50, 100];
+                    final value = values[index];
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          amountController.text = '$value';
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff2B2D30),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: const Color(0xff464A4F)),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            '₹$value',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              color: Color(0xffEFEDED),
+                              height: 0,
+                            ),
+                            textScaler: TextScaler.noScaling,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
+            Container(
+              clipBehavior: Clip.hardEdge,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xffF4F4F4),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                spacing: 16,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Summary',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                  ),
+                  Column(
+                    spacing: 4,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('You Pay', style: TextStyle(color: Colors.black)),
+                            Text(
+                              '₹$amount',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('GST (28%)', style: TextStyle(color: Colors.black)),
+                            Text(
+                              '₹ -${calculateGst()}',
+                              style: const TextStyle(color: Color(0xffF77178)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Text(
+                    'You Get',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700),
+                  ),
+                  Column(
+                    spacing: 4,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Silver Coins', style: TextStyle(color: Color(0xff9A710A))),
+                            Row(
+                              spacing: 4,
+                              children: [
+                                SvgPicture.asset('assets/images/svg/silver_coin.svg'),
+                                Text(
+                                  '${getCoinsWithoutGST()}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text('Bonus Silver Coins', style: TextStyle(color: Colors.black)),
+                            Row(
+                              spacing: 4,
+                              children: [
+                                SvgPicture.asset('assets/images/svg/silver_coin.svg'),
+                                Text(
+                                  '${getTotalCoins() - getCoinsWithoutGST()}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xff54C339),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xffFCEABD),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Total Silver Coins',
+                          style: TextStyle(color: Color(0xff222222), fontWeight: FontWeight.w600),
+                        ),
+                        Row(
+                          spacing: 4,
+                          children: [
+                            SvgPicture.asset('assets/images/svg/silver_coin.svg'),
+                            Text(
+                              '${getTotalCoins()}',
+                              style: const TextStyle(
+                                color: Color(0xff222222),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: MaterialButton(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          height: 54,
+          color: const Color(0xff54C339),
+          onPressed: () {
+            ref.read(walletProvider.notifier).createPaymentGateway();
+          },
+          child: Text(
+            'Proceed to pay'.toUpperCase(),
+            style: const TextStyle(fontWeight: FontWeight.w800),
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -50,6 +50,7 @@ import 'package:rooktook/src/view/tournament/pages/tournament_screen.dart';
 import 'package:rooktook/src/view/user/challenge_requests_screen.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/view/user/recent_games.dart';
+import 'package:rooktook/src/view/wallet/presentation/wallet_page.dart';
 import 'package:rooktook/src/widgets/buttons.dart';
 import 'package:rooktook/src/widgets/feedback.dart';
 import 'package:rooktook/src/widgets/match_result_popup.dart';
@@ -302,8 +303,23 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               //   icon: Icon(isEditing ? Icons.save_outlined : Icons.app_registration),
               //   tooltip: isEditing ? 'Save' : 'Edit',
               // ),
-              // const _ChallengeScreenButton(),
-              // IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const WalletPage()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xff2B2D30),
+                    border: Border.all(color: const Color(0xff464A4F)),
+                  ),
+                  child: SvgPicture.asset('assets/images/svg/wallet1.svg', height: 20),
+                ),
+              ),
               // const _PlayerScreenButton(),
               Padding(
                 padding: const EdgeInsets.all(8.0),

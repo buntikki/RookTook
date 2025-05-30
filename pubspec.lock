@@ -662,6 +662,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.1"
+  flutter_cashfree_pg_sdk:
+    dependency: "direct main"
+    description:
+      name: flutter_cashfree_pg_sdk
+      sha256: "3470fd4293939e29d6a5c2e811ec8eef8b1588e407ff6e51c68d19850845804d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.7+45"
   flutter_custom_clippers:
     dependency: "direct main"
     description:
