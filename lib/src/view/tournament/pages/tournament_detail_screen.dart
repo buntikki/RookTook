@@ -41,7 +41,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     if (data == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Error joining tournamnet', style: TextStyle(color: Colors.white)),
+          content: Text('Error joining tournament', style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.red,
         ),
       );
@@ -93,7 +93,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Tournamnet joined successfully', style: TextStyle(color: Colors.white)),
+          content: Text('Tournament joined successfully', style: TextStyle(color: Colors.white)),
           backgroundColor: Color(0xFF54C339),
         ),
       );
