@@ -40,14 +40,14 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: SafeArea(
+        minimum: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
             Text(
-              'Enter the referral code',
+              'Have a \nreferral code?',
               style: Theme.of(
                 context,
               ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -56,7 +56,7 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
               inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
               controller: controller,
               decoration: InputDecoration(
-                hintText: 'Enter the referral code',
+                hintText: 'Enter referral code',
                 hintStyle: TextStyle(color: Colors.grey.shade500),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 border: border,
@@ -67,11 +67,28 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
             const Spacer(),
             ElevatedButton(
               onPressed: () async {
-                await ref.read(referralProvider.notifier).createReferral(controller.text.trim());
-                Navigator.of(context).pushAndRemoveUntil(
-                  buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-                  (route) => false,
-                );
+                if (controller.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      duration: Duration(seconds: 1),
+                      content: Text(
+                        "Referral Code can't be empty",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } else {
+                  await ref
+                      .read(referralProvider.notifier)
+                      .createReferral(controller.text.trim())
+                      .then(
+                        (_) => Navigator.of(context).pushAndRemoveUntil(
+                          buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+                          (route) => false,
+                        ),
+                      );
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xff4CAF50), // Green color

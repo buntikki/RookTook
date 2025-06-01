@@ -77,6 +77,7 @@ class ReferralNotifier extends StateNotifier<ReferralState> {
     final headers = {
       'Access-Control-Allow-Origin': '*',
       'Origin': 'https://lichess.dev',
+      'Content-Type': 'application/json',
       'Authorization': 'Bearer ${signBearerToken(data!.token)}',
     };
     try {

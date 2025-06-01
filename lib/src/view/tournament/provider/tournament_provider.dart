@@ -249,7 +249,7 @@ class Tournament {
       name: map['name'] as String,
       maxParticipants: map['maxParticipants'] as int,
       id: map['id'] as String,
-      rewardGoldCoins: map['rewardGoldCoins'] as int,
+      rewardGoldCoins: map['rewardGoldCoins'] != null ? map['rewardGoldCoins'] as int : 0,
       rewardPool: map['rewardPool'] as String,
       customRules: map['customRules'] as String,
       howToPlay: map['howToPlay'] as String,

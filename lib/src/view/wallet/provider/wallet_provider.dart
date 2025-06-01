@@ -2,42 +2,44 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfwebcheckoutpayment.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpaymentgateway/cfpaymentgatewayservice.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfsession/cfsession.dart';
 import 'package:flutter_cashfree_pg_sdk/utils/cfenums.dart';
-import 'package:flutter_cashfree_pg_sdk/utils/cfexceptions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/view/wallet/presentation/wallet_add_coins_page.dart';
 
 final walletProvider = StateNotifierProvider<WalletNotifier, WalletState>((ref) {
   return WalletNotifier();
 });
 final fetchWalletPageDetails = FutureProvider((ref) async {
-  final provider = ref.read(walletProvider.notifier);
-  await provider.getUserWalletInfo();
-  await provider.getUserLedger();
+  await ref.read(walletProvider.notifier).getUserLedger();
 });
 
 class WalletNotifier extends StateNotifier<WalletState> {
   WalletNotifier() : super(WalletState.initial());
 
-  Future<void> verifyPayment(String orderId) async {
+  Future<void> verifyPayment(String orderId, BuildContext context) async {
     print('Verify Payment of order id $orderId');
+    showSuccessOverlay(context);
     await verifyPaymentStatus(orderId: orderId);
   }
 
-  void paymentError(CFErrorResponse errorResponse, String orderId) {
+  void paymentError(CFErrorResponse errorResponse, String orderId, BuildContext context) {
+    // state = state.copyWith(showFailedAnimation: true);
     print(errorResponse.getMessage());
+    showFailedOverlay(context);
     print('Error while making payment of order id $orderId');
   }
 
-  Future<void> createPaymentGateway({required int amount}) async {
+  Future<void> createPaymentGateway({required int amount, required BuildContext context}) async {
     try {
       final result = await createPaymentOrder(amount: amount);
       if (result != null) {
@@ -49,7 +51,10 @@ class WalletNotifier extends StateNotifier<WalletState> {
                 .build();
         final cfWebCheckout = CFWebCheckoutPaymentBuilder().setSession(session).build();
         final cfPaymentGatewayService = CFPaymentGatewayService();
-        cfPaymentGatewayService.setCallback(verifyPayment, paymentError);
+        cfPaymentGatewayService.setCallback(
+          (id) => verifyPayment(id, context),
+          (error, id) => paymentError(error, id, context),
+        );
         cfPaymentGatewayService.doPayment(cfWebCheckout);
       } else {
         Exception('An error occured!');
@@ -101,10 +106,19 @@ class WalletNotifier extends StateNotifier<WalletState> {
             jsonDecode(response.body) as Map<String, dynamic>;
 
         state = state.copyWith(
+          walletInfo: WalletInfoModel.fromMap(
+            decodedResponse['walletInfo'] as Map<String, dynamic>,
+          ),
           ledgerList: List.from(
             (decodedResponse['coinLedger'] as List<dynamic>)
                 .map((e) => LedgerModel.fromMap(e as Map<String, dynamic>))
                 .toList(),
+          ),
+          goldToSilverConversion: GoldToSilverConversion.fromMap(
+            decodedResponse['conversionSettings']['goldToSilverRate'] as Map<String, dynamic>,
+          ),
+          rechargeConversionRate: RechargeConversion.fromMap(
+            decodedResponse['conversionSettings']['rechargeConversionRate'] as Map<String, dynamic>,
           ),
         );
       }
@@ -119,6 +133,7 @@ class WalletNotifier extends StateNotifier<WalletState> {
     final headers = {
       'Access-Control-Allow-Origin': '*',
       'Origin': 'https://lichess.dev',
+      'Content-Type': 'application/json',
       'Authorization': 'Bearer ${signBearerToken(data!.token)}',
     };
     try {
@@ -159,10 +174,14 @@ class WalletNotifier extends StateNotifier<WalletState> {
         final Map<String, dynamic> decodedResponse =
             jsonDecode(response.body) as Map<String, dynamic>;
 
-        print(decodedResponse);
+        state = state.copyWith(
+          walletInfo: WalletInfoModel.fromMap(
+            decodedResponse['walletInfo'] as Map<String, dynamic>,
+          ),
+        );
       }
     } catch (e) {
-      rethrow;
+      log(e.toString());
     }
   }
 
@@ -193,8 +212,8 @@ class WalletNotifier extends StateNotifier<WalletState> {
 
         print(decodedResponse);
         return (
-          decodedResponse['order_id'] as String,
-          decodedResponse['payment_session_id'] as String,
+          decodedResponse['orderId'] as String,
+          decodedResponse['paymentSessionId'] as String,
         );
       }
     } catch (e) {
@@ -206,17 +225,35 @@ class WalletNotifier extends StateNotifier<WalletState> {
 
 class WalletState {
   final WalletInfoModel walletInfo;
+  final GoldToSilverConversion goldToSilverConversion;
+  final RechargeConversion rechargeConversionRate;
   final List<LedgerModel> ledgerList;
 
-  factory WalletState.initial() =>
-      WalletState(walletInfo: WalletInfoModel.initial(), ledgerList: []);
+  factory WalletState.initial() => WalletState(
+    walletInfo: WalletInfoModel.initial(),
+    ledgerList: [],
+    goldToSilverConversion: GoldToSilverConversion.initial(),
+    rechargeConversionRate: RechargeConversion.initial(),
+  );
 
-  WalletState({required this.walletInfo, required this.ledgerList});
+  WalletState({
+    required this.walletInfo,
+    required this.ledgerList,
+    required this.goldToSilverConversion,
+    required this.rechargeConversionRate,
+  });
 
-  WalletState copyWith({WalletInfoModel? walletInfo, List<LedgerModel>? ledgerList}) {
+  WalletState copyWith({
+    WalletInfoModel? walletInfo,
+    List<LedgerModel>? ledgerList,
+    GoldToSilverConversion? goldToSilverConversion,
+    RechargeConversion? rechargeConversionRate,
+  }) {
     return WalletState(
       walletInfo: walletInfo ?? this.walletInfo,
       ledgerList: ledgerList ?? this.ledgerList,
+      goldToSilverConversion: goldToSilverConversion ?? this.goldToSilverConversion,
+      rechargeConversionRate: rechargeConversionRate ?? this.rechargeConversionRate,
     );
   }
 }
@@ -338,5 +375,67 @@ class WalletUserModel {
 
   factory WalletUserModel.fromMap(Map<String, dynamic> map) {
     return WalletUserModel(id: map['id'] as String, name: map['name'] as String);
+  }
+}
+
+class GoldToSilverConversion {
+  final String id;
+  final String coinType;
+  final int value;
+  final bool isActive;
+
+  GoldToSilverConversion({
+    required this.id,
+    required this.coinType,
+    required this.value,
+    required this.isActive,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{'id': id, 'coinType': coinType, 'value': value, 'isActive': isActive};
+  }
+
+  factory GoldToSilverConversion.initial() {
+    return GoldToSilverConversion(id: '', coinType: '', value: 0, isActive: false);
+  }
+
+  factory GoldToSilverConversion.fromMap(Map<String, dynamic> map) {
+    return GoldToSilverConversion(
+      id: map['id'] as String,
+      coinType: map['coinType'] as String,
+      value: map['value'] as int,
+      isActive: map['isActive'] as bool,
+    );
+  }
+}
+
+class RechargeConversion {
+  final String id;
+  final String coinType;
+  final int value;
+  final bool isActive;
+
+  RechargeConversion({
+    required this.id,
+    required this.coinType,
+    required this.value,
+    required this.isActive,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{'id': id, 'coinType': coinType, 'value': value, 'isActive': isActive};
+  }
+
+  factory RechargeConversion.initial() {
+    return RechargeConversion(id: '', coinType: '', value: 0, isActive: false);
+  }
+
+  factory RechargeConversion.fromMap(Map<String, dynamic> map) {
+    return RechargeConversion(
+      id: map['id'] as String,
+      coinType: map['coinType'] as String,
+      value: map['value'] as int,
+      isActive: map['isActive'] as bool,
+    );
   }
 }

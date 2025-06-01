@@ -2,7 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
+
+void showSuccessOverlay(BuildContext context) {
+  final overlay = Overlay.of(context);
+  final entry = OverlayEntry(
+    builder:
+        (context) => Positioned.fill(
+          child: ColoredBox(
+            color: Colors.black38,
+            child: LottieBuilder.asset('assets/success.json'),
+          ),
+        ),
+  );
+  overlay.insert(entry);
+  Future.delayed(const Duration(seconds: 1), () {
+    entry.remove();
+  });
+}
+
+void showFailedOverlay(BuildContext context) {
+  final overlay = Overlay.of(context);
+  final entry = OverlayEntry(
+    builder:
+        (context) => Positioned.fill(
+          child: ColoredBox(
+            color: Colors.black38,
+            child: LottieBuilder.asset('assets/failed.json'),
+          ),
+        ),
+  );
+  overlay.insert(entry);
+  Future.delayed(const Duration(milliseconds: 1500), () {
+    entry.remove();
+  });
+}
 
 class WalletAddCoinsPage extends ConsumerStatefulWidget {
   const WalletAddCoinsPage({super.key});
@@ -33,12 +68,12 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
     return (amount * 28) / 100;
   }
 
-  int getCoinsWithoutGST() {
-    return ((amount - calculateGst()) * 100).toInt();
+  int getCoinsWithoutGST(int conversionRate) {
+    return ((amount - calculateGst()) * conversionRate).toInt();
   }
 
-  int getTotalCoins() {
-    return amount * 100;
+  int getTotalCoins(int conversionRate) {
+    return amount * conversionRate;
   }
 
   @override
@@ -47,6 +82,8 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
       borderRadius: BorderRadius.circular(12),
       borderSide: const BorderSide(color: Colors.grey),
     );
+    final state = ref.watch(walletProvider);
+    final conversion = state.goldToSilverConversion;
     return Scaffold(
       appBar: AppBar(surfaceTintColor: Colors.transparent, title: const Text('Add Silver Coin')),
       body: SingleChildScrollView(
@@ -74,13 +111,13 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
                           height: 40,
                           width: 40,
                         ),
-                        const Column(
+                        Column(
                           children: [
                             Text(
-                              '2500',
-                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
+                              '${state.walletInfo.silverCoins}',
+                              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
                             ),
-                            Text(
+                            const Text(
                               'Current Silver coins',
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
@@ -101,9 +138,9 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
                       border: Border(top: BorderSide(color: Color(0xff464A4F), width: .5)),
                     ),
                     alignment: Alignment.center,
-                    child: const Text(
-                      '₹1 = 100 Silver Coins',
-                      style: TextStyle(color: Color(0xff959494)),
+                    child: Text(
+                      '₹1 = ${conversion.value} Silver Coins',
+                      style: const TextStyle(color: Color(0xff959494)),
                     ),
                   ),
                 ],
@@ -114,7 +151,7 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Select no. of coins',
+                  'Select amount',
                   style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xffEFEDED)),
                 ),
                 TextField(
@@ -249,7 +286,7 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
                               children: [
                                 SvgPicture.asset('assets/images/svg/silver_coin.svg'),
                                 Text(
-                                  '${getCoinsWithoutGST()}',
+                                  '${getCoinsWithoutGST(conversion.value)}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: Colors.black,
@@ -275,7 +312,7 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
                               children: [
                                 SvgPicture.asset('assets/images/svg/silver_coin.svg'),
                                 Text(
-                                  '${getTotalCoins() - getCoinsWithoutGST()}',
+                                  '${getTotalCoins(conversion.value) - getCoinsWithoutGST(conversion.value)}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w700,
                                     color: Color(0xff54C339),
@@ -306,7 +343,7 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
                           children: [
                             SvgPicture.asset('assets/images/svg/silver_coin.svg'),
                             Text(
-                              '${getTotalCoins()}',
+                              '${getTotalCoins(conversion.value)}',
                               style: const TextStyle(
                                 color: Color(0xff222222),
                                 fontWeight: FontWeight.w700,
@@ -330,7 +367,10 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
           height: 54,
           color: const Color(0xff54C339),
           onPressed: () {
-            ref.read(walletProvider.notifier).createPaymentGateway(amount: amount);
+            // showFailedOverlay(context);
+            ref
+                .read(walletProvider.notifier)
+                .createPaymentGateway(amount: amount, context: context);
           },
           child: Text(
             'Proceed to pay'.toUpperCase(),

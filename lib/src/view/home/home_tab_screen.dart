@@ -317,7 +317,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                     color: const Color(0xff2B2D30),
                     border: Border.all(color: const Color(0xff464A4F)),
                   ),
-                  child: SvgPicture.asset('assets/images/svg/wallet1.svg', height: 20),
+                  child: SvgPicture.asset('assets/images/svg/wallet.svg', height: 20),
                 ),
               ),
               // const _PlayerScreenButton(),

@@ -6,7 +6,6 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/model/notifications/notification_service.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/puzzle/storm_screen.dart';
@@ -14,6 +13,7 @@ import 'package:rooktook/src/view/settings/faq_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/participants_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_result.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
+import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class TournamentDetailScreen extends ConsumerStatefulWidget {
@@ -35,66 +35,91 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
   }
 
   Future<void> handleJoinTournament({required String id, String? inviteCode}) async {
-    final data = await ref
-        .read(tournamentProvider.notifier)
-        .joinTournament(id: id, inviteCode: inviteCode);
-    if (data == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error joining tournament', style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.red,
-        ),
-      );
+    await ref.read(walletProvider.notifier).getUserLedger();
+    final walletState = ref.read(walletProvider);
+    if (walletState.walletInfo.silverCoins >= widget.tournament.entrySilverCoins) {
+      final data = await ref
+          .read(tournamentProvider.notifier)
+          .joinTournament(id: id, inviteCode: inviteCode);
+
+      if (data == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error joining tournament', style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } else {
+        setState(() {
+          _tournament = data;
+        });
+
+        final baseId = int.tryParse(data.id) ?? 0;
+        final service = ref.read(notificationServiceProvider);
+
+        if (DateTime.fromMillisecondsSinceEpoch(
+          data.startTime,
+        ).subtract(const Duration(minutes: 1)).isAfter(DateTime.now())) {
+          await service.scheduleNotification(
+            id: baseId + 1,
+            title: data.name,
+            body: '${data.name} starts in 1 minute!',
+            scheduledTime: DateTime.fromMillisecondsSinceEpoch(
+              data.startTime,
+            ).subtract(const Duration(minutes: 1)),
+          );
+        }
+        if (DateTime.fromMillisecondsSinceEpoch(
+          data.startTime,
+        ).subtract(const Duration(minutes: 2)).isAfter(DateTime.now())) {
+          await service.scheduleNotification(
+            id: baseId + 2,
+            title: data.name,
+            body: '${data.name} starts in 2 minutes!',
+            scheduledTime: DateTime.fromMillisecondsSinceEpoch(
+              data.startTime,
+            ).subtract(const Duration(minutes: 2)),
+          );
+        }
+        if (DateTime.fromMillisecondsSinceEpoch(
+          data.startTime,
+        ).subtract(const Duration(minutes: 5)).isAfter(DateTime.now())) {
+          await service.scheduleNotification(
+            id: baseId + 5,
+            title: data.name,
+            body: '${data.name} starts in 5 minutes!',
+            scheduledTime: DateTime.fromMillisecondsSinceEpoch(
+              data.startTime,
+            ).subtract(const Duration(minutes: 5)),
+          );
+        }
+        await service.scheduleNotification(
+          id: baseId + 10,
+          title: data.name,
+          body: '${data.name} has ended. Check your results.!',
+          scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.endTime),
+        );
+        if (DateTime.fromMillisecondsSinceEpoch(data.startTime).isAfter(DateTime.now())) {
+          await service.scheduleNotification(
+            id: baseId,
+            title: data.name,
+            body: '${data.name} started!',
+            scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.startTime),
+          );
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Tournament joined successfully', style: TextStyle(color: Colors.white)),
+            backgroundColor: Color(0xFF54C339),
+          ),
+        );
+      }
     } else {
-      setState(() {
-        _tournament = data;
-      });
-      final baseId = int.tryParse(data.id) ?? 0;
-      final service = ref.read(notificationServiceProvider);
-
-      await service.scheduleNotification(
-        id: baseId + 1,
-        title: data.name,
-        body: '${data.name} starts in 1 minute!',
-        scheduledTime: DateTime.fromMillisecondsSinceEpoch(
-          data.startTime,
-        ).subtract(const Duration(minutes: 1)),
-      );
-
-      await service.scheduleNotification(
-        id: baseId + 2,
-        title: data.name,
-        body: '${data.name} starts in 2 minutes!',
-        scheduledTime: DateTime.fromMillisecondsSinceEpoch(
-          data.startTime,
-        ).subtract(const Duration(minutes: 2)),
-      );
-
-      await service.scheduleNotification(
-        id: baseId + 5,
-        title: data.name,
-        body: '${data.name} starts in 5 minutes!',
-        scheduledTime: DateTime.fromMillisecondsSinceEpoch(
-          data.startTime,
-        ).subtract(const Duration(minutes: 5)),
-      );
-      await service.scheduleNotification(
-        id: baseId + 10,
-        title: data.name,
-        body: '${data.name} has ended. Check your results.!',
-        scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.endTime),
-      );
-      await service.scheduleNotification(
-        id: baseId,
-        title: data.name,
-        body: '${data.name} started!',
-        scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.startTime),
-      );
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Tournament joined successfully', style: TextStyle(color: Colors.white)),
-          backgroundColor: Color(0xFF54C339),
+          content: Text('Not enough coins in the wallet', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
         ),
       );
     }
@@ -333,15 +358,16 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                                           context,
                                           TournamentResult.route(
                                             tournamentId: tournament.id,
-                                            isShowLoading:
-                                                DateTime.now()
-                                                    .difference(
-                                                      DateTime.fromMillisecondsSinceEpoch(
-                                                        tournament.endTime,
-                                                      ),
-                                                    )
-                                                    .inMinutes <
-                                                2,
+                                            isShowLoading: true,
+                                            // isShowLoading:
+                                            //     DateTime.now()
+                                            //         .difference(
+                                            //           DateTime.fromMillisecondsSinceEpoch(
+                                            //             tournament.endTime,
+                                            //           ),
+                                            //         )
+                                            //         .inMinutes <
+                                            //     2,
                                           ),
                                         );
                                       } else {

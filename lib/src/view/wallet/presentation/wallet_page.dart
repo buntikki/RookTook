@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
+import 'package:rooktook/src/view/settings/faq_screen.dart';
 import 'package:rooktook/src/view/wallet/presentation/wallet_add_coins_page.dart';
+import 'package:rooktook/src/view/wallet/presentation/wallet_faq_screen.dart';
 import 'package:rooktook/src/view/wallet/presentation/wallet_ledger_page.dart';
 import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 
@@ -21,11 +25,105 @@ class _WalletPageState extends ConsumerState<WalletPage> {
     ref.invalidate(fetchWalletPageDetails);
   }
 
+  final List<Map<String, String>> goldFaqs = [
+    {
+      'question': 'What are Gold Coins?',
+      'answer':
+          'Gold Coins are a premium currency awarded for exceptional performance in tournaments.',
+    },
+    {
+      'question': 'How can I earn Gold Coins?',
+      'answer': 'Finishing in top positions in select tournaments',
+    },
+    {
+      'question': 'Can I purchase Gold Coins?',
+      'answer': 'No, Gold Coins cannot be purchased. They must be earned through gameplay.',
+    },
+    {
+      'question': 'What can I do with Gold Coins?',
+      'answer':
+          'Gold Coins may be used in the RookTook Store to redeem exclusive items, features, or future rewards.',
+    },
+
+    {
+      'question': 'Can I use Gold Coins to enter tournaments?',
+      'answer': 'No, only Silver Coins can be used for tournament entry.',
+    },
+    {'question': 'Do Gold Coins expire?', 'answer': 'No, Gold Coins do not expire.'},
+    {
+      'question': 'Can I convert Gold Coins to Silver Coins?',
+      'answer': 'This feature is not currently available but may be added in future versions.',
+    },
+    {
+      'question': 'Why didn’t I receive Gold Coins after winning?',
+      'answer':
+          'Gold Coins are awarded only for eligible tournaments. Check the tournament rules to confirm eligibility.',
+    },
+  ];
+  final List<Map<String, String>> silverFaqs = [
+    {
+      'question': 'What are Silver Coins?',
+      'answer':
+          'Silver Coins are a virtual currency used to participate in tournaments and unlock certain game features.',
+    },
+    {
+      'question': 'How can I earn Silver Coins?',
+      'answer':
+          'You can earn Silver Coins by Winning 1v1 games, Completing puzzle challenges, Referring friends to the app',
+    },
+    {
+      'question': 'Can I purchase Silver Coins?',
+      'answer':
+          'Yes, Silver Coins can be purchased using real money via our in-app payment gateway.',
+    },
+    {
+      'question': 'Where can I use Silver Coins?',
+      'answer':
+          'Silver Coins are required to join tournaments and may be used in future features like power-ups or in-app purchases.',
+    },
+    {
+      'question': 'Do Silver Coins expire?',
+      'answer': 'No, Silver Coins do not expire and remain in your wallet unless spent.',
+    },
+    {
+      'question': 'How many Silver Coins do I need to join a tournament?',
+      'answer':
+          'The entry cost varies for each tournament. Check the tournament details page for the required number of coins.',
+    },
+    {
+      'question': 'Can I transfer Silver Coins to another user?',
+      'answer': 'Currently, coin transfers between users are not supported.',
+    },
+    {
+      'question':
+          'What happens if I leave or disconnect from a tournament I joined using Silver Coins?',
+      'answer': 'Coins used to join a tournament are non-refundable.',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     final provider = ref.watch(fetchWalletPageDetails);
     return Scaffold(
-      appBar: AppBar(surfaceTintColor: Colors.transparent, title: const Text('Wallet')),
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        title: const Text('Wallet'),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => WalletFaqScreen(silverFaqs: silverFaqs, goldFaqs: goldFaqs),
+                ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: SvgPicture.asset('assets/images/svg/faq.svg'),
+            ),
+          ),
+        ],
+      ),
       body: provider.when(
         data: (data) {
           return const WalletPageBodyWidget();
@@ -180,11 +278,12 @@ class WalletPageBodyWidget extends ConsumerWidget {
                       ),
                       Expanded(
                         child: ListView.separated(
-                          itemCount: state.ledgerList.length,
+                          itemCount: state.ledgerList.length < 10 ? state.ledgerList.length : 10,
                           shrinkWrap: true,
                           separatorBuilder: (context, index) => const SizedBox(height: 8),
                           itemBuilder: (BuildContext context, int index) {
-                            return const LedgerTile();
+                            final ledger = state.ledgerList.reversed.toList()[index];
+                            return LedgerTile(ledger: ledger);
                           },
                         ),
                       ),
@@ -199,14 +298,14 @@ class WalletPageBodyWidget extends ConsumerWidget {
   }
 }
 
-class ConvertCoinsSheet extends StatefulWidget {
+class ConvertCoinsSheet extends ConsumerStatefulWidget {
   const ConvertCoinsSheet({super.key});
 
   @override
-  State<ConvertCoinsSheet> createState() => _ConvertCoinsSheetState();
+  ConsumerState<ConvertCoinsSheet> createState() => _ConvertCoinsSheetState();
 }
 
-class _ConvertCoinsSheetState extends State<ConvertCoinsSheet> {
+class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
   int goldCoins = 100;
   final goldCoinController = TextEditingController(text: '100');
   void updateGoldCoins([int? value]) {
@@ -468,7 +567,9 @@ class _ConvertCoinsSheetState extends State<ConvertCoinsSheet> {
                 minWidth: double.infinity,
                 height: 54,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                onPressed: () {},
+                onPressed: () {
+                  ref.read(walletProvider.notifier).convertGoldToSilver(goldCoins: goldCoins);
+                },
                 child: const Text('CONVERT', style: TextStyle(fontWeight: FontWeight.w800)),
               ),
             ],
@@ -480,9 +581,10 @@ class _ConvertCoinsSheetState extends State<ConvertCoinsSheet> {
 }
 
 class LedgerTile extends StatelessWidget {
-  const LedgerTile({super.key, this.radius = 0, this.isBorder = false});
+  const LedgerTile({super.key, this.radius = 0, this.isBorder = false, required this.ledger});
   final double radius;
   final bool isBorder;
+  final LedgerModel ledger;
 
   @override
   Widget build(BuildContext context) {
@@ -500,14 +602,17 @@ class LedgerTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Versus Game',
+                ledger.reason,
                 style: TextStyle(
                   color: isBorder ? const Color(0xffEFEDED) : const Color(0xff222222),
                 ),
               ),
-              const Text(
-                '5 min ago',
-                style: TextStyle(
+              Text(
+                DateFormat(
+                  "dd MMM yyyy 'at' hh:mm a",
+                ).format(DateTime.fromMillisecondsSinceEpoch(ledger.createdAt)),
+
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: Color(0xff959494),
@@ -518,11 +623,14 @@ class LedgerTile extends StatelessWidget {
           Row(
             spacing: 4,
             children: [
-              const Text(
-                '+ 500',
-                style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xff54C339)),
+              Text(
+                '${ledger.amount > 0 ? '+' : ''}${ledger.amount}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: ledger.amount > 0 ? const Color(0xff54C339) : Colors.red,
+                ),
               ),
-              SvgPicture.asset('assets/images/svg/gold_coin.svg'),
+              SvgPicture.asset('assets/images/svg/${ledger.coinType}_coin.svg'),
             ],
           ),
         ],

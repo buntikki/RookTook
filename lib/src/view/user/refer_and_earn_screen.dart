@@ -29,7 +29,7 @@ class _ReferAndEarnScreenState extends ConsumerState<ReferAndEarnScreen> {
   Widget build(BuildContext context) {
     final provider = ref.watch(fetchUserReferralDetails);
     return Scaffold(
-      appBar: AppBar(title: const Text('Refer & Earn')),
+      appBar: AppBar(title: const Text('Refer & Earn'), surfaceTintColor: Colors.transparent),
       body: provider.when(
         data: (_) => const ReferAndEarnLoaded(),
         error: (error, stackTrace) => Center(child: Text('$error')),
@@ -47,8 +47,8 @@ class ReferAndEarnLoaded extends ConsumerWidget {
     final state = ref.watch(referralProvider);
     final details = state.referralDetails;
     final List<String> steps = [
-      'Invite your frind to install the app with your referral link',
-      'He will play his 1st Tournament',
+      'Invite your friend to install the app with your referral link',
+      'They will play their 1st Tournament',
       'You will get ${details.referralReward.value} silver coins & your friend will get ${details.referralReward.value} silver coins.',
     ];
     return SingleChildScrollView(
@@ -87,7 +87,7 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                   ],
                 ),
                 Text(
-                  'Invite your friends & family on RookTook. And you’ll earn ${details.referralReward.value} silver coins on their 1st play',
+                  'Invite your friends & family on RookTook. And you’ll earn ${details.referralReward.value} silver coins on their 1st tournament',
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -115,7 +115,7 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Your referral code',
+                        'Your referral link',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 12,
@@ -123,12 +123,13 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                         ),
                       ),
                       Text(
-                        'rooktook.com/${state.referralDetails.referralId}',
+                        'play.rooktook.com/${state.referralDetails.referralId}',
                         style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 14,
                           color: Color(0xffEFEDED),
                         ),
+                        textScaler: TextScaler.noScaling,
                       ),
                     ],
                   ),
@@ -175,9 +176,9 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          width: 24,
-                          height: 24,
-                          // padding: EdgeInsets.all(4),
+                          // width: 24,
+                          // height: 24,
+                          padding: const EdgeInsets.all(8),
                           alignment: Alignment.center,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
@@ -201,7 +202,7 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                         ...List.generate(
                           4,
                           (index) => Container(
-                            margin: const EdgeInsets.only(left: 16),
+                            margin: const EdgeInsets.only(left: 28),
                             height: 4,
                             width: .5,
                             color: const Color(0xff464A4F),

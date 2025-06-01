@@ -141,6 +141,7 @@ flutter:
     - assets/chess_puzzle.json
     - assets/finding_opponent.json
     - assets/pieces/custom/
+    - assets/
 
   fonts:
     - family: LichessIcons

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
@@ -89,14 +90,17 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
             //       ),
             // ),
           ),
-      error: (error, stackTrace) => const Scaffold(body: Text('data')),
+      error: (error, stackTrace) => Scaffold(body: Center(child: Text('$error'))),
       loading:
-          () => const Scaffold(
+          () => Scaffold(
             body: Center(
               child: Column(
                 spacing: 16,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [CircularProgressIndicator(), Text('Fetching Results')],
+                children: [
+                  Lottie.asset('assets/result_loading.json', height: 60),
+                  const Text('Fetching Results'),
+                ],
               ),
             ),
           ),
