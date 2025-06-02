@@ -125,11 +125,17 @@ class TournamentCard extends StatelessWidget {
                               child: Row(
                                 spacing: 4,
                                 children: [
-                                  SvgPicture.asset('assets/images/svg/gold_coin.svg', height: 14.0),
+                                  SvgPicture.asset(
+                                    'assets/images/svg/${tournament.rewardCoinType}_coin.svg',
+                                    height: 14.0,
+                                  ),
                                   Text(
-                                    '${tournament.rewardGoldCoins}',
-                                    style: const TextStyle(
-                                      color: Color(0xffD4AA40),
+                                    '${tournament.rewardCoins}',
+                                    style: TextStyle(
+                                      color:
+                                          tournament.rewardCoinType == 'silver'
+                                              ? Colors.white
+                                              : const Color(0xffD4AA40),
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
                                     ),

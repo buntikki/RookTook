@@ -98,7 +98,7 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
                 spacing: 16,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Lottie.asset('assets/result_loading.json', height: 60),
+                  Lottie.asset('assets/result_loading.json', height: 120),
                   const Text('Fetching Results'),
                 ],
               ),
@@ -168,7 +168,7 @@ class TournamentResultCard extends StatelessWidget {
                       children: [
                         SvgPicture.asset('assets/images/svg/gold_coin.svg', height: 16, width: 16),
                         Text(
-                          ' ${player.rewardGoldCoins}',
+                          ' ${player.rewardCoins}',
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             color: isUserCard ? const Color(0xff222222) : const Color(0xffEFEDED),

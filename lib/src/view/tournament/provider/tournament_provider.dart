@@ -205,8 +205,9 @@ class Tournament {
   final int puzzleDuration;
   final int entrySilverCoins;
   final String name;
+  final String rewardCoinType;
   final int maxParticipants;
-  final int rewardGoldCoins;
+  final int rewardCoins;
   final bool oneTime;
   final bool haveParticipated;
   final String id;
@@ -227,10 +228,11 @@ class Tournament {
     required this.name,
     required this.maxParticipants,
     required this.id,
+    required this.rewardCoinType,
     required this.haveParticipated,
     required this.oneTime,
     required this.rewardPool,
-    required this.rewardGoldCoins,
+    required this.rewardCoins,
     required this.customRules,
     required this.howToPlay,
     required this.players,
@@ -249,7 +251,9 @@ class Tournament {
       name: map['name'] as String,
       maxParticipants: map['maxParticipants'] as int,
       id: map['id'] as String,
-      rewardGoldCoins: map['rewardGoldCoins'] != null ? map['rewardGoldCoins'] as int : 0,
+      rewardCoinType:
+          (map['rewardCoinType'] != null ? map['rewardCoinType'] as String : 'gold').toLowerCase(),
+      rewardCoins: map['rewardCoins'] != null ? map['rewardCoins'] as int : 0,
       rewardPool: map['rewardPool'] as String,
       customRules: map['customRules'] as String,
       howToPlay: map['howToPlay'] as String,
@@ -276,7 +280,7 @@ class Player {
   final int combo;
   final int time;
   final int rank;
-  final int rewardGoldCoins;
+  final int rewardCoins;
   final bool? withdraw;
 
   Player({
@@ -289,7 +293,7 @@ class Player {
     required this.combo,
     required this.time,
     required this.rank,
-    required this.rewardGoldCoins,
+    required this.rewardCoins,
     required this.errors,
     required this.moves,
   });
@@ -306,7 +310,7 @@ class Player {
       combo: map['combo'] != null ? map['combo'] as int : 0,
       moves: map['moves'] != null ? map['moves'] as int : 0,
       errors: map['errors'] != null ? map['errors'] as int : 0,
-      rewardGoldCoins: map['rewardGoldCoins'] != null ? map['rewardGoldCoins'] as int : 0,
+      rewardCoins: map['rewardCoins'] != null ? map['rewardCoins'] as int : 0,
       withdraw: map['withdraw'] != null ? map['withdraw'] as bool : null,
     );
   }

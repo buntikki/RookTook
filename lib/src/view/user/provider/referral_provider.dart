@@ -186,37 +186,44 @@ class ReferredUserModel {
 
 class ReferralDetailsModel {
   final String referralId;
-  final ReferralRewardModel referralReward;
+  final RewardModel referredRewardSetting;
+  final RewardModel referrerRewardSetting;
 
-  ReferralDetailsModel({required this.referralId, required this.referralReward});
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{'referralId': referralId, 'referralReward': referralReward.toMap()};
-  }
+  ReferralDetailsModel({
+    required this.referralId,
+    required this.referredRewardSetting,
+    required this.referrerRewardSetting,
+  });
 
   factory ReferralDetailsModel.initial() => ReferralDetailsModel(
     referralId: '',
-    referralReward: ReferralRewardModel(coinType: '', value: 0),
+    referredRewardSetting: RewardModel(coinType: '', value: 0),
+    referrerRewardSetting: RewardModel(coinType: '', value: 0),
   );
   factory ReferralDetailsModel.fromMap(Map<String, dynamic> map) {
     return ReferralDetailsModel(
       referralId: map['referralId'] as String,
-      referralReward: ReferralRewardModel.fromMap(map['referralReward'] as Map<String, dynamic>),
+      referredRewardSetting: RewardModel.fromMap(
+        map['referredRewardSetting'] as Map<String, dynamic>,
+      ),
+      referrerRewardSetting: RewardModel.fromMap(
+        map['referrerRewardSetting'] as Map<String, dynamic>,
+      ),
     );
   }
 }
 
-class ReferralRewardModel {
+class RewardModel {
   final String coinType;
   final int value;
 
-  ReferralRewardModel({required this.coinType, required this.value});
+  RewardModel({required this.coinType, required this.value});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{'coinType': coinType, 'value': value};
   }
 
-  factory ReferralRewardModel.fromMap(Map<String, dynamic> map) {
-    return ReferralRewardModel(coinType: map['coinType'] as String, value: map['value'] as int);
+  factory RewardModel.fromMap(Map<String, dynamic> map) {
+    return RewardModel(coinType: map['coinType'] as String, value: map['value'] as int);
   }
 }

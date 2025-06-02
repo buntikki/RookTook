@@ -253,9 +253,9 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                 spacing: 12,
                 children: [
                   _coinCard(
-                    icon: 'assets/images/svg/gold_coin.svg',
+                    icon: 'assets/images/svg/${tournament.rewardCoinType}_coin.svg',
                     label: 'Reward',
-                    value: '${tournament.rewardGoldCoins} C',
+                    value: '${tournament.rewardCoins} C',
                   ),
                   _coinCard(
                     icon: 'assets/images/svg/silver_coin.svg',
@@ -358,16 +358,15 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                                           context,
                                           TournamentResult.route(
                                             tournamentId: tournament.id,
-                                            isShowLoading: true,
-                                            // isShowLoading:
-                                            //     DateTime.now()
-                                            //         .difference(
-                                            //           DateTime.fromMillisecondsSinceEpoch(
-                                            //             tournament.endTime,
-                                            //           ),
-                                            //         )
-                                            //         .inMinutes <
-                                            //     2,
+                                            isShowLoading:
+                                                DateTime.now()
+                                                    .difference(
+                                                      DateTime.fromMillisecondsSinceEpoch(
+                                                        tournament.endTime,
+                                                      ),
+                                                    )
+                                                    .inMinutes <
+                                                1,
                                           ),
                                         );
                                       } else {

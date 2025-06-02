@@ -4,8 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
-import 'package:rooktook/src/view/settings/faq_screen.dart';
 import 'package:rooktook/src/view/wallet/presentation/wallet_add_coins_page.dart';
 import 'package:rooktook/src/view/wallet/presentation/wallet_faq_screen.dart';
 import 'package:rooktook/src/view/wallet/presentation/wallet_ledger_page.dart';
@@ -111,7 +109,8 @@ class _WalletPageState extends ConsumerState<WalletPage> {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(
+              Navigator.push(
+                context,
                 MaterialPageRoute(
                   builder: (context) => WalletFaqScreen(silverFaqs: silverFaqs, goldFaqs: goldFaqs),
                 ),
@@ -142,7 +141,7 @@ class WalletPageBodyWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(walletProvider);
     final walletInfo = state.walletInfo;
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         spacing: 24,
@@ -227,68 +226,77 @@ class WalletPageBodyWidget extends ConsumerWidget {
             }),
           ),
           if (state.ledgerList.isNotEmpty)
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const WalletLedgerPage()),
-                  );
-                },
-                child: Container(
-                  clipBehavior: Clip.hardEdge,
-                  decoration: BoxDecoration(
-                    color: const Color(0xffF4F4F4),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Ledger',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18,
-                                color: Color(0xff222222),
-                              ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const WalletLedgerPage()),
+                );
+              },
+              child: Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  color: const Color(0xffF4F4F4),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Ledger',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18,
+                              color: Color(0xff222222),
                             ),
-                            Container(
-                              width: 36,
-                              height: 36,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(Icons.arrow_outward, color: Colors.black, size: 20),
+                          ),
+                          Container(
+                            width: 36,
+                            height: 36,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                            child: const Icon(Icons.arrow_outward, color: Colors.black, size: 20),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: ListView.separated(
-                          itemCount: state.ledgerList.length < 10 ? state.ledgerList.length : 10,
-                          shrinkWrap: true,
-                          separatorBuilder: (context, index) => const SizedBox(height: 8),
-                          itemBuilder: (BuildContext context, int index) {
+                    ),
+                    Column(
+                      spacing: 8,
+                      children: [
+                        ...List.generate(
+                          state.ledgerList.length < 5 ? state.ledgerList.length : 5,
+                          (index) {
                             final ledger = state.ledgerList.reversed.toList()[index];
                             return LedgerTile(ledger: ledger);
                           },
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                    // ListView.separated(
+                    //   itemCount: state.ledgerList.length < 10 ? state.ledgerList.length : 10,
+                    //   shrinkWrap: true,
+                    //   separatorBuilder: (context, index) => const SizedBox(height: 8),
+                    //   itemBuilder: (BuildContext context, int index) {
+                    //     final ledger = state.ledgerList.reversed.toList()[index];
+                    //     return LedgerTile(ledger: ledger);
+                    //   },
+                    // ),
+                  ],
                 ),
               ),
             ),
@@ -308,30 +316,22 @@ class ConvertCoinsSheet extends ConsumerStatefulWidget {
 class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
   int goldCoins = 100;
   final goldCoinController = TextEditingController(text: '100');
-  void updateGoldCoins([int? value]) {
-    if (value == null) {
-      final int parsedValue = int.parse(
-        goldCoinController.text.isEmpty ? '0' : goldCoinController.text.trim(),
-      );
-      goldCoins = parsedValue > 1000 ? 1000 : parsedValue;
-    } else {
-      goldCoins = value;
-      goldCoinController.text = '$value';
-    }
-    setState(() {});
-  }
+  final maxLimit = 1000;
 
   @override
   void initState() {
     super.initState();
-    goldCoinController.addListener(() {
-      final int parsedValue = int.parse(
-        goldCoinController.text.isEmpty ? '0' : goldCoinController.text.trim(),
-      );
-      goldCoins = parsedValue > 1000 ? 1000 : parsedValue;
-
-      updateGoldCoins();
-    });
+    final int walletCoinsValue = ref.read(walletProvider).walletInfo.goldCoins;
+    goldCoins = walletCoinsValue > maxLimit ? maxLimit : walletCoinsValue;
+    goldCoinController.text = goldCoins.toString();
+    goldCoinController.addListener(
+      () => setState(() {
+        final int parsedValue = int.parse(
+          goldCoinController.text.isEmpty ? '0' : goldCoinController.text.trim(),
+        );
+        goldCoins = parsedValue;
+      }),
+    );
   }
 
   @override
@@ -342,6 +342,9 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(walletProvider);
+    final conversion = state.goldToSilverConversion;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -393,9 +396,9 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
                           Row(
                             spacing: 8,
                             children: [
-                              const Text(
-                                '+100',
-                                style: TextStyle(
+                              Text(
+                                '${state.walletInfo.goldCoins}',
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xff54C339),
                                 ),
@@ -413,9 +416,9 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
                         borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
                         color: Color(0xffFCEABD),
                       ),
-                      child: const Text(
-                        '1 Gold Coin = 25 Silver Coins',
-                        style: TextStyle(color: Color(0xff926C0D)),
+                      child: Text(
+                        '1 Gold Coin = ${conversion.value} Silver Coins',
+                        style: const TextStyle(color: Color(0xff926C0D)),
                       ),
                     ),
                   ],
@@ -460,8 +463,12 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
                                   if (index == 0)
                                     GestureDetector(
                                       onTap: () {
-                                        if (goldCoins > 0) {
-                                          updateGoldCoins(goldCoins - 1);
+                                        if (goldCoins > 1) {
+                                          setState(() {
+                                            goldCoins -= 1;
+
+                                            goldCoinController.text = goldCoins.toString();
+                                          });
                                         }
                                       },
                                       child: Container(
@@ -469,7 +476,7 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
                                         height: 32,
                                         decoration: BoxDecoration(
                                           color: const Color(0xff666666),
-                                          borderRadius: BorderRadius.circular(6),
+                                          borderRadius: BorderRadius.circular(4),
                                         ),
                                         child: const Icon(CupertinoIcons.minus, size: 20),
                                       ),
@@ -480,13 +487,14 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
                                         height: 32,
                                         child: Center(
                                           child: TextField(
+                                            textAlign: TextAlign.center,
                                             controller: goldCoinController,
                                             onChanged: (value) {
                                               final int parsedValue = int.parse(
                                                 value.isEmpty ? '0' : value.trim(),
                                               );
                                               goldCoinController.text =
-                                                  parsedValue > 1000 ? '1000' : value;
+                                                  parsedValue > maxLimit ? '$maxLimit' : value;
                                             },
                                             keyboardType: TextInputType.number,
                                             inputFormatters: [
@@ -516,7 +524,7 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
                                       height: 32,
                                       child: Center(
                                         child: Text(
-                                          '${goldCoins * 25}',
+                                          '${goldCoins * conversion.value}',
                                           style: const TextStyle(fontSize: 16),
                                         ),
                                       ),
@@ -524,14 +532,23 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
                                   if (index == 0)
                                     GestureDetector(
                                       onTap: () {
-                                        if (goldCoins < 1000) updateGoldCoins(goldCoins + 1);
+                                        if (goldCoins <
+                                            (state.walletInfo.goldCoins > maxLimit
+                                                ? maxLimit
+                                                : state.walletInfo.goldCoins)) {
+                                          setState(() {
+                                            goldCoins += 1;
+
+                                            goldCoinController.text = goldCoins.toString();
+                                          });
+                                        }
                                       },
                                       child: Container(
                                         width: 32,
                                         height: 32,
                                         decoration: BoxDecoration(
                                           color: const Color(0xff54C339),
-                                          borderRadius: BorderRadius.circular(6),
+                                          borderRadius: BorderRadius.circular(4),
                                         ),
                                         child: const Icon(CupertinoIcons.add, size: 20),
                                       ),
@@ -568,7 +585,12 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
                 height: 54,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 onPressed: () {
-                  ref.read(walletProvider.notifier).convertGoldToSilver(goldCoins: goldCoins);
+                  if (state.walletInfo.goldCoins > 0 && goldCoinController.text.trim().isNotEmpty) {
+                    ref
+                        .read(walletProvider.notifier)
+                        .convertGoldToSilver(goldCoins: goldCoins, context: context);
+                    Navigator.pop(context);
+                  }
                 },
                 child: const Text('CONVERT', style: TextStyle(fontWeight: FontWeight.w800)),
               ),
@@ -596,29 +618,34 @@ class LedgerTile extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
       child: Row(
+        spacing: 16,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                ledger.reason,
-                style: TextStyle(
-                  color: isBorder ? const Color(0xffEFEDED) : const Color(0xff222222),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  ledger.reason,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: isBorder ? const Color(0xffEFEDED) : const Color(0xff222222),
+                  ),
                 ),
-              ),
-              Text(
-                DateFormat(
-                  "dd MMM yyyy 'at' hh:mm a",
-                ).format(DateTime.fromMillisecondsSinceEpoch(ledger.createdAt)),
+                Text(
+                  DateFormat(
+                    "dd MMM yyyy 'at' hh:mm a",
+                  ).format(DateTime.fromMillisecondsSinceEpoch(ledger.createdAt)),
 
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff959494),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xff959494),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Row(
             spacing: 4,
@@ -630,7 +657,7 @@ class LedgerTile extends StatelessWidget {
                   color: ledger.amount > 0 ? const Color(0xff54C339) : Colors.red,
                 ),
               ),
-              SvgPicture.asset('assets/images/svg/${ledger.coinType}_coin.svg'),
+              SvgPicture.asset('assets/images/svg/${ledger.coinType}_coin.svg', height: 20),
             ],
           ),
         ],

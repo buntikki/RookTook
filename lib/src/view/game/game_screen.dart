@@ -153,6 +153,7 @@ class _GameScreenState extends ConsumerState<GameScreen> with RouteAware {
             gameId != null
                 ? GameBody(
                   id: gameId,
+                  seek: widget.seek!,
                   loadingBoardWidget: StandaloneGameLoadingBoard(
                     fen: widget.loadingFen,
                     lastMove: widget.loadingLastMove,
@@ -337,6 +338,7 @@ class _LobbyGameTitle extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mode = seek.rated ? ' • ${context.l10n.rated}' : ' • ${context.l10n.casual}';
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

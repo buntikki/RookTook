@@ -1,43 +1,17 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
+
 import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 
-void showSuccessOverlay(BuildContext context) {
-  final overlay = Overlay.of(context);
-  final entry = OverlayEntry(
-    builder:
-        (context) => Positioned.fill(
-          child: ColoredBox(
-            color: Colors.black38,
-            child: LottieBuilder.asset('assets/success.json'),
-          ),
-        ),
-  );
-  overlay.insert(entry);
-  Future.delayed(const Duration(seconds: 1), () {
-    entry.remove();
-  });
-}
+final _border = OutlineInputBorder(
+  borderRadius: BorderRadius.circular(12),
+  borderSide: const BorderSide(color: Colors.grey),
+);
 
-void showFailedOverlay(BuildContext context) {
-  final overlay = Overlay.of(context);
-  final entry = OverlayEntry(
-    builder:
-        (context) => Positioned.fill(
-          child: ColoredBox(
-            color: Colors.black38,
-            child: LottieBuilder.asset('assets/failed.json'),
-          ),
-        ),
-  );
-  overlay.insert(entry);
-  Future.delayed(const Duration(milliseconds: 1500), () {
-    entry.remove();
-  });
-}
 
 class WalletAddCoinsPage extends ConsumerStatefulWidget {
   const WalletAddCoinsPage({super.key});
@@ -53,7 +27,10 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
   void initState() {
     super.initState();
     amountController.addListener(() {
-      amount = int.parse(amountController.text.trim().isEmpty ? '0' : amountController.text.trim());
+      final int parsedAmount = int.parse(
+        amountController.text.trim().isEmpty ? '0' : amountController.text.trim(),
+      );
+      amount = parsedAmount > 1000 ? 1000 : parsedAmount;
       setState(() {});
     });
   }
@@ -78,12 +55,8 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.grey),
-    );
     final state = ref.watch(walletProvider);
-    final conversion = state.goldToSilverConversion;
+    final conversion = state.rechargeConversionRate;
     return Scaffold(
       appBar: AppBar(surfaceTintColor: Colors.transparent, title: const Text('Add Silver Coin')),
       body: SingleChildScrollView(
@@ -164,11 +137,11 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     isDense: true,
-                    border: border,
-                    enabledBorder: border,
-                    errorBorder: border,
-                    focusedBorder: border,
-                    focusedErrorBorder: border,
+                    border: _border,
+                    enabledBorder: _border,
+                    errorBorder: _border,
+                    focusedBorder: _border,
+                    focusedErrorBorder: _border,
                     hintText: 'Enter the amount',
                   ),
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -366,16 +339,126 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           height: 54,
           color: const Color(0xff54C339),
-          onPressed: () {
-            // showFailedOverlay(context);
-            ref
-                .read(walletProvider.notifier)
-                .createPaymentGateway(amount: amount, context: context);
+          onPressed: () async {
+            final provider = ref.read(walletProvider.notifier);
+            final phoneNumber = await provider.getPhoneNumber();
+            if (phoneNumber == null) {
+              showModalBottomSheet(
+                isScrollControlled: true,
+                backgroundColor: const Color(0xFF1A1F23),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                context: context,
+                builder:
+                    (context) => PhoneNumberSheet(
+                      onPressed: (value) {
+                        provider.savePhoneNumber(value);
+                        provider.createPaymentGateway(
+                          amount: amount,
+                          context: context,
+                          phoneNumber: value,
+                        );
+                      },
+                    ),
+              );
+            } else {
+              ref
+                  .read(walletProvider.notifier)
+                  .createPaymentGateway(amount: amount, context: context, phoneNumber: phoneNumber);
+            }
           },
           child: Text(
             'Proceed to pay'.toUpperCase(),
             style: const TextStyle(fontWeight: FontWeight.w800),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class PhoneNumberSheet extends StatefulWidget {
+  const PhoneNumberSheet({super.key, required this.onPressed});
+  final void Function(String phonenUmber) onPressed;
+
+  @override
+  State<PhoneNumberSheet> createState() => _PhoneNumberSheetState();
+}
+
+class _PhoneNumberSheetState extends State<PhoneNumberSheet> {
+  final phoneController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(
+        16.0,
+      ).copyWith(bottom: MediaQuery.of(context).viewInsets.bottom + 28),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          spacing: 16,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 4,
+              width: 40,
+              decoration: BoxDecoration(
+                color: Colors.grey[600],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const Text(
+              'Enter Phone Number',
+              style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xffEFEDED), fontSize: 16),
+            ),
+            TextFormField(
+              style: const TextStyle(fontSize: 16, color: Color(0xffEFEDED)),
+              keyboardType: TextInputType.phone,
+              maxLength: 10,
+              controller: phoneController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Phone number can't be empty";
+                }
+                if (value!.length < 10) {
+                  return 'Phone number is incomplete';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                isDense: true,
+                border: _border,
+                counterText: '',
+                enabledBorder: _border,
+                errorBorder: _border,
+                focusedBorder: _border,
+                focusedErrorBorder: _border,
+                hintText: 'xxxxxxxxxx',
+                prefixIconConstraints: const BoxConstraints.tightFor(width: 44),
+                hintStyle: const TextStyle(fontSize: 14, color: Color(0xff7D8082)),
+                prefixIcon: const Center(
+                  child: Text('+91', style: TextStyle(fontSize: 16, color: Color(0xffEFEDED))),
+                ),
+              ),
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            ),
+            MaterialButton(
+              minWidth: double.infinity,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              height: 54,
+              color: const Color(0xff54C339),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  Navigator.pop(context);
+                  widget.onPressed(phoneController.text);
+                }
+              },
+              child: const Text('SUBMIT', style: TextStyle(fontWeight: FontWeight.w800)),
+            ),
+          ],
         ),
       ),
     );

@@ -10,11 +10,12 @@ import 'package:flutter_cashfree_pg_sdk/api/cfsession/cfsession.dart';
 import 'package:flutter_cashfree_pg_sdk/utils/cfenums.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/network/http.dart';
-import 'package:rooktook/src/view/wallet/presentation/wallet_add_coins_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final walletProvider = StateNotifierProvider<WalletNotifier, WalletState>((ref) {
   return WalletNotifier();
@@ -26,10 +27,44 @@ final fetchWalletPageDetails = FutureProvider((ref) async {
 class WalletNotifier extends StateNotifier<WalletState> {
   WalletNotifier() : super(WalletState.initial());
 
+  void showSuccessOverlay(BuildContext context) {
+    final overlay = Overlay.of(context);
+    final entry = OverlayEntry(
+      builder:
+          (context) => Positioned.fill(
+            child: ColoredBox(
+              color: Colors.black38,
+              child: Center(child: Lottie.asset('assets/success.json', height: 120)),
+            ),
+          ),
+    );
+    overlay.insert(entry);
+    Future.delayed(const Duration(seconds: 1), () {
+      entry.remove();
+    });
+  }
+
+  void showFailedOverlay(BuildContext context) {
+    final overlay = Overlay.of(context);
+    final entry = OverlayEntry(
+      builder:
+          (context) => Positioned.fill(
+            child: ColoredBox(color: Colors.black38, child: Lottie.asset('assets/failed.json')),
+          ),
+    );
+    overlay.insert(entry);
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      entry.remove();
+    });
+  }
+
   Future<void> verifyPayment(String orderId, BuildContext context) async {
     print('Verify Payment of order id $orderId');
-    showSuccessOverlay(context);
-    await verifyPaymentStatus(orderId: orderId);
+
+    final status = await verifyPaymentStatus(orderId: orderId);
+    if (status == 'success') {
+      showSuccessOverlay(context);
+    }
   }
 
   void paymentError(CFErrorResponse errorResponse, String orderId, BuildContext context) {
@@ -39,15 +74,31 @@ class WalletNotifier extends StateNotifier<WalletState> {
     print('Error while making payment of order id $orderId');
   }
 
-  Future<void> createPaymentGateway({required int amount, required BuildContext context}) async {
+  Future<String?> getPhoneNumber() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('phoneNumber');
+  }
+
+  Future<void> savePhoneNumber(String phoneNumber) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('phoneNumber', phoneNumber);
+  }
+
+  Future<void> createPaymentGateway({
+    required int amount,
+    required BuildContext context,
+    required String phoneNumber,
+  }) async {
     try {
-      final result = await createPaymentOrder(amount: amount);
+      final result = await createPaymentOrder(amount: amount, phoneNumber: phoneNumber);
       if (result != null) {
+        final orderId = result.$1;
+        final paymentSessionId = result.$2;
         final session =
             CFSessionBuilder()
                 .setEnvironment(CFEnvironment.SANDBOX)
-                .setOrderId(result.$1)
-                .setPaymentSessionId(result.$2)
+                .setOrderId(orderId)
+                .setPaymentSessionId(paymentSessionId)
                 .build();
         final cfWebCheckout = CFWebCheckoutPaymentBuilder().setSession(session).build();
         final cfPaymentGatewayService = CFPaymentGatewayService();
@@ -127,7 +178,7 @@ class WalletNotifier extends StateNotifier<WalletState> {
     }
   }
 
-  Future<void> convertGoldToSilver({required int goldCoins}) async {
+  Future<void> convertGoldToSilver({required int goldCoins, required BuildContext context}) async {
     const storage = SessionStorage();
     final data = await storage.read();
     final headers = {
@@ -147,14 +198,54 @@ class WalletNotifier extends StateNotifier<WalletState> {
         final Map<String, dynamic> decodedResponse =
             jsonDecode(response.body) as Map<String, dynamic>;
 
-        print(decodedResponse);
+        final bool converted = decodedResponse['converted'] as bool;
+        if (converted) {
+          showSuccessOverlay(context);
+        } else {
+          showFailedOverlay(context);
+        }
       }
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> verifyPaymentStatus({required String orderId}) async {
+  Future<void> processGameReward({
+    required String gameMode,
+    required String resultType,
+    required String gameId,
+    required String gameFullId,
+  }) async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+    };
+    try {
+      final response = await http.post(
+        lichessUri('/api/rt-wallet/process-game-reward'),
+        headers: headers,
+        body: jsonEncode({
+          'gameMode': gameMode,
+          'resultType': resultType,
+          'gameId': gameId,
+          'gameFullId': gameFullId,
+        }),
+      );
+      log(response.body);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> verifyPaymentStatus({required String orderId}) async {
     const storage = SessionStorage();
     final data = await storage.read();
     final headers = {
@@ -174,18 +265,26 @@ class WalletNotifier extends StateNotifier<WalletState> {
         final Map<String, dynamic> decodedResponse =
             jsonDecode(response.body) as Map<String, dynamic>;
 
-        state = state.copyWith(
-          walletInfo: WalletInfoModel.fromMap(
-            decodedResponse['walletInfo'] as Map<String, dynamic>,
-          ),
-        );
+        if (decodedResponse['walletInfo'] != null) {
+          state = state.copyWith(
+            walletInfo: WalletInfoModel.fromMap(
+              decodedResponse['walletInfo'] as Map<String, dynamic>,
+            ),
+          );
+        } else {
+          return decodedResponse['status'] as String;
+        }
       }
     } catch (e) {
       log(e.toString());
     }
+    return 'success';
   }
 
-  Future<(String, String)?> createPaymentOrder({required int amount}) async {
+  Future<(String, String)?> createPaymentOrder({
+    required int amount,
+    required String phoneNumber,
+  }) async {
     const storage = SessionStorage();
     final data = await storage.read();
     final headers = {
@@ -201,7 +300,7 @@ class WalletNotifier extends StateNotifier<WalletState> {
         body: jsonEncode({
           'orderAmount': amount,
           'orderCurrency': 'INR',
-          'customerPhone': '+919313096065',
+          'customerPhone': phoneNumber,
           'note': 'Buying silver coins for rooktook chess app',
         }),
       );

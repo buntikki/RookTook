@@ -14,6 +14,7 @@ import 'package:rooktook/src/model/game/chat_controller.dart';
 import 'package:rooktook/src/model/game/game_controller.dart';
 import 'package:rooktook/src/model/game/game_preferences.dart';
 import 'package:rooktook/src/model/game/playable_game.dart';
+import 'package:rooktook/src/model/lobby/game_seek.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:rooktook/src/utils/gestures_exclusion.dart';
 import 'package:rooktook/src/utils/immersive_mode.dart';
@@ -26,6 +27,7 @@ import 'package:rooktook/src/view/game/game_result_dialog.dart';
 import 'package:rooktook/src/view/game/game_screen_providers.dart';
 import 'package:rooktook/src/view/game/message_screen.dart';
 import 'package:rooktook/src/view/game/status_l10n.dart';
+import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 import 'package:rooktook/src/widgets/adaptive_action_sheet.dart';
 import 'package:rooktook/src/widgets/board_table.dart';
 import 'package:rooktook/src/widgets/bottom_bar.dart';
@@ -56,10 +58,12 @@ class GameBody extends ConsumerWidget {
     required this.onNewOpponentCallback,
     required this.loadingBoardWidget,
     required this.boardKey,
+    required this.seek,
   });
 
   /// The [GameFullId] of the game.
   final GameFullId id;
+  final GameSeek seek;
 
   /// [GlobalKey] for the white clock.
   ///
@@ -356,6 +360,19 @@ class GameBody extends ConsumerWidget {
     }
   }
 
+  String _getGameMode() {
+    switch (seek.timeIncrement?.display) {
+      case '3+2':
+        return '3plus2';
+      case '5+0':
+        return '5plus0';
+      case '10+0':
+        return '10plus0';
+      default:
+        return '';
+    }
+  }
+
   void _stateListener(
     AsyncValue<GameState>? prev,
     AsyncValue<GameState> state, {
@@ -377,6 +394,17 @@ class GameBody extends ConsumerWidget {
                 gameState.game.winner != null
                     ? ' • ${gameState.game.winner == Side.white ? context.l10n.whiteIsVictorious : context.l10n.blackIsVictorious}'
                     : '';
+            final game = gameState.game;
+            if (game.winner == game.youAre) {
+              ref
+                  .read(walletProvider.notifier)
+                  .processGameReward(
+                    gameMode: game.meta.perf.name + _getGameMode(),
+                    resultType: 'win',
+                    gameId: game.id.value,
+                    gameFullId: id.value,
+                  );
+            }
 
             // showAdaptiveDialog<void>(
             //   context: context,
@@ -389,7 +417,7 @@ class GameBody extends ConsumerWidget {
               showCupertinoDialog(
                 context: context,
                 builder:
-                    (_) => MatchResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback)
+                    (_) => MatchResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback),
 
                 /*MatchResultPopup(
                       seek: state,
@@ -423,13 +451,13 @@ class GameBody extends ConsumerWidget {
                         }
                         // onNewOpponentCallback();
                       },
-                    )*/,
+                    )*/
               );
             } else {
               showDialog(
                 context: context,
                 builder:
-                    (_) => MatchResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback)
+                    (_) => MatchResultDialog(id: id, onNewOpponentCallback: onNewOpponentCallback),
 
                 /*MatchResultPopup(
                       seek: state,
@@ -463,7 +491,7 @@ class GameBody extends ConsumerWidget {
                         }
                         // onNewOpponentCallback();
                       },
-                    )*/,
+                    )*/
               );
             }
           }
@@ -625,7 +653,7 @@ class _GameBottomBar extends ConsumerWidget {
                 },
                 icon: CupertinoIcons.arrowshape_turn_up_left,
               )
-           /* else if (gameState.game.finished)
+            /* else if (gameState.game.finished)
               BottomBarButton(
                 label: context.l10n.gameAnalysis,
                 icon: Icons.biotech,

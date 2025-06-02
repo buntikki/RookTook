@@ -51,6 +51,7 @@ import 'package:rooktook/src/view/user/challenge_requests_screen.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/view/user/recent_games.dart';
 import 'package:rooktook/src/view/wallet/presentation/wallet_page.dart';
+import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 import 'package:rooktook/src/widgets/buttons.dart';
 import 'package:rooktook/src/widgets/feedback.dart';
 import 'package:rooktook/src/widgets/match_result_popup.dart';

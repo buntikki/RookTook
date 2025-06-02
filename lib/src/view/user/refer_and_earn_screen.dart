@@ -47,9 +47,9 @@ class ReferAndEarnLoaded extends ConsumerWidget {
     final state = ref.watch(referralProvider);
     final details = state.referralDetails;
     final List<String> steps = [
-      'Invite your friend to install the app with your referral link',
+      'Invite your friend to signup with your referral link',
       'They will play their 1st Tournament',
-      'You will get ${details.referralReward.value} silver coins & your friend will get ${details.referralReward.value} silver coins.',
+      'You will get ${details.referrerRewardSetting.value} ${details.referrerRewardSetting.coinType} coins & your friend will get ${details.referredRewardSetting.value} ${details.referredRewardSetting.coinType} coins.',
     ];
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -74,20 +74,20 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                   spacing: 8,
                   children: [
                     Text(
-                      'EARN ${details.referralReward.value}',
+                      'EARN ${details.referrerRewardSetting.value}',
                       style: GoogleFonts.bricolageGrotesque(
                         fontWeight: FontWeight.w900,
                         fontSize: 36,
                       ),
                     ),
                     SvgPicture.asset(
-                      'assets/images/svg/${details.referralReward.coinType}_coin.svg',
+                      'assets/images/svg/${details.referrerRewardSetting.coinType}_coin.svg',
                       height: 28,
                     ),
                   ],
                 ),
                 Text(
-                  'Invite your friends & family on RookTook. And you’ll earn ${details.referralReward.value} silver coins on their 1st tournament',
+                  'Invite your friends & family on RookTook. And you’ll earn ${details.referrerRewardSetting.value} ${details.referrerRewardSetting.coinType} coins on their 1st tournament',
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -123,7 +123,7 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                         ),
                       ),
                       Text(
-                        'play.rooktook.com/${state.referralDetails.referralId}',
+                        'play.rooktook.com/${details.referralId}',
                         style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 14,
@@ -136,7 +136,10 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                   MaterialButton(
                     onPressed: () {
                       SharePlus.instance.share(
-                        ShareParams(uri: Uri.parse('rooktook.com/${details.referralId}')),
+                        ShareParams(
+                          text:
+                              'Join RookTook and get ${details.referredRewardSetting.value} ${details.referredRewardSetting.coinType} Coins FREE!\nSign up with my link and get your bonus after your first tournament:\nrooktook.com/invite?ref=${details.referralId}',
+                        ),
                       );
                     },
                     padding: EdgeInsets.zero,

@@ -55,6 +55,7 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
     final BaseGame game;
 
     game = gameState.game;
+    print(game.meta.speed.name);
 
     return Dialog(
       backgroundColor: const Color(0xff2B2D30),
@@ -232,8 +233,8 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
                           : game.me!.ratingDiff! < 0
                           ? '${game.me?.ratingDiff}'
                           : '+${game.me?.ratingDiff}',
-                          maxLines: 1,
-                           // Fixed string interpolation here
+                      maxLines: 1,
+                      // Fixed string interpolation here
                       style: TextStyle(
                         color:
                             game.me?.ratingDiff == null
