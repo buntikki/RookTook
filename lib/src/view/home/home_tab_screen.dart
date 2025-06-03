@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
@@ -823,6 +825,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 22),
             child: Row(
+              spacing: 8,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
@@ -843,7 +846,6 @@ class GameTypeBottomSheet extends ConsumerWidget {
                     },
                   ),
                 ),
-                const SizedBox(width: 25),
                 Expanded(
                   child: GameTypeCard(
                     icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
@@ -945,6 +947,7 @@ class ChessRatingCards extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Row(
+        spacing: 8,
         children: [
           Expanded(
             child: _buildRatingCard(
@@ -954,7 +957,6 @@ class ChessRatingCards extends StatelessWidget {
               rating: blitzRank,
             ),
           ),
-          const SizedBox(width: 8),
           Expanded(
             child: _buildRatingCard(
               icon: Image.asset('assets/images/rapid_game.png'),
@@ -976,47 +978,57 @@ class ChessRatingCards extends StatelessWidget {
     required String rating,
   }) {
     return ClipPath(
-      clipper: ContainerClipper(),
+      clipper: ContainerClipper(notch: Platform.isAndroid ? 50 : 60),
       child: Container(
         // width: 140,
         // height: 135,
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.0)),
         padding: const EdgeInsets.all(16.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: iconColor,
-                // borderRadius: BorderRadius.circular(8.0),
-                shape: BoxShape.circle,
+            Expanded(
+              flex: 3,
+              child: FittedBox(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: iconColor,
+                        // borderRadius: BorderRadius.circular(8.0),
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: icon,
+                    ),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                          textScaler: TextScaler.noScaling,
+                        ),
+                        Text(
+                          rating,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textScaler: TextScaler.noScaling,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              padding: const EdgeInsets.all(8.0),
-              child: icon,
             ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                  textScaler: TextScaler.noScaling,
-                ),
-                Text(
-                  rating,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textScaler: TextScaler.noScaling,
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
+            const Expanded(flex: 1, child: SizedBox()),
           ],
         ),
       ),
@@ -1068,24 +1080,11 @@ class GameTypeCard extends StatelessWidget {
                       Text.rich(
                         TextSpan(
                           children: [
-                            TextSpan(
-                              text: '$title ',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            TextSpan(
-                              text: subtitle,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: subtitleColor,
-                              ),
-                            ),
+                            TextSpan(text: '$title ', style: const TextStyle(color: Colors.black)),
+                            TextSpan(text: subtitle, style: TextStyle(color: subtitleColor)),
                           ],
                         ),
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         textScaler: TextScaler.noScaling,
                       ),
                       const Spacer(),

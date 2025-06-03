@@ -57,40 +57,44 @@ class ReferAndEarnLoaded extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16,
         children: [
-          Container(
-            width: double.infinity,
-            height: 350,
-            padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 56),
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/refer_banner.png'),
-                fit: BoxFit.contain,
+          AspectRatio(
+            aspectRatio: 1 / 1,
+            child: Container(
+              width: double.infinity,
+              // height: 350,
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/refer_banner.png'),
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 8,
-                  children: [
-                    Text(
-                      'EARN ${details.referrerRewardSetting.value}',
-                      style: GoogleFonts.bricolageGrotesque(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 36,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 8,
+                    children: [
+                      Text(
+                        'EARN ${details.referrerRewardSetting.value}',
+                        style: GoogleFonts.bricolageGrotesque(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 36,
+                        ),
                       ),
-                    ),
-                    SvgPicture.asset(
-                      'assets/images/svg/${details.referrerRewardSetting.coinType}_coin.svg',
-                      height: 28,
-                    ),
-                  ],
-                ),
-                Text(
-                  'Invite your friends & family on RookTook. And you’ll earn ${details.referrerRewardSetting.value} ${details.referrerRewardSetting.coinType} coins on their 1st tournament',
-                  textAlign: TextAlign.center,
-                ),
-              ],
+                      SvgPicture.asset(
+                        'assets/images/svg/${details.referrerRewardSetting.coinType}_coin.svg',
+                        height: 28,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    'Invite your friends & family on RookTook. And you’ll earn ${details.referrerRewardSetting.value} ${details.referrerRewardSetting.coinType} coins on their 1st tournament',
+                    textAlign: TextAlign.center,
+                    textScaler: TextScaler.noScaling,
+                  ),
+                ],
+              ),
             ),
           ),
 
@@ -109,48 +113,58 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
+                spacing: 16,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Your referral link',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: Color(0xff7D8082),
-                        ),
+                  Expanded(
+                    flex: 3,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Your referral link',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              color: Color(0xff7D8082),
+                            ),
+                          ),
+                          Text(
+                            'play.rooktook.com/${details.referralId}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 14,
+                              color: Color(0xffEFEDED),
+                            ),
+                            textScaler: TextScaler.noScaling,
+                          ),
+                        ],
                       ),
-                      Text(
-                        'play.rooktook.com/${details.referralId}',
-                        style: const TextStyle(
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: MaterialButton(
+                      onPressed: () {
+                        SharePlus.instance.share(
+                          ShareParams(
+                            text:
+                                'Join RookTook and get ${details.referredRewardSetting.value} ${details.referredRewardSetting.coinType} Coins FREE!\nSign up with my link and get your bonus after your first tournament:\nrooktook.com/invite?ref=${details.referralId}',
+                          ),
+                        );
+                      },
+                      padding: EdgeInsets.zero,
+                      color: const Color(0xff54C339),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                      child: const Text(
+                        'SHARE',
+                        style: TextStyle(
                           fontWeight: FontWeight.w800,
-                          fontSize: 14,
+                          fontSize: 12,
                           color: Color(0xffEFEDED),
                         ),
-                        textScaler: TextScaler.noScaling,
-                      ),
-                    ],
-                  ),
-                  MaterialButton(
-                    onPressed: () {
-                      SharePlus.instance.share(
-                        ShareParams(
-                          text:
-                              'Join RookTook and get ${details.referredRewardSetting.value} ${details.referredRewardSetting.coinType} Coins FREE!\nSign up with my link and get your bonus after your first tournament:\nrooktook.com/invite?ref=${details.referralId}',
-                        ),
-                      );
-                    },
-                    padding: EdgeInsets.zero,
-                    color: const Color(0xff54C339),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                    child: const Text(
-                      'SHARE',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12,
-                        color: Color(0xffEFEDED),
                       ),
                     ),
                   ),

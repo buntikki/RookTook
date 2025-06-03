@@ -105,7 +105,8 @@ class TournamentCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Divider(height: 0, thickness: .5),
-                      Padding(
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.only(right: 12.0),
                         child: Row(
                           spacing: 12,
@@ -139,6 +140,7 @@ class TournamentCard extends StatelessWidget {
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
                                     ),
+                                    textScaler: TextScaler.noScaling,
                                   ),
                                 ],
                               ),

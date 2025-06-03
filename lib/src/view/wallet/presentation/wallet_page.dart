@@ -210,12 +210,14 @@ class WalletPageBodyWidget extends ConsumerWidget {
                           side: const BorderSide(color: Color(0xff54C339)),
                         ),
                         color: index == 0 ? const Color(0xff54C339) : Colors.transparent,
-                        child: Text(
-                          (index == 0 ? 'Add Coins' : 'Convert Coins').toUpperCase(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 12,
-                            color: index == 0 ? null : const Color(0xff54C339),
+                        child: FittedBox(
+                          child: Text(
+                            (index == 0 ? 'Add Coins' : 'Convert Coins').toUpperCase(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                              color: index == 0 ? null : const Color(0xff54C339),
+                            ),
                           ),
                         ),
                       ),
@@ -316,12 +318,13 @@ class ConvertCoinsSheet extends ConsumerStatefulWidget {
 class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
   int goldCoins = 100;
   final goldCoinController = TextEditingController(text: '100');
-  final maxLimit = 1000;
+  int maxLimit = 1000;
 
   @override
   void initState() {
     super.initState();
     final int walletCoinsValue = ref.read(walletProvider).walletInfo.goldCoins;
+    maxLimit = walletCoinsValue > maxLimit ? maxLimit : walletCoinsValue;
     goldCoins = walletCoinsValue > maxLimit ? maxLimit : walletCoinsValue;
     goldCoinController.text = goldCoins.toString();
     goldCoinController.addListener(
@@ -428,7 +431,7 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
                 alignment: Alignment.bottomCenter,
                 children: [
                   Row(
-                    spacing: 80,
+                    spacing: 60,
                     children: List.generate(2, (index) {
                       return Expanded(
                         child: Column(

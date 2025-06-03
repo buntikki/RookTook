@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -276,38 +277,47 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 4,
-                        children: [
-                          SvgPicture.asset('assets/images/svg/tournament_clock.svg', height: 18.0),
-                          Text(
-                            DateFormat(
-                              'hh:mm a, MMM dd',
-                            ).format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime)),
-                            style: const TextStyle(color: Color(0xff7D8082), fontSize: 14),
-                            textScaler: TextScaler.noScaling,
-                          ),
-                        ],
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 4,
+                          children: [
+                            SvgPicture.asset(
+                              'assets/images/svg/tournament_clock.svg',
+                              height: 18.0,
+                            ),
+                            Text(
+                              DateFormat(
+                                'hh:mm a, MMM dd',
+                              ).format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime)),
+                              style: const TextStyle(color: Color(0xff7D8082), fontSize: 14),
+                              textScaler: TextScaler.noScaling,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     // Vertical divider
                     Container(width: 1, height: 16, color: const Color(0xff464A4F)),
                     Expanded(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 4,
-                        children: [
-                          SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
-                          Text(
-                            '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(color: Color(0xff7D8082)),
-                            textScaler: TextScaler.noScaling,
-                          ),
-                        ],
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 4,
+                          children: [
+                            SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
+                            Text(
+                              '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(color: Color(0xff7D8082)),
+                              textScaler: TextScaler.noScaling,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -527,15 +537,16 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
       child: CustomPaint(
         painter: BorderPainter(),
         child: ClipPath(
-          clipper: ContainerClipper(),
+          clipper: ContainerClipper(notch: Platform.isAndroid ? 50 : 60),
           child: Container(
             clipBehavior: Clip.hardEdge,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: const BoxDecoration(color: Color(0xFF2B2D30)),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               spacing: 12,
               children: [
-                SvgPicture.asset(icon, height: 32.0),
+                SvgPicture.asset(icon, height: 28.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
