@@ -151,7 +151,7 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                         SharePlus.instance.share(
                           ShareParams(
                             text:
-                                'Join RookTook and get ${details.referredRewardSetting.value} ${details.referredRewardSetting.coinType} Coins FREE!\nSign up with my link and get your bonus after your first tournament:\nrooktook.com/invite?ref=${details.referralId}',
+                                'Join RookTook and get ${details.referredRewardSetting.value} ${details.referredRewardSetting.coinType} Coins FREE!\nSign up with my link and get your bonus after your first tournament:\nplay.rooktook.com/invite?ref=${details.referralId}',
                           ),
                         );
                       },

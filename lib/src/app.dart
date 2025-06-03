@@ -160,19 +160,24 @@ class _AppState extends ConsumerState<Application> {
 
   void handleIncomingLink(Uri uri) async {
     debugPrint('Received deep link: $uri');
-    if (uri.path == '/tournament') {
-      final tournament = await ref
-          .read(tournamentProvider.notifier)
-          .fetchSingleTournament('682f0c72a879a6ff56744429');
-
-      if (tournament != null) {
-        // Wait until WidgetsBinding is done and Navigator is ready
-        if (rootNavigatorKey.currentState?.mounted ?? false) {
-          rootNavigatorKey.currentState!.push(
-            MaterialPageRoute(builder: (context) => TournamentDetailScreen(tournament: tournament)),
-          );
-        } else {
-          debugPrint('Navigator not yet mounted.');
+    final segments = uri.pathSegments;
+    if (segments.isNotEmpty && segments.first == 'tournament' && segments.length > 1) {
+      final tournamentId = segments[1];
+      if (tournamentId.isNotEmpty) {
+        final tournament = await ref
+            .read(tournamentProvider.notifier)
+            .fetchSingleTournament(tournamentId);
+        if (tournament != null) {
+          // Wait until WidgetsBinding is done and Navigator is ready
+          if (rootNavigatorKey.currentState?.mounted ?? false) {
+            rootNavigatorKey.currentState!.push(
+              MaterialPageRoute(
+                builder: (context) => TournamentDetailScreen(tournament: tournament),
+              ),
+            );
+          } else {
+            debugPrint('Navigator not yet mounted.');
+          }
         }
       }
     }

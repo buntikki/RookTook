@@ -223,7 +223,12 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                 //   context,
                 //   MaterialPageRoute(builder: (context) => const TournamentResult()),
                 // );
-                SharePlus.instance.share(ShareParams(text: 'Check out the RookTook App!'));
+                SharePlus.instance.share(
+                  ShareParams(
+                    text:
+                        'Check out the Tournament!\nplay.rooktook.com/tournament/${tournament.id}',
+                  ),
+                );
               },
               icon: const Icon(Icons.share, color: Colors.white),
             ),
