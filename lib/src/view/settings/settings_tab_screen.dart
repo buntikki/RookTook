@@ -78,17 +78,22 @@ class _Body extends ConsumerWidget {
     {
       'question': 'What is RookTook?',
       'answer':
-          'RookTook is an online chess platform where you can play timed games, solve puzzles, and track your progress.',
+          'RookTook is an online platform where you can play daily tournaments to earn real rewards.',
     },
     {
       'question': 'How do I play a game on RookTook?',
       'answer':
-          'Tap the “Play” button on the home screen and choose a game type (e.g. Blitz, Rapid, Pass & Play).',
+          'Join Puzzle tournaments from the tournament section or Tap the “Quick Play” button on the home screen and choose a game type (e.g. Blitz, Rapid, Pass & Play) or join Puzzle tournaments from the tournament section',
+    },
+    {
+      'question': 'What are Puzzle Tournaments?',
+      'answer':
+      'Everyone starts at the same time with the same puzzles and a fixed time to solve as many as possible. Correct answers earn points, streaks give bonuses, and one mistake breaks the streak.',
     },
     {
       'question': 'What do the time formats like 3+2 or 5+0 mean?',
       'answer':
-          'These are time controls. 3+2 means 3 minutes total + 2 seconds added after every move. 5+0 means 5 minutes with no extra time.',
+          'These are different time formats of chess. 3+2 means 3 minutes total + 2 seconds added after every move. 5+0 means 5 minutes with no extra time.',
     },
     {
       'question': 'What’s the difference between Blitz and Rapid?',
@@ -116,7 +121,7 @@ class _Body extends ConsumerWidget {
     {
       'question': 'What happens if I run out of time?',
       'answer':
-          'You lose the game unless your opponent doesn’t have enough material to checkmate — in that case, it’s a draw.',
+          'You lose the game',
     },
     {
       'question': 'Can I pause a game?',

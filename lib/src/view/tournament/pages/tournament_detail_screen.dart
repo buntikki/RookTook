@@ -141,7 +141,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     {
       'question': 'What do I need to join a tournament?',
       'answer':
-          'You need enough Silver Coins (if it’s a paid entry) and user should not be enrolled in another tournament at the same time.',
+          'Paid tournaments require silver coins to join, while free ones can be entered with a simple tap on “Join now.”',
     },
     {
       'question': 'Can I join more than one tournament at the same time?',
@@ -151,7 +151,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     {
       'question': 'What is the tournament format?',
       'answer':
-          'Everyone gets the same puzzles. You have fixed time to solve as many as possible. Each correct answer gives a score.',
+          'Everyone starts at the same time with the same puzzles and a fixed time to solve as many as possible. Correct answers earn points, streaks give bonuses, and one mistake breaks the streak.',
     },
     {
       'question': 'What happens after I join?',
@@ -165,11 +165,11 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     {
       'question': 'What if I miss the tournament start time?',
       'answer':
-          'You won’t be able to participate, and your entry fee (if any) will not be refunded.',
+          'You can still play the tournament if it is live but with the disadvantage of the time lost. Once the tournament ends, it ends. You can not participate in it.',
     },
     {
       'question': 'How are winners decided?',
-      'answer': 'Based on total score: Points earned per correct puzzle.',
+      'answer': 'Participants are ranked based on the points earned from solving puzzles. You can view the reward distribution by rank on the tournament card.',
     },
     {
       'question': 'What do winners get?',
@@ -183,12 +183,12 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     },
     {
       'question': 'What if two players have the same score?',
-      'answer': 'In case of a tie, the player who has better combo streak wins.',
+      'answer': 'In case of a tie, the player who has less number of errors and better combo streak wins.',
     },
     {
       'question': 'How do I know a tournament is fair?',
       'answer':
-          'Every participant gets the same puzzles, and cheating is strictly monitored. Suspicious behavior may result in disqualification.',
+          'Every participant gets the same puzzles, and cheating is strictly monitored by our Anti-cheating agent. Suspicious behavior may result in disqualification.',
     },
   ];
 
