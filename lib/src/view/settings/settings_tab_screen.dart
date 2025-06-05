@@ -366,7 +366,7 @@ class _Body extends ConsumerWidget {
               // }
 
               final Uri emailUri = Uri.parse(
-                'mailto:support@rooktook.com?subject=${Uri.encodeComponent('How may I help you?')}&body=${Uri.encodeComponent('')}',
+                'mailto:support@rooktook.com?subject=${Uri.encodeComponent('Support Requested')}&body=${Uri.encodeComponent('')}',
               );
 
               if (await launchUrl(emailUri)) {
