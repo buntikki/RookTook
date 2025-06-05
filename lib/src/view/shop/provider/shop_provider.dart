@@ -100,28 +100,29 @@ class ShopNotifier extends StateNotifier<ShopState> {
           'productId': productId,
         }),
       );
+      final Map<String, dynamic> decodedResponse =
+          jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode == 200) {
-        final Map<String, dynamic> decodedResponse =
-            jsonDecode(response.body) as Map<String, dynamic>;
         if (decodedResponse['status'] == 'success') {
           showSuccessOverlay(context);
           return;
-        } else {
-          showFailedOverlay(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(decodedResponse['error'] as String? ??'An error occured', style: TextStyle(color: Colors.white)),
-            ),
-          );
-          return;
         }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              decodedResponse['error'] as String? ?? 'An error occured',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        );
+        return;
       }
     } catch (e) {
       log(e.toString());
     }
     showFailedOverlay(context);
-
     return;
   }
 }
