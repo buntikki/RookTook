@@ -10,6 +10,7 @@ import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/view/home/home_tab_screen.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_tab_screen.dart';
 import 'package:rooktook/src/view/settings/settings_tab_screen.dart';
+import 'package:rooktook/src/view/shop/presentation/shop_screen.dart';
 import 'package:rooktook/src/view/tools/tools_tab_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_screen.dart';
 import 'package:rooktook/src/view/watch/watch_tab_screen.dart';
@@ -18,7 +19,7 @@ import 'package:rooktook/src/widgets/feedback.dart';
 
 enum BottomTab {
   home,
-  // puzzles,
+  shop,
   // tools,
   tournament,
   //watch,
@@ -28,8 +29,8 @@ enum BottomTab {
     switch (this) {
       case BottomTab.home:
         return strings.mobileHomeTab;
-      // case BottomTab.puzzles:
-      //   return strings.mobilePuzzlesTab;
+      case BottomTab.shop:
+        return 'Shop';
       // case BottomTab.tools:
       //   return strings.mobileToolsTab;
       case BottomTab.tournament:
@@ -46,8 +47,8 @@ enum BottomTab {
       case BottomTab.home:
         return 'assets/images/home.svg';
       // Icons.home_outlined;
-      // case BottomTab.puzzles:
-      //   return 'assets/images/puzzle.svg';
+      case BottomTab.shop:
+        return 'assets/images/svg/Buy.svg';
 
       // return Icons.extension_outlined;
       case BottomTab.tournament:
@@ -69,8 +70,8 @@ enum BottomTab {
     switch (this) {
       case BottomTab.home:
         return Icons.home;
-      // case BottomTab.puzzles:
-      //   return Icons.extension;
+      case BottomTab.shop:
+        return Icons.extension;
       case BottomTab.tournament:
         return Icons.emoji_events;
       // case BottomTab.tools:
@@ -90,8 +91,8 @@ final currentNavigatorKeyProvider = Provider<GlobalKey<NavigatorState>>((ref) {
   switch (currentTab) {
     case BottomTab.home:
       return homeNavigatorKey;
-    // case BottomTab.puzzles:
-    // return puzzlesNavigatorKey;
+    case BottomTab.shop:
+      return shopNavigatorKey;
     case BottomTab.tournament:
       return toolsNavigatorKey;
     // case BottomTab.tools:
@@ -108,8 +109,8 @@ final currentRootScrollControllerProvider = Provider<ScrollController>((ref) {
   switch (currentTab) {
     case BottomTab.home:
       return homeScrollController;
-    // case BottomTab.puzzles:
-    //   return puzzlesScrollController;
+    case BottomTab.shop:
+      return shopScrollController;
     case BottomTab.tournament:
       return toolsScrollController;
     // case BottomTab.watch:
@@ -120,13 +121,13 @@ final currentRootScrollControllerProvider = Provider<ScrollController>((ref) {
 });
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
-// final puzzlesNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'puzzles');
+final shopNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'shop');
 final toolsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'tools');
 //final watchNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'watch');
 final settingsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'settings');
 
 final homeScrollController = ScrollController(debugLabel: 'HomeScroll');
-// final puzzlesScrollController = ScrollController(debugLabel: 'PuzzlesScroll');
+final shopScrollController = ScrollController(debugLabel: 'ShopScroll');
 final toolsScrollController = ScrollController(debugLabel: 'ToolsScroll');
 //final watchScrollController = ScrollController(debugLabel: 'WatchScroll');
 final settingsScrollController = ScrollController(debugLabel: 'SettingsScroll');
@@ -141,7 +142,7 @@ final homeTabInteraction = _BottomTabInteraction();
 
 /// A [ChangeNotifier] that can be used to notify when the Puzzles tab is tapped, and all the built in
 /// interactions (pop stack, scroll to top) are done.
-final puzzlesTabInteraction = _BottomTabInteraction();
+final shopTabInteraction = _BottomTabInteraction();
 
 /// A [ChangeNotifier] that can be used to notify when the Tools tab is tapped, and all the built interactions
 /// (pop stack, scroll to top) are done.
@@ -156,7 +157,7 @@ final toolsTabInteraction = _BottomTabInteraction();
 final settingsTabInteraction = _BottomTabInteraction();
 final List<Widget> tabs = [
   const HomeTabScreen(),
-  // const PuzzleTabScreen(),
+  const ShopScreen(),
   const TournamentScreen(),
   const SettingsTabScreen(),
 ];
@@ -192,6 +193,7 @@ class BottomNavScaffold extends ConsumerWidget {
                 return NavigationBar(
                   labelTextStyle: MaterialStateProperty.resolveWith<TextStyle>((states) {
                     return TextStyle(
+                      fontSize: 12,
                       color:
                           states.contains(MaterialState.selected) ? const Color(0xff54C339) : null,
                     );
@@ -283,8 +285,8 @@ class BottomNavScaffold extends ConsumerWidget {
         switch (tappedTab) {
           case BottomTab.home:
             homeTabInteraction.notifyItemTapped();
-          // case BottomTab.puzzles:
-          //   puzzlesTabInteraction.notifyItemTapped();
+          case BottomTab.shop:
+            shopTabInteraction.notifyItemTapped();
           case BottomTab.tournament:
             toolsTabInteraction.notifyItemTapped();
           /*case BottomTab.watch:
@@ -314,13 +316,13 @@ Widget _androidTabBuilder(BuildContext context, int index) {
         tab: BottomTab.home,
         builder: (context) => const HomeTabScreen(),
       );
-    // case 1:
-    //   return _MaterialTabView(
-    //     navigatorKey: puzzlesNavigatorKey,
-    //     tab: BottomTab.puzzles,
-    //     builder: (context) => const PuzzleTabScreen(),
-    // );
     case 1:
+      return _MaterialTabView(
+        navigatorKey: shopNavigatorKey,
+        tab: BottomTab.shop,
+        builder: (context) => const ShopScreen(),
+      );
+    case 2:
       return _MaterialTabView(
         navigatorKey: toolsNavigatorKey,
         tab: BottomTab.tournament,
@@ -333,7 +335,7 @@ Widget _androidTabBuilder(BuildContext context, int index) {
     //     tab: BottomTab.watch,
     //     builder: (context) => const WatchTabScreen(),
     //   );
-    case 2:
+    case 3:
       return _MaterialTabView(
         navigatorKey: settingsNavigatorKey,
         tab: BottomTab.settings,
@@ -353,13 +355,13 @@ Widget _iOSTabBuilder(BuildContext context, int index) {
         navigatorKey: homeNavigatorKey,
         builder: (context) => const HomeTabScreen(),
       );
-    // case 1:
-    //   return CupertinoTabView(
-    //     defaultTitle: context.l10n.mobilePuzzlesTab,
-    //     navigatorKey: puzzlesNavigatorKey,
-    //     builder: (context) => const PuzzleTabScreen(),
-    //   );
     case 1:
+      return CupertinoTabView(
+        defaultTitle: context.l10n.mobilePuzzlesTab,
+        navigatorKey: shopNavigatorKey,
+        builder: (context) => const ShopScreen(),
+      );
+    case 2:
       return CupertinoTabView(
         defaultTitle: context.l10n.mobileToolsTab,
         navigatorKey: toolsNavigatorKey,
@@ -372,7 +374,7 @@ Widget _iOSTabBuilder(BuildContext context, int index) {
     //     navigatorKey: watchNavigatorKey,
     //     builder: (context) => const WatchTabScreen(),
     //   );
-    case 2:
+    case 3:
       return CupertinoTabView(
         defaultTitle: context.l10n.mobileSettingsTab,
         navigatorKey: settingsNavigatorKey,

@@ -28,6 +28,9 @@
     <meta-data
         android:name="firebase_analytics_collection_enabled"
         android:value="false" />
+    <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_aEtdmLbVHIp9RqegNcdHgjoiwwmhLyr1" />
+    <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_hBzgoKkHHJd2MxcaQebLakgaCzpnLCRi" />
+    <meta-data android:name="io.branch.sdk.TestMode" android:value="true" />
 
         <activity
             android:name=".MainActivity"
@@ -68,31 +71,32 @@
                 <data android:pathPattern="/......../black" />
                 <data android:pathPattern="/......../white" />
             </intent-filter>
-            <intent-filter >
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data
-                    android:scheme="https"
-                    android:host="rooktook.com"
-                    android:pathPrefix="/tournament"/>
+            <!-- Branch App Links for your domains -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Branch Dashboard domains -->
+                <data android:scheme="https" android:host="app.rooktook.com" />
+                <data android:scheme="https" android:host="www.rooktook.com" />
             </intent-filter>
-            <intent-filter >
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data
-                    android:scheme="https"
-                    android:host="play.rooktook.com"
-                    android:pathPrefix="/tournament"/>
+
+            <!-- Branch OneLink domain -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="onelink.to" />
             </intent-filter>
-            <intent-filter >
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data
-                    android:scheme="https"
-                    android:host="play.rooktook.com"/>
+
+            <!-- Custom URI Scheme Support for Branch (and your app) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="rooktook" />
+                <data android:scheme="rooktook" android:host="open" />
             </intent-filter>
 
         </activity>

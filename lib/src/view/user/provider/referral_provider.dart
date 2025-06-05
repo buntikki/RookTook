@@ -43,7 +43,6 @@ class ReferralNotifier extends StateNotifier<ReferralState> {
                   .map((x) => ReferralModel.fromMap(x as Map<String, dynamic>))
                   .toList(),
         );
-        print('hogya kya');
       }
     } catch (e) {
       rethrow;
@@ -91,7 +90,7 @@ class ReferralNotifier extends StateNotifier<ReferralState> {
         final Map<String, dynamic> decodedResponse =
             jsonDecode(response.body) as Map<String, dynamic>;
 
-        print(decodedResponse);
+        log(decodedResponse.toString());
       }
     } catch (e) {
       rethrow;

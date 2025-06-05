@@ -529,6 +529,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         },
         child: ChessPuzzleScreen(puzzleRank: puzzleRank),
       ),
+      SvgPicture.asset('assets/images/svg/footer.svg'),
       // RecentGamesWidget(
       //   recentGames: recentGames,
       //   nbOfGames: nbOfGames,
@@ -733,10 +734,10 @@ class ChessPuzzleScreen extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      const Text(
-                        'Continue Your Journey!',
-                        style: TextStyle(fontSize: 12, color: Color(0xFF7E8899)),
-                      ),
+                      // const Text(
+                      //   'Continue Your Journey!',
+                      //   style: TextStyle(fontSize: 12, color: Color(0xFF7E8899)),
+                      // ),
                       const SizedBox(height: 8),
                       Row(
                         spacing: 8,

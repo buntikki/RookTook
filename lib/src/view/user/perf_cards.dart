@@ -77,7 +77,6 @@ class PerfCards extends StatelessWidget {
               final perf = userPerfs[index];
               final userPerf = user.perfs[perf]!;
               final bool isPerfWithoutStats = Perf.streak == perf;
-              print(user.perfs);
               return SizedBox(
                 height: 100,
                 width: 100,

@@ -48,7 +48,6 @@ class GoogleSignInButton extends ConsumerWidget {
             loadingOverlay.remove();
           }
         } catch (e) {
-          print(e);
           // Make sure to remove the loading overlay on error
           loadingOverlay.remove();
           // Call the error handler

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/view/user/provider/referral_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReferralCodeScreen extends ConsumerStatefulWidget {
   const ReferralCodeScreen({super.key});
@@ -15,9 +16,20 @@ class ReferralCodeScreen extends ConsumerStatefulWidget {
 class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
   final controller = TextEditingController();
   @override
+  void initState() {
+    super.initState();
+    _getReferralCode();
+  }
+
+  @override
   void dispose() {
     controller.clear();
     super.dispose();
+  }
+
+  Future<void> _getReferralCode() async {
+    final prefs = await SharedPreferences.getInstance();
+    controller.text = prefs.getString('referralCode') ?? '';
   }
 
   @override

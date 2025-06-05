@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfwebcheckoutpayment.dart';
@@ -15,6 +16,7 @@ import 'package:lottie/lottie.dart';
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/widgets/success_failed_overlay.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final walletProvider = StateNotifierProvider<WalletNotifier, WalletState>((ref) {
@@ -27,39 +29,8 @@ final fetchWalletPageDetails = FutureProvider((ref) async {
 class WalletNotifier extends StateNotifier<WalletState> {
   WalletNotifier() : super(WalletState.initial());
 
-  void showSuccessOverlay(BuildContext context) {
-    final overlay = Overlay.of(context);
-    final entry = OverlayEntry(
-      builder:
-          (context) => Positioned.fill(
-            child: ColoredBox(
-              color: Colors.black38,
-              child: Center(child: Lottie.asset('assets/success.json', height: 120)),
-            ),
-          ),
-    );
-    overlay.insert(entry);
-    Future.delayed(const Duration(seconds: 1), () {
-      entry.remove();
-    });
-  }
-
-  void showFailedOverlay(BuildContext context) {
-    final overlay = Overlay.of(context);
-    final entry = OverlayEntry(
-      builder:
-          (context) => Positioned.fill(
-            child: ColoredBox(color: Colors.black38, child: Lottie.asset('assets/failed.json')),
-          ),
-    );
-    overlay.insert(entry);
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      entry.remove();
-    });
-  }
-
   Future<void> verifyPayment(String orderId, BuildContext context) async {
-    print('Verify Payment of order id $orderId');
+    log('Verify Payment of order id $orderId');
 
     final status = await verifyPaymentStatus(orderId: orderId);
     if (status == 'success') {
@@ -69,9 +40,9 @@ class WalletNotifier extends StateNotifier<WalletState> {
 
   void paymentError(CFErrorResponse errorResponse, String orderId, BuildContext context) {
     // state = state.copyWith(showFailedAnimation: true);
-    print(errorResponse.getMessage());
+    log(errorResponse.getMessage().toString());
     showFailedOverlay(context);
-    print('Error while making payment of order id $orderId');
+    log('Error while making payment of order id $orderId');
   }
 
   Future<String?> getPhoneNumber() async {
@@ -96,7 +67,7 @@ class WalletNotifier extends StateNotifier<WalletState> {
         final paymentSessionId = result.$2;
         final session =
             CFSessionBuilder()
-                .setEnvironment(CFEnvironment.SANDBOX)
+                .setEnvironment(kReleaseMode ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX)
                 .setOrderId(orderId)
                 .setPaymentSessionId(paymentSessionId)
                 .build();
@@ -308,8 +279,6 @@ class WalletNotifier extends StateNotifier<WalletState> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedResponse =
             jsonDecode(response.body) as Map<String, dynamic>;
-
-        print(decodedResponse);
         return (
           decodedResponse['orderId'] as String,
           decodedResponse['paymentSessionId'] as String,

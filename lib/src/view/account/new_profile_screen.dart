@@ -94,7 +94,7 @@ class NewProfileScreen extends ConsumerWidget {
               Container(
                 height: 120,
                 width: 120,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                 child: ClipOval(child: RandomAvatar(avatarSeed, height: 120, width: 120)),
               ),
 
@@ -129,7 +129,7 @@ class NewProfileScreen extends ConsumerWidget {
                         labelIcon: 'W',
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: _StatCard(
                         label: 'Losses',
@@ -138,7 +138,7 @@ class NewProfileScreen extends ConsumerWidget {
                         labelIcon: 'L',
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
 
                     Expanded(
                       child: _StatCard(
@@ -155,9 +155,9 @@ class NewProfileScreen extends ConsumerWidget {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: Color(0xff464A4F),
+                  color: const Color(0xff464A4F),
                 ),
-                margin: EdgeInsets.all(16),
+                margin: const EdgeInsets.all(16),
                 child: Column(
                   children: [
                     _MenuItem(
@@ -686,6 +686,6 @@ class NewGameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.black, body: Center(child: GameWonCard(score: 500)));
+    return const Scaffold(backgroundColor: Colors.black, body: Center(child: GameWonCard(score: 500)));
   }
 }

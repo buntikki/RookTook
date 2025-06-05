@@ -16,7 +16,6 @@ import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/utils/badge_service.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 part 'notification_service.g.dart';

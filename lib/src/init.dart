@@ -17,7 +17,6 @@ import 'package:rooktook/src/model/settings/general_preferences.dart';
 import 'package:rooktook/src/model/settings/preferences_storage.dart';
 import 'package:rooktook/src/utils/chessboard.dart';
 import 'package:rooktook/src/utils/color_palette.dart';
-import 'package:rooktook/src/utils/custom_piece_set.dart';
 import 'package:rooktook/src/utils/screen.dart';
 import 'package:rooktook/src/utils/string.dart';
 import 'package:logging/logging.dart';

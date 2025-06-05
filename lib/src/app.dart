@@ -1,12 +1,16 @@
-import 'package:app_links/app_links.dart';
+import 'dart:async';
+
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:l10n_esperanto/l10n_esperanto.dart';
 import 'package:rooktook/l10n/l10n.dart';
-import 'package:rooktook/src/app_links.dart';
 import 'package:rooktook/src/constants.dart';
+import 'package:rooktook/src/maintenance_screen.dart';
 import 'package:rooktook/src/model/account/account_repository.dart';
 import 'package:rooktook/src/model/account/account_service.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
@@ -24,9 +28,9 @@ import 'package:rooktook/src/theme.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/utils/screen.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/login_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Application initialization and main entry point.
 class AppInitializationScreen extends ConsumerWidget {
@@ -34,6 +38,7 @@ class AppInitializationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(maintenanceModeProvider.notifier).init();
     ref.listen<AsyncValue<PreloadedData>>(preloadedDataProvider, (_, state) {
       if (state.hasValue || state.hasError) {
         FlutterNativeSplash.remove();
@@ -72,7 +77,6 @@ class _AppState extends ConsumerState<Application> {
   AppLifecycleListener? _appLifecycleListener;
 
   DateTime? _pausedAt;
-
   @override
   void initState() {
     _appLifecycleListener = AppLifecycleListener(
@@ -129,58 +133,44 @@ class _AppState extends ConsumerState<Application> {
     });
 
     super.initState();
-    initDeepLinkListener();
+    initBranchSetup();
   }
 
-  bool _handledInitialLink = false;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (!_handledInitialLink) {
-      _handledInitialLink = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        final applinks = AppLinks();
-        final uri = await applinks.getInitialLink();
-        if (uri != null) {
-          handleIncomingLink(uri);
-        }
-      });
-    }
-  }
-
-  void initDeepLinkListener() {
-    final applinks = AppLinks();
-    applinks.uriLinkStream.listen((uri) {
-      if (uri != null) {
-        handleIncomingLink(uri);
-      }
-    });
-  }
-
-  void handleIncomingLink(Uri uri) async {
-    debugPrint('Received deep link: $uri');
-    final segments = uri.pathSegments;
-    if (segments.isNotEmpty && segments.first == 'tournament' && segments.length > 1) {
-      final tournamentId = segments[1];
-      if (tournamentId.isNotEmpty) {
-        final tournament = await ref
-            .read(tournamentProvider.notifier)
-            .fetchSingleTournament(tournamentId);
-        if (tournament != null) {
-          // Wait until WidgetsBinding is done and Navigator is ready
-          if (rootNavigatorKey.currentState?.mounted ?? false) {
-            rootNavigatorKey.currentState!.push(
-              MaterialPageRoute(
-                builder: (context) => TournamentDetailScreen(tournament: tournament),
-              ),
-            );
-          } else {
-            debugPrint('Navigator not yet mounted.');
+  Future<void> initBranchSetup() async {
+    await FlutterBranchSdk.init();
+    FlutterBranchSdk.listSession().listen(
+      (event) async {
+        print('Branch Event $event');
+        if (event.containsKey('+clicked_branch_link') && event['+clicked_branch_link'] == true) {
+          final branchLink = event['\$deeplink_path'] as String;
+          if (branchLink.contains('invite') && event.containsKey('ref')) {
+            final prefs = await SharedPreferences.getInstance();
+            prefs.setString('referralCode', event['ref'].toString());
+          }
+          if (branchLink.contains('tournament') && event.containsKey('id')) {
+            final tournament = await ref
+                .read(tournamentProvider.notifier)
+                .fetchSingleTournament(event['id'].toString());
+            if (tournament != null) {
+              // Wait until WidgetsBinding is done and Navigator is ready
+              if (rootNavigatorKey.currentState?.mounted ?? false) {
+                rootNavigatorKey.currentState!.push(
+                  MaterialPageRoute(
+                    builder: (context) => TournamentDetailScreen(tournament: tournament),
+                  ),
+                );
+              } else {
+                debugPrint('Navigator not yet mounted.');
+              }
+            }
           }
         }
-      }
-    }
+      },
+      onError: (error) {
+        print('Branch Error $error');
+      },
+    );
+    // FlutterBranchSdk.validateSDKIntegration();
   }
 
   @override
@@ -191,6 +181,7 @@ class _AppState extends ConsumerState<Application> {
 
   @override
   Widget build(BuildContext context) {
+    final isMaintenance = ref.watch(maintenanceModeProvider);
     final generalPrefs = ref.watch(generalPreferencesProvider);
     final userSession = ref.read(authSessionProvider)?.user;
     final boardPrefs = ref.watch(boardPreferencesProvider);
@@ -240,18 +231,68 @@ class _AppState extends ConsumerState<Application> {
       // onGenerateRoute:
       //     (settings) =>
       //         settings.name != null ? resolveAppLinkUri(context, Uri.parse(settings.name!)) : null,
-      onGenerateRoute: (initialRoute) {
-        final homeRoute =
-            userSession != null
-                ? buildScreenRoute<void>(context, screen: const BottomNavScaffold())
-                : buildScreenRoute<void>(context, screen: const LoginScreen());
-        return homeRoute;
-        // return <Route<dynamic>?>[
-        //   homeRoute,
-        //   // resolveAppLinkUri(context, Uri.parse(initialRoute)),
-        // ].nonNulls.toList(growable: false);
-      },
+      // onGenerateRoute: (initialRoute) {
+
+      //   final homeRoute =
+      //       isMaintenance
+      //           ? buildScreenRoute<void>(context, screen: const MaintenanceScreen())
+      //           : userSession != null
+      //           ? buildScreenRoute<void>(context, screen: const BottomNavScaffold())
+      //           : buildScreenRoute<void>(context, screen: const LoginScreen());
+      //   return homeRoute;
+      //   // return <Route<dynamic>?>[
+      //   //   homeRoute,
+      //   //   // resolveAppLinkUri(context, Uri.parse(initialRoute)),
+      //   // ].nonNulls.toList(growable: false);
+      // },
+      home:
+          isMaintenance
+              ? const MaintenanceScreen()
+              : userSession != null
+              ? const BottomNavScaffold()
+              : const LoginScreen(),
       navigatorObservers: [rootNavPageRouteObserver],
     );
+  }
+}
+
+final maintenanceModeProvider = StateNotifierProvider<MaintenanceNotifier, bool>((ref) {
+  return MaintenanceNotifier();
+});
+
+class MaintenanceNotifier extends StateNotifier<bool> {
+  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
+  Timer? _timer;
+
+  MaintenanceNotifier() : super(false);
+
+  Future<void> init() async {
+    await _remoteConfig.setConfigSettings(
+      RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: const Duration(minutes: 1),
+      ),
+    );
+    await _remoteConfig.fetchAndActivate().onError((error, stackTrace) {
+      print(error);
+      return false;
+    });
+    state = _remoteConfig.getBool('maintenanceMode');
+
+    // poll every 2 minutes
+    _timer = Timer.periodic(const Duration(minutes: 1), (_) async {
+      await _remoteConfig.fetchAndActivate();
+      final value = _remoteConfig.getBool('maintenanceMode');
+      print(value);
+      if (value != state) {
+        state = value;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }

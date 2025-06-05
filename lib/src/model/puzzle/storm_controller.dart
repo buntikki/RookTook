@@ -9,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/common/chess.dart';
-import 'package:rooktook/src/model/common/id.dart';
 import 'package:rooktook/src/model/common/service/move_feedback.dart';
 import 'package:rooktook/src/model/common/service/sound_service.dart';
 import 'package:rooktook/src/model/puzzle/puzzle.dart';

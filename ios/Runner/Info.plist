@@ -96,7 +96,22 @@
 				<string>com.googleusercontent.apps.1035858141908-07bp848sildi8mpscdqs9f9keeqatbi1</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>app.rooktook.com</string>
+			</array>
+		</dict>
 	</array>
+	<key>branch_key</key>
+    <dict>
+        <key>live</key>
+        <string>key_test_hBzgoKkHHJd2MxcaQebLakgaCzpnLCRi</string>
+        <key>test</key>
+        <string>key_test_hBzgoKkHHJd2MxcaQebLakgaCzpnLCRi</string>
+    </dict>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FirebaseMessagingAutoInitEnabled</key>
@@ -106,6 +121,7 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>
+		<string>app.rooktook.com</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

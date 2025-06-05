@@ -388,7 +388,7 @@ class _PuzzleMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final connectivity = ref.watch(connectivityChangesProvider);
     final bool isOnline = connectivity.value?.isOnline ?? false;
-    return SizedBox.shrink();
+    return const SizedBox.shrink();
     // return ListSection(
     //   hasLeading: true,
     //   children: [

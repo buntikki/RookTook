@@ -13,7 +13,6 @@ import 'package:rooktook/src/model/common/service/sound_service.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 
-
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
@@ -44,6 +43,7 @@ Future<void> main() async {
   await initializeLocalNotifications(locale);
 
   await lichessBinding.initializeFirebase();
+  
 
-  runApp(ProviderScope(observers: [ProviderLogger()], child: const AppInitializationScreen()));
+  runApp(ProviderScope(observers: [ProviderLogger()], child:  AppInitializationScreen()));
 }

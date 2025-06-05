@@ -360,13 +360,11 @@ class _Body extends ConsumerWidget {
               //   print('⚠️ Could not launch email client');
               // }
 
-              final Uri emailUri = Uri(
-                scheme: 'mailto',
-                path: 'support@rooktook.com',
-                queryParameters: {'subject': 'How may I help you?', 'body': ''},
+              final Uri emailUri = Uri.parse(
+                'mailto:support@rooktook.com?subject=${Uri.encodeComponent('How may I help you?')}&body=${Uri.encodeComponent('')}',
               );
 
-              if (await canLaunchUrl(emailUri)) {
+              if (await launchUrl(emailUri)) {
                 final bool launched = await launchUrl(
                   emailUri,
                   mode: LaunchMode.externalApplication,

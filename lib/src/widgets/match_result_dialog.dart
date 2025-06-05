@@ -55,7 +55,6 @@ class _MatchResultDialogState extends ConsumerState<MatchResultDialog> {
     final BaseGame game;
 
     game = gameState.game;
-    print(game.meta.speed.name);
 
     return Dialog(
       backgroundColor: const Color(0xff2B2D30),

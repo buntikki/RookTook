@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -195,6 +196,43 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
       '<h3><strong>1. Tournament Format</strong></h3><ul><li>Each player gets the <strong>same puzzle set</strong>.</li><li>The tournament runs for a <strong>fixed time duration</strong> (e.g. 3 minutes).</li><li>Your objective is to <strong>solve as many puzzles as possible</strong> in the given time.</li></ul><h3><strong>2. Scoring System</strong></h3><ul><li><strong>Correct Answer</strong>: +1 point.</li><li><strong>Wrong Answer</strong>: No points deducted, but your <strong>streak breaks</strong>.</li></ul><h3><strong>3. Participation Rules</strong></h3><ul><li>You can only join <strong>one tournament per time slot</strong>.</li><li>You must join the tournament <strong>before it starts</strong>.</li><li>Once joined, you <strong>cannot cancel</strong> and <strong>entry fees are non-refundable</strong>.</li><li>You must have sufficient <strong>Silver Coins</strong> to join if the tournament requires it.</li></ul><h3><strong>4. Eligibility</strong></h3><ul><li>Some tournaments may require a <strong>minimum puzzle rating</strong>.</li><li>You must meet all entry criteria shown on the tournament detail page.</li></ul><h3><strong>5. Winner Selection</strong></h3><ul><li>Players are ranked by <strong>highest score</strong>.</li><li>In case of a tie, the <strong>puzzle combo</strong> gets a higher rank.</li><li>The winners will receive <strong>Gold Coins</strong> as per the defined reward split.</li></ul><h3><strong>6. Prizes</strong></h3><ul><li>All rewards are in <strong>Gold Coins</strong>.</li><li>Gold Coins can be used to <strong>redeem gifts</strong> from the RookTook Store.</li><li>Gold Coins <strong>cannot be exchanged for real money</strong>.</li></ul><h3><strong>7. Fair Play &amp; Penalties</strong></h3><ul><li>Cheating, automation, or unfair gameplay will result in <strong>immediate disqualification</strong>.</li><li>Suspicious behavior is logged and reviewed by our moderation team.</li><li>Multiple offenses may result in <strong>account suspension</strong>.</li></ul><h3><strong>8. Missed Tournament</strong></h3><ul><li>If you miss the start time after joining, you <strong>forfeit your entry</strong>.</li><li>No refunds for missed or incomplete participation.</li></ul><p><br></p>';
   final howToPlay =
       '<p><strong>Game rules</strong></p><p>Each puzzle grants one point. The goal is to get as many points as you can before the time runs out.</p><p>You always play the same colour during a storm run.</p><p><strong>Combo bar</strong></p><p>Each correct move fills the combo bar. When the bar is full, you get a time bonus, and you increase the value of the next bonus.</p><p>When you play a wrong move, the combo bar is depleted.</p>';
+  Future<void> shareBranchTournamentLink({required String tournamentId}) async {
+    // Step 1: Create BranchUniversalObject
+    final BranchUniversalObject buo = BranchUniversalObject(
+      canonicalIdentifier: 'tournament/$tournamentId',
+      title: 'Check out the Tournament!',
+      contentMetadata: BranchContentMetaData()..addCustomMetadata('id', tournamentId),
+    );
+
+    // Step 2: Add link properties
+    final BranchLinkProperties lp = BranchLinkProperties(
+      channel: 'app',
+      feature: 'tournament',
+      campaign: 'tournament-$tournamentId',
+      stage: 'all-user',
+      // alias: 'tournament/$tournamentId',
+    );
+
+    lp.addControlParam('\$fallback_url', 'https://onelink.to/u9ktwp');
+    lp.addControlParam('\$deeplink_path', 'tournament/$tournamentId');
+
+    // Step 3: Get short link
+    final BranchResponse response = await FlutterBranchSdk.getShortUrl(
+      buo: buo,
+      linkProperties: lp,
+    );
+
+    if (response.success) {
+      final String link = response.result as String;
+      print(link);
+
+      // Step 4: Share the link
+      SharePlus.instance.share(ShareParams(text: 'Check out the Tournament!\n$link'));
+    } else {
+      print(response.errorCode);
+      print('Error generating Branch link: ${response.errorMessage}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -219,16 +257,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
           actions: [
             IconButton(
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => const TournamentResult()),
-                // );
-                SharePlus.instance.share(
-                  ShareParams(
-                    text:
-                        'Check out the Tournament!\nplay.rooktook.com/tournament/${tournament.id}',
-                  ),
-                );
+                shareBranchTournamentLink(tournamentId: tournament.id);
               },
               icon: const Icon(Icons.share, color: Colors.white),
             ),
@@ -240,11 +269,6 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             spacing: 8,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // if (tournament.bannerImage != null)
-              //   ClipRRect(
-              //     borderRadius: BorderRadius.circular(12),
-              //     child: Image.asset(tournament.bannerImage!, height: 200, fit: BoxFit.cover),
-              //   ),
               const SizedBox(height: 8),
               Text(
                 tournament.name,
@@ -356,19 +380,6 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                                 ? isTournamentStarted
                                     ? () {
                                       if (isTournamentEnded) {
-                                        // ScaffoldMessenger.of(context).showSnackBar(
-                                        //   const SnackBar(
-                                        //     backgroundColor: Colors.red,
-                                        //     content: Text(
-                                        //       'Event has ended',
-                                        //       style: TextStyle(
-                                        //         fontWeight: FontWeight.w700,
-                                        //         fontSize: 16,
-                                        //         color: Colors.white,
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // );
                                         Navigator.push(
                                           context,
                                           TournamentResult.route(
@@ -451,8 +462,19 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                           ],
                         ),
                       ),
-                      if (!isTournamentStarted)
-                        Center(child: TournamentTimerWidget(startTime: tournament.startTime)),
+                      // if (!isTournamentStarted)
+                      Center(
+                        child:
+                            isTournamentStarted
+                                ? TournamentEndTimerWidget(
+                                  startTime: tournament.endTime,
+                                  forEndTimer: true,
+                                )
+                                : TournamentTimerWidget(
+                                  startTime: tournament.startTime,
+                                  forEndTimer: false,
+                                ),
+                      ),
                     ],
                   );
                 },
@@ -563,7 +585,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                     Text(
                       value,
                       style: const TextStyle(
-                        fontSize: 22,
+                        fontSize: 20,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
                       ),
@@ -613,6 +635,16 @@ class RewardDistributionSheet extends StatelessWidget {
               shrinkWrap: true,
               separatorBuilder: (context, index) => const SizedBox(height: 8),
               itemBuilder: (BuildContext context, int index) {
+                Color? color;
+                if (index == 0) {
+                  color = const Color(0xff463F24);
+                }
+                if (index == 1) {
+                  color = const Color(0xff2E4755);
+                }
+                if (index == 2) {
+                  color = const Color(0xff413C60);
+                }
                 return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
@@ -622,32 +654,33 @@ class RewardDistributionSheet extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      if (index < 3)
-                        SvgPicture.asset(
-                          'assets/images/svg/${index == 0
-                              ? 'gold'
-                              : index == 1
-                              ? 'silver'
-                              : 'bronze'}_medal.svg',
-                          height: 36,
-                          width: 36,
-                        )
-                      else
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: const Color(0xff464A4F)),
-                          ),
-                          child: Text(
-                            '#${index + 1}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12,
-                              color: Color(0xffEFEDED),
-                            ),
+                      // if (index < 3)
+                      //   SvgPicture.asset(
+                      //     'assets/images/svg/${index == 0
+                      //         ? 'gold'
+                      //         : index == 1
+                      //         ? 'silver'
+                      //         : 'bronze'}_medal.svg',
+                      //     height: 36,
+                      //     width: 36,
+                      //   )
+                      // else
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: const Color(0xff464A4F)),
+                        ),
+                        child: Text(
+                          '#${index + 1}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Color(0xffEFEDED),
                           ),
                         ),
+                      ),
                       Row(
                         spacing: 8,
                         children: [
@@ -771,9 +804,10 @@ class AlphanumericInputFormatter extends TextInputFormatter {
 }
 
 class TournamentTimerWidget extends StatefulWidget {
-  const TournamentTimerWidget({super.key, required this.startTime});
+  const TournamentTimerWidget({super.key, required this.startTime, this.forEndTimer = false});
 
   final int startTime;
+  final bool forEndTimer;
   @override
   State<TournamentTimerWidget> createState() => _TournamentTimerWidgetState();
 }
@@ -834,10 +868,90 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
   @override
   Widget build(BuildContext context) {
     if (eventTimer?.isActive ?? false) {
-      return Text('Starting in 00:${timeLeft.toString().padLeft(2, '0')} sec');
+      return Text(
+        '${widget.forEndTimer ? 'Ending' : 'Starting'} in 00:${timeLeft.toString().padLeft(2, '0')}',
+      );
     } else {
       return Text(
-        'Event starts at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(widget.startTime))}',
+        'Event ${widget.forEndTimer ? 'ends' : 'starts'} at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(widget.startTime))}',
+        textAlign: TextAlign.center,
+        style: const TextStyle(color: Color(0xff7D8082)),
+      );
+    }
+  }
+}
+
+class TournamentEndTimerWidget extends StatefulWidget {
+  const TournamentEndTimerWidget({super.key, required this.startTime, this.forEndTimer = false});
+
+  final int startTime;
+  final bool forEndTimer;
+  @override
+  State<TournamentEndTimerWidget> createState() => _TournamentEndTimerWidgetState();
+}
+
+class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
+  int timeLeft = 00;
+  Timer? scheduledTimer;
+  Timer? eventTimer;
+  @override
+  void initState() {
+    super.initState();
+    scheduleTimerForTargetTime();
+  }
+
+  void scheduleTimerForTargetTime() {
+    final startTime = DateTime.fromMillisecondsSinceEpoch(widget.startTime);
+    final timeUntilEvent = getLeftDuration(startTime);
+
+    // Schedule 1 min before start
+    final delayUntilStart = timeUntilEvent - const Duration(minutes: 1);
+
+    if (delayUntilStart.isNegative) {
+      // Already within 1 min → start now
+      startTimer();
+    } else {
+      scheduledTimer = Timer(delayUntilStart, () {
+        startTimer();
+      });
+    }
+  }
+
+  Duration getLeftDuration(DateTime startTime) {
+    return startTime.difference(DateTime.now());
+  }
+
+  void startTimer() {
+    eventTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      final now = DateTime.now();
+      final targetTime = DateTime.fromMillisecondsSinceEpoch(widget.startTime);
+      final remaining = targetTime.difference(now).inSeconds;
+
+      if (remaining <= 0) {
+        timer.cancel();
+        setState(() => timeLeft = 0);
+      } else {
+        setState(() => timeLeft = remaining);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scheduledTimer?.cancel();
+    eventTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (eventTimer?.isActive ?? false) {
+      return Text(
+        '${widget.forEndTimer ? 'Ending' : 'Starting'} in 00:${timeLeft.toString().padLeft(2, '0')}',
+      );
+    } else {
+      return Text(
+        'Event ${widget.forEndTimer ? 'ends' : 'starts'} at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(widget.startTime))}',
         textAlign: TextAlign.center,
         style: const TextStyle(color: Color(0xff7D8082)),
       );

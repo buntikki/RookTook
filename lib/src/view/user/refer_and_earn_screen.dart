@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,6 +42,53 @@ class _ReferAndEarnScreenState extends ConsumerState<ReferAndEarnScreen> {
 
 class ReferAndEarnLoaded extends ConsumerWidget {
   const ReferAndEarnLoaded({super.key});
+  Future<void> shareBranchReferralLink({
+    required String referralId,
+    required String coinAmount,
+    required String coinType,
+  }) async {
+    // Step 1: Create BranchUniversalObject
+    final BranchUniversalObject buo = BranchUniversalObject(
+      canonicalIdentifier: 'invite/ref=$referralId',
+      title: 'Join RookTook and get $coinAmount $coinType Coins FREE!',
+      contentDescription: 'Sign up with my link and get your bonus after your first tournament!',
+      contentMetadata: BranchContentMetaData()..addCustomMetadata('ref', referralId),
+    );
+
+    // Step 2: Add link properties
+    final BranchLinkProperties lp = BranchLinkProperties(
+      channel: 'app',
+      feature: 'referral',
+      campaign: 'referral-$referralId',
+      stage: 'new-user',
+      alias: 'invite/ref=$referralId',
+    );
+
+    lp.addControlParam('\$fallback_url', 'https://onelink.to/u9ktwp');
+    lp.addControlParam('\$deeplink_path', 'invite/ref=$referralId');
+
+    // Step 3: Get short link
+    final BranchResponse response = await FlutterBranchSdk.getShortUrl(
+      buo: buo,
+      linkProperties: lp,
+    );
+
+    if (response.success) {
+      final String link = response.result as String;
+      print(link);
+
+      // Step 4: Share the link
+      SharePlus.instance.share(
+        ShareParams(
+          text:
+              'Join RookTook and get $coinAmount $coinType Coins FREE!\n'
+              'Sign up with my link and get your bonus after your first tournament:\n$link',
+        ),
+      );
+    } else {
+      print('Error generating Branch link: ${response.errorMessage}');
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -132,7 +180,7 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            'play.rooktook.com/${details.referralId}',
+                            'app.rooktook.com/${details.referralId}',
                             style: const TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 14,
@@ -148,11 +196,16 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                     flex: 1,
                     child: MaterialButton(
                       onPressed: () {
-                        SharePlus.instance.share(
-                          ShareParams(
-                            text:
-                                'Join RookTook and get ${details.referredRewardSetting.value} ${details.referredRewardSetting.coinType} Coins FREE!\nSign up with my link and get your bonus after your first tournament:\nplay.rooktook.com/invite?ref=${details.referralId}',
-                          ),
+                        // SharePlus.instance.share(
+                        //   ShareParams(
+                        //     text:
+                        //         'Join RookTook and get ${details.referredRewardSetting.value} ${details.referredRewardSetting.coinType} Coins FREE!\nSign up with my link and get your bonus after your first tournament:\napp.rooktook.com/invite?ref=${details.referralId}',
+                        //   ),
+                        // );
+                        shareBranchReferralLink(
+                          referralId: details.referralId,
+                          coinAmount: details.referredRewardSetting.value.toString(),
+                          coinType: details.referredRewardSetting.coinType,
                         );
                       },
                       padding: EdgeInsets.zero,

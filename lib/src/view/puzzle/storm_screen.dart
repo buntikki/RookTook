@@ -281,10 +281,6 @@ Future<void> _showStats(
   final data = await ref
       .read(tournamentProvider.notifier)
       .fetchTournamentResult(id: tournamentId, stats: stats);
-  // print(stats.slowPuzzleIds.length);
-  // print(stats.highest);
-  // print(stats.history.length);
-  print(data);
   if (data) {
     Navigator.pushReplacement(
       context,
@@ -452,7 +448,8 @@ class _ComboState extends ConsumerState<_Combo> with SingleTickerProviderStateMi
                           ),
                         ),
                         Text(
-                          context.l10n.stormCombo,
+                          'Moves\nCombo',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             color:
                                 Theme.of(context).platform == TargetPlatform.iOS

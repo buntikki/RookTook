@@ -30,7 +30,7 @@ final fetchLeaderboardProviderWithLoading = FutureProvider.family<List<Player>, 
   id,
 ) async {
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
-  await Future.delayed(const Duration(seconds: 10));
+  await Future.delayed(const Duration(seconds: 60));
   final tournament = await tournamentNotifier.fetchSingleTournament(id);
   return await tournamentNotifier.sortLeaderboard(tournament?.players ?? []);
 });
@@ -94,7 +94,6 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
   }
 
   Future<Tournament?> fetchSingleTournament(String id) async {
-    print('fetchSingleTournament called');
     const storage = SessionStorage();
     final data = await storage.read();
     final headers = {
@@ -149,7 +148,6 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
   }
 
   Future<bool> fetchTournamentResult({required String id, required StormRunStats stats}) async {
-    print('fetchTournamentResult called');
     const storage = SessionStorage();
     final data = await storage.read();
     final headers = {

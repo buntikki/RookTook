@@ -98,7 +98,7 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
                 spacing: 16,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Lottie.asset('assets/result_loading.json', height: 120),
+                  Lottie.asset('assets/result_loading.json', height: 200),
                   const Text('Fetching Results'),
                 ],
               ),
