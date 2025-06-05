@@ -67,24 +67,27 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             onRefresh: () async => ref.refresh(accountProvider),
             child:
                 recentGames.value!.isEmpty
-                    ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Lottie.asset('assets/chess_puzzle.json', width: 160, height: 160),
-                          const SizedBox(height: 20),
-                          const Text(
-                            'No Games Yet',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Your recent games will appear here once you start playing.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 14, color: Colors.white),
-                          ),
-                        ],
+                    ? Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Lottie.asset('assets/chess_puzzle.json', width: 160, height: 160),
+                            const SizedBox(height: 20),
+                            const Text(
+                              'No Games Yet',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Your recent games will appear here once you start playing.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 14, color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                     : ListView(

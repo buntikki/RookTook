@@ -61,7 +61,7 @@ class ReferAndEarnLoaded extends ConsumerWidget {
       feature: 'referral',
       campaign: 'referral-$referralId',
       stage: 'new-user',
-      alias: 'invite/ref=$referralId',
+      // alias: 'invite/ref=$referralId',
     );
 
     lp.addControlParam('\$fallback_url', 'https://onelink.to/u9ktwp');
@@ -167,7 +167,7 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                   Expanded(
                     flex: 3,
                     child: FittedBox(
-                      fit: BoxFit.scaleDown,
+                      // fit: BoxFit.scaleDown,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -178,9 +178,10 @@ class ReferAndEarnLoaded extends ConsumerWidget {
                               fontSize: 12,
                               color: Color(0xff7D8082),
                             ),
+                            textScaler: TextScaler.noScaling,
                           ),
                           Text(
-                            'app.rooktook.com/${details.referralId}',
+                            'rooktook.com/${details.referralId}',
                             style: const TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 14,

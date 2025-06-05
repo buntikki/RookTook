@@ -19,9 +19,9 @@ import 'package:rooktook/src/widgets/feedback.dart';
 
 enum BottomTab {
   home,
-  shop,
   // tools,
   tournament,
+  shop,
   //watch,
   settings;
 
@@ -30,7 +30,7 @@ enum BottomTab {
       case BottomTab.home:
         return strings.mobileHomeTab;
       case BottomTab.shop:
-        return 'Shop';
+        return 'Store';
       // case BottomTab.tools:
       //   return strings.mobileToolsTab;
       case BottomTab.tournament:
@@ -157,8 +157,8 @@ final toolsTabInteraction = _BottomTabInteraction();
 final settingsTabInteraction = _BottomTabInteraction();
 final List<Widget> tabs = [
   const HomeTabScreen(),
-  const ShopScreen(),
   const TournamentScreen(),
+  const ShopScreen(),
   const SettingsTabScreen(),
 ];
 
@@ -316,18 +316,19 @@ Widget _androidTabBuilder(BuildContext context, int index) {
         tab: BottomTab.home,
         builder: (context) => const HomeTabScreen(),
       );
+
     case 1:
-      return _MaterialTabView(
-        navigatorKey: shopNavigatorKey,
-        tab: BottomTab.shop,
-        builder: (context) => const ShopScreen(),
-      );
-    case 2:
       return _MaterialTabView(
         navigatorKey: toolsNavigatorKey,
         tab: BottomTab.tournament,
         builder: (context) => const TournamentScreen(),
         // builder: (context) => const ToolsTabScreen(),
+      );
+    case 2:
+      return _MaterialTabView(
+        navigatorKey: shopNavigatorKey,
+        tab: BottomTab.shop,
+        builder: (context) => const ShopScreen(),
       );
     // case 3:
     //   return _MaterialTabView(
@@ -355,18 +356,19 @@ Widget _iOSTabBuilder(BuildContext context, int index) {
         navigatorKey: homeNavigatorKey,
         builder: (context) => const HomeTabScreen(),
       );
+
     case 1:
-      return CupertinoTabView(
-        defaultTitle: context.l10n.mobilePuzzlesTab,
-        navigatorKey: shopNavigatorKey,
-        builder: (context) => const ShopScreen(),
-      );
-    case 2:
       return CupertinoTabView(
         defaultTitle: context.l10n.mobileToolsTab,
         navigatorKey: toolsNavigatorKey,
         // builder: (context) => const ToolsTabScreen(),
         builder: (context) => const TournamentScreen(),
+      );
+    case 2:
+      return CupertinoTabView(
+        defaultTitle: context.l10n.mobilePuzzlesTab,
+        navigatorKey: shopNavigatorKey,
+        builder: (context) => const ShopScreen(),
       );
     // case 3:
     //   return CupertinoTabView(
