@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -105,12 +106,22 @@ class ShopNotifier extends StateNotifier<ShopState> {
         if (decodedResponse['status'] == 'success') {
           showSuccessOverlay(context);
           return;
+        } else {
+          showFailedOverlay(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(decodedResponse['error'] as String? ??'An error occured', style: TextStyle(color: Colors.white)),
+            ),
+          );
+          return;
         }
       }
     } catch (e) {
       log(e.toString());
     }
     showFailedOverlay(context);
+
     return;
   }
 }

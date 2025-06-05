@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rooktook/src/view/shop/presentation/shop_screen.dart';
 import 'package:rooktook/src/view/shop/provider/shop_provider.dart';
+import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 
 class CreateOrderFormScreen extends ConsumerStatefulWidget {
   const CreateOrderFormScreen({super.key, required this.item});
@@ -208,16 +209,28 @@ class _CreateOrderFormScreenState extends ConsumerState<CreateOrderFormScreen> {
               color: const Color(0xFF54C339),
               onPressed: () {
                 if (_formkey.currentState!.validate()) {
-                  ref
-                      .read(shopProvider.notifier)
-                      .createOrder(
-                        name: nameController.text.trim(),
-                        email: emailController.text.trim(),
-                        address: addressController.text.trim(),
-                        number: mobileController.text.trim(),
-                        productId: widget.item.id,
-                        context: context,
-                      );
+                  if (ref.read(walletProvider).walletInfo.goldCoins >= widget.item.coinRequired) {
+                    ref
+                        .read(shopProvider.notifier)
+                        .createOrder(
+                          name: nameController.text.trim(),
+                          email: emailController.text.trim(),
+                          address: addressController.text.trim(),
+                          number: mobileController.text.trim(),
+                          productId: widget.item.id,
+                          context: context,
+                        );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text(
+                          'Not have enough coins',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  }
                 }
               },
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
