@@ -225,7 +225,7 @@ class _CreateOrderFormScreenState extends ConsumerState<CreateOrderFormScreen> {
                       const SnackBar(
                         backgroundColor: Colors.red,
                         content: Text(
-                          'Not have enough coins',
+                          'Not enough Gold Coins',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
