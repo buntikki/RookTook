@@ -183,7 +183,7 @@ class _AppState extends ConsumerState<Application> {
   Widget build(BuildContext context) {
     final isMaintenance = ref.watch(maintenanceModeProvider);
     final generalPrefs = ref.watch(generalPreferencesProvider);
-    final userSession = ref.read(authSessionProvider)?.user;
+    final userSession = ref.watch(authSessionProvider)?.user;
     final boardPrefs = ref.watch(boardPreferencesProvider);
     final (light: themeLight, dark: themeDark) = makeAppTheme(context, generalPrefs, boardPrefs);
 

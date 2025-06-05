@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,6 +55,7 @@ class NewProfileScreen extends ConsumerWidget {
         recentGames.value!
             .where((element) => element.game.perf == Perf.rapid || element.game.perf == Perf.blitz)
             .toList();
+    log(filteredGames.toString());
 
     final draw = filteredGames.where((element) => element.game.winner == null).length;
 
@@ -686,6 +689,9 @@ class NewGameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(backgroundColor: Colors.black, body: Center(child: GameWonCard(score: 500)));
+    return const Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(child: GameWonCard(score: 500)),
+    );
   }
 }

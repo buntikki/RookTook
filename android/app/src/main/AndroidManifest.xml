@@ -79,6 +79,9 @@
 
                 <!-- Branch Dashboard domains -->
                 <data android:scheme="https" android:host="app.rooktook.com" />
+                <data android:scheme="https" android:host="m.rooktook.com" />
+                <data android:scheme="https" android:host="rooktook.com" />
+                <data android:scheme="https" android:host="play.rooktook.com" />
                 <data android:scheme="https" android:host="www.rooktook.com" />
             </intent-filter>
 

@@ -19,6 +19,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
   void initState() {
     super.initState();
     ref.read(walletProvider.notifier).getUserLedger();
+    
   }
 
   @override

@@ -97,7 +97,7 @@ class GameListTile extends StatelessWidget {
     }
 
     return _GameListTile(
-      name: opponent.user!.name,
+      name: opponent.user?.name,
       game: game,
       color: tileColor,
       mySide: youAre,
