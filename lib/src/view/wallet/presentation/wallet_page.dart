@@ -27,56 +27,56 @@ class _WalletPageState extends ConsumerState<WalletPage> {
     {
       'question': 'What are Gold Coins?',
       'answer':
-          'Gold Coins are a premium currency awarded for exceptional performance in tournaments.',
+          'Gold Coins are a premium currency that you get by winning paid tournaments and can be used to redeem rewards.',
     },
     {
       'question': 'How can I earn Gold Coins?',
-      'answer': 'Finishing in top positions in select tournaments',
+      'answer': 'Gold coins can be won by playing paid tournaments',
     },
     {
       'question': 'Can I purchase Gold Coins?',
-      'answer': 'No, Gold Coins cannot be purchased. They must be earned through gameplay.',
+      'answer': 'No, Gold Coins cannot be purchased. You can only win them in paid tournaments.',
     },
     {
       'question': 'What can I do with Gold Coins?',
       'answer':
-          'Gold Coins may be used in the RookTook Store to redeem exclusive items, features, or future rewards.',
+          'Gold Coins are used in the RookTook Store to redeem physical products, features, or vouchers.',
     },
     {
       'question': 'Can I use Gold Coins to enter tournaments?',
-      'answer': 'No, only Silver Coins can be used for tournament entry.',
+      'answer': 'No, only Silver Coins can be used as tournament entry fee.',
     },
     {'question': 'Do Gold Coins expire?', 'answer': 'No, Gold Coins do not expire.'},
-    {
+    /*{
       'question': 'Can I convert Gold Coins to Silver Coins?',
       'answer': 'This feature is not currently available but may be added in future versions.',
-    },
+    },*/
     {
       'question': 'Why didn’t I receive Gold Coins after winning?',
       'answer':
-          'Gold Coins are awarded only for eligible tournaments. Check the tournament rules to confirm eligibility.',
+          'Gold Coins are awarded only for eligible tournaments. Check the tournament rules and reward distribution to confirm eligibility.',
     },
   ];
   final List<Map<String, String>> silverFaqs = [
     {
       'question': 'What are Silver Coins?',
       'answer':
-          'Silver Coins are a virtual currency used to participate in tournaments and unlock certain game features.',
+          'Silver Coins are In-game coins used to participate in tournaments and unlock certain game features.',
     },
     {
       'question': 'How can I earn Silver Coins?',
       'answer':
-          'You can earn Silver Coins by Winning 1v1 games, Completing puzzle challenges, Referring friends to the app',
+          'You can earn Silver Coins by Winning 1v1 games, Completing puzzle challenges, Referring friends to the app and Playing free tournaments',
     },
-    {
+    /*{
       'question': 'Can I purchase Silver Coins?',
       'answer':
           'Yes, Silver Coins can be purchased using real money via our in-app payment gateway.',
-    },
+    },*/
     {
       'question': 'Where can I use Silver Coins?',
       'answer':
-          'Silver Coins are required to join tournaments and may be used in future features like power-ups or in-app purchases.',
+          'Silver Coins are required to join paid tournaments',
     },
     {
       'question': 'Do Silver Coins expire?',
@@ -85,7 +85,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
     {
       'question': 'How many Silver Coins do I need to join a tournament?',
       'answer':
-          'The entry cost varies for each tournament. Check the tournament details page for the required number of coins.',
+          'The entry cost varies for each tournament. Check the tournament details page for the tournament fee to participate.',
     },
     {
       'question': 'Can I transfer Silver Coins to another user?',
