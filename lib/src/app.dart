@@ -139,6 +139,7 @@ class _AppState extends ConsumerState<Application> {
 
   Future<void> initBranchSetup() async {
     await FlutterBranchSdk.init();
+    FlutterBranchSdk.disableTracking(false);
     FlutterBranchSdk.listSession().listen(
       (event) async {
         print('Branch Event $event');

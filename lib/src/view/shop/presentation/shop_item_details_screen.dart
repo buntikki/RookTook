@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/shop/presentation/create_order_form_screen.dart';
@@ -13,7 +14,7 @@ class ShopItemDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.share, color: Colors.white))],
+        // actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.share, color: Colors.white))],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -101,7 +102,93 @@ class ShopItemDetailsScreen extends StatelessWidget {
                   _ListTile(
                     icon: 'assets/images/svg/how_to_play.svg',
                     title: 'How to Redeem',
-                    onTap: () {},
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        useSafeArea: true,
+                        builder:
+                            (context) => DraggableScrollableSheet(
+                              expand: false,
+                              initialChildSize: 0.5,
+                              maxChildSize: 0.9,
+                              minChildSize: 0.3,
+                              builder:
+                                  (_, controller) => Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 24,
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          height: 4,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[600],
+                                            borderRadius: BorderRadius.circular(2),
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 16),
+                                        Expanded(
+                                          child: SingleChildScrollView(
+                                            controller: controller,
+                                            child: Html(
+                                              data: '''
+<h2>How to Redeem</h2>
+
+<ol>
+  <li>
+    <strong>Go to the Store</strong><br>
+    Open the app and go to the <strong>Store</strong> section from the home screen.
+  </li>
+  <li>
+    <strong>Tap on a Tile</strong><br>
+    Browse the available rewards and tap on the <strong>tile</strong> of the product you want to redeem.
+  </li>
+  <li>
+    <strong>Check your Gold Coin balance</strong><br>
+    Make sure you have enough coins to redeem the selected item.
+  </li>
+  <li>
+    <strong>If you are eligible, tap to proceed</strong><br>
+    You’ll see the <strong>‘Redeem Your Coins’</strong> option if you meet the coin requirement.
+  </li>
+  <li>
+    <strong>Enter your details</strong>
+    <ul>
+      <li>Full Name</li>
+      <li>Complete Delivery Address</li>
+      <li>Valid Email ID (for support and confirmation)</li>
+    </ul>
+  </li>
+  <li>
+    <strong>Check your Email</strong><br>
+    You will receive a confirmation email with further instructions or updates.
+  </li>
+  <li>
+    <strong>Coins will be deducted on shipment</strong><br>
+    The required number of gold coins will be deducted <strong>only when the product is shipped</strong>.
+  </li>
+</ol>''',
+                                              style: {
+                                                'body': Style(
+                                                  color: Colors.white,
+                                                  fontSize: FontSize(16),
+                                                ),
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                            ),
+                      );
+                    },
                   ),
                 ],
               ),

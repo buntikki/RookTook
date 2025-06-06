@@ -156,7 +156,11 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
     return null;
   }
 
-  Future<bool> fetchTournamentResult({required String id, required StormRunStats stats}) async {
+  Future<bool> fetchTournamentResult({
+    required String id,
+    required StormRunStats stats,
+    required int numSolved,
+  }) async {
     const storage = SessionStorage();
     final data = await storage.read();
     final headers = {
@@ -167,11 +171,12 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
     };
     // print(signBearerToken(data!.token));
     try {
+      print('$numSolved ${stats.score}');
       final response = await http.put(
         lichessUri('api/rt-tournament/$id/player/result'),
         headers: headers,
         body: json.encode({
-          'score': stats.score,
+          'score': numSolved,
           'combo': stats.comboBest,
           'errors': stats.errors,
           'time': stats.time.inSeconds,

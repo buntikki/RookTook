@@ -13,12 +13,14 @@ class TournamentCard extends StatelessWidget {
     required this.index,
     this.backgroundColor,
     this.isShowJoinedTag = true,
+    this.isEnded = false,
   });
 
   final Tournament tournament;
   final int index;
   final Color? backgroundColor;
   final bool isShowJoinedTag;
+  final bool isEnded;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -169,7 +171,9 @@ class TournamentCard extends StatelessWidget {
                                   height: 18.0,
                                 ),
                                 Text(
-                                  '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
+                                  isEnded
+                                      ? ' ${tournament.players.length} Participants'
+                                      : '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
                                   textScaler: TextScaler.noScaling,
                                   style: const TextStyle(color: Colors.white70, fontSize: 12),
                                 ),

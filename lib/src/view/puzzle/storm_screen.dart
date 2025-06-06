@@ -44,7 +44,7 @@ class StormScreen extends ConsumerStatefulWidget {
     return buildScreenRoute(
       context,
       screen: StormScreen(tournamentId: tournamentId, startTime: startTime),
-      title: 'Puzzle Storm',
+      title: 'Puzzle Rush',
     );
   }
 
@@ -63,7 +63,7 @@ class _StormScreenState extends ConsumerState<StormScreen> {
           // _StormDashboardButton(),
           const ToggleSoundButton(),
         ],
-        appBarTitle: const Text('Puzzle Storm'),
+        appBarTitle: const Text('Puzzle Rush'),
         body: _Load(_boardKey, widget.tournamentId, widget.startTime),
       ),
     );
@@ -129,7 +129,13 @@ class _Body extends ConsumerWidget {
       if (prev?.mode != StormMode.ended && state.mode == StormMode.ended) {
         Future.delayed(const Duration(milliseconds: 200), () async {
           if (context.mounted) {
-            await _showStats(context, ref.read(ctrlProvider).stats!, ref, tournamentId);
+            await _showStats(
+              context,
+              ref.read(ctrlProvider).stats!,
+              ref,
+              tournamentId,
+              state.numSolved,
+            );
           }
         });
       }
@@ -259,7 +265,7 @@ Future<void> _stormInfoDialogBuilder(BuildContext context) {
       );
 
       return PlatformAlertDialog(
-        title: Text(context.l10n.aboutX('Puzzle Storm')),
+        title: Text(context.l10n.aboutX('Puzzle Rush')),
         content: content,
         actions: [
           PlatformDialogAction(
@@ -277,10 +283,11 @@ Future<void> _showStats(
   StormRunStats stats,
   WidgetRef ref,
   String tournamentId,
+  int numSolved,
 ) async {
   final data = await ref
       .read(tournamentProvider.notifier)
-      .fetchTournamentResult(id: tournamentId, stats: stats);
+      .fetchTournamentResult(id: tournamentId, stats: stats, numSolved: numSolved);
   if (data) {
     Navigator.pushReplacement(
       context,
@@ -592,7 +599,7 @@ class _BottomBar extends ConsumerWidget {
             icon: Icons.open_in_new,
             label: 'Result',
             showLabel: true,
-            onTap: () => _showStats(context, stormState.stats!, ref, ''),
+            onTap: () => _showStats(context, stormState.stats!, ref, '', stormState.numSolved),
           ),
       ],
     );

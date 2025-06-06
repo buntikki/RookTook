@@ -257,11 +257,14 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             onPressed: () => Navigator.pop(context),
           ),
           actions: [
-            IconButton(
-              onPressed: () {
-                shareBranchTournamentLink(tournamentId: tournament.id);
-              },
-              icon: const Icon(Icons.share, color: Colors.white),
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: IconButton(
+                onPressed: () {
+                  shareBranchTournamentLink(tournamentId: tournament.id);
+                },
+                icon: const Icon(Icons.share, color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -274,6 +277,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
               const SizedBox(height: 8),
               Text(
                 tournament.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 20,
                   color: Colors.white,
@@ -342,7 +347,11 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                           children: [
                             SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
                             Text(
-                              '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
+                              DateTime.now().isAfter(
+                                    DateTime.fromMillisecondsSinceEpoch(tournament.endTime),
+                                  )
+                                  ? '${tournament.players.length} Participants'
+                                  : '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(color: Color(0xff7D8082)),
                               textScaler: TextScaler.noScaling,
@@ -997,16 +1006,6 @@ void _showHowToPlaySheet(BuildContext context, String data, String title) {
                         data: data,
                         style: {'body': Style(color: Colors.white, fontSize: FontSize(16))},
                       ),
-                      // Text(
-                      //   'Lorem Ipsum is simply dummy text of the printing and typesetting industry. '
-                      //   "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, "
-                      //   'when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-                      //   style: TextStyle(color: Colors.white70),
-                      // ),
-                      // SizedBox(height: 16),
-                      // RuleItem(text: '1 to 1 player will play here'),
-                      // RuleItem(text: 'You have to wait for another player'),
-                      // RuleItem(text: 'Remember rule number 1 and 2'),
                     ),
                   ),
                 ],

@@ -52,15 +52,16 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-                (route) => false,
-              );
-            },
-            child: const Text('Skip', style: TextStyle(color: Colors.white)),
-          ),
+          if (enabled)
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+                  (route) => false,
+                );
+              },
+              child: const Text('Skip', style: TextStyle(color: Colors.white)),
+            ),
         ],
       ),
       body: SafeArea(

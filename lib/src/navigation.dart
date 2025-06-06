@@ -34,7 +34,7 @@ enum BottomTab {
       // case BottomTab.tools:
       //   return strings.mobileToolsTab;
       case BottomTab.tournament:
-        return strings.tournament;
+        return 'Tournaments';
       // case BottomTab.watch:
       //   return strings.mobileWatchTab;
       case BottomTab.settings:

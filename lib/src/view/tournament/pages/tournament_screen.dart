@@ -59,7 +59,7 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
           Padding(
             padding: const EdgeInsets.all(16.0).copyWith(top: 0),
             child: const Text(
-              'Tournament',
+              'Tournaments',
               style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
             ),
           ),
@@ -171,6 +171,8 @@ class BuildMyTournamentList extends StatelessWidget {
               (element) =>
                   DateTime.fromMillisecondsSinceEpoch(element.endTime).isBefore(DateTime.now()),
             )
+            .toList()
+            .reversed
             .toList();
     return RefreshIndicator.adaptive(
       onRefresh: () async {
@@ -236,6 +238,7 @@ class BuildMyTournamentList extends StatelessWidget {
                                   tournament: tournament,
                                   index: index,
                                   isShowJoinedTag: false,
+                                  isEnded: true,
                                 );
                               },
                             ),

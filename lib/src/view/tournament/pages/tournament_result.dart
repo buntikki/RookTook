@@ -277,10 +277,7 @@ class TournamentResultCard extends StatelessWidget {
                     Row(
                       spacing: 8,
                       children: [
-                        SvgPicture.asset(
-                          'assets/images/svg/${isUserCard ? 'tournament_clock_light' : 'error'}.svg',
-                          height: 16.0,
-                        ),
+                        SvgPicture.asset('assets/images/svg/error.svg', height: 16.0),
                         Text(
                           '${player.errors}',
                           style: const TextStyle(color: Color(0xff7D8082), fontSize: 12),
