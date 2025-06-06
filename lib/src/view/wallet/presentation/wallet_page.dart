@@ -42,7 +42,6 @@ class _WalletPageState extends ConsumerState<WalletPage> {
       'answer':
           'Gold Coins may be used in the RookTook Store to redeem exclusive items, features, or future rewards.',
     },
-
     {
       'question': 'Can I use Gold Coins to enter tournaments?',
       'answer': 'No, only Silver Coins can be used for tournament entry.',
@@ -378,7 +377,9 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
           child: const Text('Convert', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
         ),
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(
+            16,
+          ).copyWith(bottom: MediaQuery.of(context).viewInsets.bottom + 24),
           decoration: const BoxDecoration(color: Color(0xff2B2D30)),
           child: Column(
             spacing: 30,

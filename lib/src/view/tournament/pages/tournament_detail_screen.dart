@@ -500,6 +500,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                             isScrollControlled: true,
                             builder: (context) {
                               return RewardDistributionSheet(
+                                coinType: tournament.rewardCoinType,
                                 rewards: tournament.rewardPool.split(',').toList(),
                               );
                             },
@@ -603,8 +604,9 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
 }
 
 class RewardDistributionSheet extends StatelessWidget {
-  const RewardDistributionSheet({super.key, required this.rewards});
+  const RewardDistributionSheet({super.key, required this.rewards, required this.coinType});
   final List<String> rewards;
+  final String coinType;
 
   @override
   Widget build(BuildContext context) {
@@ -688,7 +690,7 @@ class RewardDistributionSheet extends StatelessWidget {
                             rewards[index],
                             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                           ),
-                          SvgPicture.asset('assets/images/svg/gold_coin.svg', height: 24),
+                          SvgPicture.asset('assets/images/svg/${coinType}_coin.svg', height: 24),
                         ],
                       ),
                     ],
