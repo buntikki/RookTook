@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -267,27 +268,35 @@ class MaintenanceNotifier extends StateNotifier<bool> {
   MaintenanceNotifier() : super(false);
 
   Future<void> init() async {
-    await _remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(minutes: 1),
-      ),
-    );
-    await _remoteConfig.fetchAndActivate().onError((error, stackTrace) {
-      print(error);
-      return false;
-    });
-    state = _remoteConfig.getBool('maintenanceMode');
+    try {
+      await _remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 10),
+          minimumFetchInterval: const Duration(minutes: 1),
+        ),
+      );
+      await _remoteConfig.fetchAndActivate().onError((error, stackTrace) {
+        log(error.toString());
+        return false;
+      });
+      state = _remoteConfig.getBool('maintenanceMode');
 
-    // poll every 2 minutes
-    _timer = Timer.periodic(const Duration(minutes: 1), (_) async {
-      await _remoteConfig.fetchAndActivate();
-      final value = _remoteConfig.getBool('maintenanceMode');
-      print(value);
-      if (value != state) {
-        state = value;
-      }
-    });
+      // poll every 2 minutes
+      _timer = Timer.periodic(const Duration(minutes: 1), (_) async {
+        await _remoteConfig.fetchAndActivate().onError((error, stackTrace) {
+          log(error.toString());
+          return false;
+        });
+        ;
+        final value = _remoteConfig.getBool('maintenanceMode');
+
+        if (value != state) {
+          state = value;
+        }
+      });
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   @override

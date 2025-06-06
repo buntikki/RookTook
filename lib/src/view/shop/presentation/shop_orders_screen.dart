@@ -53,6 +53,22 @@ class OrderCard extends StatelessWidget {
   const OrderCard({super.key, required this.item});
 
   final OrderModel item;
+  Color getStatusColor(String status) {
+    switch (status) {
+      case 'cancelled':
+        return Colors.red;
+      case 'processing':
+        return Colors.orange.shade700;
+      case 'confirmed':
+        return Colors.green;
+      case 'shipped':
+        return Colors.blue;
+      case 'fulfilled':
+        return Colors.green;
+      default:
+        return Colors.white;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +107,7 @@ class OrderCard extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+                    padding: const EdgeInsets.all(8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 4,
@@ -120,18 +136,17 @@ class OrderCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Row(
-                          spacing: 8,
-                          children: [
-                            Text.rich(
-                              TextSpan(
-                                text: 'Status: ',
-                                children: [TextSpan(text: item.status.toUpperCase())],
-                              ),
-                              textScaler: TextScaler.noScaling,
-                              style: const TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                          ],
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            color: getStatusColor(item.status),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            item.status.toUpperCase(),
+                            textScaler: TextScaler.noScaling,
+                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 10),
+                          ),
                         ),
                       ],
                     ),

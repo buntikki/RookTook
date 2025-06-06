@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:random_avatar/random_avatar.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 class TournamentResult extends ConsumerStatefulWidget {
@@ -37,59 +38,65 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
           ? fetchLeaderboardProviderWithLoading(widget.tournamentId)
           : fetchLeaderboardProvider(widget.tournamentId),
     );
+    final session = ref.watch(authSessionProvider);
     return leaderboardPr.when(
       skipLoadingOnRefresh: false,
-      data:
-          (players) => Scaffold(
-            appBar: AppBar(
-              surfaceTintColor: Colors.transparent,
-              title: const Text(
-                'Results',
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 28),
-              ),
+      data: (data) {
+        final players = data.$1;
+        final coinType = data.$2;
+        return Scaffold(
+          appBar: AppBar(
+            surfaceTintColor: Colors.transparent,
+            title: const Text(
+              'Results',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 28),
             ),
-            body: ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: players.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
-              itemBuilder: (BuildContext context, int index) {
-                Color? color1;
-                Color? color2;
-                if (index == 0) {
-                  color1 = const Color(0xff2B291F);
-                  color2 = const Color(0xff463F24);
-                }
-                if (index == 1) {
-                  color1 = const Color(0xff202C33);
-                  color2 = const Color(0xff2E4755);
-                }
-                if (index == 2) {
-                  color1 = const Color(0xff312F3D);
-                  color2 = const Color(0xff413C60);
-                }
-                final player = players[index];
-                return TournamentResultCard(
-                  player: player,
-                  color1: color1,
-                  color2: color2,
-                  rank: (index + 1).toString().padLeft(2, '0'),
-                );
-              },
-            ),
-            // bottomSheet: BottomSheet(
-            //   shape: const BeveledRectangleBorder(),
-            //   backgroundColor: Colors.transparent,
-            //   onClosing: () {},
-            //   builder:
-            //       (context) => IntrinsicHeight(
-            //         child: TournamentResultCard(
-            //           rank: '',
-            //           margin: const EdgeInsets.all(16).copyWith(top: 0),
-            //           isUserCard: true,
-            //         ),
-            //       ),
-            // ),
           ),
+          body: ListView.separated(
+            padding: const EdgeInsets.all(16),
+            itemCount: players.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            itemBuilder: (BuildContext context, int index) {
+              Color? color1;
+              Color? color2;
+              if (index == 0) {
+                color1 = const Color(0xff2B291F);
+                color2 = const Color(0xff463F24);
+              }
+              if (index == 1) {
+                color1 = const Color(0xff202C33);
+                color2 = const Color(0xff2E4755);
+              }
+              if (index == 2) {
+                color1 = const Color(0xff312F3D);
+                color2 = const Color(0xff413C60);
+              }
+              final player = players[index];
+              return TournamentResultCard(
+                player: player,
+                color1: color1,
+                color2: color2,
+                coinType: coinType,
+                isUserCard: session!.user.name == player.userId,
+                rank: (index + 1).toString().padLeft(2, '0'),
+              );
+            },
+          ),
+          // bottomSheet: BottomSheet(
+          //   shape: const BeveledRectangleBorder(),
+          //   backgroundColor: Colors.transparent,
+          //   onClosing: () {},
+          //   builder:
+          //       (context) => IntrinsicHeight(
+          //         child: TournamentResultCard(
+          //           rank: '',
+          //           margin: const EdgeInsets.all(16).copyWith(top: 0),
+          //           isUserCard: true,
+          //         ),
+          //       ),
+          // ),
+        );
+      },
       error: (error, stackTrace) => Scaffold(body: Center(child: Text('$error'))),
       loading:
           () => Scaffold(
@@ -117,12 +124,14 @@ class TournamentResultCard extends StatelessWidget {
     this.color2,
     required this.rank,
     required this.player,
+    required this.coinType,
   });
   final EdgeInsetsGeometry? margin;
   final Color? color1;
   final Color? color2;
   final bool isUserCard;
   final String rank;
+  final String coinType;
   final Player player;
 
   @override
@@ -149,14 +158,29 @@ class TournamentResultCard extends StatelessWidget {
                   spacing: 12,
                   children: [
                     RandomAvatar(player.id, height: 40),
-                    Text(
-                      isUserCard ? 'You are here' : player.userId,
-                      maxLines: 2,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: isUserCard ? const Color(0xff222222) : Colors.white,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          isUserCard ? 'You are here' : player.userId,
+                          maxLines: 2,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: isUserCard ? const Color(0xff222222) : Colors.white,
+                          ),
+                        ),
+                        if (isUserCard)
+                          Text(
+                            player.userId,
+                            maxLines: 2,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey,
+                            ),
+                          ),
+                      ],
                     ),
                   ],
                 ),
@@ -166,7 +190,11 @@ class TournamentResultCard extends StatelessWidget {
                     Row(
                       spacing: 4,
                       children: [
-                        SvgPicture.asset('assets/images/svg/gold_coin.svg', height: 16, width: 16),
+                        SvgPicture.asset(
+                          'assets/images/svg/${coinType}_coin.svg',
+                          height: 16,
+                          width: 16,
+                        ),
                         Text(
                           ' ${player.rewardCoins}',
                           style: TextStyle(

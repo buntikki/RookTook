@@ -169,7 +169,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     },
     {
       'question': 'How are winners decided?',
-      'answer': 'Participants are ranked based on the points earned from solving puzzles. You can view the reward distribution by rank on the tournament card.',
+      'answer':
+          'Participants are ranked based on the points earned from solving puzzles. You can view the reward distribution by rank on the tournament card.',
     },
     {
       'question': 'What do winners get?',
@@ -183,7 +184,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     },
     {
       'question': 'What if two players have the same score?',
-      'answer': 'In case of a tie, the player who has less number of errors and better combo streak wins.',
+      'answer':
+          'In case of a tie, the player who has less number of errors and better combo streak wins.',
     },
     {
       'question': 'How do I know a tournament is fair?',
@@ -462,19 +464,13 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                           ],
                         ),
                       ),
-                      // if (!isTournamentStarted)
-                      Center(
-                        child:
-                            isTournamentStarted
-                                ? TournamentEndTimerWidget(
-                                  startTime: tournament.endTime,
-                                  forEndTimer: true,
-                                )
-                                : TournamentTimerWidget(
-                                  startTime: tournament.startTime,
-                                  forEndTimer: false,
-                                ),
-                      ),
+                      if (!isTournamentEnded)
+                        Center(
+                          child:
+                              isTournamentStarted
+                                  ? TournamentEndTimerWidget(startTime: tournament.endTime)
+                                  : TournamentTimerWidget(startTime: tournament.startTime),
+                        ),
                     ],
                   );
                 },
@@ -806,10 +802,9 @@ class AlphanumericInputFormatter extends TextInputFormatter {
 }
 
 class TournamentTimerWidget extends StatefulWidget {
-  const TournamentTimerWidget({super.key, required this.startTime, this.forEndTimer = false});
+  const TournamentTimerWidget({super.key, required this.startTime});
 
   final int startTime;
-  final bool forEndTimer;
   @override
   State<TournamentTimerWidget> createState() => _TournamentTimerWidgetState();
 }
@@ -870,12 +865,10 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
   @override
   Widget build(BuildContext context) {
     if (eventTimer?.isActive ?? false) {
-      return Text(
-        '${widget.forEndTimer ? 'Ending' : 'Starting'} in 00:${timeLeft.toString().padLeft(2, '0')}',
-      );
+      return Text('Starting in 00:${timeLeft.toString().padLeft(2, '0')}');
     } else {
       return Text(
-        'Event ${widget.forEndTimer ? 'ends' : 'starts'} at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(widget.startTime))}',
+        'Event starts at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(widget.startTime))}',
         textAlign: TextAlign.center,
         style: const TextStyle(color: Color(0xff7D8082)),
       );
@@ -884,10 +877,9 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
 }
 
 class TournamentEndTimerWidget extends StatefulWidget {
-  const TournamentEndTimerWidget({super.key, required this.startTime, this.forEndTimer = false});
+  const TournamentEndTimerWidget({super.key, required this.startTime});
 
   final int startTime;
-  final bool forEndTimer;
   @override
   State<TournamentEndTimerWidget> createState() => _TournamentEndTimerWidgetState();
 }
@@ -948,12 +940,10 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
   @override
   Widget build(BuildContext context) {
     if (eventTimer?.isActive ?? false) {
-      return Text(
-        '${widget.forEndTimer ? 'Ending' : 'Starting'} in 00:${timeLeft.toString().padLeft(2, '0')}',
-      );
+      return Text('Ending in 00:${timeLeft.toString().padLeft(2, '0')}');
     } else {
       return Text(
-        'Event ${widget.forEndTimer ? 'ends' : 'starts'} at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(widget.startTime))}',
+        'Event ends at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(widget.startTime))}',
         textAlign: TextAlign.center,
         style: const TextStyle(color: Color(0xff7D8082)),
       );

@@ -86,8 +86,12 @@ class _WalletFaqScreenState extends State<WalletFaqScreen> with SingleTickerProv
             ),
           ),
           Expanded(
-            child: WalletFaqListWidget(
-              list: controller.index == 0 ? widget.silverFaqs : widget.goldFaqs,
+            child: TabBarView(
+              controller: controller,
+              children: [
+                WalletFaqListWidget(list: widget.silverFaqs),
+                WalletFaqListWidget(list: widget.goldFaqs),
+              ],
             ),
           ),
         ],

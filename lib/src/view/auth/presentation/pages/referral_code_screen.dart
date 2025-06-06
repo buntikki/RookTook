@@ -15,10 +15,16 @@ class ReferralCodeScreen extends ConsumerStatefulWidget {
 
 class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
   final controller = TextEditingController();
+  bool enabled = true;
   @override
   void initState() {
     super.initState();
-    _getReferralCode();
+    initControllerSetup();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => setState(() async {
+        enabled = (await _getReferralCode()).isEmpty;
+      }),
+    );
   }
 
   @override
@@ -27,9 +33,14 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
     super.dispose();
   }
 
-  Future<void> _getReferralCode() async {
+  Future<void> initControllerSetup() async {
+    controller.text = await _getReferralCode();
+  }
+
+  Future<String> _getReferralCode() async {
     final prefs = await SharedPreferences.getInstance();
-    controller.text = prefs.getString('referralCode') ?? '';
+    final referralCode = prefs.getString('referralCode') ?? '';
+    return referralCode;
   }
 
   @override
@@ -65,6 +76,7 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
               ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             TextField(
+              enabled: enabled,
               inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
               controller: controller,
               decoration: InputDecoration(
@@ -72,6 +84,11 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
                 hintStyle: TextStyle(color: Colors.grey.shade500),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 border: border,
+                disabledBorder: border,
+                errorBorder: border,
+                focusedBorder: border,
+                enabledBorder: border,
+                focusedErrorBorder: border,
                 suffixStyle: TextStyle(color: Colors.grey.shade500, fontSize: 16),
               ),
               style: const TextStyle(color: Colors.white, fontSize: 18),

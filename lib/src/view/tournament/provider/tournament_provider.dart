@@ -20,19 +20,28 @@ final fetchUserTournamentsProvider = FutureProvider<List<Tournament>>((ref) asyn
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
   return await tournamentNotifier.fetchUserTournaments();
 });
-final fetchLeaderboardProvider = FutureProvider.family<List<Player>, String>((ref, id) async {
-  final tournamentNotifier = ref.read(tournamentProvider.notifier);
-  final tournament = await tournamentNotifier.fetchSingleTournament(id);
-  return await tournamentNotifier.sortLeaderboard(tournament?.players ?? []);
-});
-final fetchLeaderboardProviderWithLoading = FutureProvider.family<List<Player>, String>((
+final fetchLeaderboardProvider = FutureProvider.family<(List<Player>, String), String>((
   ref,
   id,
 ) async {
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
-  await Future.delayed(const Duration(seconds: 60));
   final tournament = await tournamentNotifier.fetchSingleTournament(id);
-  return await tournamentNotifier.sortLeaderboard(tournament?.players ?? []);
+  return (
+    tournamentNotifier.sortLeaderboard(tournament?.players ?? []),
+    tournament!.rewardCoinType,
+  );
+});
+final fetchLeaderboardProviderWithLoading = FutureProvider.family<(List<Player>, String), String>((
+  ref,
+  id,
+) async {
+  final tournamentNotifier = ref.read(tournamentProvider.notifier);
+  await Future.delayed(const Duration(seconds: 30));
+  final tournament = await tournamentNotifier.fetchSingleTournament(id);
+  return (
+    tournamentNotifier.sortLeaderboard(tournament?.players ?? []),
+    tournament!.rewardCoinType,
+  );
 });
 
 class TournamentNotifier extends StateNotifier<List<Tournament>> {
@@ -184,9 +193,11 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
     return false;
   }
 
-  Future<List<Player>> sortLeaderboard(List<Player> players) async {
+  List<Player> sortLeaderboard(List<Player> players) {
+    print('inside leaderboard');
     players.sort((a, b) {
-      return b.rank.compareTo(a.rank);
+      print('${a.userId} ${b.userId}');
+      return a.rank.compareTo(b.rank);
     });
 
     return players;

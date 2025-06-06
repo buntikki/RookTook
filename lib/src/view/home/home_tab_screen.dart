@@ -529,7 +529,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         },
         child: ChessPuzzleScreen(puzzleRank: puzzleRank),
       ),
-      SvgPicture.asset('assets/images/svg/footer.svg'),
+      Center(child: SvgPicture.asset('assets/images/svg/footer.svg')),
       // RecentGamesWidget(
       //   recentGames: recentGames,
       //   nbOfGames: nbOfGames,

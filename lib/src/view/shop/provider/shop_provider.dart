@@ -10,6 +10,8 @@ import 'package:http/http.dart' as http;
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/view/shop/presentation/shop_orders_screen.dart';
+import 'package:rooktook/src/view/shop/presentation/shop_screen.dart';
 import 'package:rooktook/src/widgets/success_failed_overlay.dart';
 
 final shopProvider = StateNotifierProvider((ref) => ShopNotifier());
@@ -105,6 +107,13 @@ class ShopNotifier extends StateNotifier<ShopState> {
       if (response.statusCode == 200) {
         if (decodedResponse['status'] == 'success') {
           showSuccessOverlay(context);
+          await Future.delayed(const Duration(seconds: 1), () {
+            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ShopOrdersScreen()),
+            );
+          });
           return;
         }
       } else {
