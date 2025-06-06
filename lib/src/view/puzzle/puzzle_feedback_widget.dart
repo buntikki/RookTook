@@ -31,11 +31,11 @@ class PuzzleFeedbackWidget extends ConsumerWidget {
         final puzzleRating = context.l10n.puzzleRatingX(puzzle.puzzle.rating.toString());
         final playedXTimes = context.l10n.puzzlePlayedXTimes(puzzle.puzzle.plays).localizeNumbers();
         return _FeedbackTile(
-          leading:
+          title:
               state.result == PuzzleResult.win
                   ? Icon(Icons.check, size: 36, color: context.lichessColors.good)
-                  : null,
-          title:
+                  : Text(puzzleRating),
+          leading:
               onStreak && state.result == PuzzleResult.lose
                   ? const Text(
                     'GAME OVER',
@@ -43,11 +43,15 @@ class PuzzleFeedbackWidget extends ConsumerWidget {
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                   )
-                  : Text(
-                    state.result == PuzzleResult.win
-                        ? context.l10n.puzzlePuzzleSuccess
-                        : context.l10n.puzzlePuzzleComplete,
-                    overflow: TextOverflow.ellipsis,
+                  : Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Text(
+                      state.result == PuzzleResult.win
+                          ? context.l10n.puzzlePuzzleSuccess
+                          : context.l10n.puzzlePuzzleComplete,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                    ),
                   ),
         );
       case PuzzleMode.load:
@@ -113,23 +117,28 @@ class _FeedbackTile extends StatelessWidget {
 
     return Row(
       children: [
-        if (leading != null) ...[leading!, const SizedBox(width: 16.0)],
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DefaultTextStyle.merge(
-                style: TextStyle(
-                  fontSize: defaultFontSize != null ? defaultFontSize * 1.2 : null,
-                  fontWeight: FontWeight.bold,
-                ),
-                child: title,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (leading != null) ...[leading!, const SizedBox(width: 16.0)],
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DefaultTextStyle.merge(
+                    style: TextStyle(
+                      fontSize: defaultFontSize != null ? defaultFontSize * 1.2 : null,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    child: title,
+                  ),
+                  if (subtitle != null) subtitle!,
+                ],
               ),
-              if (subtitle != null) subtitle!,
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );

@@ -21,18 +21,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'storm_controller.freezed.dart';
 part 'storm_controller.g.dart';
 
-const malus = Duration(seconds: 10);
+const malus = Duration.zero;
 const moveDelay = Duration(milliseconds: 200);
-const startTime = Duration(minutes: 3);
+// const startTime = Duration(minutes: 3);
 
 @riverpod
 class StormController extends _$StormController {
   Timer? _firstMoveTimer;
 
   @override
-  StormState build(IList<LitePuzzle> puzzles, DateTime timestamp) {
+  StormState build(IList<LitePuzzle> puzzles, DateTime timestamp, Duration startTime) {
     final pov = Chess.fromSetup(Setup.parseFen(puzzles.first.fen));
-    final clock = StormClock();
+    final clock = StormClock(startTime);
 
     ref.onDispose(() {
       _firstMoveTimer?.cancel();
@@ -89,8 +89,10 @@ class StormController extends _$StormController {
     state = state.copyWith(moves: state.moves + 1);
     if (state.position.isGameOver || move == expected) {
       final bonus = state.combo.bonus(getNext: true);
+
       if (bonus != null) {
-        state.clock.addTime(bonus);
+        state.clock.addTime(Duration.zero);
+        state = state.copyWith(numSolved: state.numSolved + bonus.inSeconds);
       }
       if (state.position.isGameOver || state.isOver) {
         if (!_isNextPuzzleAvailable()) {
@@ -262,7 +264,7 @@ class StormController extends _$StormController {
     final timeTaken =
         state.lastSolvedTime != null
             ? DateTime.now().difference(state.lastSolvedTime!)
-            : DateTime.now().difference(state.clock.startAt!);
+            : DateTime.now().difference(state.clock.startAt ?? DateTime.now());
     state = state.copyWith(
       history: state.history.add(
         PuzzleHistoryEntry.fromLitePuzzle(state.puzzle, success, timeTaken),
@@ -405,11 +407,13 @@ class StormClock {
       StreamController<(Duration, int?)>.broadcast();
 
   Timer? _timer;
-  Duration _currentDuration = startTime;
+
+  final Duration _initialDuration;
+  Duration _currentDuration;
   DateTime? startAt;
   Duration? endAt;
   bool isActive = false;
-
+  StormClock(Duration startTime) : _initialDuration = startTime, _currentDuration = startTime;
   Stream<(Duration, int?)> get timeStream => timeStreamController.stream;
 
   void addTime(Duration duration) {
@@ -448,7 +452,7 @@ class StormClock {
   void reset() {
     if (isActive) {
       _timer?.cancel();
-      _currentDuration = startTime;
+      _currentDuration = _initialDuration;
       timeStreamController.add((_currentDuration, null));
       endAt = DateTime.now().difference(startAt!);
       isActive = false;

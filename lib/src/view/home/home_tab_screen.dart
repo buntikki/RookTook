@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/account/account_repository.dart';
 import 'package:rooktook/src/model/account/ongoing_game.dart';
@@ -15,9 +18,14 @@ import 'package:rooktook/src/model/correspondence/offline_correspondence_game.da
 import 'package:rooktook/src/model/game/archived_game.dart';
 import 'package:rooktook/src/model/game/game_history.dart';
 import 'package:rooktook/src/model/lobby/game_seek.dart';
+import 'package:rooktook/src/model/puzzle/puzzle.dart';
 import 'package:rooktook/src/model/puzzle/puzzle_angle.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_controller.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_providers.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_service.dart';
 import 'package:rooktook/src/model/puzzle/puzzle_theme.dart';
 import 'package:rooktook/src/model/settings/home_preferences.dart';
+import 'package:rooktook/src/model/user/user.dart';
 import 'package:rooktook/src/model/user/user_repository_providers.dart';
 import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/network/connectivity.dart';
@@ -28,6 +36,7 @@ import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/screen.dart';
 import 'package:rooktook/src/view/account/new_profile_screen.dart';
 import 'package:rooktook/src/view/account/profile_screen.dart';
+import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/correspondence/offline_correspondence_game_screen.dart';
 import 'package:rooktook/src/view/game/game_screen.dart';
 import 'package:rooktook/src/view/game/offline_correspondence_games_screen.dart';
@@ -38,9 +47,13 @@ import 'package:rooktook/src/view/play/ongoing_games_screen.dart';
 import 'package:rooktook/src/view/play/play_screen.dart';
 import 'package:rooktook/src/view/play/quick_game_button.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
+import 'package:rooktook/src/view/puzzle/puzzle_tab_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_screen.dart';
 import 'package:rooktook/src/view/user/challenge_requests_screen.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/view/user/recent_games.dart';
+import 'package:rooktook/src/view/wallet/presentation/wallet_page.dart';
+import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 import 'package:rooktook/src/widgets/buttons.dart';
 import 'package:rooktook/src/widgets/feedback.dart';
 import 'package:rooktook/src/widgets/match_result_popup.dart';
@@ -76,7 +89,6 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     ref.listen(connectivityChangesProvider, (_, connectivity) {
@@ -103,12 +115,12 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         final session = ref.watch(authSessionProvider);
         final account = ref.watch(accountProvider);
 
-        const puzzlePerfsSet = {Perf.blitz, Perf.rapid};
+        const puzzlePerfsSet = {Perf.blitz, Perf.rapid, Perf.puzzle};
 
-        final userPerfs = puzzlePerfsSet;
+        const userPerfs = puzzlePerfsSet;
 
-        final perf = userPerfs;
-
+        const perf = userPerfs;
+        // print(userPerfs);
         final rapid =
             session == null
                 ? null
@@ -118,6 +130,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                     perf: perf.where((e) => e.title == 'Rapid').first,
                   ),
                 );
+        final puzzle = account.value?.perfs[Perf.puzzle];
         final blitz =
             session == null
                 ? null
@@ -138,10 +151,16 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         final shouldShowWelcomeScreen =
             session == null &&
             recentGames.maybeWhen(data: (data) => data.isEmpty, orElse: () => false);
+        // final puzzlePr = ref.watch(nextPuzzleProvider(const PuzzleTheme(PuzzleThemeKey.mix)));
 
+        // final ctrlProvider = puzzleControllerProvider(puzzlePr.value!);
+        // final puzzleState = ref.watch(ctrlProvider);
+        final puzzleRank = puzzle?.rating ?? 1500;
+        // final puzzleRank = 1750;
         final widgets =
             shouldShowWelcomeScreen
                 ? _welcomeScreenWidgets(
+                  puzzleRank: puzzleRank,
                   session: session,
                   status: status,
                   isTablet: isTablet,
@@ -170,6 +189,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   nbOfGames: nbOfGames,
                 )
                 : _welcomeScreenWidgets(
+                  puzzleRank: puzzleRank,
                   rapidRank:
                       session != null
                           ? rapid!.value != null
@@ -277,6 +297,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         return Scaffold(
           appBar: AppBar(
             title: const Text(''),
+            automaticallyImplyLeading: false,
             actions: [
               // IconButton(
               //   onPressed: () {
@@ -285,8 +306,23 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               //   icon: Icon(isEditing ? Icons.save_outlined : Icons.app_registration),
               //   tooltip: isEditing ? 'Save' : 'Edit',
               // ),
-              // const _ChallengeScreenButton(),
-              // IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const WalletPage()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xff2B2D30),
+                    border: Border.all(color: const Color(0xff464A4F)),
+                  ),
+                  child: SvgPicture.asset('assets/images/svg/wallet.svg', height: 20),
+                ),
+              ),
               // const _PlayerScreenButton(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -324,16 +360,16 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   child: ListView(
                     controller: homeScrollController,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Text(
-                          'A Platform for\nNext Level Chess',
-                          textAlign: TextAlign.start,
-                          style: Theme.of(context).textTheme.headlineMedium!.merge(
-                            const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(12.0),
+                      //   child: Text(
+                      //     'A Platform for\nNext Level Chess',
+                      //     textAlign: TextAlign.start,
+                      //     style: Theme.of(context).textTheme.headlineMedium!.merge(
+                      //       const TextStyle(fontWeight: FontWeight.w600),
+                      //     ),
+                      //   ),
+                      // ),
                       ...widgets,
                     ],
                   ),
@@ -341,7 +377,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-        /*  floatingActionButton:
+          /*  floatingActionButton:
               isTablet
                   ? null
                   : FloatingActionButton.extended(
@@ -435,6 +471,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required int nbOfGames,
     required int rapidRank,
     required int blitzRank,
+    required int puzzleRank,
   }) {
     // fetch the account user to be sure we have the latest data (flair, etc.)
     final accountUser = ref
@@ -453,14 +490,14 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           textAlign: TextAlign.center,
         ),
       ),*/
-      const SizedBox(height: 24.0),
+      const SizedBox(height: 8.0),
       Container(
         height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: ElevatedButton.icon(
-          label: Text(
-            'PLAY NOW',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14.0,),
+          label: const Text(
+            'QUICK PLAY',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14.0),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xff54C339),
@@ -471,7 +508,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           onPressed: () async {
             showModalBottomSheet(
               context: context,
-              backgroundColor: const Color(0xff464A4F),
+              backgroundColor: const Color(0xff2B2D30),
               isScrollControlled: true,
               showDragHandle: true,
               useSafeArea: true,
@@ -481,21 +518,24 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         ),
       ),
       const SizedBox(height: 24),
+      const HomeTournamentContainer(),
+      const SizedBox(height: 8),
       InkWell(
         onTap: () {
           Navigator.of(
             context,
             rootNavigator: true,
-          ).push(PuzzleScreen.buildRoute(context, angle: const PuzzleTheme(PuzzleThemeKey.mix)));
+          ).push(MaterialPageRoute(builder: (context) => const PuzzleTabScreen()));
         },
-        child: const ChessPuzzleScreen(),
+        child: ChessPuzzleScreen(puzzleRank: puzzleRank),
       ),
-      RecentGamesWidget(
-        recentGames: recentGames,
-        nbOfGames: nbOfGames,
-        user: session?.user,
-        maxGamesToShow: 5,
-      ),
+      Center(child: SvgPicture.asset('assets/images/svg/footer.svg')),
+      // RecentGamesWidget(
+      //   recentGames: recentGames,
+      //   nbOfGames: nbOfGames,
+      //   user: session?.user,
+      //   maxGamesToShow: 5,
+      // ),
       // if (session == null) ...[
       //   const Center(child: _SignInWidget()),
       //   const SizedBox(height: 16.0),
@@ -609,20 +649,20 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               ],
             ),
           ),
-          Flexible(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8.0),
-                RecentGamesWidget(
-                  recentGames: recentGames,
-                  nbOfGames: nbOfGames,
-                  user: session?.user,
-                ),
-              ],
-            ),
-          ),
+          // Flexible(
+          //   child: Column(
+          //     mainAxisSize: MainAxisSize.max,
+          //     mainAxisAlignment: MainAxisAlignment.start,
+          //     children: [
+          //       const SizedBox(height: 8.0),
+          //       RecentGamesWidget(
+          //         recentGames: recentGames,
+          //         nbOfGames: nbOfGames,
+          //         user: session?.user,
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     ];
@@ -637,8 +677,26 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
   }
 }
 
+class HomeTournamentContainer extends ConsumerWidget {
+  const HomeTournamentContainer({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () {
+        handleTournamentBannerNavigation(ref);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Image.asset('assets/images/home_tournament.png', fit: BoxFit.cover),
+      ),
+    );
+  }
+}
+
 class ChessPuzzleScreen extends StatelessWidget {
-  const ChessPuzzleScreen({super.key});
+  const ChessPuzzleScreen({super.key, required this.puzzleRank});
+  final int puzzleRank;
 
   @override
   Widget build(BuildContext context) {
@@ -648,7 +706,8 @@ class ChessPuzzleScreen extends StatelessWidget {
           Container(
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xff464A4F),
+              color: const Color(0xff2B2D30),
+              border: Border.all(color: const Color(0xff464A4F), width: .5),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -662,12 +721,12 @@ class ChessPuzzleScreen extends StatelessWidget {
                 ),
 
                 // Right side - Information
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'Solve Puzzles',
                         style: TextStyle(
                           fontSize: 16,
@@ -675,9 +734,17 @@ class ChessPuzzleScreen extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      Text(
-                        'Continue Your Journey!',
-                        style: TextStyle(fontSize: 12, color: Color(0xFF7E8899)),
+                      // const Text(
+                      //   'Continue Your Journey!',
+                      //   style: TextStyle(fontSize: 12, color: Color(0xFF7E8899)),
+                      // ),
+                      const SizedBox(height: 8),
+                      Row(
+                        spacing: 8,
+                        children: [
+                          SvgPicture.asset('assets/images/svg/puzzle_rating.svg', height: 24),
+                          Text('$puzzleRank', style: const TextStyle(color: Colors.white)),
+                        ],
                       ),
                     ],
                   ),
@@ -713,7 +780,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
     final session = ref.watch(authSessionProvider);
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xff464A4F),
+        color: const Color(0xff2B2D30),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
@@ -755,14 +822,15 @@ class GameTypeBottomSheet extends ConsumerWidget {
             ),
           ),
           const Divider(color: Colors.grey, height: 1),
-          SizedBox(height: 25),
+          const SizedBox(height: 25),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:  22,),
+            padding: const EdgeInsets.symmetric(horizontal: 22),
             child: Row(
+              spacing: 8,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child:  GameTypeCard(
+                  child: GameTypeCard(
                     icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
                     title: 'Play',
                     subtitle: 'Blitz',
@@ -777,10 +845,10 @@ class GameTypeBottomSheet extends ConsumerWidget {
                         ),
                       );
                     },
-                  ),),
-                SizedBox(width: 25),
+                  ),
+                ),
                 Expanded(
-                  child:  GameTypeCard(
+                  child: GameTypeCard(
                     icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
                     title: 'Play',
                     subtitle: 'Blitz',
@@ -803,7 +871,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
 
           // Game options
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:  22,vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
             child: Wrap(
               runSpacing: 10,
               spacing: 25,
@@ -880,6 +948,7 @@ class ChessRatingCards extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Row(
+        spacing: 8,
         children: [
           Expanded(
             child: _buildRatingCard(
@@ -889,7 +958,6 @@ class ChessRatingCards extends StatelessWidget {
               rating: blitzRank,
             ),
           ),
-          const SizedBox(width: 8),
           Expanded(
             child: _buildRatingCard(
               icon: Image.asset('assets/images/rapid_game.png'),
@@ -910,42 +978,60 @@ class ChessRatingCards extends StatelessWidget {
     required String title,
     required String rating,
   }) {
-    return Container(
-      // width: 140,
-      // height: 135,
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.0)),
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: iconColor,
-              // borderRadius: BorderRadius.circular(8.0),
-              shape: BoxShape.circle,
-            ),
-            padding: const EdgeInsets.all(8.0),
-            child: icon,
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
-              Text(
-                rating,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+    return ClipPath(
+      clipper: ContainerClipper(notch: Platform.isAndroid ? 50 : 60),
+      child: Container(
+        // width: 140,
+        // height: 135,
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.0)),
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 3,
+              child: FittedBox(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: iconColor,
+                        // borderRadius: BorderRadius.circular(8.0),
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: icon,
+                    ),
+                    const SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                          textScaler: TextScaler.noScaling,
+                        ),
+                        Text(
+                          rating,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textScaler: TextScaler.noScaling,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
-        ],
+            ),
+            const Expanded(flex: 1, child: SizedBox()),
+          ],
+        ),
       ),
     );
   }
@@ -973,14 +1059,17 @@ class GameTypeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: 111,
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-        child: Stack(
-          children: [
-            // Content
-            Padding(
+      child: Stack(
+        children: [
+          ClipPath(
+            clipper: ContainerClipper(),
+            child: Container(
+              height: 111,
               padding: const EdgeInsets.only(left: 16, top: 16, right: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -989,55 +1078,46 @@ class GameTypeCard extends StatelessWidget {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      RichText(
-                        text: TextSpan(
+                      Text.rich(
+                        TextSpan(
                           children: [
-                            TextSpan(
-                              text: '$title ',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                            TextSpan(
-                              text: subtitle,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: subtitleColor,
-                              ),
-                            ),
+                            TextSpan(text: '$title ', style: const TextStyle(color: Colors.black)),
+                            TextSpan(text: subtitle, style: TextStyle(color: subtitleColor)),
                           ],
                         ),
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        textScaler: TextScaler.noScaling,
                       ),
-                      Spacer(),
-                      Text(type, style: TextStyle(color: Color(0xff959494),fontWeight: FontWeight.bold,)),
+                      const Spacer(),
+                      Text(
+                        type,
+                        style: const TextStyle(
+                          color: Color(0xff959494),
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textScaler: TextScaler.noScaling,
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
-
-            // Arrow button
-            Positioned(
-              top: 8,
-              right: 8,
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
-                  ],
-                ),
-                child: const Icon(Icons.arrow_outward, color: Colors.black, size: 20),
+          ),
+          Positioned(
+            top: 0,
+            right: 12,
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
               ),
+              child: const Icon(Icons.arrow_outward, color: Colors.black, size: 20),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

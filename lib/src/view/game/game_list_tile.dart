@@ -97,7 +97,7 @@ class GameListTile extends StatelessWidget {
     }
 
     return _GameListTile(
-      name: opponent.user!.name,
+      name: opponent.user?.name,
       game: game,
       color: tileColor,
       mySide: youAre,
@@ -120,13 +120,11 @@ class GameListTile extends StatelessWidget {
         style: TextStyle(color: titleColor ?? Colors.black),
       ),
       onPressedBookmark: onPressedBookmark,
-      subtitle: Text(opponentRating==null?'N/A': '$opponentRating', style: TextStyle(color: Color(0xff959494))),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          getResultIcon(game, youAre),
-        ],
+      subtitle: Text(
+        opponentRating == null ? 'N/A' : '$opponentRating',
+        style: const TextStyle(color: Color(0xff959494)),
       ),
+      trailing: Row(mainAxisSize: MainAxisSize.min, children: [getResultIcon(game, youAre)]),
     );
   }
 }
@@ -162,17 +160,17 @@ class _GameListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       color: color ?? Colors.white,
       child: ListTile(
         tileColor: Colors.white12,
-        shape: RoundedRectangleBorder(),
+        shape: const RoundedRectangleBorder(),
         leading:
             icon == Perf.blitz.icon
                 ? Image.asset('assets/images/blitz.png', height: 20, width: 20)
                 : icon == Perf.rapid.icon
                 ? Image.asset('assets/images/rapid_game.png', height: 20, width: 20)
-                : SizedBox(),
+                : const SizedBox(),
         onTap: onTap,
         title: Row(
           children: [
@@ -190,7 +188,7 @@ class _GameListTile extends StatelessWidget {
                 // ),
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

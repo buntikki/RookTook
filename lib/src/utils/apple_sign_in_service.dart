@@ -9,11 +9,7 @@ class AppleSignInUserInfo {
   final String email;
   final String userId;
 
-  AppleSignInUserInfo({
-    required this.identityToken,
-    required this.email,
-    required this.userId,
-  });
+  AppleSignInUserInfo({required this.identityToken, required this.email, required this.userId});
 }
 
 class AppleSignInService {
@@ -36,15 +32,14 @@ class AppleSignInService {
 
       // Request credential for the currently signed in Apple account
       final appleCredential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
+        scopes: [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName],
         nonce: nonce,
       );
 
       // Debug logging
-      debugPrint('Apple credential received - Identity Token available: ${appleCredential.identityToken != null}');
+      debugPrint(
+        'Apple credential received - Identity Token available: ${appleCredential.identityToken != null}',
+      );
 
       if (appleCredential.identityToken == null) {
         throw Exception('No identity token received from Apple');
@@ -57,11 +52,18 @@ class AppleSignInService {
       // Return user info
       return AppleSignInUserInfo(
         identityToken: appleCredential.identityToken!,
-        email: appleCredential.email!=null?appleCredential.email!:'',
+        email: appleCredential.email != null ? appleCredential.email! : '',
         userId: appleCredential.userIdentifier!,
       );
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) {
+        throw Exception('Sign in with Apple Cancelled');
+      }
+      if (e.code == AuthorizationErrorCode.unknown) {
+        throw Exception('Sign in with Apple Cancelled');
+      }
+      rethrow;
     } catch (e) {
-      debugPrint('Error signing in with Apple: $e');
       rethrow;
     }
   }

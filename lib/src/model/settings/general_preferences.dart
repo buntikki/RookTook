@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rooktook/l10n/l10n.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart'
     show BoardPrefs, BoardTheme, boardPreferencesProvider;
 import 'package:rooktook/src/model/settings/preferences_storage.dart';
 import 'package:rooktook/src/utils/json.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'general_preferences.freezed.dart';
 part 'general_preferences.g.dart';

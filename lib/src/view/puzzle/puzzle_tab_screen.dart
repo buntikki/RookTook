@@ -65,15 +65,15 @@ Widget _buildMainListItem(
     case 0:
       return const _PuzzleMenu();
     case 1:
-      return SizedBox();
-      // Padding(
-      //   padding: Styles.horizontalBodyPadding.add(
-      //     Theme.of(context).platform == TargetPlatform.iOS
-      //         ? Styles.sectionTopPadding
-      //         : EdgeInsets.zero,
-      //   ),
-      //   child: Text(context.l10n.puzzleDesc, style: Styles.sectionTitle),
-      // );
+      return const SizedBox();
+    // Padding(
+    //   padding: Styles.horizontalBodyPadding.add(
+    //     Theme.of(context).platform == TargetPlatform.iOS
+    //         ? Styles.sectionTopPadding
+    //         : EdgeInsets.zero,
+    //   ),
+    //   child: Text(context.l10n.puzzleDesc, style: Styles.sectionTitle),
+    // );
     case 2:
       return const DailyPuzzle();
     case 3:
@@ -173,7 +173,7 @@ class _CupertinoTabBodyState extends ConsumerState<_CupertinoTabBody> {
           Expanded(
             child: CupertinoPageScaffold(
               child: CustomScrollView(
-                controller: puzzlesScrollController,
+                // controller: puzzlesScrollController,
                 slivers: [
                   CupertinoSliverNavigationBar(
                     padding: const EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
@@ -217,7 +217,7 @@ class _CupertinoTabBodyState extends ConsumerState<_CupertinoTabBody> {
 
     return CupertinoPageScaffold(
       child: CustomScrollView(
-        controller: puzzlesScrollController,
+        // controller: puzzlesScrollController,
         slivers: [
           CupertinoSliverNavigationBar(
             padding: const EdgeInsetsDirectional.only(start: 16.0, end: 8.0),
@@ -300,7 +300,7 @@ class _MaterialTabBodyState extends ConsumerState<_MaterialTabBody> {
         _buildMainListItem(context, index, animation, (index) => _angles[index]);
 
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvokedWithResult: (bool didPop, _) {
         if (!didPop) {
           ref.read(currentBottomTabProvider.notifier).state = BottomTab.home;
@@ -320,7 +320,7 @@ class _MaterialTabBodyState extends ConsumerState<_MaterialTabBody> {
                       child: AnimatedList(
                         key: _listKey,
                         initialItemCount: _angles.length,
-                        controller: puzzlesScrollController,
+                        // controller: puzzlesScrollController,
                         itemBuilder: buildItem,
                       ),
                     ),
@@ -333,7 +333,7 @@ class _MaterialTabBodyState extends ConsumerState<_MaterialTabBody> {
                     Expanded(
                       child: AnimatedList(
                         key: _listKey,
-                        controller: puzzlesScrollController,
+                        // controller: puzzlesScrollController,
                         initialItemCount: _angles.length,
                         itemBuilder: buildItem,
                       ),
@@ -388,61 +388,58 @@ class _PuzzleMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final connectivity = ref.watch(connectivityChangesProvider);
     final bool isOnline = connectivity.value?.isOnline ?? false;
-
-    return SizedBox();
-    // ListSection(
+    return const SizedBox.shrink();
+    // return ListSection(
     //   hasLeading: true,
     //   children: [
-    //     // _PuzzleMenuListTile(
-    //     //   icon: PuzzleIcons.opening,
-    //     //   title: context.l10n.puzzlePuzzleThemes,
-    //     //   subtitle: context.l10n.mobilePuzzleThemesSubtitle,
-    //     //   onTap: () {
-    //     //     Navigator.of(context).push(PuzzleThemesScreen.buildRoute(context));
-    //     //   },
-    //     // ),
-    //     // Opacity(
-    //     //   opacity: isOnline ? 1 : 0.5,
-    //     //   child: _PuzzleMenuListTile(
-    //     //     icon: LichessIcons.streak,
-    //     //     title: 'Puzzle Streak',
-    //     //     subtitle:
-    //     //         context.l10n.puzzleStreakDescription.characters
-    //     //             .takeWhile((c) => c != '.')
-    //     //             .toString() +
-    //     //         (context.l10n.puzzleStreakDescription.contains('.') ? '.' : ''),
-    //     //     onTap:
-    //     //         isOnline
-    //     //             ? () {
-    //     //               Navigator.of(
-    //     //                 context,
-    //     //                 rootNavigator: true,
-    //     //               ).push(StreakScreen.buildRoute(context));
-    //     //             }
-    //     //             : null,
-    //     //   ),
-    //     // ),
-    //     // Opacity(
-    //     //   opacity: isOnline ? 1 : 0.5,
-    //     //   child: _PuzzleMenuListTile(
-    //     //     icon: LichessIcons.storm,
-    //     //     title: 'Puzzle Storm',
-    //     //     subtitle: context.l10n.mobilePuzzleStormSubtitle,
-    //     //     onTap:
-    //     //         isOnline
-    //     //             ? () {
-    //     //               Navigator.of(
-    //     //                 context,
-    //     //                 rootNavigator: true,
-    //     //               ).push(StormScreen.buildRoute(context));
-    //     //             }
-    //     //             : null,
-    //     //   ),
-    //     // ),
-  
+    // _PuzzleMenuListTile(
+    //   icon: PuzzleIcons.opening,
+    //   title: context.l10n.puzzlePuzzleThemes,
+    //   subtitle: context.l10n.mobilePuzzleThemesSubtitle,
+    //   onTap: () {
+    //     Navigator.of(context).push(PuzzleThemesScreen.buildRoute(context));
+    //   },
+    // ),
+    // Opacity(
+    //   opacity: isOnline ? 1 : 0.5,
+    //   child: _PuzzleMenuListTile(
+    //     icon: LichessIcons.streak,
+    //     title: 'Puzzle Streak',
+    //     subtitle:
+    //         context.l10n.puzzleStreakDescription.characters
+    //             .takeWhile((c) => c != '.')
+    //             .toString() +
+    //         (context.l10n.puzzleStreakDescription.contains('.') ? '.' : ''),
+    //     onTap:
+    //         isOnline
+    //             ? () {
+    //               Navigator.of(
+    //                 context,
+    //                 rootNavigator: true,
+    //               ).push(StreakScreen.buildRoute(context));
+    //             }
+    //             : null,
+    //   ),
+    // ),
+    // Opacity(
+    //   opacity: isOnline ? 1 : 0.5,
+    //   child: _PuzzleMenuListTile(
+    //     icon: LichessIcons.storm,
+    //     title: 'Puzzle Storm',
+    //     subtitle: context.l10n.mobilePuzzleStormSubtitle,
+    //     onTap:
+    //         isOnline
+    //             ? () {
+    //               Navigator.of(
+    //                 context,
+    //                 rootNavigator: true,
+    //               ).push(StormScreen.buildRoute(context, '', const Duration(minutes: 3)));
+    //             }
+    //             : null,
+    //   ),
+    // ),
     //   ],
     // );
-
   }
 }
 

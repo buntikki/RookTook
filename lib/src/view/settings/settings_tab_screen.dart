@@ -74,6 +74,60 @@ class SettingsTabScreen extends ConsumerWidget {
 }
 
 class _Body extends ConsumerWidget {
+  final faqs = const [
+    {
+      'question': 'What is RookTook?',
+      'answer':
+          'RookTook is an online platform where you can play daily tournaments to earn real rewards.',
+    },
+    {
+      'question': 'How do I play a game on RookTook?',
+      'answer':
+          'Join Puzzle tournaments from the tournament section or Tap the “Quick Play” button on the home screen and choose a game type (e.g. Blitz, Rapid, Pass & Play) or join Puzzle tournaments from the tournament section',
+    },
+    {
+      'question': 'What are Puzzle Tournaments?',
+      'answer':
+      'Everyone starts at the same time with the same puzzles and a fixed time to solve as many as possible. Correct answers earn points, streaks give bonuses, and one mistake breaks the streak.',
+    },
+    {
+      'question': 'What do the time formats like 3+2 or 5+0 mean?',
+      'answer':
+          'These are different time formats of chess. 3+2 means 3 minutes total + 2 seconds added after every move. 5+0 means 5 minutes with no extra time.',
+    },
+    {
+      'question': 'What’s the difference between Blitz and Rapid?',
+      'answer':
+          'Blitz is a fast-paced game (3–5 minutes). Rapid is slightly longer (10+ minutes), giving more time to think.',
+    },
+    {
+      'question': 'What is “Pass & Play”?',
+      'answer':
+          'This mode lets two players take turns on the same device — perfect for playing with a friend offline.',
+    },
+    {
+      'question': 'How does the rating system work?',
+      'answer':
+          'You gain or lose rating points based on whether you win, lose, or draw. The more you win, the higher your rating.',
+    },
+    {
+      'question': 'How do I report a bug or issue?',
+      'answer': 'Tap the “Send Feedback” button in Settings or email us at support@rooktook.com.',
+    },
+    {
+      'question': 'I’m new to chess. Where should I start?',
+      'answer': 'Start with Rapid games (10+0) and explore the Puzzle section to practice tactics.',
+    },
+    {
+      'question': 'What happens if I run out of time?',
+      'answer':
+          'You lose the game',
+    },
+    {
+      'question': 'Can I pause a game?',
+      'answer': 'Online games cannot be paused. Try Pass & Play mode for flexible timing.',
+    },
+  ];
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(currentBottomTabProvider, (prev, current) {
@@ -287,7 +341,7 @@ class _Body extends ConsumerWidget {
             title: const Text('FAQs'),
             trailing: const _OpenInNewIcon(),
             onTap: () {
-              Navigator.of(context).push(FAQScreen.buildRoute(context));
+              Navigator.of(context).push(FAQScreen.buildRoute(context, faqs));
             },
           ),
           PlatformListTile(
@@ -311,13 +365,11 @@ class _Body extends ConsumerWidget {
               //   print('⚠️ Could not launch email client');
               // }
 
-              final Uri emailUri = Uri(
-                scheme: 'mailto',
-                path: 'support@rooktook.com',
-                queryParameters: {'subject': 'How may I help you?', 'body': ''},
+              final Uri emailUri = Uri.parse(
+                'mailto:support@rooktook.com?subject=${Uri.encodeComponent('Support Requested')}&body=${Uri.encodeComponent('')}',
               );
 
-              if (await canLaunchUrl(emailUri)) {
+              if (await launchUrl(emailUri)) {
                 final bool launched = await launchUrl(
                   emailUri,
                   mode: LaunchMode.externalApplication,
@@ -328,7 +380,11 @@ class _Body extends ConsumerWidget {
               } else {
                 // Fallback: Copy email to clipboard and show a snackbar
                 await Clipboard.setData(const ClipboardData(text: 'hello@rooktook.com'));
-                showPlatformSnackbar(context, 'Email address copied. Kindly send us your feedback on the same.',type: SnackBarType.success);
+                showPlatformSnackbar(
+                  context,
+                  'Email address copied. Kindly send us your feedback on the same.',
+                  type: SnackBarType.success,
+                );
 
                 debugPrint('⚠️ Could not launch email client');
               }
