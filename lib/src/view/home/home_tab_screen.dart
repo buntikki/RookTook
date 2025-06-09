@@ -31,6 +31,7 @@ import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/network/connectivity.dart';
 import 'package:rooktook/src/styles/lichess_icons.dart';
 import 'package:rooktook/src/styles/styles.dart';
+import 'package:rooktook/src/utils/branch_repository.dart';
 import 'package:rooktook/src/utils/l10n.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/screen.dart';
@@ -308,6 +309,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               // ),
               GestureDetector(
                 onTap: () {
+                  BranchRepository.trackCustomEvent('wallet_clicked', ref: ref);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const WalletPage()),
@@ -328,6 +330,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
                   onTap: () {
+                    BranchRepository.trackCustomEvent('profile_clicked', ref: ref);
                     // Navigate to profile screen
                     Navigator.of(context).push(NewProfileScreen.buildRoute(context));
                   },

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -172,6 +173,7 @@ class _AppState extends ConsumerState<Application> {
         print('Branch Error $error');
       },
     );
+    FlutterBranchSdk.setIdentity(ref.watch(authSessionProvider)?.user.id.value??'');
     // FlutterBranchSdk.validateSDKIntegration();
   }
 
@@ -191,7 +193,7 @@ class _AppState extends ConsumerState<Application> {
 
     final isIOS = Theme.of(context).platform == TargetPlatform.iOS;
     final remainingHeight = estimateRemainingHeightLeftBoard(context);
-
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       navigatorKey: rootNavigatorKey,
       debugShowCheckedModeBanner: false,

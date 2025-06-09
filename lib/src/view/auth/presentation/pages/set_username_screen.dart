@@ -8,6 +8,7 @@ import 'package:rooktook/src/model/auth/auth_input_controller.dart';
 import 'package:rooktook/src/model/auth/auth_input_state.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/network/http.dart';
+import 'package:rooktook/src/utils/branch_repository.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/referral_code_screen.dart';
 
@@ -127,6 +128,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
 
     ref.listen<AuthSessionState?>(authSessionProvider, (previous, current) {
       if (previous == null && current != null) {
+        BranchRepository.trackCustomEvent('signup', ref: ref);
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const ReferralCodeScreen()),
           (route) => false,

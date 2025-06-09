@@ -8,7 +8,9 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:ntp/ntp.dart';
 import 'package:rooktook/src/model/notifications/notification_service.dart';
+import 'package:rooktook/src/utils/branch_repository.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/puzzle/storm_screen.dart';
 import 'package:rooktook/src/view/settings/faq_screen.dart';
@@ -58,7 +60,11 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
 
         final baseId = int.tryParse(data.id) ?? 0;
         final service = ref.read(notificationServiceProvider);
-
+        BranchRepository.trackCustomEvent(
+          data.entrySilverCoins > 0 ? 'paid_tournament_register' : 'free_tournament_register',
+          data: {'tournamentId': data.id},
+          ref: ref,
+        );
         if (DateTime.fromMillisecondsSinceEpoch(
           data.startTime,
         ).subtract(const Duration(minutes: 1)).isAfter(DateTime.now())) {
@@ -351,7 +357,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                                     DateTime.fromMillisecondsSinceEpoch(tournament.endTime),
                                   )
                                   ? '${tournament.players.length} Participants'
-                                  : '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
+                                  : '${tournament.players.length}/${tournament.maxParticipants} Joined',
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(color: Color(0xff7D8082)),
                               textScaler: TextScaler.noScaling,
@@ -389,7 +395,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                         onPressed:
                             isUserJoined
                                 ? isTournamentStarted
-                                    ? () {
+                                    ? () async {
                                       if (isTournamentEnded) {
                                         Navigator.push(
                                           context,
@@ -416,7 +422,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                                               seconds:
                                                   DateTime.fromMillisecondsSinceEpoch(
                                                     tournament.endTime,
-                                                  ).difference(DateTime.now()).inSeconds,
+                                                  ).difference(await NTP.now()).inSeconds,
                                             ),
                                           ),
                                         );
