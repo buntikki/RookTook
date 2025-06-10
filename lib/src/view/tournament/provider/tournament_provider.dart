@@ -36,7 +36,7 @@ final fetchLeaderboardProviderWithLoading = FutureProvider.family<(List<Player>,
   id,
 ) async {
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
-  await Future.delayed(const Duration(seconds: 30));
+  await Future.delayed(const Duration(seconds: 7));
   final tournament = await tournamentNotifier.fetchSingleTournament(id);
   return (
     tournamentNotifier.sortLeaderboard(tournament?.players ?? []),
