@@ -274,297 +274,310 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16).copyWith(bottom: 24), // Optional bottom padding
-          child: Column(
-            spacing: 8,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 8),
-              Text(
-                tournament.name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                spacing: 12,
-                children: [
-                  _coinCard(
-                    icon: 'assets/images/svg/${tournament.rewardCoinType}_coin.svg',
-                    label: 'Reward',
-                    value: '${tournament.rewardCoins} C',
+        body: RefreshIndicator.adaptive(
+          onRefresh: () async {
+            final data = await ref
+                .read(tournamentProvider.notifier)
+                .fetchSingleTournament(tournament.id);
+            setState(() {
+              _tournament = data;
+            });
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16).copyWith(bottom: 24), // Optional bottom padding
+            child: Column(
+              spacing: 8,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 8),
+                Text(
+                  tournament.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  _coinCard(
-                    icon: 'assets/images/svg/silver_coin.svg',
-                    label: 'Entry Fee',
-                    value: '${tournament.entrySilverCoins} C',
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xff464a4f), width: .5),
-                  color: const Color(0xFF2B2D30),
-                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Row(
-                  spacing: 8,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                const SizedBox(height: 8),
+                Row(
+                  spacing: 12,
                   children: [
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 4,
-                          children: [
-                            SvgPicture.asset(
-                              'assets/images/svg/tournament_clock.svg',
-                              height: 18.0,
-                            ),
-                            Text(
-                              DateFormat(
-                                'hh:mm a, MMM dd',
-                              ).format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime)),
-                              style: const TextStyle(color: Color(0xff7D8082), fontSize: 14),
-                              textScaler: TextScaler.noScaling,
-                            ),
-                          ],
-                        ),
-                      ),
+                    _coinCard(
+                      icon: 'assets/images/svg/${tournament.rewardCoinType}_coin.svg',
+                      label: 'Reward',
+                      value: '${tournament.rewardCoins} C',
                     ),
-                    // Vertical divider
-                    Container(width: 1, height: 16, color: const Color(0xff464A4F)),
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 4,
-                          children: [
-                            SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
-                            Text(
-                              DateTime.now().isAfter(
-                                    DateTime.fromMillisecondsSinceEpoch(tournament.endTime),
-                                  )
-                                  ? '${tournament.players.length} Participants'
-                                  : '${tournament.players.length}/${tournament.maxParticipants} Joined',
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(color: Color(0xff7D8082)),
-                              textScaler: TextScaler.noScaling,
-                            ),
-                          ],
-                        ),
-                      ),
+                    _coinCard(
+                      icon: 'assets/images/svg/silver_coin.svg',
+                      label: 'Entry Fee',
+                      value: '${tournament.entrySilverCoins} C',
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 8),
-              Consumer(
-                builder: (context, ref, child) {
-                  final status = ref.watch(
-                    tournamentStatusProvider((tournament.startTime, tournament.endTime)),
-                  );
-                  final bool isTournamentStarted = status.isStarted;
-                  final bool isTournamentEnded = status.isEnded;
-                  // print(
-                  //   DateTime.fromMillisecondsSinceEpoch(
-                  //     tournament.endTime,
-                  //   ).difference(DateTime.now()),
-                  // );
-                  // print(Duration(seconds: 10));
-                  return Column(
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xff464a4f), width: .5),
+                    color: const Color(0xFF2B2D30),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
                     spacing: 8,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF54C339),
-                          minimumSize: const Size.fromHeight(50),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            spacing: 4,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/svg/tournament_clock.svg',
+                                height: 18.0,
+                              ),
+                              Text(
+                                DateFormat(
+                                  'hh:mm a, MMM dd',
+                                ).format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime)),
+                                style: const TextStyle(color: Color(0xff7D8082), fontSize: 14),
+                                textScaler: TextScaler.noScaling,
+                              ),
+                            ],
+                          ),
                         ),
-                        onPressed:
-                            isUserJoined
-                                ? isTournamentStarted
-                                    ? () async {
-                                      if (isTournamentEnded) {
-                                        Navigator.push(
-                                          context,
-                                          TournamentResult.route(
-                                            tournamentId: tournament.id,
-                                            isShowLoading:
-                                                DateTime.now()
-                                                    .difference(
-                                                      DateTime.fromMillisecondsSinceEpoch(
-                                                        tournament.endTime,
-                                                      ),
-                                                    )
-                                                    .inMinutes <
-                                                1,
-                                          ),
-                                        );
-                                      } else {
-                                        Navigator.of(context).push(
-                                          StormScreen.buildRoute(
-                                            context,
-                                            tournament.id,
-                                            // Duration(seconds: 10),
-                                            Duration(
-                                              seconds:
-                                                  DateTime.fromMillisecondsSinceEpoch(
-                                                    tournament.endTime,
-                                                  ).difference(await NTP.now()).inSeconds,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    }
-                                    : null
-                                : () {
-                                  if (tournament.access.toLowerCase() == 'invite') {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      backgroundColor: const Color(0xFF1A1F23),
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(20),
-                                        ),
-                                      ),
-                                      isScrollControlled: true,
-                                      builder: (_) {
-                                        return InviteCodeSheet(
-                                          onPressed: (code) {
-                                            handleJoinTournament(
-                                              id: tournament.id,
-                                              inviteCode: code,
-                                            );
-                                            Navigator.pop(context);
-                                          },
-                                          scaffoldContext: context,
-                                        );
-                                      },
-                                    );
-                                  } else {
-                                    handleJoinTournament(id: tournament.id);
-                                  }
-                                },
-                        child: Row(
-                          spacing: 4,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              isTournamentEnded
-                                  ? 'View Results'
-                                  : isUserJoined
+                      ),
+                      // Vertical divider
+                      Container(width: 1, height: 16, color: const Color(0xff464A4F)),
+                      Expanded(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            spacing: 4,
+                            children: [
+                              SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
+                              Text(
+                                DateTime.now().isAfter(
+                                      DateTime.fromMillisecondsSinceEpoch(tournament.endTime),
+                                    )
+                                    ? '${tournament.players.length} Participants'
+                                    : '${tournament.players.length}/${tournament.maxParticipants} Joined',
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Color(0xff7D8082)),
+                                textScaler: TextScaler.noScaling,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final status = ref.watch(
+                      tournamentStatusProvider((tournament.startTime, tournament.endTime)),
+                    );
+                    final bool isTournamentStarted = status.isStarted;
+                    final bool isTournamentEnded = status.isEnded;
+                    // print(
+                    //   DateTime.fromMillisecondsSinceEpoch(
+                    //     tournament.endTime,
+                    //   ).difference(DateTime.now()),
+                    // );
+                    // print(Duration(seconds: 10));
+                    return Column(
+                      spacing: 8,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF54C339),
+                            minimumSize: const Size.fromHeight(50),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          onPressed:
+                              isUserJoined
                                   ? isTournamentStarted
-                                      ? 'PLAY NOW'
-                                      : 'JOINED'
-                                  : 'JOIN NOW',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800,
+                                      ? () async {
+                                        if (isTournamentEnded) {
+                                          Navigator.push(
+                                            context,
+                                            TournamentResult.route(
+                                              tournamentId: tournament.id,
+                                              isShowLoading:
+                                                  (await NTP.now())
+                                                      .difference(
+                                                        DateTime.fromMillisecondsSinceEpoch(
+                                                          tournament.endTime,
+                                                        ),
+                                                      )
+                                                      .inMinutes <
+                                                  1,
+                                            ),
+                                          );
+                                        } else {
+                                          Navigator.of(context).push(
+                                            StormScreen.buildRoute(
+                                              context,
+                                              tournament.id,
+                                              // Duration(seconds: 10),
+                                              Duration(
+                                                seconds:
+                                                    DateTime.fromMillisecondsSinceEpoch(
+                                                      tournament.endTime,
+                                                    ).difference(await NTP.now()).inSeconds,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                      : null
+                                  : () {
+                                    if (tournament.access.toLowerCase() == 'invite') {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        backgroundColor: const Color(0xFF1A1F23),
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
+                                          ),
+                                        ),
+                                        isScrollControlled: true,
+                                        builder: (_) {
+                                          return InviteCodeSheet(
+                                            onPressed: (code) {
+                                              handleJoinTournament(
+                                                id: tournament.id,
+                                                inviteCode: code,
+                                              );
+                                              Navigator.pop(context);
+                                            },
+                                            scaffoldContext: context,
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      handleJoinTournament(id: tournament.id);
+                                    }
+                                  },
+                          child: Row(
+                            spacing: 4,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                isTournamentEnded
+                                    ? 'View Results'
+                                    : isUserJoined
+                                    ? isTournamentStarted
+                                        ? 'PLAY NOW'
+                                        : 'JOINED'
+                                    : 'JOIN NOW',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              if (tournament.access == 'invite' && !isUserJoined)
+                                const Icon(Icons.lock_rounded, color: Colors.white),
+                            ],
+                          ),
+                        ),
+                        if (!isTournamentEnded)
+                          Center(
+                            child:
+                                isTournamentStarted
+                                    ? TournamentEndTimerWidget(startTime: tournament.endTime)
+                                    : TournamentTimerWidget(startTime: tournament.startTime),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 16),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xff2B2D30),
+                  ),
+                  child: Column(
+                    children: [
+                      _MenuItem(
+                        icon: 'assets/images/svg/reward_logo.svg',
+                        title: 'Reward Distribution',
+                        onTap:
+                            () => showModalBottomSheet(
+                              useSafeArea: true,
+                              enableDrag: true,
+                              context: context,
+                              backgroundColor: const Color(0xFF1A1F23),
+                              isScrollControlled: true,
+                              builder: (context) {
+                                return RewardDistributionSheet(
+                                  coinType: tournament.rewardCoinType,
+                                  rewards: tournament.rewardPool.split(',').toList(),
+                                );
+                              },
+                            ),
+                      ),
+                      const Divider(color: Colors.white24, height: 1),
+                      _MenuItem(
+                        icon: 'assets/images/svg/tournament_rules.svg',
+                        title: 'Tournament Rules',
+                        onTap:
+                            () => _showHowToPlaySheet(
+                              context,
+                              tournament.customRules.isEmpty ? rules : tournament.customRules,
+                              'Tournament Rules',
+                            ),
+                      ),
+                      const Divider(color: Colors.white24, height: 1),
+                      _MenuItem(
+                        icon: 'assets/images/svg/participants_list.svg',
+                        title: 'Participants',
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => ParticipantsScreen(players: tournament.players),
                               ),
                             ),
-                            if (tournament.access == 'invite' && !isUserJoined)
-                              const Icon(Icons.lock_rounded, color: Colors.white),
-                          ],
-                        ),
                       ),
-                      if (!isTournamentEnded)
-                        Center(
-                          child:
-                              isTournamentStarted
-                                  ? TournamentEndTimerWidget(startTime: tournament.endTime)
-                                  : TournamentTimerWidget(startTime: tournament.startTime),
-                        ),
-                    ],
-                  );
-                },
-              ),
+                      const Divider(color: Colors.white24, height: 1),
 
-              const SizedBox(height: 16),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: const Color(0xff2B2D30),
-                ),
-                child: Column(
-                  children: [
-                    _MenuItem(
-                      icon: 'assets/images/svg/reward_logo.svg',
-                      title: 'Reward Distribution',
-                      onTap:
-                          () => showModalBottomSheet(
-                            useSafeArea: true,
-                            enableDrag: true,
-                            context: context,
-                            backgroundColor: const Color(0xFF1A1F23),
-                            isScrollControlled: true,
-                            builder: (context) {
-                              return RewardDistributionSheet(
-                                coinType: tournament.rewardCoinType,
-                                rewards: tournament.rewardPool.split(',').toList(),
-                              );
-                            },
-                          ),
-                    ),
-                    const Divider(color: Colors.white24, height: 1),
-                    _MenuItem(
-                      icon: 'assets/images/svg/tournament_rules.svg',
-                      title: 'Tournament Rules',
-                      onTap:
-                          () => _showHowToPlaySheet(
-                            context,
-                            tournament.customRules.isEmpty ? rules : tournament.customRules,
-                            'Tournament Rules',
-                          ),
-                    ),
-                    const Divider(color: Colors.white24, height: 1),
-                    _MenuItem(
-                      icon: 'assets/images/svg/participants_list.svg',
-                      title: 'Participants',
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ParticipantsScreen(players: tournament.players),
+                      // _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
+                      // const Divider(color: Colors.white24),
+                      _MenuItem(
+                        icon: 'assets/images/svg/how_to_play.svg',
+                        title: 'How to Play',
+                        onTap:
+                            () => _showHowToPlaySheet(
+                              context,
+                              tournament.howToPlay.isEmpty ? howToPlay : tournament.howToPlay,
+                              'How To Play',
                             ),
-                          ),
-                    ),
-                    const Divider(color: Colors.white24, height: 1),
-
-                    // _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
-                    // const Divider(color: Colors.white24),
-                    _MenuItem(
-                      icon: 'assets/images/svg/how_to_play.svg',
-                      title: 'How to Play',
-                      onTap:
-                          () => _showHowToPlaySheet(
-                            context,
-                            tournament.howToPlay.isEmpty ? howToPlay : tournament.howToPlay,
-                            'How To Play',
-                          ),
-                    ),
-                    const Divider(color: Colors.white24, height: 1),
-                    _MenuItem(
-                      icon: 'assets/images/document.svg',
-                      title: 'FAQs',
-                      onTap:
-                          () => Navigator.of(context).push(FAQScreen.buildRoute(context, faqList)),
-                    ),
-                  ],
+                      ),
+                      const Divider(color: Colors.white24, height: 1),
+                      _MenuItem(
+                        icon: 'assets/images/document.svg',
+                        title: 'FAQs',
+                        onTap:
+                            () =>
+                                Navigator.of(context).push(FAQScreen.buildRoute(context, faqList)),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -834,9 +847,9 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
     scheduleTimerForTargetTime();
   }
 
-  void scheduleTimerForTargetTime() {
+  Future<void> scheduleTimerForTargetTime() async {
     final startTime = DateTime.fromMillisecondsSinceEpoch(widget.startTime);
-    final timeUntilEvent = getLeftDuration(startTime);
+    final timeUntilEvent = await getLeftDuration(startTime);
 
     // Schedule 1 min before start
     final delayUntilStart = timeUntilEvent - const Duration(minutes: 1);
@@ -851,13 +864,13 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
     }
   }
 
-  Duration getLeftDuration(DateTime startTime) {
-    return startTime.difference(DateTime.now());
+  Future<Duration> getLeftDuration(DateTime startTime) async {
+    return startTime.difference(await NTP.now());
   }
 
   void startTimer() {
-    eventTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      final now = DateTime.now();
+    eventTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      final now = await NTP.now();
       final targetTime = DateTime.fromMillisecondsSinceEpoch(widget.startTime);
       final remaining = targetTime.difference(now).inSeconds;
 
@@ -909,9 +922,9 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
     scheduleTimerForTargetTime();
   }
 
-  void scheduleTimerForTargetTime() {
+  Future<void> scheduleTimerForTargetTime() async {
     final startTime = DateTime.fromMillisecondsSinceEpoch(widget.startTime);
-    final timeUntilEvent = getLeftDuration(startTime);
+    final timeUntilEvent = await getLeftDuration(startTime);
 
     // Schedule 1 min before start
     final delayUntilStart = timeUntilEvent - const Duration(minutes: 1);
@@ -926,13 +939,13 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
     }
   }
 
-  Duration getLeftDuration(DateTime startTime) {
-    return startTime.difference(DateTime.now());
+  Future<Duration> getLeftDuration(DateTime startTime) async {
+    return startTime.difference(await NTP.now());
   }
 
   void startTimer() {
-    eventTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      final now = DateTime.now();
+    eventTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      final now = await NTP.now();
       final targetTime = DateTime.fromMillisecondsSinceEpoch(widget.startTime);
       final remaining = targetTime.difference(now).inSeconds;
 

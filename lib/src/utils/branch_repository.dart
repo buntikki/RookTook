@@ -2,17 +2,19 @@
 
 import 'dart:developer';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 
 class BranchRepository {
-  static void trackCustomEvent(
+  static Future<void> trackCustomEvent(
     String eventName, {
-    Map<String, dynamic>? data,
+    Map<String, Object>? data,
     required WidgetRef ref,
-  }) {
-    FlutterBranchSdk.setIdentity(ref.watch(authSessionProvider)?.user.id.value ?? '');
+  }) async {
+    final userId = ref.watch(authSessionProvider)?.user.id.value ?? '';
+    FlutterBranchSdk.setIdentity(userId);
     final BranchEvent event = BranchEvent.customEvent(eventName);
     if (data != null) {
       data.forEach((key, value) {
@@ -23,5 +25,8 @@ class BranchRepository {
     FlutterBranchSdk.trackContent(buo: buo, branchEvent: event);
     log(event.toMap().toString());
     log('identity: ${ref.watch(authSessionProvider)?.user.id.value ?? ''}');
+    final analytics = FirebaseAnalytics.instance;
+    await analytics.setUserId(id: userId);
+    await analytics.logEvent(name: eventName, parameters: data);
   }
 }

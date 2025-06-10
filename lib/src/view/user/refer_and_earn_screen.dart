@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -82,7 +83,6 @@ class _ReferAndEarnLoadedState extends ConsumerState<ReferAndEarnLoaded> {
 
     if (response.success) {
       final String link = response.result as String;
-      print(link);
       BranchRepository.trackCustomEvent('refer_friend', data: {'referralLink': link}, ref: ref);
       // Step 4: Share the link
       SharePlus.instance.share(
@@ -93,7 +93,7 @@ class _ReferAndEarnLoadedState extends ConsumerState<ReferAndEarnLoaded> {
         ),
       );
     } else {
-      print('Error generating Branch link: ${response.errorMessage}');
+      log('Error generating Branch link: ${response.errorMessage}');
     }
   }
 
