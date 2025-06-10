@@ -29,8 +29,8 @@
         android:name="firebase_analytics_collection_enabled"
         android:value="false" />
     <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_aEtdmLbVHIp9RqegNcdHgjoiwwmhLyr1" />
-    <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_hBzgoKkHHJd2MxcaQebLakgaCzpnLCRi" />
-    <meta-data android:name="io.branch.sdk.TestMode" android:value="true" />
+<!--    <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_hBzgoKkHHJd2MxcaQebLakgaCzpnLCRi" />-->
+    <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
 
         <activity
             android:name=".MainActivity"

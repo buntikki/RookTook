@@ -43,7 +43,6 @@ Future<void> main() async {
   await initializeLocalNotifications(locale);
 
   await lichessBinding.initializeFirebase();
-  
 
   runApp(ProviderScope(observers: [ProviderLogger()], child:  AppInitializationScreen()));
 }
