@@ -55,7 +55,6 @@ class NewProfileScreen extends ConsumerWidget {
         recentGames.value!
             .where((element) => element.game.perf == Perf.rapid || element.game.perf == Perf.blitz)
             .toList();
-    log(filteredGames.toString());
 
     final draw = filteredGames.where((element) => element.game.winner == null).length;
 

@@ -16,6 +16,7 @@ import 'package:rooktook/src/model/game/game_preferences.dart';
 import 'package:rooktook/src/model/game/playable_game.dart';
 import 'package:rooktook/src/model/lobby/game_seek.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
+import 'package:rooktook/src/utils/branch_repository.dart';
 import 'package:rooktook/src/utils/gestures_exclusion.dart';
 import 'package:rooktook/src/utils/immersive_mode.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
@@ -58,12 +59,12 @@ class GameBody extends ConsumerWidget {
     required this.onNewOpponentCallback,
     required this.loadingBoardWidget,
     required this.boardKey,
-    required this.seek,
+    this.seek,
   });
 
   /// The [GameFullId] of the game.
   final GameFullId id;
-  final GameSeek seek;
+  final GameSeek? seek;
 
   /// [GlobalKey] for the white clock.
   ///
@@ -361,7 +362,7 @@ class GameBody extends ConsumerWidget {
   }
 
   String _getGameMode() {
-    switch (seek.timeIncrement?.display) {
+    switch (seek?.timeIncrement?.display) {
       case '3+2':
         return '3plus2';
       case '5+0':
@@ -395,6 +396,11 @@ class GameBody extends ConsumerWidget {
                     ? ' • ${gameState.game.winner == Side.white ? context.l10n.whiteIsVictorious : context.l10n.blackIsVictorious}'
                     : '';
             final game = gameState.game;
+            BranchRepository.trackCustomEvent(
+              '1v1_game',
+              ref: ref,
+              data: {'gameMode': game.meta.perf.name + _getGameMode()},
+            );
             if (game.winner == game.youAre) {
               ref
                   .read(walletProvider.notifier)

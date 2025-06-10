@@ -173,7 +173,7 @@ class TournamentCard extends StatelessWidget {
                                 Text(
                                   isEnded
                                       ? ' ${tournament.players.length} Participants'
-                                      : '${tournament.maxParticipants - tournament.players.length}/${tournament.maxParticipants} Seats Left',
+                                      : '${tournament.players.length}/${tournament.maxParticipants} Joined',
                                   textScaler: TextScaler.noScaling,
                                   style: const TextStyle(color: Colors.white70, fontSize: 12),
                                 ),

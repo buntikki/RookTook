@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:ntp/ntp.dart';
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/model/puzzle/storm.dart';
@@ -36,7 +37,7 @@ final fetchLeaderboardProviderWithLoading = FutureProvider.family<(List<Player>,
   id,
 ) async {
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
-  await Future.delayed(const Duration(seconds: 30));
+  await Future.delayed(const Duration(seconds: 7));
   final tournament = await tournamentNotifier.fetchSingleTournament(id);
   return (
     tournamentNotifier.sortLeaderboard(tournament?.players ?? []),
@@ -356,8 +357,8 @@ class TournamentStatusNotifier extends StateNotifier<TournamentStatus> {
   final int endTime;
   Timer? _timer;
 
-  void _checkStatus() {
-    final now = DateTime.now();
+  Future<void> _checkStatus() async {
+    final now = await NTP.now();
     final start = DateTime.fromMillisecondsSinceEpoch(startTime);
     final end = DateTime.fromMillisecondsSinceEpoch(endTime);
 

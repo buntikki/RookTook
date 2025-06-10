@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rooktook/src/utils/branch_repository.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/view/user/provider/referral_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -40,8 +42,14 @@ class _ReferAndEarnScreenState extends ConsumerState<ReferAndEarnScreen> {
   }
 }
 
-class ReferAndEarnLoaded extends ConsumerWidget {
+class ReferAndEarnLoaded extends ConsumerStatefulWidget {
   const ReferAndEarnLoaded({super.key});
+
+  @override
+  ConsumerState<ReferAndEarnLoaded> createState() => _ReferAndEarnLoadedState();
+}
+
+class _ReferAndEarnLoadedState extends ConsumerState<ReferAndEarnLoaded> {
   Future<void> shareBranchReferralLink({
     required String referralId,
     required String coinAmount,
@@ -75,8 +83,7 @@ class ReferAndEarnLoaded extends ConsumerWidget {
 
     if (response.success) {
       final String link = response.result as String;
-      print(link);
-
+      BranchRepository.trackCustomEvent('refer_friend', data: {'referralLink': link}, ref: ref);
       // Step 4: Share the link
       SharePlus.instance.share(
         ShareParams(
@@ -86,12 +93,12 @@ class ReferAndEarnLoaded extends ConsumerWidget {
         ),
       );
     } else {
-      print('Error generating Branch link: ${response.errorMessage}');
+      log('Error generating Branch link: ${response.errorMessage}');
     }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final state = ref.watch(referralProvider);
     final details = state.referralDetails;
     final List<String> steps = [

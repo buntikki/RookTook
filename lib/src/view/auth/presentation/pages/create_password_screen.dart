@@ -6,13 +6,11 @@ import 'package:rooktook/src/model/auth/auth_controller.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/auth/password/password_controller.dart';
 import 'package:rooktook/src/navigation.dart';
+import 'package:rooktook/src/utils/branch_repository.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/set_username_screen.dart';
 
-enum PasswordScreenMode {
-  login,
-  create
-}
+enum PasswordScreenMode { login, create }
 
 class CreatePasswordScreen extends ConsumerStatefulWidget {
   final PasswordScreenMode screenMode;
@@ -20,11 +18,11 @@ class CreatePasswordScreen extends ConsumerStatefulWidget {
   const CreatePasswordScreen(this.screenMode, this.username, {super.key});
 
   static Route<dynamic> buildRoute(
-      BuildContext context, PasswordScreenMode screenMode, String username) {
-    return buildScreenRoute(
-      context,
-      screen: CreatePasswordScreen(screenMode, username),
-    );
+    BuildContext context,
+    PasswordScreenMode screenMode,
+    String username,
+  ) {
+    return buildScreenRoute(context, screen: CreatePasswordScreen(screenMode, username));
   }
 
   @override
@@ -69,38 +67,29 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
 
     final authState = ref.watch(authControllerProvider);
 
-    if(mode == PasswordScreenMode.login){
-      ref.listen<AuthSessionState?>(
-          authSessionProvider,
-              (previous, current) {
-            if (previous == null && current != null) {
-              Navigator.of(context).pushAndRemoveUntil(
-                buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-                    (route) => false,
-              );
-            }
-          }
-      );
+    if (mode == PasswordScreenMode.login) {
+      ref.listen<AuthSessionState?>(authSessionProvider, (previous, current) {
+        if (previous == null && current != null) {
+          BranchRepository.trackCustomEvent('login', ref: ref);
+          Navigator.of(context).pushAndRemoveUntil(
+            buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+            (route) => false,
+          );
+        }
+      });
 
-      ref.listen<AsyncValue<void>>(
-        authControllerProvider,
-            (previous, current) {
-          if (previous?.isLoading == true && current.hasError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Login failed: ${current.error}'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        },
-      );
+      ref.listen<AsyncValue<void>>(authControllerProvider, (previous, current) {
+        if (previous?.isLoading == true && current.hasError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Login failed: ${current.error}'), backgroundColor: Colors.red),
+          );
+        }
+      });
     }
 
     // Now you can use it for conditional logic
-    final String titleText = mode == PasswordScreenMode.create
-        ? 'Create Your\nPassword'
-        : 'Enter Your\nPassword';
+    final String titleText =
+        mode == PasswordScreenMode.create ? 'Create Your\nPassword' : 'Enter Your\nPassword';
 
     return Scaffold(
       backgroundColor: const Color(0xFF13191D),
@@ -133,7 +122,9 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                       // Create Your Password text
                       Text(
                         titleText,
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
 
                       const SizedBox(height: 16),
@@ -147,26 +138,25 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                                "Your ${_isInputEmail ? 'Email': 'Username'}"
-                            ),
+                            Text("Your ${_isInputEmail ? 'Email' : 'Username'}"),
                             const SizedBox(height: 8),
                             Row(
                               children: [
                                 CircleAvatar(
                                   radius: 16,
                                   backgroundColor: Colors.green,
-                                  child: _isInputEmail?const Icon(
-                                    Icons.email,
-                                    color: Colors.white,
-                                    size: 12,
-                                  ): RandomAvatar(widget.username),
+                                  child:
+                                      _isInputEmail
+                                          ? const Icon(Icons.email, color: Colors.white, size: 12)
+                                          : RandomAvatar(widget.username),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
                                     widget.username,
-                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: const Color(0xff4CAF50)),
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.copyWith(color: const Color(0xff4CAF50)),
                                   ),
                                 ),
                               ],
@@ -178,9 +168,7 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                       TextField(
                         controller: _passwordController,
                         obscureText: !state.isPasswordVisible,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                        ],
+                        inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                         decoration: InputDecoration(
                           hintText: 'Enter Password',
                           hintStyle: const TextStyle(color: Colors.grey),
@@ -209,7 +197,7 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                       const SizedBox(height: 24),
 
                       // Password strength indicator
-                      if (state.password.isNotEmpty && mode==PasswordScreenMode.create)
+                      if (state.password.isNotEmpty && mode == PasswordScreenMode.create)
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           height: 8,
@@ -220,12 +208,15 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                           ),
                         ),
 
-                      if (state.password.isNotEmpty && mode==PasswordScreenMode.create)
+                      if (state.password.isNotEmpty && mode == PasswordScreenMode.create)
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
                             controller.getPasswordStrengthText(),
-                            style: TextStyle(color: controller.getPasswordStrengthColor(), fontSize: 14),
+                            style: TextStyle(
+                              color: controller.getPasswordStrengthColor(),
+                              fontSize: 14,
+                            ),
                           ),
                         ),
 
@@ -239,22 +230,27 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
             // Fixed button at the bottom
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              decoration: const BoxDecoration(
-                color: Color(0xFF13191D),
-              ),
+              decoration: const BoxDecoration(color: Color(0xFF13191D)),
               child: ElevatedButton(
-                onPressed: authState.isLoading
-                    ? null
-                    : (controller.isButtonEnabled
-                    ? () {
-                  if (mode == PasswordScreenMode.create) {
-                    Navigator.of(context).push(SetUsernameScreen.buildRoute(context, previousInput: widget.username, password: _passwordController.text.trim()));
-                    debugPrint('Password submitted: ${state.password}');
-                  } else {
-                    _handleSignIn();
-                  }
-                }
-                    : null),
+                onPressed:
+                    authState.isLoading
+                        ? null
+                        : (controller.isButtonEnabled
+                            ? () {
+                              if (mode == PasswordScreenMode.create) {
+                                Navigator.of(context).push(
+                                  SetUsernameScreen.buildRoute(
+                                    context,
+                                    previousInput: widget.username,
+                                    password: _passwordController.text.trim(),
+                                  ),
+                                );
+                                debugPrint('Password submitted: ${state.password}');
+                              } else {
+                                _handleSignIn();
+                              }
+                            }
+                            : null),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xff4CAF50),
                   // Green color
@@ -263,22 +259,20 @@ class _PasswordCreationScreenState extends ConsumerState<CreatePasswordScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   disabledBackgroundColor: Colors.grey.shade700,
                 ),
-                child: authState.isLoading
-                    ? const SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2.0,
-                  ),
-                )
-                    : Text(
-                  mode == PasswordScreenMode.create ? 'CONTINUE' : 'LOGIN',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold
-                  ),
-                ),
+                child:
+                    authState.isLoading
+                        ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.0),
+                        )
+                        : Text(
+                          mode == PasswordScreenMode.create ? 'CONTINUE' : 'LOGIN',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
               ),
             ),
           ],
