@@ -75,8 +75,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
     },*/
     {
       'question': 'Where can I use Silver Coins?',
-      'answer':
-          'Silver Coins are required to join paid tournaments',
+      'answer': 'Silver Coins are required to join paid tournaments',
     },
     {
       'question': 'Do Silver Coins expire?',
@@ -318,17 +317,17 @@ class ConvertCoinsSheet extends ConsumerStatefulWidget {
 }
 
 class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
-  int goldCoins = 100;
-  final goldCoinController = TextEditingController(text: '100');
+  int goldCoins = 1;
+  final goldCoinController = TextEditingController(text: '1');
   int maxLimit = 1000;
 
   @override
   void initState() {
     super.initState();
-    final int walletCoinsValue = ref.read(walletProvider).walletInfo.goldCoins;
-    maxLimit = walletCoinsValue > maxLimit ? maxLimit : walletCoinsValue;
-    goldCoins = walletCoinsValue > maxLimit ? maxLimit : walletCoinsValue;
-    goldCoinController.text = goldCoins.toString();
+    // final int walletCoinsValue = ref.read(walletProvider).walletInfo.goldCoins;
+    // maxLimit = walletCoinsValue > maxLimit ? maxLimit : walletCoinsValue;
+    // goldCoins = walletCoinsValue > maxLimit ? maxLimit : walletCoinsValue;
+    // goldCoinController.text = goldCoins.toString();
     goldCoinController.addListener(
       () => setState(() {
         final int parsedValue = int.parse(
@@ -597,6 +596,7 @@ class _ConvertCoinsSheetState extends ConsumerState<ConvertCoinsSheet> {
                         .read(walletProvider.notifier)
                         .convertGoldToSilver(goldCoins: goldCoins, context: context);
                     Navigator.pop(context);
+                    ref.invalidate(fetchWalletPageDetails);
                   }
                 },
                 child: const Text('CONVERT', style: TextStyle(fontWeight: FontWeight.w800)),
