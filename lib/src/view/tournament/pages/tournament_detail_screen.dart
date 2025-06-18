@@ -232,7 +232,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
       // alias: 'tournament/$tournamentId',
     );
 
-    lp.addControlParam('\$fallback_url', 'https://onelink.to/u9ktwp');
+    // lp.addControlParam('\$fallback_url', 'https://onelink.to/u9ktwp');
     lp.addControlParam('\$deeplink_path', 'tournament/$tournamentId');
 
     // Step 3: Get short link
