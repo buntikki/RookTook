@@ -103,7 +103,7 @@ class _ReferAndEarnLoadedState extends ConsumerState<ReferAndEarnLoaded> {
     final details = state.referralDetails;
     final List<String> steps = [
       'Invite your friend to signup with your referral link',
-      'They will play their 1st Tournament',
+      'Ask them to play their 1st Tournament',
       'You will get ${details.referrerRewardSetting.value} ${details.referrerRewardSetting.coinType} coins & your friend will get ${details.referredRewardSetting.value} ${details.referredRewardSetting.coinType} coins.',
     ];
     return SingleChildScrollView(

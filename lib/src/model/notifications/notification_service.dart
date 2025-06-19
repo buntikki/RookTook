@@ -192,7 +192,7 @@ class NotificationService {
       id,
       title,
       body,
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       tz.TZDateTime.from(scheduledTime, tz.local),
       notificationDetails,
       matchDateTimeComponents: null,

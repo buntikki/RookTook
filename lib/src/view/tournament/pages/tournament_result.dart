@@ -211,7 +211,7 @@ class TournamentResultCard extends StatelessWidget {
                 Row(
                   spacing: 12,
                   children: [
-                    RandomAvatar(player.id, height: 40),
+                    RandomAvatar(player.userId, height: 40),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
