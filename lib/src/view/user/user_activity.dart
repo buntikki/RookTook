@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -37,6 +39,7 @@ class UserActivityWidget extends ConsumerWidget {
 
               return entry.games!.keys.any((perf) => perf == Perf.rapid || perf == Perf.blitz);
             }).toList();
+        log(filteredActivities.toString());
         if (filteredActivities.isEmpty) {
           return const SizedBox.shrink();
         }
@@ -191,13 +194,13 @@ class UserActivityEntry extends ConsumerWidget {
               subtitle: emptySubtitle,
               trailing: BriefGameResultBox(win: entry.streak!.score, draw: 0, loss: 0),
             ),
-        if (entry.storm != null)
-          _UserActivityListTile(
-            leading: const Icon(LichessIcons.storm, size: leadingIconSize),
-            title: context.l10n.stormPlayedNbRunsOfPuzzleStorm(entry.storm!.runs, 'Puzzle Storm'),
-            subtitle: emptySubtitle,
-            trailing: BriefGameResultBox(win: entry.storm!.score, draw: 0, loss: 0),
-          ),
+        // if (entry.storm != null)
+        //   _UserActivityListTile(
+        //     leading: const Icon(LichessIcons.storm, size: leadingIconSize),
+        //     title: context.l10n.stormPlayedNbRunsOfPuzzleStorm(entry.storm!.runs, 'Puzzle Rush'),
+        //     subtitle: emptySubtitle,
+        //     trailing: BriefGameResultBox(win: entry.storm!.score, draw: 0, loss: 0),
+        //   ),
         if (entry.correspondenceEnds != null)
           _UserActivityListTile(
             leading: const Icon(LichessIcons.correspondence, size: leadingIconSize),

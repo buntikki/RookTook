@@ -88,7 +88,7 @@ class _Body extends ConsumerWidget {
     {
       'question': 'What are Puzzle Tournaments?',
       'answer':
-      'Everyone starts at the same time with the same puzzles and a fixed time to solve as many as possible. Correct answers earn points, streaks give bonuses, and one mistake breaks the streak.',
+          'Everyone starts at the same time with the same puzzles and a fixed time to solve as many as possible. Correct answers earn points, streaks give bonuses, and one mistake breaks the streak.',
     },
     {
       'question': 'What do the time formats like 3+2 or 5+0 mean?',
@@ -118,11 +118,7 @@ class _Body extends ConsumerWidget {
       'question': 'I’m new to chess. Where should I start?',
       'answer': 'Start with Rapid games (10+0) and explore the Puzzle section to practice tactics.',
     },
-    {
-      'question': 'What happens if I run out of time?',
-      'answer':
-          'You lose the game',
-    },
+    {'question': 'What happens if I run out of time?', 'answer': 'You lose the game'},
     {
       'question': 'Can I pause a game?',
       'answer': 'Online games cannot be paused. Try Pass & Play mode for flexible timing.',
@@ -398,6 +394,24 @@ class _Body extends ConsumerWidget {
             trailing: const _OpenInNewIcon(),
             onTap: () {
               launchUrl(Uri.parse('https://www.rooktook.com/privacy-policy'));
+            },
+          ),
+          PlatformListTile(
+            leading: SvgPicture.asset('assets/images/svg/tnc.svg'),
+            // leading: const Icon(Icons.privacy_tip_outlined),
+            title: const Text('Terms & Conditions'),
+            trailing: const _OpenInNewIcon(),
+            onTap: () {
+              launchUrl(Uri.parse('https://www.rooktook.com/terms-and-conditions'));
+            },
+          ),
+          PlatformListTile(
+            leading: SvgPicture.asset('assets/images/svg/refund.svg'),
+            // leading: const Icon(Icons.privacy_tip_outlined),
+            title: const Text('Refund & Cancellation Policy'),
+            trailing: const _OpenInNewIcon(),
+            onTap: () {
+              launchUrl(Uri.parse('https://www.rooktook.com/refund-policy'));
             },
           ),
         ],

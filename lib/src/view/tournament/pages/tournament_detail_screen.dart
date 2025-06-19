@@ -122,6 +122,17 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             backgroundColor: Color(0xFF54C339),
           ),
         );
+        final time =
+            DateTime.fromMillisecondsSinceEpoch(
+              data.startTime,
+            ).difference(await NTP.now()).inSeconds;
+        if (time > 30) {
+          _showHowToPlaySheet(
+            context,
+            data.howToPlay.isEmpty ? howToPlay : data.howToPlay,
+            'How To Play',
+          );
+        }
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -221,7 +232,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
       // alias: 'tournament/$tournamentId',
     );
 
-    lp.addControlParam('\$fallback_url', 'https://onelink.to/u9ktwp');
+    // lp.addControlParam('\$fallback_url', 'https://onelink.to/u9ktwp');
     lp.addControlParam('\$deeplink_path', 'tournament/$tournamentId');
 
     // Step 3: Get short link
@@ -423,19 +434,43 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                                             ),
                                           );
                                         } else {
-                                          Navigator.of(context).push(
-                                            StormScreen.buildRoute(
+                                          await ref
+                                              .read(tournamentProvider.notifier)
+                                              .fetchSingleTournament(tournament.id)
+                                              .then(
+                                                (data) => setState(() {
+                                                  _tournament = data;
+                                                }),
+                                              );
+
+                                          if (tournament.minParticipants <=
+                                              tournament.players.length) {
+                                            Navigator.push(
                                               context,
-                                              tournament.id,
-                                              // Duration(seconds: 10),
-                                              Duration(
-                                                seconds:
-                                                    DateTime.fromMillisecondsSinceEpoch(
-                                                      tournament.endTime,
-                                                    ).difference(await NTP.now()).inSeconds,
+                                              StormScreen.buildRoute(
+                                                context,
+                                                tournament.id,
+                                                // Duration(seconds: 10),
+                                                Duration(
+                                                  seconds:
+                                                      DateTime.fromMillisecondsSinceEpoch(
+                                                        tournament.endTime,
+                                                      ).difference(await NTP.now()).inSeconds,
+                                                ),
                                               ),
-                                            ),
-                                          );
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  'Tournament Terminated',
+                                                  style: TextStyle(color: Colors.white),
+                                                ),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                            Navigator.pop(context);
+                                          }
                                         }
                                       }
                                       : null
@@ -893,7 +928,10 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
   @override
   Widget build(BuildContext context) {
     if (eventTimer?.isActive ?? false) {
-      return Text('Starting in 00:${timeLeft.toString().padLeft(2, '0')}');
+      return Text(
+        'Starting in 00:${timeLeft.toString().padLeft(2, '0')}',
+        style: const TextStyle(color: Color(0xFF54C339)),
+      );
     } else {
       return Text(
         'Event starts at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(widget.startTime))}',

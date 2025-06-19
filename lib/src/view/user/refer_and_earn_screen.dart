@@ -72,7 +72,7 @@ class _ReferAndEarnLoadedState extends ConsumerState<ReferAndEarnLoaded> {
       // alias: 'invite/ref=$referralId',
     );
 
-    lp.addControlParam('\$fallback_url', 'https://onelink.to/u9ktwp');
+    // lp.addControlParam('\$fallback_url', 'https://onelink.to/u9ktwp');
     lp.addControlParam('\$deeplink_path', 'invite/ref=$referralId');
 
     // Step 3: Get short link

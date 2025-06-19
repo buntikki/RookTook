@@ -305,63 +305,74 @@ class _TopTable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stormState = ref.watch(stormControllerProvider(data.puzzles, data.timestamp, startTime));
+    final side = stormState.pov == Side.white;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // if (stormState.mode == StormMode.initial)
-          //   Expanded(
-          //     child: Padding(
-          //       padding: const EdgeInsets.only(right: 16.0),
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Text(
-          //             context.l10n.stormMoveToStart,
-          //             maxLines: 1,
-          //             overflow: TextOverflow.ellipsis,
-          //             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          //           ),
-          //           Text(
-          //             stormState.pov == Side.white
-          //                 ? context.l10n.stormYouPlayTheWhitePiecesInAllPuzzles
-          //                 : context.l10n.stormYouPlayTheBlackPiecesInAllPuzzles,
-          //             maxLines: 2,
-          //             overflow: TextOverflow.ellipsis,
-          //             style: const TextStyle(fontSize: 12),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   )
-          // else
-          ...[
-            PlatformCard(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Icon(LichessIcons.storm, size: 50.0, color: ColorScheme.of(context).primary),
-                    const SizedBox(width: 8),
-                    Text(
-                      stormState.numSolved.toString().padRight(2),
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: ColorScheme.of(context).primary,
-                        fontFeatures: const [FontFeature.tabularFigures()],
-                      ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // if (stormState.mode == StormMode.initial)
+              //   Expanded(
+              //     child: Padding(
+              //       padding: const EdgeInsets.only(right: 16.0),
+              //       child: Column(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text(
+              //             context.l10n.stormMoveToStart,
+              //             maxLines: 1,
+              //             overflow: TextOverflow.ellipsis,
+              //             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              //           ),
+              //           Text(
+              //             stormState.pov == Side.white
+              //                 ? context.l10n.stormYouPlayTheWhitePiecesInAllPuzzles
+              //                 : context.l10n.stormYouPlayTheBlackPiecesInAllPuzzles,
+              //             maxLines: 2,
+              //             overflow: TextOverflow.ellipsis,
+              //             style: const TextStyle(fontSize: 12),
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   )
+              // else
+              ...[
+                PlatformCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Icon(
+                          LichessIcons.storm,
+                          size: 50.0,
+                          color: ColorScheme.of(context).primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          stormState.numSolved.toString().padRight(2),
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                            color: ColorScheme.of(context).primary,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            const Spacer(),
-          ],
-          StormClockWidget(clock: stormState.clock),
+                const Spacer(),
+              ],
+              StormClockWidget(clock: stormState.clock),
+            ],
+          ),
+          Text(side ? 'White to play' : 'Black to play', style: const TextStyle(fontSize: 16)),
         ],
       ),
     );

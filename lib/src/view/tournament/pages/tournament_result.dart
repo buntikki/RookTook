@@ -52,35 +52,89 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
               style: TextStyle(fontWeight: FontWeight.w700, fontSize: 28),
             ),
           ),
-          body: ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: players.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 16),
-            itemBuilder: (BuildContext context, int index) {
-              Color? color1;
-              Color? color2;
-              if (index == 0) {
-                color1 = const Color(0xff2B291F);
-                color2 = const Color(0xff463F24);
-              }
-              if (index == 1) {
-                color1 = const Color(0xff202C33);
-                color2 = const Color(0xff2E4755);
-              }
-              if (index == 2) {
-                color1 = const Color(0xff312F3D);
-                color2 = const Color(0xff413C60);
-              }
-              final player = players[index];
-              return TournamentResultCard(
-                player: player,
-                color1: color1,
-                color2: color2,
-                coinType: coinType,
-                isUserCard: session!.user.name == player.userId,
-                rank: (index + 1).toString().padLeft(2, '0'),
-              );
-            },
+          body: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2B2D30),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Row(
+                    //   spacing: 8,
+                    //   children: [
+                    //     // SvgPicture.asset('assets/images/svg/puzzle.svg', height: 18.0),
+                    //     const Text(
+                    //       '# Rank',
+                    //       style: TextStyle(color: Color(0xff7D8082), fontSize: 12),
+                    //     ),
+                    //   ],
+                    // ),
+                    Row(
+                      spacing: 8,
+                      children: [
+                        SvgPicture.asset('assets/images/svg/puzzle.svg', height: 18.0),
+                        const Text('Score', style: TextStyle(color: Colors.white, fontSize: 12)),
+                      ],
+                    ),
+
+                    Row(
+                      spacing: 8,
+                      children: [
+                        SvgPicture.asset('assets/images/svg/fire.svg', height: 18.0),
+                        const Text(
+                          'Moves Combo',
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      spacing: 8,
+                      children: [
+                        SvgPicture.asset('assets/images/svg/error.svg', height: 16.0),
+                        const Text('Errors', style: TextStyle(color: Colors.white, fontSize: 12)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: players.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  itemBuilder: (BuildContext context, int index) {
+                    Color? color1;
+                    Color? color2;
+                    if (index == 0) {
+                      color1 = const Color(0xff2B291F);
+                      color2 = const Color(0xff463F24);
+                    }
+                    if (index == 1) {
+                      color1 = const Color(0xff202C33);
+                      color2 = const Color(0xff2E4755);
+                    }
+                    if (index == 2) {
+                      color1 = const Color(0xff312F3D);
+                      color2 = const Color(0xff413C60);
+                    }
+                    final player = players[index];
+                    return TournamentResultCard(
+                      player: player,
+                      color1: color1,
+                      color2: color2,
+                      coinType: coinType,
+                      isUserCard: session!.user.name == player.userId,
+                      rank: (index + 1).toString().padLeft(2, '0'),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
           // bottomSheet: BottomSheet(
           //   shape: const BeveledRectangleBorder(),
@@ -204,7 +258,10 @@ class TournamentResultCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const Text('Coins', style: TextStyle(color: Color(0xff7D8082), fontSize: 12)),
+                    const Text(
+                      'Coins Won',
+                      style: TextStyle(color: Color(0xff7D8082), fontSize: 12),
+                    ),
                   ],
                 ),
               ],
