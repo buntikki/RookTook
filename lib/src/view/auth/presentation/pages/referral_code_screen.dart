@@ -50,20 +50,7 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
       borderSide: const BorderSide(color: Colors.grey),
     );
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          if (enabled)
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                  buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
-                  (route) => false,
-                );
-              },
-              child: const Text('Skip', style: TextStyle(color: Colors.white)),
-            ),
-        ],
-      ),
+      appBar: AppBar(),
       body: SafeArea(
         minimum: const EdgeInsets.all(16),
         child: Column(
@@ -95,6 +82,34 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
               style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
             const Spacer(),
+            if (enabled)
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: Colors.grey.shade800,
+                  disabledForegroundColor: Colors.grey,
+                  minimumSize: const Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(color: Colors.grey.shade800),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+                    (route) => false,
+                  );
+                },
+                child: Text(
+                  'Skip',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ElevatedButton(
               onPressed: () async {
                 if (controller.text.isEmpty) {

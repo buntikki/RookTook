@@ -850,24 +850,24 @@ class GameTypeBottomSheet extends ConsumerWidget {
                     },
                   ),
                 ),
-                Expanded(
-                  child: GameTypeCard(
-                    icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
-                    title: 'Play',
-                    subtitle: 'Blitz',
-                    type: '5+0',
-                    subtitleColor: const Color(0xFF8BC34A), // Light green
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.of(context, rootNavigator: true).push(
-                        GameScreen.buildRoute(
-                          context,
-                          seek: GameSeek.fastPairing(const TimeIncrement(300, 0), session),
-                        ),
-                      );
-                    },
-                  ),
-                ),
+                // Expanded(
+                //   child: GameTypeCard(
+                //     icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
+                //     title: 'Play',
+                //     subtitle: 'Blitz',
+                //     type: '5+0',
+                //     subtitleColor: const Color(0xFF8BC34A), // Light green
+                //     onTap: () {
+                //       Navigator.pop(context);
+                //       Navigator.of(context, rootNavigator: true).push(
+                //         GameScreen.buildRoute(
+                //           context,
+                //           seek: GameSeek.fastPairing(const TimeIncrement(300, 0), session),
+                //         ),
+                //       );
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -981,60 +981,57 @@ class ChessRatingCards extends StatelessWidget {
     required String title,
     required String rating,
   }) {
-    return ClipPath(
-      clipper: ContainerClipper(notch: Platform.isAndroid ? 50 : 60),
-      child: Container(
-        // width: 140,
-        // height: 135,
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.0)),
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 3,
-              child: FittedBox(
-                child: Row(
-                  children: [
-                    Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        color: iconColor,
-                        // borderRadius: BorderRadius.circular(8.0),
-                        shape: BoxShape.circle,
+    return Container(
+      // width: 140,
+      // height: 135,
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16.0)),
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: 3,
+            child: FittedBox(
+              child: Row(
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: iconColor,
+                      // borderRadius: BorderRadius.circular(8.0),
+                      shape: BoxShape.circle,
+                    ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: icon,
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                        textScaler: TextScaler.noScaling,
                       ),
-                      padding: const EdgeInsets.all(8.0),
-                      child: icon,
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                          textScaler: TextScaler.noScaling,
+                      Text(
+                        rating,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                        Text(
-                          rating,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textScaler: TextScaler.noScaling,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                        textScaler: TextScaler.noScaling,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const Expanded(flex: 1, child: SizedBox()),
-          ],
-        ),
+          ),
+          const Expanded(flex: 1, child: SizedBox()),
+        ],
       ),
     );
   }
