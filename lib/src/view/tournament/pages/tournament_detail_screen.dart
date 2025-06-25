@@ -42,9 +42,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     await ref.read(walletProvider.notifier).getUserLedger();
     final walletState = ref.read(walletProvider);
     if (walletState.walletInfo.silverCoins >= widget.tournament.entrySilverCoins) {
-      final data = await ref
-          .read(tournamentProvider.notifier)
-          .joinTournament(id: id, inviteCode: inviteCode);
+      final data = await ref.read(tournamentProvider.notifier).fetchSingleTournament(id);
 
       if (data == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -57,81 +55,23 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
         setState(() {
           _tournament = data;
         });
-
-        final baseId = int.tryParse(data.id) ?? 0;
-        final service = ref.read(notificationServiceProvider);
-        BranchRepository.trackCustomEvent(
-          data.entrySilverCoins > 0 ? 'paid_tournament_register' : 'free_tournament_register',
-          data: {'tournamentId': data.id},
-          ref: ref,
-        );
-        if (DateTime.fromMillisecondsSinceEpoch(
+        final tournaStartTime = DateTime.fromMillisecondsSinceEpoch(
           data.startTime,
-        ).subtract(const Duration(minutes: 1)).isAfter(DateTime.now())) {
-          await service.scheduleNotification(
-            id: baseId + 1,
-            title: data.name,
-            body: '${data.name} starts in 1 minute!',
-            scheduledTime: DateTime.fromMillisecondsSinceEpoch(
-              data.startTime,
-            ).subtract(const Duration(minutes: 1)),
-          );
-        }
-        if (DateTime.fromMillisecondsSinceEpoch(
-          data.startTime,
-        ).subtract(const Duration(minutes: 2)).isAfter(DateTime.now())) {
-          await service.scheduleNotification(
-            id: baseId + 2,
-            title: data.name,
-            body: '${data.name} starts in 2 minutes!',
-            scheduledTime: DateTime.fromMillisecondsSinceEpoch(
-              data.startTime,
-            ).subtract(const Duration(minutes: 2)),
-          );
-        }
-        if (DateTime.fromMillisecondsSinceEpoch(
-          data.startTime,
-        ).subtract(const Duration(minutes: 5)).isAfter(DateTime.now())) {
-          await service.scheduleNotification(
-            id: baseId + 5,
-            title: data.name,
-            body: '${data.name} starts in 5 minutes!',
-            scheduledTime: DateTime.fromMillisecondsSinceEpoch(
-              data.startTime,
-            ).subtract(const Duration(minutes: 5)),
-          );
-        }
-        await service.scheduleNotification(
-          id: baseId + 10,
-          title: data.name,
-          body: '${data.name} has ended. Check your results.!',
-          scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.endTime),
-        );
-        if (DateTime.fromMillisecondsSinceEpoch(data.startTime).isAfter(DateTime.now())) {
-          await service.scheduleNotification(
-            id: baseId,
-            title: data.name,
-            body: '${data.name} started!',
-            scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.startTime),
-          );
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Tournament joined successfully', style: TextStyle(color: Colors.white)),
-            backgroundColor: Color(0xFF54C339),
-          ),
-        );
-        final time =
-            DateTime.fromMillisecondsSinceEpoch(
-              data.startTime,
-            ).difference(await NTP.now()).inSeconds;
-        if (time > 30) {
-          _showHowToPlaySheet(
-            context,
-            data.howToPlay.isEmpty ? howToPlay : data.howToPlay,
-            'How To Play',
-          );
+        ).subtract(const Duration(seconds: 10));
+        if ((await NTP.now()).isAfter(tournaStartTime)) {
+          if (data.minParticipants <= data.players.length) {
+            tournamentSuccessFn(id, inviteCode);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tournament Terminated', style: TextStyle(color: Colors.white)),
+                backgroundColor: Colors.red,
+              ),
+            );
+            Navigator.pop(context);
+          }
+        } else {
+          tournamentSuccessFn(id, inviteCode);
         }
       }
     } else {
@@ -141,6 +81,97 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
           backgroundColor: Colors.red,
         ),
       );
+    }
+  }
+
+  Future<void> tournamentSuccessFn(String id, String? inviteCode) async {
+    final data = await ref
+        .read(tournamentProvider.notifier)
+        .joinTournament(id: id, inviteCode: inviteCode);
+    if (data == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error joining tournament', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else {
+      setState(() {
+        _tournament = data;
+      });
+      final baseId = int.tryParse(data.id) ?? 0;
+      final service = ref.read(notificationServiceProvider);
+      BranchRepository.trackCustomEvent(
+        data.entrySilverCoins > 0 ? 'paid_tournament_register' : 'free_tournament_register',
+        data: {'tournamentId': data.id},
+        ref: ref,
+      );
+      if (DateTime.fromMillisecondsSinceEpoch(
+        data.startTime,
+      ).subtract(const Duration(minutes: 1)).isAfter(DateTime.now())) {
+        await service.scheduleNotification(
+          id: baseId + 1,
+          title: data.name,
+          body: '${data.name} starts in 1 minute!',
+          scheduledTime: DateTime.fromMillisecondsSinceEpoch(
+            data.startTime,
+          ).subtract(const Duration(minutes: 1)),
+        );
+      }
+      if (DateTime.fromMillisecondsSinceEpoch(
+        data.startTime,
+      ).subtract(const Duration(minutes: 2)).isAfter(DateTime.now())) {
+        await service.scheduleNotification(
+          id: baseId + 2,
+          title: data.name,
+          body: '${data.name} starts in 2 minutes!',
+          scheduledTime: DateTime.fromMillisecondsSinceEpoch(
+            data.startTime,
+          ).subtract(const Duration(minutes: 2)),
+        );
+      }
+      if (DateTime.fromMillisecondsSinceEpoch(
+        data.startTime,
+      ).subtract(const Duration(minutes: 5)).isAfter(DateTime.now())) {
+        await service.scheduleNotification(
+          id: baseId + 5,
+          title: data.name,
+          body: '${data.name} starts in 5 minutes!',
+          scheduledTime: DateTime.fromMillisecondsSinceEpoch(
+            data.startTime,
+          ).subtract(const Duration(minutes: 5)),
+        );
+      }
+      await service.scheduleNotification(
+        id: baseId + 10,
+        title: data.name,
+        body: '${data.name} has ended. Check your results.!',
+        scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.endTime),
+      );
+      if (DateTime.fromMillisecondsSinceEpoch(data.startTime).isAfter(DateTime.now())) {
+        await service.scheduleNotification(
+          id: baseId,
+          title: data.name,
+          body: '${data.name} started!',
+          scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.startTime),
+        );
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Tournament joined successfully', style: TextStyle(color: Colors.white)),
+          backgroundColor: Color(0xFF54C339),
+        ),
+      );
+      final time =
+          DateTime.fromMillisecondsSinceEpoch(data.startTime).difference(await NTP.now()).inSeconds;
+      if (time > 30) {
+        _showHowToPlaySheet(
+          context,
+          data.howToPlay.isEmpty ? howToPlay : data.howToPlay,
+          'How To Play',
+        );
+      }
     }
   }
 
