@@ -19,6 +19,7 @@ import 'package:rooktook/src/view/tournament/pages/tournament_result.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TournamentDetailScreen extends ConsumerStatefulWidget {
   final Tournament tournament;
@@ -166,11 +167,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
       final time =
           DateTime.fromMillisecondsSinceEpoch(data.startTime).difference(await NTP.now()).inSeconds;
       if (time > 30) {
-        _showHowToPlaySheet(
-          context,
-          data.howToPlay.isEmpty ? howToPlay : data.howToPlay,
-          'How To Play',
-        );
+        showHowToPlaySheet(context, data.howToPlay, 'How To Play');
       }
     }
   }
@@ -244,8 +241,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
 
   final rules =
       '<h3><strong>1. Tournament Format</strong></h3><ul><li>Each player gets the <strong>same puzzle set</strong>.</li><li>The tournament runs for a <strong>fixed time duration</strong> (e.g. 3 minutes).</li><li>Your objective is to <strong>solve as many puzzles as possible</strong> in the given time.</li></ul><h3><strong>2. Scoring System</strong></h3><ul><li><strong>Correct Answer</strong>: +1 point.</li><li><strong>Wrong Answer</strong>: No points deducted, but your <strong>streak breaks</strong>.</li></ul><h3><strong>3. Participation Rules</strong></h3><ul><li>You can only join <strong>one tournament per time slot</strong>.</li><li>You must join the tournament <strong>before it starts</strong>.</li><li>Once joined, you <strong>cannot cancel</strong> and <strong>entry fees are non-refundable</strong>.</li><li>You must have sufficient <strong>Silver Coins</strong> to join if the tournament requires it.</li></ul><h3><strong>4. Eligibility</strong></h3><ul><li>Some tournaments may require a <strong>minimum puzzle rating</strong>.</li><li>You must meet all entry criteria shown on the tournament detail page.</li></ul><h3><strong>5. Winner Selection</strong></h3><ul><li>Players are ranked by <strong>highest score</strong>.</li><li>In case of a tie, the <strong>puzzle combo</strong> gets a higher rank.</li><li>The winners will receive <strong>Gold Coins</strong> as per the defined reward split.</li></ul><h3><strong>6. Prizes</strong></h3><ul><li>All rewards are in <strong>Gold Coins</strong>.</li><li>Gold Coins can be used to <strong>redeem gifts</strong> from the RookTook Store.</li><li>Gold Coins <strong>cannot be exchanged for real money</strong>.</li></ul><h3><strong>7. Fair Play &amp; Penalties</strong></h3><ul><li>Cheating, automation, or unfair gameplay will result in <strong>immediate disqualification</strong>.</li><li>Suspicious behavior is logged and reviewed by our moderation team.</li><li>Multiple offenses may result in <strong>account suspension</strong>.</li></ul><h3><strong>8. Missed Tournament</strong></h3><ul><li>If you miss the start time after joining, you <strong>forfeit your entry</strong>.</li><li>No refunds for missed or incomplete participation.</li></ul><p><br></p>';
-  final howToPlay =
-      '<p><strong>Game rules</strong></p><p>Each puzzle grants one point. The goal is to get as many points as you can before the time runs out.</p><p>You always play the same colour during a storm run.</p><p><strong>Combo bar</strong></p><p>Each correct move fills the combo bar. When the bar is full, you get a time bonus, and you increase the value of the next bonus.</p><p>When you play a wrong move, the combo bar is depleted.</p>';
+
   Future<void> shareBranchTournamentLink({required String tournamentId}) async {
     // Step 1: Create BranchUniversalObject
     final BranchUniversalObject buo = BranchUniversalObject(
@@ -305,6 +301,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             onPressed: () => Navigator.pop(context),
           ),
           actions: [
+            howToPlayButton(context, tournament.howToPlay),
             Padding(
               padding: const EdgeInsets.only(right: 8),
               child: IconButton(
@@ -598,7 +595,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                         icon: 'assets/images/svg/tournament_rules.svg',
                         title: 'Tournament Rules',
                         onTap:
-                            () => _showHowToPlaySheet(
+                            () => showHowToPlaySheet(
                               context,
                               tournament.customRules.isEmpty ? rules : tournament.customRules,
                               'Tournament Rules',
@@ -621,17 +618,17 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
 
                       // _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
                       // const Divider(color: Colors.white24),
-                      _MenuItem(
-                        icon: 'assets/images/svg/how_to_play.svg',
-                        title: 'How to Play',
-                        onTap:
-                            () => _showHowToPlaySheet(
-                              context,
-                              tournament.howToPlay.isEmpty ? howToPlay : tournament.howToPlay,
-                              'How To Play',
-                            ),
-                      ),
-                      const Divider(color: Colors.white24, height: 1),
+                      // _MenuItem(
+                      //   icon: 'assets/images/svg/how_to_play.svg',
+                      //   title: 'How to Play',
+                      //   onTap:
+                      //       () => _showHowToPlaySheet(
+                      //         context,
+                      //         tournament.howToPlay.isEmpty ? howToPlay : tournament.howToPlay,
+                      //         'How To Play',
+                      //       ),
+                      // ),
+                      // const Divider(color: Colors.white24, height: 1),
                       _MenuItem(
                         icon: 'assets/images/document.svg',
                         title: 'FAQs',
@@ -652,44 +649,160 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
 
   Widget _coinCard({required String icon, required String label, required String value}) {
     return Expanded(
-      child: CustomPaint(
-        painter: BorderPainter(),
-        child: ClipPath(
-          clipper: ContainerClipper(notch: Platform.isAndroid ? 50 : 60),
-          child: Container(
-            clipBehavior: Clip.hardEdge,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            decoration: const BoxDecoration(color: Color(0xFF2B2D30)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              spacing: 12,
+      child: Container(
+        clipBehavior: Clip.hardEdge,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        decoration: BoxDecoration(
+          color: const Color(0xFF2B2D30),
+          border: Border.all(color: const Color(0xff464a4f), width: .5),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          spacing: 12,
+          children: [
+            SvgPicture.asset(icon, height: 28.0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SvgPicture.asset(icon, height: 28.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: const TextStyle(color: Color(0xff7D8082), fontSize: 12),
-                      textScaler: TextScaler.noScaling,
-                    ),
-                    Text(
-                      value,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                      textScaler: TextScaler.noScaling,
-                    ),
-                  ],
+                Text(
+                  label,
+                  style: const TextStyle(color: Color(0xff7D8082), fontSize: 12),
+                  textScaler: TextScaler.noScaling,
+                ),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                  textScaler: TextScaler.noScaling,
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );
+  }
+}
+
+class HowToPlayVideoSheet extends StatefulWidget {
+  const HowToPlayVideoSheet({
+    super.key,
+    required this.data,
+    required this.title,
+    required this.scrollController,
+  });
+  final String data;
+  final String title;
+  final ScrollController scrollController;
+
+  @override
+  State<HowToPlayVideoSheet> createState() => _HowToPlayVideoSheetState();
+}
+
+class _HowToPlayVideoSheetState extends State<HowToPlayVideoSheet> {
+  late YoutubePlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    const videoUrl = 'https://youtu.be/16cb7Q0ks30';
+    final videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
+
+    _controller = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: const YoutubePlayerFlags(autoPlay: true, mute: false),
+    );
+  }
+
+  bool _isHindi = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 4,
+          width: 40,
+          decoration: BoxDecoration(
+            color: Colors.grey[600],
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          widget.title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        const SizedBox(height: 16),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: YoutubePlayerBuilder(
+            player: YoutubePlayer(
+              controller: _controller,
+              progressIndicatorColor: Colors.red,
+              showVideoProgressIndicator: true,
+              progressColors: const ProgressBarColors(
+                playedColor: Colors.red,
+                handleColor: Colors.red,
+              ),
+              bottomActions: const [
+                SizedBox(width: 10),
+                CurrentPosition(),
+                SizedBox(width: 10),
+                ProgressBar(isExpanded: true),
+                SizedBox(width: 10),
+                RemainingDuration(),
+                // FullScreenButton(),
+              ],
+              onEnded: (metaData) {
+                Navigator.pop(context);
+              },
+            ),
+            builder: (context, player) => player,
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            final videoUrl =
+                _isHindi ? 'https://youtu.be/16cb7Q0ks30' : 'https://youtu.be/ZDgyHzyTJtA';
+            final videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
+
+            _controller.load(videoId);
+            _isHindi = !_isHindi;
+            setState(() {});
+          },
+          child: Text(
+            _isHindi ? 'Watch in English' : 'Watch in Hindi',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+
+        Expanded(
+          child: SingleChildScrollView(
+            controller: widget.scrollController,
+            child: Html(
+              data: widget.data,
+              style: {'body': Style(color: Colors.white, fontSize: FontSize(16))},
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }
 
@@ -1037,7 +1150,10 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
   @override
   Widget build(BuildContext context) {
     if (eventTimer?.isActive ?? false) {
-      return Text('Ending in 00:${timeLeft.toString().padLeft(2, '0')}');
+      return Text(
+        'Ending in 00:${timeLeft.toString().padLeft(2, '0')}',
+        style: const TextStyle(color: Colors.red),
+      );
     } else {
       return Text(
         'Event ends at ${DateFormat('hh:mm a on MMM dd').format(DateTime.fromMillisecondsSinceEpoch(widget.startTime))}',
@@ -1048,7 +1164,10 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
   }
 }
 
-void _showHowToPlaySheet(BuildContext context, String data, String title) {
+void showHowToPlaySheet(BuildContext context, String data, String title) {
+  const howToPlay =
+      '<p><strong>Game rules</strong></p><p>Each puzzle grants one point. The goal is to get as many points as you can before the time runs out.</p><p>You always play the same colour during a storm run.</p><p><strong>Combo bar</strong></p><p>Each correct move fills the combo bar. When the bar is full, you get a time bonus, and you increase the value of the next bonus.</p><p>When you play a wrong move, the combo bar is depleted.</p>';
+
   showModalBottomSheet(
     context: context,
     backgroundColor: const Color(0xFF1A1F23),
@@ -1066,37 +1185,10 @@ void _showHowToPlaySheet(BuildContext context, String data, String title) {
             (_, controller) => Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 4,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[600],
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: controller,
-                      child: Html(
-                        data: data,
-                        style: {'body': Style(color: Colors.white, fontSize: FontSize(16))},
-                      ),
-                    ),
-                  ),
-                ],
+              child: HowToPlayVideoSheet(
+                data: data.isEmpty ? howToPlay : data,
+                title: title,
+                scrollController: controller,
               ),
             ),
       );
@@ -1147,4 +1239,22 @@ class _MenuItem extends StatelessWidget {
       onTap: onTap,
     );
   }
+}
+
+TextButton howToPlayButton(BuildContext context, String howToPlay) {
+  return TextButton(
+    onPressed: () {
+      showHowToPlaySheet(context, howToPlay, 'How To Play');
+    },
+    child: Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        // color: const Color(0xff2B2D30),
+        border: Border.all(color: const Color(0xFF54C339)),
+        // border: Border.all(color: const Color(0xff464A4F)),
+      ),
+      child: const Text('How to play?', style: TextStyle(color: Colors.white)),
+    ),
+  );
 }

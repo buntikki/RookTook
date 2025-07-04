@@ -173,7 +173,7 @@ class _AppState extends ConsumerState<Application> {
         print('Branch Error $error');
       },
     );
-    FlutterBranchSdk.setIdentity(ref.watch(authSessionProvider)?.user.id.value??'');
+    FlutterBranchSdk.setIdentity(ref.watch(authSessionProvider)?.user.id.value ?? '');
     // FlutterBranchSdk.validateSDKIntegration();
   }
 

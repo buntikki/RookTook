@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +12,7 @@ import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/utils/branch_repository.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/referral_code_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum RegistrationType { email, google, apple }
 
@@ -349,6 +351,26 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                     ],
                   ),
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+              child: Text.rich(
+                TextSpan(
+                  text: 'By clicking on Sign Up, you agree to our ',
+                  children: [
+                    TextSpan(
+                      text: 'Terms and Conditions',
+                      style: const TextStyle(decoration: TextDecoration.underline),
+                      recognizer:
+                          TapGestureRecognizer()
+                            ..onTap = () {
+                              launchUrl(Uri.parse('https://www.rooktook.com/terms-and-conditions'));
+                            },
+                    ),
+                  ],
+                ),
+                style: TextStyle(color: Colors.grey.shade500),
               ),
             ),
             Container(
