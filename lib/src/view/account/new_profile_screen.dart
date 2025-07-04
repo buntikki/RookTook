@@ -178,12 +178,12 @@ class NewProfileScreen extends ConsumerWidget {
                           () => Navigator.of(context).push(ReferAndEarnScreen.buildRoute(context)),
                     ),
                     const Divider(color: Colors.white24, height: 1),
-                    _MenuItem(
+                    /*_MenuItem(
                       icon: 'assets/images/leaderboard.svg',
                       title: 'Leaderboard',
                       onTap: () => Navigator.of(context).push(PlayerScreen.buildRoute(context)),
                     ),
-                    const Divider(color: Colors.white24, height: 1),
+                    const Divider(color: Colors.white24, height: 1),*/
 
                     // _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
                     // const Divider(color: Colors.white24),
