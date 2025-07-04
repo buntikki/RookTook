@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,7 +10,6 @@ import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/view/shop/presentation/shop_orders_screen.dart';
-import 'package:rooktook/src/view/shop/presentation/shop_screen.dart';
 import 'package:rooktook/src/widgets/success_failed_overlay.dart';
 
 final shopProvider = StateNotifierProvider((ref) => ShopNotifier());
@@ -35,13 +33,12 @@ class ShopNotifier extends StateNotifier<ShopState> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedResponse =
             jsonDecode(response.body) as Map<String, dynamic>;
-
-        state = state.copyWith(
-          items:
-              (decodedResponse['products'] as List<dynamic>)
-                  .map((x) => ShopItemModel.fromMap(x as Map<String, dynamic>))
-                  .toList(),
-        );
+        final list =
+            (decodedResponse['products'] as List<dynamic>)
+                .map((x) => ShopItemModel.fromMap(x as Map<String, dynamic>))
+                .toList();
+        list.sort((a, b) => a.coinRequired.compareTo(b.coinRequired));
+        state = state.copyWith(items: list);
       }
     } catch (e) {
       log(e.toString());

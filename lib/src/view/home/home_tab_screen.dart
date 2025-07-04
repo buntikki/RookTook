@@ -493,34 +493,34 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           textAlign: TextAlign.center,
         ),
       ),*/
-      const SizedBox(height: 8.0),
-      Container(
-        height: 50,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ElevatedButton.icon(
-          label: const Text(
-            'QUICK PLAY',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14.0),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xff54C339),
-            foregroundColor: Colors.black,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-          onPressed: () async {
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: const Color(0xff2B2D30),
-              isScrollControlled: true,
-              showDragHandle: true,
-              useSafeArea: true,
-              builder: (BuildContext context) => const GameTypeBottomSheet(),
-            );
-          },
-        ),
-      ),
-      const SizedBox(height: 24),
+      // const SizedBox(height: 8.0),
+      // Container(
+      //   height: 50,
+      //   padding: const EdgeInsets.symmetric(horizontal: 16),
+      //   child: ElevatedButton.icon(
+      //     label: const Text(
+      //       'QUICK PLAY',
+      //       style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14.0),
+      //     ),
+      //     style: ElevatedButton.styleFrom(
+      //       backgroundColor: const Color(0xff54C339),
+      //       foregroundColor: Colors.black,
+      //       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      //     ),
+      //     onPressed: () async {
+      //       showModalBottomSheet(
+      //         context: context,
+      //         backgroundColor: const Color(0xff2B2D30),
+      //         isScrollControlled: true,
+      //         showDragHandle: true,
+      //         useSafeArea: true,
+      //         builder: (BuildContext context) => const GameTypeBottomSheet(),
+      //       );
+      //     },
+      //   ),
+      // ),
+      // const SizedBox(height: 24),
       const HomeTournamentContainer(),
       const SizedBox(height: 8),
       InkWell(
@@ -825,52 +825,52 @@ class GameTypeBottomSheet extends ConsumerWidget {
             ),
           ),
           const Divider(color: Colors.grey, height: 1),
-          const SizedBox(height: 25),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 22),
-            child: Row(
-              spacing: 8,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: GameTypeCard(
-                    icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
-                    title: 'Play',
-                    subtitle: 'Blitz',
-                    type: '3+2',
-                    subtitleColor: const Color(0xFF8BC34A), // Light green
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.of(context, rootNavigator: true).push(
-                        GameScreen.buildRoute(
-                          context,
-                          seek: GameSeek.fastPairing(const TimeIncrement(180, 2), session),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                // Expanded(
-                //   child: GameTypeCard(
-                //     icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
-                //     title: 'Play',
-                //     subtitle: 'Blitz',
-                //     type: '5+0',
-                //     subtitleColor: const Color(0xFF8BC34A), // Light green
-                //     onTap: () {
-                //       Navigator.pop(context);
-                //       Navigator.of(context, rootNavigator: true).push(
-                //         GameScreen.buildRoute(
-                //           context,
-                //           seek: GameSeek.fastPairing(const TimeIncrement(300, 0), session),
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
-              ],
-            ),
-          ),
+          // const SizedBox(height: 25),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 22),
+          //   child: Row(
+          //     spacing: 8,
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          // Expanded(
+          //   child: GameTypeCard(
+          //     icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
+          //     title: 'Play',
+          //     subtitle: 'Blitz',
+          //     type: '3+2',
+          //     subtitleColor: const Color(0xFF8BC34A), // Light green
+          //     onTap: () {
+          //       Navigator.pop(context);
+          //       Navigator.of(context, rootNavigator: true).push(
+          //         GameScreen.buildRoute(
+          //           context,
+          //           seek: GameSeek.fastPairing(const TimeIncrement(180, 2), session),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
+          // Expanded(
+          //   child: GameTypeCard(
+          //     icon: Image.asset('assets/images/blitz.png', height: 33, width: 33),
+          //     title: 'Play',
+          //     subtitle: 'Blitz',
+          //     type: '5+0',
+          //     subtitleColor: const Color(0xFF8BC34A), // Light green
+          //     onTap: () {
+          //       Navigator.pop(context);
+          //       Navigator.of(context, rootNavigator: true).push(
+          //         GameScreen.buildRoute(
+          //           context,
+          //           seek: GameSeek.fastPairing(const TimeIncrement(300, 0), session),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
+          //     ],
+          //   ),
+          // ),
 
           // Game options
           Padding(
@@ -953,16 +953,17 @@ class ChessRatingCards extends StatelessWidget {
       child: Row(
         spacing: 8,
         children: [
+          // Expanded(
+          //   child: _buildRatingCard(
+          //     icon: Image.asset('assets/images/blitz.png'),
+          //     iconColor: const Color(0xffFFF9E5),
+          //     title: 'Blitz',
+          //     rating: blitzRank,
+          //   ),
+          // ),
           Expanded(
             child: _buildRatingCard(
-              icon: Image.asset('assets/images/blitz.png'),
-              iconColor: const Color(0xffFFF9E5),
-              title: 'Blitz',
-              rating: blitzRank,
-            ),
-          ),
-          Expanded(
-            child: _buildRatingCard(
+              context: context,
               icon: Image.asset('assets/images/rapid_game.png'),
 
               iconColor: const Color(0xffE5FFF1),
@@ -980,6 +981,7 @@ class ChessRatingCards extends StatelessWidget {
     required Color iconColor,
     required String title,
     required String rating,
+    required BuildContext context,
   }) {
     return Container(
       // width: 140,
@@ -991,46 +993,68 @@ class ChessRatingCards extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 3,
-            child: FittedBox(
-              child: Row(
-                children: [
-                  Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: iconColor,
-                      // borderRadius: BorderRadius.circular(8.0),
-                      shape: BoxShape.circle,
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: iconColor,
+                    // borderRadius: BorderRadius.circular(8.0),
+                    shape: BoxShape.circle,
+                  ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: icon,
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      textScaler: TextScaler.noScaling,
                     ),
-                    padding: const EdgeInsets.all(8.0),
-                    child: icon,
-                  ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                        textScaler: TextScaler.noScaling,
+                    Text(
+                      rating,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        rating,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textScaler: TextScaler.noScaling,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                      textScaler: TextScaler.noScaling,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          const Expanded(flex: 1, child: SizedBox()),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: ElevatedButton.icon(
+              label: const Text(
+                'QUICK PLAY',
+                textScaler: TextScaler.noScaling,
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14.0),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff54C339),
+                foregroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () async {
+                showModalBottomSheet(
+                  context: context,
+                  backgroundColor: const Color(0xff2B2D30),
+                  isScrollControlled: true,
+                  showDragHandle: true,
+                  useSafeArea: true,
+                  builder: (BuildContext context) => const GameTypeBottomSheet(),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

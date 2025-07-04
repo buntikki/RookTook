@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_card.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 class TournamentScreen extends ConsumerStatefulWidget {
@@ -51,6 +52,9 @@ class _TournamentScreenState extends ConsumerState<TournamentScreen>
         //   padding: EdgeInsets.symmetric(vertical: 16.0),
         //   child: Text('Tournament', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         // ),
+        actions: [
+           howToPlayButton(context, ''),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
