@@ -74,7 +74,7 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                     child: Text(
-                      'Tournament is still active. Waiting for other players to submit their scores. Tournament results will be declared on ${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(tournament.endTime))}',
+                      'Tournament is still active. Waiting for other players to submit their scores. Tournament results will be declared on ${DateFormat('hh:mm a, MMM dd').format(DateTime.fromMillisecondsSinceEpoch(tournament.endTime))}',
                       style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
                     ),
                   ),
