@@ -21,29 +21,29 @@ final fetchUserTournamentsProvider = FutureProvider<List<Tournament>>((ref) asyn
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
   return await tournamentNotifier.fetchUserTournaments();
 });
-final fetchLeaderboardProvider = FutureProvider.family<(List<Player>, String), String>((
+final fetchLeaderboardProvider = FutureProvider.family<TournamentLeaderboardResponse, String>((
   ref,
   id,
 ) async {
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
   final tournament = await tournamentNotifier.fetchSingleTournament(id);
-  return (
-    tournamentNotifier.sortLeaderboard(tournament?.players ?? []),
-    tournament!.rewardCoinType,
+  return TournamentLeaderboardResponse(
+    players: tournamentNotifier.sortLeaderboard(tournament?.players ?? []),
+    rewardCoinType: tournament!.rewardCoinType,
+    tournament: tournament,
   );
 });
-final fetchLeaderboardProviderWithLoading = FutureProvider.family<(List<Player>, String), String>((
-  ref,
-  id,
-) async {
-  final tournamentNotifier = ref.read(tournamentProvider.notifier);
-  await Future.delayed(const Duration(seconds: 7));
-  final tournament = await tournamentNotifier.fetchSingleTournament(id);
-  return (
-    tournamentNotifier.sortLeaderboard(tournament?.players ?? []),
-    tournament!.rewardCoinType,
-  );
-});
+final fetchLeaderboardProviderWithLoading =
+    FutureProvider.family<TournamentLeaderboardResponse, String>((ref, id) async {
+      final tournamentNotifier = ref.read(tournamentProvider.notifier);
+      await Future.delayed(const Duration(seconds: 7));
+      final tournament = await tournamentNotifier.fetchSingleTournament(id);
+      return TournamentLeaderboardResponse(
+        players: tournamentNotifier.sortLeaderboard(tournament?.players ?? []),
+        rewardCoinType: tournament!.rewardCoinType,
+        tournament: tournament,
+      );
+    });
 
 class TournamentNotifier extends StateNotifier<List<Tournament>> {
   TournamentNotifier() : super([]);
@@ -172,7 +172,6 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
     };
     // print(signBearerToken(data!.token));
     try {
-      print('$numSolved ${stats.score}');
       final response = await http.put(
         lichessUri('api/rt-tournament/$id/player/result'),
         headers: headers,
@@ -203,7 +202,19 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
     print('inside leaderboard');
     players.sort((a, b) {
       print('${a.userId} ${b.userId}');
-      return a.rank.compareTo(b.rank);
+      if (a.rank == b.rank) {
+        if (a.score == b.score) {
+          if (a.errors == b.errors) {
+            return b.combo.compareTo(a.combo);
+          } else {
+            return a.errors.compareTo(b.errors);
+          }
+        } else {
+          return b.score.compareTo(a.score);
+        }
+      } else {
+        return a.rank.compareTo(b.rank);
+      }
     });
 
     return players;
@@ -370,4 +381,16 @@ class TournamentStatusNotifier extends StateNotifier<TournamentStatus> {
     _timer?.cancel();
     super.dispose();
   }
+}
+
+class TournamentLeaderboardResponse {
+  final String rewardCoinType;
+  final List<Player> players;
+  final Tournament tournament;
+
+  TournamentLeaderboardResponse({
+    required this.rewardCoinType,
+    required this.players,
+    required this.tournament,
+  });
 }

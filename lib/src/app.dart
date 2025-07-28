@@ -159,7 +159,16 @@ class _AppState extends ConsumerState<Application> {
               if (rootNavigatorKey.currentState?.mounted ?? false) {
                 rootNavigatorKey.currentState!.push(
                   MaterialPageRoute(
-                    builder: (context) => TournamentDetailScreen(tournament: tournament),
+                    builder:
+                        (context) => TournamentDetailScreen(
+                          tournament: tournament,
+                          isPlayed: tournament.players.any(
+                            (element) =>
+                                element.userId ==
+                                    (ref.watch(authSessionProvider)?.user.id.value ?? '') &&
+                                element.time > 0,
+                          ),
+                        ),
                   ),
                 );
               } else {

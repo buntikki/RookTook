@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:ntp/ntp.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
@@ -42,113 +44,127 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
     return leaderboardPr.when(
       skipLoadingOnRefresh: false,
       data: (data) {
-        final players = data.$1;
-        final coinType = data.$2;
-        return Scaffold(
-          appBar: AppBar(
-            surfaceTintColor: Colors.transparent,
-            title: const Text(
-              'Results',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 28),
+        final players = data.players;
+        final coinType = data.rewardCoinType;
+        final tournament = data.tournament;
+        final isEnded = DateTime.now().isAfter(
+          DateTime.fromMillisecondsSinceEpoch(tournament.endTime),
+        );
+        return PopScope(
+          onPopInvokedWithResult: (didPop, result) {
+            ref.invalidate(fetchTournamentsProvider);
+            ref.invalidate(fetchUserTournamentsProvider);
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              surfaceTintColor: Colors.transparent,
+              title: Text(
+                isEnded ? 'Results' : 'Leaderboard',
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 28),
+              ),
             ),
-          ),
-          body: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2B2D30),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Row(
-                    //   spacing: 8,
-                    //   children: [
-                    //     // SvgPicture.asset('assets/images/svg/puzzle.svg', height: 18.0),
-                    //     const Text(
-                    //       '# Rank',
-                    //       style: TextStyle(color: Color(0xff7D8082), fontSize: 12),
-                    //     ),
-                    //   ],
-                    // ),
-                    Row(
-                      spacing: 8,
-                      children: [
-                        SvgPicture.asset('assets/images/svg/puzzle.svg', height: 18.0),
-                        const Text('Score', style: TextStyle(color: Colors.white, fontSize: 12)),
-                      ],
+            body: Column(
+              children: [
+                if (!isEnded)
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2B2D30),
+                      borderRadius: BorderRadius.circular(8),
                     ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                    child: Text(
+                      'Tournament is still active. Waiting for other players to submit their scores. Tournament results will be declared on ${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(tournament.endTime))}',
+                      style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2B2D30),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        spacing: 8,
+                        children: [
+                          SvgPicture.asset('assets/images/svg/puzzle.svg', height: 18.0),
+                          const Text('Score', style: TextStyle(color: Colors.white, fontSize: 12)),
+                        ],
+                      ),
 
-                    Row(
-                      spacing: 8,
-                      children: [
-                        SvgPicture.asset('assets/images/svg/fire.svg', height: 18.0),
-                        const Text(
-                          'Moves Combo',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      spacing: 8,
-                      children: [
-                        SvgPicture.asset('assets/images/svg/error.svg', height: 16.0),
-                        const Text('Errors', style: TextStyle(color: Colors.white, fontSize: 12)),
-                      ],
-                    ),
-                  ],
+                      Row(
+                        spacing: 8,
+                        children: [
+                          SvgPicture.asset('assets/images/svg/fire.svg', height: 18.0),
+                          const Text(
+                            'Moves Combo',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        spacing: 8,
+                        children: [
+                          SvgPicture.asset('assets/images/svg/error.svg', height: 16.0),
+                          const Text('Errors', style: TextStyle(color: Colors.white, fontSize: 12)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: players.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 16),
-                  itemBuilder: (BuildContext context, int index) {
-                    Color? color1;
-                    Color? color2;
-                    if (index == 0) {
-                      color1 = const Color(0xff2B291F);
-                      color2 = const Color(0xff463F24);
-                    }
-                    if (index == 1) {
-                      color1 = const Color(0xff202C33);
-                      color2 = const Color(0xff2E4755);
-                    }
-                    if (index == 2) {
-                      color1 = const Color(0xff312F3D);
-                      color2 = const Color(0xff413C60);
-                    }
-                    final player = players[index];
-                    return TournamentResultCard(
-                      player: player,
-                      color1: color1,
-                      color2: color2,
-                      coinType: coinType,
-                      isUserCard: session!.user.name == player.userId,
-                      rank: (index + 1).toString().padLeft(2, '0'),
-                    );
-                  },
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: players.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 16),
+                    itemBuilder: (BuildContext context, int index) {
+                      Color? color1;
+                      Color? color2;
+                      if (index == 0) {
+                        color1 = const Color(0xff2B291F);
+                        color2 = const Color(0xff463F24);
+                      }
+                      if (index == 1) {
+                        color1 = const Color(0xff202C33);
+                        color2 = const Color(0xff2E4755);
+                      }
+                      if (index == 2) {
+                        color1 = const Color(0xff312F3D);
+                        color2 = const Color(0xff413C60);
+                      }
+                      final player = players[index];
+                      return TournamentResultCard(
+                        player: player,
+                        color1: color1,
+                        color2: color2,
+                        coinType: coinType,
+                        isUserCard: session!.user.name == player.userId,
+                        rank: (index + 1).toString().padLeft(2, '0'),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+            // bottomSheet: BottomSheet(
+            //   shape: const BeveledRectangleBorder(),
+            //   backgroundColor: Colors.transparent,
+            //   onClosing: () {},
+            //   builder:
+            //       (context) => IntrinsicHeight(
+            //         child: TournamentResultCard(
+            //           rank: '',
+            //           margin: const EdgeInsets.all(16).copyWith(top: 0),
+            //           isUserCard: true,
+            //         ),
+            //       ),
+            // ),
           ),
-          // bottomSheet: BottomSheet(
-          //   shape: const BeveledRectangleBorder(),
-          //   backgroundColor: Colors.transparent,
-          //   onClosing: () {},
-          //   builder:
-          //       (context) => IntrinsicHeight(
-          //         child: TournamentResultCard(
-          //           rank: '',
-          //           margin: const EdgeInsets.all(16).copyWith(top: 0),
-          //           isUserCard: true,
-          //         ),
-          //       ),
-          // ),
         );
       },
       error: (error, stackTrace) => Scaffold(body: Center(child: Text('$error'))),

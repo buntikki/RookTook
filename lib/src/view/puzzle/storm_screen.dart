@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ntp/ntp.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/puzzle/puzzle_providers.dart';
@@ -12,6 +13,7 @@ import 'package:rooktook/src/model/puzzle/puzzle_repository.dart';
 import 'package:rooktook/src/model/puzzle/storm.dart';
 import 'package:rooktook/src/model/puzzle/storm_controller.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
+import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/styles/lichess_icons.dart';
 import 'package:rooktook/src/styles/styles.dart';
 import 'package:rooktook/src/utils/gestures_exclusion.dart';
@@ -289,9 +291,92 @@ Future<void> _showStats(
       .read(tournamentProvider.notifier)
       .fetchTournamentResult(id: tournamentId, stats: stats, numSolved: numSolved);
   if (data) {
-    Navigator.pushReplacement(
-      context,
-      TournamentResult.route(tournamentId: tournamentId, isShowLoading: true),
+    final tournament = await ref
+        .read(tournamentProvider.notifier)
+        .fetchSingleTournament(tournamentId);
+    final titles = ['Score', 'Combo', 'Moves', 'Puzzles', 'Errors'];
+    final values = [
+      numSolved,
+      stats.comboBest,
+      stats.moves,
+      stats.slowPuzzleIds.length,
+      stats.errors,
+    ];
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            insetPadding: const EdgeInsets.all(16),
+            content: Column(
+              spacing: 8,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Your Score',
+                  style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                ...List.generate(
+                  values.length,
+                  (index) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        titles[index],
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        values[index].toString(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Result will be announced when the tournament ends',
+                  style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF54C339),
+                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () async {
+                    final now = await NTP.now();
+                    final isEnded = (await NTP.now()).isAfter(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        tournament?.endTime ?? now.millisecondsSinceEpoch,
+                      ),
+                    );
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      TournamentResult.route(tournamentId: tournamentId, isShowLoading: isEnded),
+                    );
+                  },
+                  child: const Text(
+                    'Got It',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
     );
   }
 }

@@ -1,12 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
-class TournamentCard extends StatelessWidget {
+class TournamentCard extends ConsumerWidget {
   const TournamentCard({
     super.key,
     required this.tournament,
@@ -22,13 +24,21 @@ class TournamentCard extends StatelessWidget {
   final bool isShowJoinedTag;
   final bool isEnded;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute<TournamentDetailScreen>(
-            builder: (_) => TournamentDetailScreen(tournament: tournament),
+            builder:
+                (_) => TournamentDetailScreen(
+                  tournament: tournament,
+                  isPlayed: tournament.players.any(
+                    (element) =>
+                        element.userId == ref.watch(authSessionProvider)!.user.id.value &&
+                        element.time > 0,
+                  ),
+                ),
           ),
         );
       },

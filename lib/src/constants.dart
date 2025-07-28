@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 
 const kLichessHost = String.fromEnvironment('LICHESS_HOST', defaultValue: '13.203.89.65:9663');
 
-const kLichessWSHost = String.fromEnvironment(
-  'LICHESS_WS_HOST',
-  defaultValue: '13.203.89.65:9664',
-);
+const kLichessWSHost = String.fromEnvironment('LICHESS_WS_HOST', defaultValue: '13.203.89.65:9664');
 
 const kLichessWSSecret = String.fromEnvironment(
   'LICHESS_WS_SECRET',

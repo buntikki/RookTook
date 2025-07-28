@@ -323,7 +323,7 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: TextField(
-                          inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
+                          inputFormatters: [UsernameFormatter()],
                           controller: _inputController,
                           decoration: InputDecoration(
                             hintText: hintText,
@@ -406,5 +406,22 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
         ),
       ),
     );
+  }
+}
+
+class UsernameFormatter extends TextInputFormatter {
+  final _regex = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._]*$');
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    // Allow empty text (backspace)
+    if (newValue.text.isEmpty) return newValue;
+
+    // Check if the new text matches the regex
+    if (_regex.hasMatch(newValue.text)) {
+      return newValue;
+    } else {
+      return oldValue; // Reject invalid input
+    }
   }
 }

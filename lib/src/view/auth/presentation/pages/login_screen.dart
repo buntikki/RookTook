@@ -223,7 +223,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 // Username or Email text field
                 TextField(
                   controller: _usernameController,
-                  inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
+                  inputFormatters: [UsernameFormatter()],
                   decoration: InputDecoration(
                     hintText: 'Username or Email',
                     hintStyle: const TextStyle(color: Colors.grey),

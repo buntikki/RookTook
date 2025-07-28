@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:rooktook/src/model/notifications/notification_service.dart';
+import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/utils/branch_repository.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/puzzle/storm_screen.dart';
@@ -23,8 +24,9 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TournamentDetailScreen extends ConsumerStatefulWidget {
   final Tournament tournament;
+  final bool isPlayed;
 
-  const TournamentDetailScreen({super.key, required this.tournament});
+  const TournamentDetailScreen({super.key, required this.tournament, required this.isPlayed});
 
   @override
   ConsumerState<TournamentDetailScreen> createState() => _TournamentDetailScreenState();
@@ -445,20 +447,12 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                               isUserJoined
                                   ? isTournamentStarted
                                       ? () async {
-                                        if (isTournamentEnded) {
+                                        if (isTournamentEnded || widget.isPlayed) {
                                           Navigator.push(
                                             context,
                                             TournamentResult.route(
                                               tournamentId: tournament.id,
-                                              isShowLoading:
-                                                  (await NTP.now())
-                                                      .difference(
-                                                        DateTime.fromMillisecondsSinceEpoch(
-                                                          tournament.endTime,
-                                                        ),
-                                                      )
-                                                      .inMinutes <
-                                                  1,
+                                              isShowLoading: isTournamentEnded,
                                             ),
                                           );
                                         } else {
@@ -482,8 +476,15 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                                                 Duration(
                                                   seconds:
                                                       DateTime.fromMillisecondsSinceEpoch(
-                                                        tournament.endTime,
-                                                      ).difference(await NTP.now()).inSeconds,
+                                                                    tournament.endTime,
+                                                                  )
+                                                                  .difference(await NTP.now())
+                                                                  .inSeconds <
+                                                              tournament.puzzleDuration
+                                                          ? DateTime.fromMillisecondsSinceEpoch(
+                                                            tournament.endTime,
+                                                          ).difference(await NTP.now()).inSeconds
+                                                          : tournament.puzzleDuration,
                                                 ),
                                               ),
                                             );
@@ -535,7 +536,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                isTournamentEnded
+                                isTournamentEnded || widget.isPlayed
                                     ? 'View Results'
                                     : isUserJoined
                                     ? isTournamentStarted
