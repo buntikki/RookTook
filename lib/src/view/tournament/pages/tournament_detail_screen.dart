@@ -537,7 +537,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                             children: [
                               Text(
                                 isTournamentEnded || widget.isPlayed
-                                    ? 'View Results'
+                                    ? 'View ${isTournamentEnded ? 'Results' : 'Leaderboard'}'
                                     : isUserJoined
                                     ? isTournamentStarted
                                         ? 'PLAY NOW'

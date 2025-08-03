@@ -63,7 +63,13 @@ class TournamentCard extends ConsumerWidget {
                     child: Row(
                       spacing: 12,
                       children: [
-                        Image.asset('assets/images/puzzle_board.png', width: 80, height: 80),
+                        Image.asset(
+                          tournament.entrySilverCoins > 0
+                              ? 'assets/images/paid.png'
+                              : 'assets/images/free.png',
+                          width: 80,
+                          height: 80,
+                        ),
                         Expanded(
                           child: Column(
                             spacing: 8,

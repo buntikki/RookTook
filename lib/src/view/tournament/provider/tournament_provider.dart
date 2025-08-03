@@ -199,9 +199,7 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
   }
 
   List<Player> sortLeaderboard(List<Player> players) {
-    print('inside leaderboard');
     players.sort((a, b) {
-      print('${a.userId} ${b.userId}');
       if (a.rank == b.rank) {
         if (a.score == b.score) {
           if (a.errors == b.errors) {
