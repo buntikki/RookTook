@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -264,7 +265,10 @@ class _AppState extends ConsumerState<Application> {
               : userSession != null
               ? const BottomNavScaffold()
               : const LoginScreen(),
-      navigatorObservers: [rootNavPageRouteObserver],
+      navigatorObservers: [
+        rootNavPageRouteObserver,
+        FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+      ],
     );
   }
 }

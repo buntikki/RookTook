@@ -136,9 +136,7 @@ class AppLichessBinding extends LichessBinding {
 
   @override
   Future<void> initializeFirebase() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
     if (kReleaseMode) {
       // Enable Crashlytics in production

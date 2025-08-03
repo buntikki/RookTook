@@ -2,6 +2,9 @@
 -keep class java.net.URL { *; }
 -keep class java.util.concurrent.Executors { *; }
 -keep class org.chromium.net.** { *; }
+-keep class com.google.firebase.analytics.** { *; }
+-keep class com.google.android.gms.measurement.** { *; }
+-dontwarn com.google.firebase.analytics.**
 
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
