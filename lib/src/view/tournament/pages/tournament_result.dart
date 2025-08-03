@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-import 'package:ntp/ntp.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/styles/lichess_icons.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 class TournamentResult extends ConsumerStatefulWidget {
@@ -326,7 +326,12 @@ class TournamentResultCard extends StatelessWidget {
                     Row(
                       spacing: 8,
                       children: [
-                        SvgPicture.asset('assets/images/svg/puzzle.svg', height: 18.0),
+                        const Icon(
+                          LichessIcons.storm,
+                          size: 18.0,
+                          color: Color(0xFF54C339),
+                          // : ColorScheme.of(context).primary,
+                        ),
                         Text(
                           '${player.score}',
                           style: const TextStyle(color: Color(0xff7D8082), fontSize: 12),
