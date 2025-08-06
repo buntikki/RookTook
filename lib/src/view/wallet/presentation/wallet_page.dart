@@ -183,45 +183,45 @@ class WalletPageBodyWidget extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      if (index != 0)
-                        MaterialButton(
-                          onPressed: () {
-                            if (index == 0) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const WalletAddCoinsPage()),
-                              );
-                            } else {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                backgroundColor: Colors.transparent,
-                                builder: (context) {
-                                  return const ConvertCoinsSheet();
-                                },
-                              );
-                            }
-                          },
-                          minWidth: double.infinity,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Color(0xff54C339)),
-                          ),
-                          color: index == 0 ? const Color(0xff54C339) : Colors.transparent,
-                          child: FittedBox(
-                            child: Text(
-                              (index == 0 ? 'Add Coins' : 'Convert Coins').toUpperCase(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 12,
-                                color: index == 0 ? null : const Color(0xff54C339),
-                              ),
+                      // if (index != 0)
+                      MaterialButton(
+                        onPressed: () {
+                          if (index == 0) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const WalletAddCoinsPage()),
+                            );
+                          } else {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) {
+                                return const ConvertCoinsSheet();
+                              },
+                            );
+                          }
+                        },
+                        minWidth: double.infinity,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: Color(0xff54C339)),
+                        ),
+                        color: index == 0 ? const Color(0xff54C339) : Colors.transparent,
+                        child: FittedBox(
+                          child: Text(
+                            (index == 0 ? 'Add Coins' : 'Convert Coins').toUpperCase(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 12,
+                              color: index == 0 ? null : const Color(0xff54C339),
                             ),
                           ),
-                        )
-                      else
-                        const MaterialButton(onPressed: null),
+                        ),
+                      ),
+                      // else
+                      //   const MaterialButton(onPressed: null),
                     ],
                   ),
                 ),

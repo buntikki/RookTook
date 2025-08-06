@@ -15,6 +15,8 @@ void showSuccessOverlay(BuildContext context) {
     overlay.insert(entry);
     Future.delayed(const Duration(seconds: 1), () {
       entry.remove();
+      Navigator.pop(context);
+      
     });
   }
 

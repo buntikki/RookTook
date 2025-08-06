@@ -34,6 +34,7 @@ class WalletNotifier extends StateNotifier<WalletState> {
 
     final status = await verifyPaymentStatus(orderId: orderId);
     if (status == 'success') {
+      await getUserLedger();
       showSuccessOverlay(context);
     }
   }

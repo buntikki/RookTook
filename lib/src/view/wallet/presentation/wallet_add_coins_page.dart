@@ -12,7 +12,6 @@ final _border = OutlineInputBorder(
   borderSide: const BorderSide(color: Colors.grey),
 );
 
-
 class WalletAddCoinsPage extends ConsumerStatefulWidget {
   const WalletAddCoinsPage({super.key});
 
