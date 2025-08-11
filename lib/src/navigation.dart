@@ -133,6 +133,7 @@ final toolsScrollController = ScrollController(debugLabel: 'ToolsScroll');
 final settingsScrollController = ScrollController(debugLabel: 'SettingsScroll');
 
 final RouteObserver<PageRoute<void>> rootNavPageRouteObserver = RouteObserver<PageRoute<void>>();
+final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
 
 final _cupertinoTabController = CupertinoTabController();
 

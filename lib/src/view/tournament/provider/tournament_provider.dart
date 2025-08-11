@@ -21,6 +21,10 @@ final fetchUserTournamentsProvider = FutureProvider<List<Tournament>>((ref) asyn
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
   return await tournamentNotifier.fetchUserTournaments();
 });
+final fetchTournamentDetailsProvider = FutureProvider.family<Tournament?, String>((ref, id) async {
+  final tournamentNotifier = ref.read(tournamentProvider.notifier);
+  return await tournamentNotifier.fetchSingleTournament(id);
+});
 final fetchLeaderboardProvider = FutureProvider.family<TournamentLeaderboardResponse, String>((
   ref,
   id,
