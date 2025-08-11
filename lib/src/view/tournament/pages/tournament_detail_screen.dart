@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/notifications/notification_service.dart';
 import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/utils/branch_repository.dart';
@@ -32,13 +33,50 @@ class TournamentDetailScreen extends ConsumerStatefulWidget {
   ConsumerState<TournamentDetailScreen> createState() => _TournamentDetailScreenState();
 }
 
-class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen> {
+class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen> with RouteAware {
   Tournament? _tournament;
+  bool? isPlayed;
   @override
   void initState() {
     super.initState();
+    fetchTournament();
+  }
 
-    // ref.read(tournamentProvider.notifier).fetchTournamentResult(id: widget.tournament.id);
+  Future<void> fetchTournament() async {
+    final tournament = await ref
+        .read(tournamentProvider.notifier)
+        .fetchSingleTournament(widget.tournament.id);
+    if (tournament != null) {
+      setState(() {
+        _tournament = tournament;
+        isPlayed =
+            widget.isPlayed
+                ? widget.isPlayed
+                : tournament.players.any(
+                  (element) =>
+                      element.userId == ref.watch(authSessionProvider)!.user.id.value &&
+                      element.time > 0,
+                );
+      });
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Called when coming back to this page
+    fetchTournament();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   Future<void> handleJoinTournament({required String id, String? inviteCode}) async {
@@ -286,6 +324,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
   Widget build(BuildContext context) {
     final tournament = _tournament ?? widget.tournament;
     final bool isUserJoined = tournament.haveParticipated;
+    final _isPlayed = isPlayed ?? widget.isPlayed;
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (didPop, result) {
@@ -298,10 +337,10 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
           backgroundColor: const Color(0xFF13191D),
           surfaceTintColor: const Color(0xFF13191D),
           elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-          ),
+          // leading: IconButton(
+          //   icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          //   onPressed: () => Navigator.pop(context),
+          // ),
           actions: [
             howToPlayButton(context, tournament.howToPlay),
             Padding(
@@ -428,12 +467,6 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                     );
                     final bool isTournamentStarted = status.isStarted;
                     final bool isTournamentEnded = status.isEnded;
-                    // print(
-                    //   DateTime.fromMillisecondsSinceEpoch(
-                    //     tournament.endTime,
-                    //   ).difference(DateTime.now()),
-                    // );
-                    // print(Duration(seconds: 10));
                     return Column(
                       spacing: 8,
                       children: [
@@ -447,12 +480,21 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                               isUserJoined
                                   ? isTournamentStarted
                                       ? () async {
-                                        if (isTournamentEnded || widget.isPlayed) {
+                                        if (isTournamentEnded || _isPlayed) {
                                           Navigator.push(
                                             context,
                                             TournamentResult.route(
                                               tournamentId: tournament.id,
-                                              isShowLoading: isTournamentEnded,
+                                              isShowLoading:
+                                                  isTournamentEnded &&
+                                                  DateTime.now()
+                                                          .difference(
+                                                            DateTime.fromMillisecondsSinceEpoch(
+                                                              tournament.endTime,
+                                                            ),
+                                                          )
+                                                          .inMinutes ==
+                                                      1,
                                             ),
                                           );
                                         } else {
@@ -536,7 +578,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                isTournamentEnded || widget.isPlayed
+                                isTournamentEnded || _isPlayed
                                     ? 'View ${isTournamentEnded ? 'Results' : 'Active Leaderboard'}'
                                     : isUserJoined
                                     ? isTournamentStarted

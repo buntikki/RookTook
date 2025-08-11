@@ -6,6 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/styles/lichess_icons.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 class TournamentResult extends ConsumerStatefulWidget {
@@ -52,8 +53,15 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
         );
         return PopScope(
           onPopInvokedWithResult: (didPop, result) {
-            ref.invalidate(fetchTournamentsProvider);
-            ref.invalidate(fetchUserTournamentsProvider);
+            // // Navigator.pop(context);
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (_) => TournamentDetailScreen(tournament: tournament, isPlayed: true),
+            //   ),
+            // );
+            // ref.invalidate(fetchTournamentsProvider);
+            // ref.invalidate(fetchUserTournamentsProvider);
           },
           child: Scaffold(
             appBar: AppBar(
@@ -118,35 +126,44 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
                   ),
                 ),
                 Expanded(
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: players.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 16),
-                    itemBuilder: (BuildContext context, int index) {
-                      Color? color1;
-                      Color? color2;
-                      if (index == 0) {
-                        color1 = const Color(0xff2B291F);
-                        color2 = const Color(0xff463F24);
-                      }
-                      if (index == 1) {
-                        color1 = const Color(0xff202C33);
-                        color2 = const Color(0xff2E4755);
-                      }
-                      if (index == 2) {
-                        color1 = const Color(0xff312F3D);
-                        color2 = const Color(0xff413C60);
-                      }
-                      final player = players[index];
-                      return TournamentResultCard(
-                        player: player,
-                        color1: color1,
-                        color2: color2,
-                        coinType: coinType,
-                        isUserCard: session!.user.name == player.userId,
-                        rank: (index + 1).toString().padLeft(2, '0'),
-                      );
+                  child: RefreshIndicator.adaptive(
+                    onRefresh: () async {
+                      ref.invalidate(fetchLeaderboardProvider(widget.tournamentId));
                     },
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: players.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 16),
+                      itemBuilder: (BuildContext context, int index) {
+                        Color? color1;
+                        Color? color2;
+                        if (index == 0) {
+                          color1 = const Color(0xff2B291F);
+                          color2 = const Color(0xff463F24);
+                        }
+                        if (index == 1) {
+                          color1 = const Color(0xff202C33);
+                          color2 = const Color(0xff2E4755);
+                        }
+                        if (index == 2) {
+                          color1 = const Color(0xff312F3D);
+                          color2 = const Color(0xff413C60);
+                        }
+                        final player = players[index];
+                        return TournamentResultCard(
+                          player: player,
+                          color1: color1,
+                          color2: color2,
+                          coinType: coinType,
+                          activeLeaderboardCoins:
+                              !isEnded && index < tournament.rewardPool.split(',').length
+                                  ? tournament.rewardPool.split(',')[index]
+                                  : null,
+                          isUserCard: session!.user.name == player.userId,
+                          rank: (index + 1).toString().padLeft(2, '0'),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -195,6 +212,7 @@ class TournamentResultCard extends StatelessWidget {
     required this.rank,
     required this.player,
     required this.coinType,
+    this.activeLeaderboardCoins,
   });
   final EdgeInsetsGeometry? margin;
   final Color? color1;
@@ -203,6 +221,7 @@ class TournamentResultCard extends StatelessWidget {
   final String rank;
   final String coinType;
   final Player player;
+  final String? activeLeaderboardCoins;
 
   @override
   Widget build(BuildContext context) {
@@ -266,7 +285,7 @@ class TournamentResultCard extends StatelessWidget {
                           width: 16,
                         ),
                         Text(
-                          ' ${player.rewardCoins}',
+                          ' ${activeLeaderboardCoins ?? player.rewardCoins}',
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             color: isUserCard ? const Color(0xff222222) : const Color(0xffEFEDED),

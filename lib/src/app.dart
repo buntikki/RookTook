@@ -267,6 +267,7 @@ class _AppState extends ConsumerState<Application> {
               : const LoginScreen(),
       navigatorObservers: [
         rootNavPageRouteObserver,
+        routeObserver,
         FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
       ],
     );
