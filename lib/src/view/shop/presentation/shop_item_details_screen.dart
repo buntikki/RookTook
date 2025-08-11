@@ -22,7 +22,10 @@ class ShopItemDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(item.imageUrl)),
+            ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(item.imageUrl, errorBuilder: (context, error, stackTrace) {
+              // Show a placeholder or error widget
+              return const Icon(Icons.broken_image);
+            },)),
             Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
             CustomPaint(
               painter: BorderPainter(),

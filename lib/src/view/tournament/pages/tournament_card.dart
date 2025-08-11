@@ -23,6 +23,7 @@ class TournamentCard extends ConsumerWidget {
   final Color? backgroundColor;
   final bool isShowJoinedTag;
   final bool isEnded;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
@@ -75,15 +76,32 @@ class TournamentCard extends ConsumerWidget {
                             spacing: 8,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                tournament.name,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    tournament.name,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8.0),
+                                  if (DateTime.fromMillisecondsSinceEpoch(tournament.endTime)
+                                          .difference(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                              tournament.startTime,
+                                            ),
+                                          )
+                                          .inMinutes >
+                                      5)
+                                    SvgPicture.asset(
+                                      'assets/images/svg/long_tournament.svg',
+                                      height: 16.0,
+                                    ),
+                                ],
                               ),
                               Row(
                                 children: [

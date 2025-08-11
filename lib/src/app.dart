@@ -25,6 +25,7 @@ import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:rooktook/src/model/settings/general_preferences.dart';
 import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/network/connectivity.dart';
+import 'package:rooktook/src/network/connectivity_overlay.dart';
 import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/network/socket.dart';
 import 'package:rooktook/src/theme.dart';
@@ -235,13 +236,20 @@ class _AppState extends ConsumerState<Application> {
         ).copyWith(height: remainingHeight < kSmallRemainingHeightLeftBoardThreshold ? 60 : null),
       ),
       themeMode: ThemeMode.dark,
-      builder:
-          isIOS
-              ? (context, child) => IconTheme.merge(
-                data: IconThemeData(color: CupertinoTheme.of(context).textTheme.textStyle.color),
-                child: Material(color: Colors.transparent, child: child),
-              )
-              : null,
+      builder: (context, child) {
+        Widget base = child ?? const SizedBox();
+
+        // Apply your existing iOS IconTheme wrapper
+        if (isIOS) {
+          base = IconTheme.merge(
+            data: IconThemeData(color: CupertinoTheme.of(context).textTheme.textStyle.color),
+            child: Material(color: Colors.transparent, child: base),
+          );
+        }
+
+        // Always wrap with the connectivity overlay
+        return ConnectivityOverlay(child: base);
+      },
       // onGenerateRoute:
       //     (settings) =>
       //         settings.name != null ? resolveAppLinkUri(context, Uri.parse(settings.name!)) : null,

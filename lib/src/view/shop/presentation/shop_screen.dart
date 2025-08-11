@@ -19,7 +19,6 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
   void initState() {
     super.initState();
     ref.read(walletProvider.notifier).getUserLedger();
-    
   }
 
   @override
@@ -149,7 +148,14 @@ class ShopItemCard extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
-                        child: Image.network(item.imageUrl, fit: BoxFit.cover),
+                        child: Image.network(
+                          item.imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            // Show a placeholder or error widget
+                            return const Icon(Icons.broken_image);
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -203,7 +209,10 @@ class ShopItemCard extends StatelessWidget {
                           child: Row(
                             spacing: 8,
                             children: [
-                              SvgPicture.asset('assets/images/svg/${item.coinType}_coin.svg',height: 16.0,),
+                              SvgPicture.asset(
+                                'assets/images/svg/${item.coinType}_coin.svg',
+                                height: 16.0,
+                              ),
                               Text(
                                 '${item.coinRequired}',
                                 textScaler: TextScaler.noScaling,

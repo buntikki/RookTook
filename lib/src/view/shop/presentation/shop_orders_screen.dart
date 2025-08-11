@@ -92,7 +92,10 @@ class OrderCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6),
-                      child: Image.network(item.productUrl, fit: BoxFit.cover),
+                      child: Image.network(item.productUrl, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
+                        // Show a placeholder or error widget
+                        return const Icon(Icons.broken_image);
+                      },),
                     ),
                   ),
                 ),

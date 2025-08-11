@@ -36,6 +36,7 @@ class TournamentDetailScreen extends ConsumerStatefulWidget {
 class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen> with RouteAware {
   Tournament? _tournament;
   bool? isPlayed;
+
   @override
   void initState() {
     super.initState();
@@ -81,11 +82,13 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
 
   Future<void> handleJoinTournament({required String id, String? inviteCode}) async {
     await ref.read(walletProvider.notifier).getUserLedger();
+    if (!mounted) return;
     final walletState = ref.read(walletProvider);
     if (walletState.walletInfo.silverCoins >= widget.tournament.entrySilverCoins) {
       final data = await ref.read(tournamentProvider.notifier).fetchSingleTournament(id);
-
+      if (!mounted) return;
       if (data == null) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Error joining tournament', style: TextStyle(color: Colors.white)),
@@ -93,6 +96,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
           ),
         );
       } else {
+        if (!mounted) return;
         setState(() {
           _tournament = data;
         });
@@ -100,9 +104,11 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
           data.startTime,
         ).subtract(const Duration(seconds: 10));
         if ((await NTP.now()).isAfter(tournaStartTime)) {
+          if (!mounted) return;
           if (data.minParticipants <= data.players.length) {
             tournamentSuccessFn(id, inviteCode);
           } else {
+            if (!mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Tournament Terminated', style: TextStyle(color: Colors.white)),
@@ -112,10 +118,12 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             Navigator.pop(context);
           }
         } else {
+          if (!mounted) return;
           tournamentSuccessFn(id, inviteCode);
         }
       }
     } else {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Not enough coins in the wallet', style: TextStyle(color: Colors.white)),
@@ -129,6 +137,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     final data = await ref
         .read(tournamentProvider.notifier)
         .joinTournament(id: id, inviteCode: inviteCode);
+    if (!mounted) return;
+
     if (data == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -158,6 +168,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             data.startTime,
           ).subtract(const Duration(minutes: 1)),
         );
+        if (!mounted) return;
       }
       if (DateTime.fromMillisecondsSinceEpoch(
         data.startTime,
@@ -170,6 +181,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             data.startTime,
           ).subtract(const Duration(minutes: 2)),
         );
+        if (!mounted) return;
       }
       if (DateTime.fromMillisecondsSinceEpoch(
         data.startTime,
@@ -182,6 +194,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             data.startTime,
           ).subtract(const Duration(minutes: 5)),
         );
+        if (!mounted) return;
       }
       await service.scheduleNotification(
         id: baseId + 10,
@@ -189,6 +202,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
         body: '${data.name} has ended. Check your results.!',
         scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.endTime),
       );
+      if (!mounted) return;
       if (DateTime.fromMillisecondsSinceEpoch(data.startTime).isAfter(DateTime.now())) {
         await service.scheduleNotification(
           id: baseId,
@@ -196,6 +210,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
           body: '${data.name} started!',
           scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.startTime),
         );
+        if (!mounted) return;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -206,6 +221,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
       );
       final time =
           DateTime.fromMillisecondsSinceEpoch(data.startTime).difference(await NTP.now()).inSeconds;
+
+      if (!mounted) return;
       if (time > 30) {
         showHowToPlaySheet(context, data.howToPlay, 'How To Play');
       }
@@ -365,7 +382,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(16).copyWith(bottom: 24), // Optional bottom padding
+            padding: const EdgeInsets.all(16).copyWith(bottom: 24),
+            // Optional bottom padding
             child: Column(
               spacing: 8,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -738,6 +756,7 @@ class HowToPlayVideoSheet extends StatefulWidget {
     required this.title,
     required this.scrollController,
   });
+
   final String data;
   final String title;
   final ScrollController scrollController;
@@ -851,6 +870,7 @@ class _HowToPlayVideoSheetState extends State<HowToPlayVideoSheet> {
 
 class RewardDistributionSheet extends StatelessWidget {
   const RewardDistributionSheet({super.key, required this.rewards, required this.coinType});
+
   final List<String> rewards;
   final String coinType;
 
@@ -953,6 +973,7 @@ class RewardDistributionSheet extends StatelessWidget {
 
 class InviteCodeSheet extends StatefulWidget {
   const InviteCodeSheet({super.key, required this.onPressed, required this.scaffoldContext});
+
   final void Function(String code) onPressed;
   final BuildContext scaffoldContext;
 
@@ -1018,7 +1039,8 @@ class _InviteCodeSheetState extends State<InviteCodeSheet> {
               minWidth: double.infinity,
               color: const Color(0xFF54C339),
               onPressed: () {
-                if (_formkey.currentState!.validate()) {
+                final form = _formkey.currentState;
+                if (form != null && form.validate()) {
                   widget.onPressed(codeController.text.trim());
                 }
               },
@@ -1055,6 +1077,7 @@ class TournamentTimerWidget extends StatefulWidget {
   const TournamentTimerWidget({super.key, required this.startTime});
 
   final int startTime;
+
   @override
   State<TournamentTimerWidget> createState() => _TournamentTimerWidgetState();
 }
@@ -1063,6 +1086,7 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
   int timeLeft = 00;
   Timer? scheduledTimer;
   Timer? eventTimer;
+
   @override
   void initState() {
     super.initState();
@@ -1133,6 +1157,7 @@ class TournamentEndTimerWidget extends StatefulWidget {
   const TournamentEndTimerWidget({super.key, required this.startTime});
 
   final int startTime;
+
   @override
   State<TournamentEndTimerWidget> createState() => _TournamentEndTimerWidgetState();
 }
@@ -1141,6 +1166,7 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
   int timeLeft = 00;
   Timer? scheduledTimer;
   Timer? eventTimer;
+
   @override
   void initState() {
     super.initState();
@@ -1159,7 +1185,9 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
       startTimer();
     } else {
       scheduledTimer = Timer(delayUntilStart, () {
-        startTimer();
+        if (mounted) {
+          startTimer();
+        }
       });
     }
   }
@@ -1176,8 +1204,10 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
 
       if (remaining <= 0) {
         timer.cancel();
+        if (!mounted) return;
         setState(() => timeLeft = 0);
       } else {
+        if (!mounted) return;
         setState(() => timeLeft = remaining);
       }
     });
@@ -1241,6 +1271,7 @@ void showHowToPlaySheet(BuildContext context, String data, String title) {
 
 class RuleItem extends StatelessWidget {
   final String text;
+
   const RuleItem({super.key, required this.text});
 
   @override

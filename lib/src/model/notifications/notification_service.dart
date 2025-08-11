@@ -178,6 +178,10 @@ class NotificationService {
     required String body,
     required DateTime scheduledTime,
   }) async {
+    if (!scheduledTime.isAfter(DateTime.now())) {
+      print('Attempted to schedule notification in the past');
+      return;
+    }
     const androidDetails = AndroidNotificationDetails(
       'tournament_channel', // static channel ID
       'Tournament Notifications',
