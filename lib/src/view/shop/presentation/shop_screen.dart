@@ -203,7 +203,7 @@ class ShopItemCard extends StatelessWidget {
                           child: Row(
                             spacing: 8,
                             children: [
-                              SvgPicture.asset('assets/images/svg/${item.coinType}_coin.svg'),
+                              SvgPicture.asset('assets/images/svg/${item.coinType}_coin.svg',height: 16.0,),
                               Text(
                                 '${item.coinRequired}',
                                 textScaler: TextScaler.noScaling,

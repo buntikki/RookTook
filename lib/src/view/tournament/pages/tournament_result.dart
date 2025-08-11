@@ -89,11 +89,16 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      const Row(
                         spacing: 8,
                         children: [
-                          SvgPicture.asset('assets/images/svg/puzzle.svg', height: 18.0),
-                          const Text('Score', style: TextStyle(color: Colors.white, fontSize: 12)),
+                          Icon(
+                            LichessIcons.storm,
+                            size: 18.0,
+                            color: Color(0xFF54C339),
+                            // : ColorScheme.of(context).primary,
+                          ),
+                          Text('Score', style: TextStyle(color: Colors.white, fontSize: 12)),
                         ],
                       ),
 

@@ -343,47 +343,47 @@ class _Body extends ConsumerWidget {
                   onStreak: false,
                 ),
               ),
-              bottomTable: const Column(
+              bottomTable: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // if (puzzleState.glicko != null)
-                  //   RatingPrefAware(
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.only(top: 10.0),
-                  //       child: Row(
-                  //         children: [
-                  //          /* Text(context.l10n.rating),*//*
-                  //           const SizedBox(width: 5.0),*/
-                  //           TweenAnimationBuilder<double>(
-                  //             tween: Tween<double>(
-                  //               begin: puzzleState.glicko!.rating,
-                  //               end:
-                  //                   puzzleState.nextContext?.glicko?.rating ??
-                  //                   puzzleState.glicko!.rating,
-                  //             ),
-                  //             duration: const Duration(milliseconds: 500),
-                  //             builder: (context, double rating, _) {
-                  //               final hasStarted = rating != puzzleState.glicko!.rating;
-                  //               return Opacity(
-                  //                 opacity: hasStarted ? 1 : 0, // Hide while on 'begin'
-                  //                 child: Text(
-                  //                   rating.truncate().toString(),
-                  //                   style: const TextStyle(
-                  //                     fontSize: 16.0,
-                  //                     fontWeight: FontWeight.bold,
-                  //                   ),
-                  //                 ),
-                  //               );
-                  //             },
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // PuzzleSessionWidget(
-                  //   initialPuzzleContext: initialPuzzleContext,
-                  //   ctrlProvider: ctrlProvider,
-                  // ),
+                  if (puzzleState.glicko != null)
+                    RatingPrefAware(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Row(
+                          children: [
+                            Text(context.l10n.rating),
+                            const SizedBox(width: 5.0),
+                            TweenAnimationBuilder<double>(
+                              tween: Tween<double>(
+                                begin: puzzleState.glicko!.rating,
+                                end:
+                                    puzzleState.nextContext?.glicko?.rating ??
+                                    puzzleState.glicko!.rating,
+                              ),
+                              duration: const Duration(milliseconds: 500),
+                              builder: (context, double rating, _) {
+                                final hasStarted = rating != puzzleState.glicko!.rating;
+                                return Opacity(
+                                  opacity: hasStarted ? 1 : 0, // Hide while on 'begin'
+                                  child: Text(
+                                    rating.truncate().toString(),
+                                    style: const TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                   PuzzleSessionWidget(
+                    initialPuzzleContext: initialPuzzleContext,
+                    ctrlProvider: ctrlProvider,
+                  ),
                 ],
               ),
             ),

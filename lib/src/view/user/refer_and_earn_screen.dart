@@ -172,14 +172,13 @@ class _ReferAndEarnLoadedState extends ConsumerState<ReferAndEarnLoaded> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    flex: 3,
                     child: FittedBox(
                       // fit: BoxFit.scaleDown,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Your referral link',
+                            'Your referral code',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 12,
@@ -188,7 +187,7 @@ class _ReferAndEarnLoadedState extends ConsumerState<ReferAndEarnLoaded> {
                             textScaler: TextScaler.noScaling,
                           ),
                           Text(
-                            'rooktook.com/${details.referralId}',
+                            details.referralId,
                             style: const TextStyle(
                               fontWeight: FontWeight.w800,
                               fontSize: 14,

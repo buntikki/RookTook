@@ -35,7 +35,7 @@ class ShopItemDetailsScreen extends StatelessWidget {
                   child: Row(
                     spacing: 16,
                     children: [
-                      SvgPicture.asset('assets/images/svg/gold_coin.svg', height: 28),
+                      SvgPicture.asset('assets/images/svg/${item.coinType}_coin.svg', height: 28),
                       Text(
                         item.coinRequired.toString(),
                         style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
