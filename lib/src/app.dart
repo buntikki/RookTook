@@ -11,6 +11,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:l10n_esperanto/l10n_esperanto.dart';
+import 'package:lottie/lottie.dart';
 import 'package:rooktook/l10n/l10n.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/maintenance_screen.dart';
@@ -43,23 +44,66 @@ class AppInitializationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(maintenanceModeProvider.notifier).init();
+
+    // Keep your splash removal listener
     ref.listen<AsyncValue<PreloadedData>>(preloadedDataProvider, (_, state) {
       if (state.hasValue || state.hasError) {
         FlutterNativeSplash.remove();
       }
     });
 
-    return ref
-        .watch(preloadedDataProvider)
-        .when(
-          data: (_) => const Application(),
-          // loading screen is handled by the native splash screen
-          loading: () => const SizedBox.shrink(),
-          error: (err, st) {
-            debugPrint('SEVERE: [App] could not initialize app; $err\n$st');
-            return const SizedBox.shrink();
-          },
+    final connectivity = ref.watch(connectivityChangesProvider);
+
+    // 1) While connectivity is loading, keep native splash
+    // 2) If offline, show a simple offline screen and DO NOT touch preloadedDataProvider
+    // 3) Only when online, start (watch) preloadedDataProvider
+    return connectivity.whenIsLoading(
+      loading: () => const SizedBox.shrink(),
+      offline: () {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Stack(
+              children: [
+                // optional: keep it empty so native splash is still visible underneath
+                Center(
+                  child: SafeArea(
+                    top: false,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset('assets/failed.json', height: 200),
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                          color: Colors.red,
+                          child: const DefaultTextStyle(
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                            child: Text('No Internet Connection', textAlign: TextAlign.center),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
+      },
+      online: () {
+        return ref
+            .watch(preloadedDataProvider)
+            .when(
+              data: (_) => const Application(),
+              loading: () => const SizedBox.shrink(), // native splash covers this
+              error: (err, st) {
+                debugPrint('SEVERE: [App] could not initialize app; $err\n$st');
+                return const SizedBox.shrink();
+              },
+            );
+      },
+    );
   }
 }
 
@@ -81,6 +125,7 @@ class _AppState extends ConsumerState<Application> {
   AppLifecycleListener? _appLifecycleListener;
 
   DateTime? _pausedAt;
+
   @override
   void initState() {
     _appLifecycleListener = AppLifecycleListener(
@@ -101,7 +146,18 @@ class _AppState extends ConsumerState<Application> {
       },
     );
 
-    // Start services
+    // ⬇️ Wait for the first connectivity status ONCE, then start services.
+    scheduleMicrotask(() async {
+      final initialStatus = await ref.read(connectivityChangesProvider.future);
+      _startServices(initiallyOnline: initialStatus.isOnline);
+
+      // Keep your existing listener for transitions
+      _listenConnectivityTransitions();
+    });
+
+    initBranchSetup();
+
+    /*// Start services
     ref.read(notificationServiceProvider).start();
     ref.read(challengeServiceProvider).start();
     ref.read(accountServiceProvider).start();
@@ -134,10 +190,50 @@ class _AppState extends ConsumerState<Application> {
       } else if (current.value?.isOnline == false) {
         socketClient.close();
       }
-    });
+    });*/
 
     super.initState();
-    initBranchSetup();
+  }
+
+  void _startServices({required bool initiallyOnline}) {
+    ref.read(notificationServiceProvider).start();
+    ref.read(challengeServiceProvider).start();
+    ref.read(accountServiceProvider).start();
+    ref.read(correspondenceServiceProvider).start();
+
+    final socketClient = ref.read(socketPoolProvider).currentClient;
+    if (initiallyOnline) {
+      ref.read(correspondenceServiceProvider).syncGames();
+      if (!socketClient.isActive) socketClient.connect();
+    } else {
+      socketClient.close();
+    }
+  }
+
+  void _listenConnectivityTransitions() {
+    ref.listenManual(connectivityChangesProvider, (prev, current) async {
+      final prevWasOffline = prev?.value?.isOnline == false;
+      final currentIsOnline = current.value?.isOnline == true;
+
+      if (prevWasOffline && currentIsOnline) {
+        final nb = await ref.read(correspondenceServiceProvider).playRegisteredMoves();
+        if (nb > 0) ref.invalidate(ongoingGamesProvider);
+      }
+
+      if (currentIsOnline && !_firstTimeOnlineCheck) {
+        _firstTimeOnlineCheck = true;
+        ref.read(correspondenceServiceProvider).syncGames();
+      }
+
+      final socketClient = ref.read(socketPoolProvider).currentClient;
+      if (currentIsOnline &&
+          current.value?.appState == AppLifecycleState.resumed &&
+          !socketClient.isActive) {
+        socketClient.connect();
+      } else if (!currentIsOnline) {
+        socketClient.close();
+      }
+    });
   }
 
   Future<void> initBranchSetup() async {
