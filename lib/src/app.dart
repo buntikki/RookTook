@@ -73,7 +73,7 @@ class AppInitializationScreen extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Lottie.asset('assets/failed.json', height: 200),
+                        Lottie.asset('assets/no_network.json', height: 200),
                         Container(
                           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                           color: Colors.red,
