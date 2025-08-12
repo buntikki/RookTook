@@ -69,6 +69,7 @@ class WalletNotifier extends StateNotifier<WalletState> {
         final session =
             CFSessionBuilder()
                 .setEnvironment(kReleaseMode ? CFEnvironment.PRODUCTION : CFEnvironment.SANDBOX)
+                //.setEnvironment(CFEnvironment.PRODUCTION)
                 .setOrderId(orderId)
                 .setPaymentSessionId(paymentSessionId)
                 .build();
@@ -276,6 +277,8 @@ class WalletNotifier extends StateNotifier<WalletState> {
           'note': 'Buying silver coins for rooktook chess app',
         }),
       );
+      print(response.request);
+      print(response.body);
       log(response.body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> decodedResponse =
