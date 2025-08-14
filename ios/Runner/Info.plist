@@ -161,6 +161,15 @@
 	<string>Main</string>
 	<key>UIStatusBarHidden</key>
 	<false/>
+  <key>LSApplicationQueriesSchemes</key>
+  <array>
+    <string>phonepe</string>
+    <string>tez</string>
+    <string>paytmmp</string>
+    <string>bhim</string>
+    <string>amazonpay</string>
+    <string>credpay</string>
+  </array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

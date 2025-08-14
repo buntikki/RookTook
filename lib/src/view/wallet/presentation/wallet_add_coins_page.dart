@@ -128,6 +128,7 @@ class _WalletAddCoinsPageState extends ConsumerState<WalletAddCoinsPage> {
                 ),
                 TextField(
                   controller: amountController,
+                  onTapOutside: (event) => FocusScope.of(context).unfocus(),
                   style: const TextStyle(fontSize: 16),
                   onChanged: (value) {
                     final int parsedValue = int.parse(value.isEmpty ? '0' : value.trim());
