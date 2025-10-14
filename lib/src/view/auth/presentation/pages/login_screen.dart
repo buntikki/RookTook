@@ -114,11 +114,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             );
             ref.read(loginControllerProvider.notifier).reset();
           case LoginState.userDoesNotExist:
-            Navigator.of(context).push(
-              CreatePasswordScreen.buildRoute(
-                context,
-                PasswordScreenMode.create,
-                result.usernameOrEmail,
+            // Navigator.of(context).push(
+            //   CreatePasswordScreen.buildRoute(
+            //     context,
+            //     PasswordScreenMode.create,
+            //     result.usernameOrEmail,
+            //   ),
+            // );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Please signup with Google or Apple',
+                  style: TextStyle(color: Colors.white),
+                ),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 3),
               ),
             );
             ref.read(loginControllerProvider.notifier).reset();

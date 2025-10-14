@@ -83,7 +83,7 @@ class NewProfileScreen extends ConsumerWidget {
             .length;*/
 
     final String avatarSeed = userSession?.user.name ?? 'default';
-
+    final accountName = ref.watch(accountProvider.selectAsync((user) => user?.lightUser.name));
     return Scaffold(
       backgroundColor: const Color(0xFF0F151A),
       appBar: AppBar(),
@@ -110,7 +110,13 @@ class NewProfileScreen extends ConsumerWidget {
               //   },
               // ),
               const SizedBox(height: 10),
-              if (userSession != null) Text('${userSession.user.name}'),
+              if (userSession != null)
+                FutureBuilder(
+                  future: accountName,
+                  builder: (context, snapshot) {
+                    return Text(snapshot.data ?? userSession.user.name);
+                  },
+                ),
               // const Text(
               //   'Magnus Carlsen 🇺🇸',
               //   style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),

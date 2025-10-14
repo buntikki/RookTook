@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:rooktook/l10n/l10n.dart';
 import 'package:rooktook/src/binding.dart';
 import 'package:rooktook/src/localizations.dart';
@@ -100,19 +101,27 @@ class NotificationService {
   /// and after [LichessBinding.initializeNotifications] has been called.
   Future<void> start() async {
     // listen for connectivity changes to register device once the app is online
-    _connectivitySubscription = _ref.listen(connectivityChangesProvider, (prev, current) async {
-      if (current.value?.isOnline == true && !_registeredDevice) {
-        try {
-          await registerDevice();
-          _registeredDevice = true;
-        } catch (e, st) {
-          _logger.severe('Could not setup push notifications; $e\n$st');
-        }
-      }
-    });
+    // _connectivitySubscription = _ref.listen(connectivityChangesProvider, (prev, current) async {
+    //   print('current: ${current.value?.isOnline}');
+    //   if (current.value?.isOnline == true && !_registeredDevice) {
+    //     try {
+    //       await registerDevice();
+    //       _registeredDevice = true;
+    //     } catch (e, st) {
+    //       _logger.severe('Could not setup push notifications; $e\n$st');
+    //     }
+    //   }
+    // });
+    try {
+      await registerDevice();
+      _registeredDevice = true;
+    } catch (e, st) {
+      _logger.severe('Could not setup push notifications; $e\n$st');
+    }
 
     // Listen for incoming messages while the app is in the foreground.
     LichessBinding.instance.firebaseMessagingOnMessage.listen((RemoteMessage message) {
+      print('message: ${message.notification?.title}');
       _processFcmMessage(message, fromBackground: false);
     });
 
@@ -293,11 +302,19 @@ class NotificationService {
 
       // TODO: handle other notification types
 
-      case UnhandledFcmMessage(data: final data):
-        _logger.warning('Received unhandled FCM notification type: ${data['lichess.type']}');
+      // case UnhandledFcmMessage(data: final data):
+      //   _logger.warning('Received unhandled FCM notification type: ${data['lichess.type']}');
 
-      case MalformedFcmMessage(data: final data):
-        _logger.severe('Received malformed FCM message: $data');
+      // case MalformedFcmMessage(data: final data):
+      //   _logger.severe('Received malformed FCM message: $data');
+      default:
+        show(
+          NormalNotification(
+            message.notification?.title ?? '',
+            message.notification?.body ?? '',
+            DateTime.now().toIso8601String().hashCode,
+          ),
+        );
     }
 
     // update badge
@@ -351,6 +368,7 @@ class NotificationService {
       return;
     }
     try {
+      // await http.post(lichessUri('/mobile/register/firebase/$token'));
       await _ref.withClient((client) => client.post(Uri(path: '/mobile/register/firebase/$token')));
     } catch (e, st) {
       _logger.severe('could not register device; $e', e, st);

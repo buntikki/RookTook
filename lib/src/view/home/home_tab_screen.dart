@@ -42,6 +42,7 @@ import 'package:rooktook/src/view/correspondence/offline_correspondence_game_scr
 import 'package:rooktook/src/view/game/game_screen.dart';
 import 'package:rooktook/src/view/game/offline_correspondence_games_screen.dart';
 import 'package:rooktook/src/view/home/games_carousel.dart';
+import 'package:rooktook/src/view/home/home_provider.dart';
 import 'package:rooktook/src/view/over_the_board/over_the_board_screen.dart';
 import 'package:rooktook/src/view/play/create_game_options.dart';
 import 'package:rooktook/src/view/play/ongoing_games_screen.dart';
@@ -49,10 +50,13 @@ import 'package:rooktook/src/view/play/play_screen.dart';
 import 'package:rooktook/src/view/play/quick_game_button.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_tab_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_screen.dart';
+import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 import 'package:rooktook/src/view/user/challenge_requests_screen.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/view/user/recent_games.dart';
+import 'package:rooktook/src/view/user/refer_and_earn_screen.dart';
 import 'package:rooktook/src/view/wallet/presentation/wallet_page.dart';
 import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 import 'package:rooktook/src/widgets/buttons.dart';
@@ -60,6 +64,7 @@ import 'package:rooktook/src/widgets/feedback.dart';
 import 'package:rooktook/src/widgets/match_result_popup.dart';
 import 'package:rooktook/src/widgets/user_full_name.dart';
 import 'package:random_avatar/random_avatar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final editModeProvider = StateProvider<bool>((ref) => false);
 
@@ -86,6 +91,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       if (session != null) {
         ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.rapid));
         ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.blitz));
+        // ref.read(homeProvider.notifier).fetchHomeBanners();
       }
     });
   }
@@ -520,7 +526,6 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       //     },
       //   ),
       // ),
-      // const SizedBox(height: 24),
       const HomeTournamentContainer(),
       const SizedBox(height: 8),
       InkWell(
@@ -599,6 +604,8 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           ],
         )
       else ...[
+        const HomeBannersWidget(),
+        const SizedBox(height: 24),
         ChessRatingCards(rapidRank: '$rapidRank', blitzRank: '$blitzRank'),
         // if (status.isOnline)
         //   const _EditableWidget(
@@ -676,7 +683,145 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       ref.refresh(myRecentGamesProvider.future),
       if (isOnline) ref.refresh(accountProvider.future),
       if (isOnline) ref.refresh(ongoingGamesProvider.future),
+      if (isOnline) ref.refresh(fetchHomeBannersProvider.future),
     ]);
+  }
+}
+
+class HomeBannersWidget extends ConsumerStatefulWidget {
+  const HomeBannersWidget();
+
+  @override
+  ConsumerState<HomeBannersWidget> createState() => _HomeBannersWidgetState();
+}
+
+class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
+  int activeBanner = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final fetchHomeBannersPr = ref.watch(fetchHomeBannersProvider);
+    return fetchHomeBannersPr.when(
+      skipLoadingOnRefresh: false,
+      data: (banners) {
+        if (banners.isEmpty) {
+          return const SizedBox.shrink();
+        } else {
+          return Column(
+            children: [
+              const SizedBox(height: 20),
+              SizedBox(
+                width: MediaQuery.of(context).size.width - 32,
+                height: 130,
+                child: PageView.builder(
+                  onPageChanged: (value) {
+                    setState(() {
+                      activeBanner = value;
+                    });
+                  },
+                  itemCount: banners.length,
+                  itemBuilder: (context, index) {
+                    final banner = banners[index];
+                    final eventType = banner.eventType;
+                    final redirectUrl = banner.redirectUrl;
+                    return GestureDetector(
+                      onTap: () async {
+                        BranchRepository.trackCustomEvent(
+                          'banner_clicked',
+                          ref: ref,
+                          data: {'bannerId': banner.id},
+                        );
+                        switch (eventType) {
+                          case BannerEventType.tournament:
+                            final tournament = await ref
+                                .read(tournamentProvider.notifier)
+                                .fetchSingleTournament(redirectUrl.split('/').last);
+                            if (tournament != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => TournamentDetailScreen(
+                                        tournament: tournament,
+                                        isPlayed: tournament.players.any(
+                                          (element) =>
+                                              element.userId ==
+                                                  (ref.watch(authSessionProvider)?.user.id.value ??
+                                                      '') &&
+                                              element.time > 0,
+                                        ),
+                                      ),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Tournament not found',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          case BannerEventType.store:
+                            handleShopBannerNavigation(ref);
+                          case BannerEventType.wallet:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const WalletPage()),
+                            );
+                          case BannerEventType.referral:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ReferAndEarnScreen()),
+                            );
+                          default:
+                            launchUrl(Uri.parse(banner.redirectUrl));
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          // color: const Color(0xff2B2D30),
+                          borderRadius: BorderRadius.circular(12),
+                          image: DecorationImage(
+                            image: NetworkImage(banner.imageUrl),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              if (banners.length > 1)
+                Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 8,
+                      children: List.generate(banners.length, (index) {
+                        final isActive = index == activeBanner;
+                        return Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            color: const Color(0xff54C339).withValues(alpha: isActive ? 0.5 : 1),
+                            shape: BoxShape.circle,
+                          ),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+            ],
+          );
+        }
+      },
+      error: (error, stackTrace) => Text(error.toString()),
+      loading: () => const SizedBox(height: 200, child: Center(child: CenterLoadingIndicator())),
+    );
   }
 }
 

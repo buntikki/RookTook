@@ -1,9 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-const kLichessHost = String.fromEnvironment('LICHESS_HOST', defaultValue: '3.110.2.12:9663');
+const releaseMode = true;
 
-const kLichessWSHost = String.fromEnvironment('LICHESS_WS_HOST', defaultValue: '3.110.2.12:9664');
+const kLichessHost = String.fromEnvironment(
+  'LICHESS_HOST',
+  defaultValue: releaseMode ? 'play.rooktook.com' : '3.110.2.12:9663',
+);
+
+const kLichessWSHost = String.fromEnvironment(
+  'LICHESS_WS_HOST',
+  defaultValue: releaseMode ? 'ws.rooktook.com' : '3.110.2.12:9664',
+);
 
 const kLichessWSSecret = String.fromEnvironment(
   'LICHESS_WS_SECRET',

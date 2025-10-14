@@ -309,6 +309,13 @@ void handleTournamentBannerNavigation(WidgetRef ref) {
   }
 }
 
+void handleShopBannerNavigation(WidgetRef ref) {
+  ref.read(currentBottomTabProvider.notifier).state = BottomTab.shop;
+  if (Platform.isIOS) {
+    _cupertinoTabController.index = BottomTab.shop.index;
+  }
+}
+
 Widget _androidTabBuilder(BuildContext context, int index) {
   switch (index) {
     case 0:

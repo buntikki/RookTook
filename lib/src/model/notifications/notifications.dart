@@ -161,6 +161,47 @@ sealed class LocalNotification {
   }
 }
 
+class NormalNotification extends LocalNotification {
+  const NormalNotification(String title, String body, int id)
+    : _title = title,
+      _body = body,
+      _id = id;
+
+  final String _title;
+  final String _body;
+  final int _id;
+
+  @override
+  String title(AppLocalizations l10n) => _title;
+
+  @override
+  String? body(AppLocalizations l10n) => _body;
+
+  @override
+  Map<String, dynamic> get _concretePayload => {'title': _title, 'body': _body};
+
+  @override
+  // TODO: implement channelId
+  String get channelId => 'normal';
+
+  @override
+  NotificationDetails details(AppLocalizations l10n) {
+    return NotificationDetails(
+      android: AndroidNotificationDetails(
+        channelId,
+        'normal',
+        importance: Importance.max,
+        priority: Priority.max,
+      ),
+      iOS: DarwinNotificationDetails(threadIdentifier: channelId),
+    );
+  }
+
+  @override
+  // TODO: implement id
+  int get id => _id;
+}
+
 /// A notification show to the user when they are banned temporarily from playing.
 class PlaybanNotification extends LocalNotification {
   const PlaybanNotification(this.playban);
