@@ -65,23 +65,23 @@ android {
   }
 
    signingConfigs {
-      // release {
-      //   keyAlias keystoreProperties['keyAlias']
-      //   keyPassword keystoreProperties['keyPassword']
-      //   storeFile file(keystoreProperties['storeFile'])
-      //   storePassword keystoreProperties['storePassword']
-      // }
+       release {
+         keyAlias keystoreProperties['keyAlias']
+         keyPassword keystoreProperties['keyPassword']
+         storeFile file(keystoreProperties['storeFile'])
+         storePassword keystoreProperties['storePassword']
+       }
    }
 
   buildTypes {
-    // release {
-    //   minifyEnabled true
-    //   proguardFiles(
-    //     getDefaultProguardFile('proguard-android-optimize.txt'),
-    //     'proguard-rules.pro'
-    //   )
-    //     signingConfig signingConfigs.release
-    // }
+     release {
+       minifyEnabled true
+       proguardFiles(
+         getDefaultProguardFile('proguard-android-optimize.txt'),
+         'proguard-rules.pro'
+       )
+         signingConfig signingConfigs.release
+     }
   }
 
   dependenciesInfo {

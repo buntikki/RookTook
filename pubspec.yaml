@@ -2,7 +2,7 @@ name: rooktook
 description: RookTook
 publish_to: "none"
 
-version: 0.1.9+12 # See README.md for details about versioning
+version: 0.1.10+13 # See README.md for details about versioning
 
 environment:
   sdk: '^3.8.0-70.0'

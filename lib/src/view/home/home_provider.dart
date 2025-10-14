@@ -27,7 +27,7 @@ class HomeProvider extends StateNotifier<HomeState> {
 
     try {
       final response = await http.get(
-        Uri.parse('https://dev-api.rooktook.com/api/v1/events'),
+        Uri.parse('https://api.rooktook.com/api/v1/events'),
         headers: headers,
       );
       if (response.statusCode == 200) {

@@ -79,10 +79,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get mobilePuzzleStormSubtitle => 'Solve as many puzzles as possible in 3 minutes.';
 
   @override
-  String get mobilePuzzleStreakAbortWarning => 'You will lose your current streak and your score will be saved.';
+  String get mobilePuzzleStreakAbortWarning =>
+      'You will lose your current streak and your score will be saved.';
 
   @override
-  String get mobilePuzzleThemesSubtitle => 'Play puzzles from your favorite openings, or choose a theme.';
+  String get mobilePuzzleThemesSubtitle =>
+      'Play puzzles from your favorite openings, or choose a theme.';
 
   @override
   String get mobilePuzzlesTab => 'Puzzles';
@@ -97,7 +99,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get mobileSettingsImmersiveMode => 'Immersive mode';
 
   @override
-  String get mobileSettingsImmersiveModeSubtitle => 'Hide system UI while playing. Use this if you are bothered by the system\'s navigation gestures at the edges of the screen. Applies to game and Puzzle Storm screens.';
+  String get mobileSettingsImmersiveModeSubtitle =>
+      'Hide system UI while playing. Use this if you are bothered by the system\'s navigation gestures at the edges of the screen. Applies to game and Puzzle Storm screens.';
 
   @override
   String get mobileSettingsTab => 'Settings';
@@ -429,7 +432,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get broadcastHowToUseLichessBroadcasts => 'How to use Lichess Broadcasts.';
 
   @override
-  String get broadcastTheNewRoundHelp => 'The new round will have the same members and contributors as the previous one.';
+  String get broadcastTheNewRoundHelp =>
+      'The new round will have the same members and contributors as the previous one.';
 
   @override
   String get broadcastAddRound => 'Cuir babhta leis';
@@ -464,7 +468,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get broadcastSourceSingleUrl => 'PGN Source URL';
 
   @override
-  String get broadcastSourceUrlHelp => 'URL a seiceálfaidh Lichess chun PGN nuashonruithe a fháil. Caithfidh sé a bheith le féiceáil go poiblí ón Idirlíon.';
+  String get broadcastSourceUrlHelp =>
+      'URL a seiceálfaidh Lichess chun PGN nuashonruithe a fháil. Caithfidh sé a bheith le féiceáil go poiblí ón Idirlíon.';
 
   @override
   String get broadcastSourceGameIds => 'Up to 64 Lichess game IDs, separated by spaces.';
@@ -490,10 +495,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get broadcastDeleteRound => 'Scrios an babhta seo';
 
   @override
-  String get broadcastDefinitivelyDeleteRound => 'Scrios go cinntitheach an babhta agus a chuid cluichí.';
+  String get broadcastDefinitivelyDeleteRound =>
+      'Scrios go cinntitheach an babhta agus a chuid cluichí.';
 
   @override
-  String get broadcastDeleteAllGamesOfThisRound => 'Scrios gach cluiche den bhabhta seo. Caithfidh an fhoinse a bheith gníomhach chun iad a athchruthú.';
+  String get broadcastDeleteAllGamesOfThisRound =>
+      'Scrios gach cluiche den bhabhta seo. Caithfidh an fhoinse a bheith gníomhach chun iad a athchruthú.';
 
   @override
   String get broadcastEditRoundStudy => 'Edit round study';
@@ -502,7 +509,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get broadcastDeleteTournament => 'Delete this tournament';
 
   @override
-  String get broadcastDefinitivelyDeleteTournament => 'Definitively delete the entire tournament, all its rounds and all its games.';
+  String get broadcastDefinitivelyDeleteTournament =>
+      'Definitively delete the entire tournament, all its rounds and all its games.';
 
   @override
   String get broadcastShowScores => 'Show players scores based on game results';
@@ -550,7 +558,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get broadcastOverview => 'Overview';
 
   @override
-  String get broadcastSubscribeTitle => 'Subscribe to be notified when each round starts. You can toggle bell or push notifications for broadcasts in your account preferences.';
+  String get broadcastSubscribeTitle =>
+      'Subscribe to be notified when each round starts. You can toggle bell or push notifications for broadcasts in your account preferences.';
 
   @override
   String get broadcastUploadImage => 'Upload tournament image';
@@ -644,7 +653,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get broadcastBackToLiveMove => 'Back to live move';
 
   @override
-  String get broadcastSinceHideResults => 'Since you chose to hide the results, all the preview boards are empty to avoid spoilers.';
+  String get broadcastSinceHideResults =>
+      'Since you chose to hide the results, all the preview boards are empty to avoid spoilers.';
 
   @override
   String broadcastNbBroadcasts(int count) {
@@ -709,10 +719,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get challengeDeclineLater => 'Ní am ceart dom anois, iarr arís níos déanaí.';
 
   @override
-  String get challengeDeclineTooFast => 'Tá an maor ama seo ró-thapa dom, tabhair dúshlán arís le cluiche níos moille.';
+  String get challengeDeclineTooFast =>
+      'Tá an maor ama seo ró-thapa dom, tabhair dúshlán arís le cluiche níos moille.';
 
   @override
-  String get challengeDeclineTooSlow => 'Tá an maor ama seo ró-mhall dom, tabhair dúshlán arís le cluiche níos tapa.';
+  String get challengeDeclineTooSlow =>
+      'Tá an maor ama seo ró-mhall dom, tabhair dúshlán arís le cluiche níos tapa.';
 
   @override
   String get challengeDeclineTimeControl => 'Nílim ag glacadh le dúshláin leis an maor ama seo.';
@@ -762,7 +774,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get perfStatProvisional => 'sealadach';
 
   @override
-  String get perfStatNotEnoughRatedGames => 'Níor imríodh go leor cluichí rátáilte chun rátáil iontaofa a bhunú.';
+  String get perfStatNotEnoughRatedGames =>
+      'Níor imríodh go leor cluichí rátáilte chun rátáil iontaofa a bhunú.';
 
   @override
   String perfStatProgressOverLastXGames(String param) {
@@ -874,10 +887,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get preferencesMaterialDifference => 'Difríocht ábhartha';
 
   @override
-  String get preferencesBoardHighlights => 'Buaicphointí an bhoird (an mbeart deireanach agus an sáinn)';
+  String get preferencesBoardHighlights =>
+      'Buaicphointí an bhoird (an mbeart deireanach agus an sáinn)';
 
   @override
-  String get preferencesPieceDestinations => 'Cinn scríbe píosaí (bearta dlithiúil agus réamh-bheart)';
+  String get preferencesPieceDestinations =>
+      'Cinn scríbe píosaí (bearta dlithiúil agus réamh-bheart)';
 
   @override
   String get preferencesBoardCoordinates => 'Comhordanáidí an chlár fichille (A-H, 1-8)';
@@ -904,7 +919,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get preferencesShowFlairs => 'Show player flairs';
 
   @override
-  String get preferencesExplainShowPlayerRatings => 'Ligeann sé seo gach rátáil a cheilt ón suíomh Gréasáin, chun cabhrú le díriú ar an bhficheall. Is féidir cluichí a rátáil fós, níl sé seo ach faoi na rudaí a fheiceann tú.';
+  String get preferencesExplainShowPlayerRatings =>
+      'Ligeann sé seo gach rátáil a cheilt ón suíomh Gréasáin, chun cabhrú le díriú ar an bhficheall. Is féidir cluichí a rátáil fós, níl sé seo ach faoi na rudaí a fheiceann tú.';
 
   @override
   String get preferencesDisplayBoardResizeHandle => 'Taispeáin láimhseáil athrú méide an bhoird';
@@ -928,7 +944,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get preferencesWhenTimeRemainingLessThanTenSeconds => 'Nuair atá am fágtha < 10 soicind';
 
   @override
-  String get preferencesHorizontalGreenProgressBars => 'Barraí cothrománacha glasa ar dhul chun cinn';
+  String get preferencesHorizontalGreenProgressBars =>
+      'Barraí cothrománacha glasa ar dhul chun cinn';
 
   @override
   String get preferencesSoundWhenTimeGetsCritical => 'Fuaim nuair atá an t-am criticiúil';
@@ -952,7 +969,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get preferencesBothClicksAndDrag => 'Aon slí';
 
   @override
-  String get preferencesPremovesPlayingDuringOpponentTurn => 'Réamh-bheart (ag imirt i lár am comhraic)';
+  String get preferencesPremovesPlayingDuringOpponentTurn =>
+      'Réamh-bheart (ag imirt i lár am comhraic)';
 
   @override
   String get preferencesTakebacksWithOpponentApproval => 'Aistarraing (le ceadú céile comhraic)';
@@ -964,22 +982,26 @@ class AppLocalizationsGa extends AppLocalizations {
   String get preferencesPromoteToQueenAutomatically => 'Ardú go banríon sa ghnáthchúrsa';
 
   @override
-  String get preferencesExplainPromoteToQueenAutomatically => 'Coinnigh an <ctrl> eochair síos agus ceithearnach á ardú chun uath-ardú a dhíchumasú go sealadach';
+  String get preferencesExplainPromoteToQueenAutomatically =>
+      'Coinnigh an <ctrl> eochair síos agus ceithearnach á ardú chun uath-ardú a dhíchumasú go sealadach';
 
   @override
   String get preferencesWhenPremoving => 'Réamh-ghluaiseacht';
 
   @override
-  String get preferencesClaimDrawOnThreefoldRepetitionAutomatically => 'Máigh cluiche cothrom ar athrshuíomh faoi thrí go huathoibríoch';
+  String get preferencesClaimDrawOnThreefoldRepetitionAutomatically =>
+      'Máigh cluiche cothrom ar athrshuíomh faoi thrí go huathoibríoch';
 
   @override
-  String get preferencesWhenTimeRemainingLessThanThirtySeconds => 'Nuair atá am fágtha < 30 soicind';
+  String get preferencesWhenTimeRemainingLessThanThirtySeconds =>
+      'Nuair atá am fágtha < 30 soicind';
 
   @override
   String get preferencesMoveConfirmation => 'Deimhniú beart';
 
   @override
-  String get preferencesExplainCanThenBeTemporarilyDisabled => 'Can be disabled during a game with the board menu';
+  String get preferencesExplainCanThenBeTemporarilyDisabled =>
+      'Can be disabled during a game with the board menu';
 
   @override
   String get preferencesInCorrespondenceGames => 'Cluichí comhfhreagrais';
@@ -988,7 +1010,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get preferencesCorrespondenceAndUnlimited => 'Comhfhreagras agus neamhtheoranta';
 
   @override
-  String get preferencesConfirmResignationAndDrawOffers => 'Deimhnigh éirí as agus tairiscintí cothroma';
+  String get preferencesConfirmResignationAndDrawOffers =>
+      'Deimhnigh éirí as agus tairiscintí cothroma';
 
   @override
   String get preferencesCastleByMovingTheKingTwoSquaresOrOntoTheRook => 'Modh caisliú';
@@ -1009,16 +1032,19 @@ class AppLocalizationsGa extends AppLocalizations {
   String get preferencesSnapArrowsToValidMoves => 'Snap saigheada chuig bearta dlithiúil';
 
   @override
-  String get preferencesSayGgWpAfterLosingOrDrawing => 'Abair \"Cluiche maith, Grma\" ar aon cluiche cailte nó cothroma';
+  String get preferencesSayGgWpAfterLosingOrDrawing =>
+      'Abair \"Cluiche maith, Grma\" ar aon cluiche cailte nó cothroma';
 
   @override
   String get preferencesYourPreferencesHaveBeenSaved => 'Sábháladh do chuid sainroghanna.';
 
   @override
-  String get preferencesScrollOnTheBoardToReplayMoves => 'Scrollaigh ar an gclár chun bearta a athimirt';
+  String get preferencesScrollOnTheBoardToReplayMoves =>
+      'Scrollaigh ar an gclár chun bearta a athimirt';
 
   @override
-  String get preferencesCorrespondenceEmailNotification => 'Ríomhphost laethúil ag liostú do chluichí comhfhreagrais';
+  String get preferencesCorrespondenceEmailNotification =>
+      'Ríomhphost laethúil ag liostú do chluichí comhfhreagrais';
 
   @override
   String get preferencesNotifyStreamStart => 'Sraoilleán ag craoladh beo';
@@ -1108,7 +1134,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleDownVote => 'Fadhb vóta síos';
 
   @override
-  String get puzzleYourPuzzleRatingWillNotChange => 'Ní thiocfaidh aon athrú ar do rátáil fadhbanna. Tabhair faoi deara nach comórtas iad fadhbanna. Cuidíonn rátáil leis na fadhbanna is fearr a roghnú do do scil reatha.';
+  String get puzzleYourPuzzleRatingWillNotChange =>
+      'Ní thiocfaidh aon athrú ar do rátáil fadhbanna. Tabhair faoi deara nach comórtas iad fadhbanna. Cuidíonn rátáil leis na fadhbanna is fearr a roghnú do do scil reatha.';
 
   @override
   String get puzzleFindTheBestMoveForWhite => 'Faigh an beart is fearr do bán.';
@@ -1158,7 +1185,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleOpeningsYouPlayedTheMost => 'Openings you played the most in rated games';
 
   @override
-  String get puzzleUseFindInPage => 'Use \"Find in page\" in the browser menu to find your favourite opening!';
+  String get puzzleUseFindInPage =>
+      'Use \"Find in page\" in the browser menu to find your favourite opening!';
 
   @override
   String get puzzleUseCtrlF => 'Use Ctrl+f to find your favourite opening!';
@@ -1234,7 +1262,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleFailed => 'teipthe';
 
   @override
-  String get puzzleStreakDescription => 'Réitigh fadhbhanna níos deacra de réir a chéile chun stríoc buaite a thiomsú. Níl aon chlog ann, mar sin tóg do chuid ama. Beart mícheart amháin, agus tá an cluiche thart! Ach is féidir beart a scipeáil uair amháin i seisiúin.';
+  String get puzzleStreakDescription =>
+      'Réitigh fadhbhanna níos deacra de réir a chéile chun stríoc buaite a thiomsú. Níl aon chlog ann, mar sin tóg do chuid ama. Beart mícheart amháin, agus tá an cluiche thart! Ach is féidir beart a scipeáil uair amháin i seisiúin.';
 
   @override
   String puzzleYourStreakX(String param) {
@@ -1242,7 +1271,8 @@ class AppLocalizationsGa extends AppLocalizations {
   }
 
   @override
-  String get puzzleStreakSkipExplanation => 'Scipeáil an beart seo chun do stríoc a choinneáil! Ní oibríonn sé ach uair amháin i sruth.';
+  String get puzzleStreakSkipExplanation =>
+      'Scipeáil an beart seo chun do stríoc a choinneáil! Ní oibríonn sé ach uair amháin i sruth.';
 
   @override
   String get puzzleContinueTheStreak => 'Lean leis an stríoc';
@@ -1265,7 +1295,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleSearchPuzzles => 'Cuardaigh fadhbanna';
 
   @override
-  String get puzzleFromMyGamesNone => 'Níl aon fadhb agat sa bhunachar sonraí, ach is breá le Lichess tú go mór fós. \nImir cluichí gasta agus clasaiceacha chun cur leis na seansanna go gcuirfear fadhb de do chuid féin leis!';
+  String get puzzleFromMyGamesNone =>
+      'Níl aon fadhb agat sa bhunachar sonraí, ach is breá le Lichess tú go mór fós. \nImir cluichí gasta agus clasaiceacha chun cur leis na seansanna go gcuirfear fadhb de do chuid féin leis!';
 
   @override
   String puzzleFromXGamesFound(String param1, String param2) {
@@ -1284,7 +1315,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleNoPuzzlesToShow => 'Níl rud le taispeáint, imirt roinnt fadhb ar dtús!';
 
   @override
-  String get puzzleImprovementAreasDescription => 'Traenáil iad seo chun do fhorbairt a bharrfheabhsú!';
+  String get puzzleImprovementAreasDescription =>
+      'Traenáil iad seo chun do fhorbairt a bharrfheabhsú!';
 
   @override
   String get puzzleStrengthDescription => 'Cruthaigh tú an chuid is fearr sna réimsí seo';
@@ -1363,127 +1395,148 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleThemeAdvancedPawn => 'Ceithearnach chun cinn';
 
   @override
-  String get puzzleThemeAdvancedPawnDescription => 'Tá ceithearnach ag ardú nó atá ag bagairt ardú ríthábhachtach don bheartaíocht.';
+  String get puzzleThemeAdvancedPawnDescription =>
+      'Tá ceithearnach ag ardú nó atá ag bagairt ardú ríthábhachtach don bheartaíocht.';
 
   @override
   String get puzzleThemeAdvantage => 'Buntáiste';
 
   @override
-  String get puzzleThemeAdvantageDescription => 'Tóg do sheans buntáiste ceart a fháil. (200cp ≤ meast ≤ 600cp)';
+  String get puzzleThemeAdvantageDescription =>
+      'Tóg do sheans buntáiste ceart a fháil. (200cp ≤ meast ≤ 600cp)';
 
   @override
   String get puzzleThemeAnastasiaMate => 'Marbhsháinn Anastasia';
 
   @override
-  String get puzzleThemeAnastasiaMateDescription => 'Oibríonn ridire agus caiseal nó banríon le chéile chun rí an namhaid a cheansaigh idir imeall an clár fichille agus píosa cairdiúil.';
+  String get puzzleThemeAnastasiaMateDescription =>
+      'Oibríonn ridire agus caiseal nó banríon le chéile chun rí an namhaid a cheansaigh idir imeall an clár fichille agus píosa cairdiúil.';
 
   @override
   String get puzzleThemeArabianMate => 'Marbhsháinn Arabaigh';
 
   @override
-  String get puzzleThemeArabianMateDescription => 'Oibríonn ridire agus caiseal le chéile chun rí an namhaid a cheansaigh idir cúinne an clár fichille.';
+  String get puzzleThemeArabianMateDescription =>
+      'Oibríonn ridire agus caiseal le chéile chun rí an namhaid a cheansaigh idir cúinne an clár fichille.';
 
   @override
   String get puzzleThemeAttackingF2F7 => 'Ag ionsaí f2 nó f7';
 
   @override
-  String get puzzleThemeAttackingF2F7Description => 'Ionsaí ag díriú ar an ceithearnach f2 nó f7, mar shampla ins an oscailt ae friochta.';
+  String get puzzleThemeAttackingF2F7Description =>
+      'Ionsaí ag díriú ar an ceithearnach f2 nó f7, mar shampla ins an oscailt ae friochta.';
 
   @override
   String get puzzleThemeAttraction => 'Meabhlú';
 
   @override
-  String get puzzleThemeAttractionDescription => 'Malartú nó íobairt a spreagann nó a chuireann brú ar phíosa comhraic dul go cearnóg a cheadaíonn beartíocht leantach.';
+  String get puzzleThemeAttractionDescription =>
+      'Malartú nó íobairt a spreagann nó a chuireann brú ar phíosa comhraic dul go cearnóg a cheadaíonn beartíocht leantach.';
 
   @override
   String get puzzleThemeBackRankMate => 'Marbhsháinn céim ar cúl';
 
   @override
-  String get puzzleThemeBackRankMateDescription => 'Déan marbhsháinn ar an rí ar an céim baile, sa tslí go bhfuil sé gafa ansin lena phíosaí féin.';
+  String get puzzleThemeBackRankMateDescription =>
+      'Déan marbhsháinn ar an rí ar an céim baile, sa tslí go bhfuil sé gafa ansin lena phíosaí féin.';
 
   @override
   String get puzzleThemeBishopEndgame => 'Cor deiridh easpaig';
 
   @override
-  String get puzzleThemeBishopEndgameDescription => 'Cor deiridh le easpaig agus ceithearnaigh amháin.';
+  String get puzzleThemeBishopEndgameDescription =>
+      'Cor deiridh le easpaig agus ceithearnaigh amháin.';
 
   @override
   String get puzzleThemeBodenMate => 'Marbhsháinn Boden';
 
   @override
-  String get puzzleThemeBodenMateDescription => 'Déanann dhá easpaig ar fiarthrasnáin chliathach ionsaí marbhsháinn ar rí a bhfuil píosaí cairdiúla ag cur bac air.';
+  String get puzzleThemeBodenMateDescription =>
+      'Déanann dhá easpaig ar fiarthrasnáin chliathach ionsaí marbhsháinn ar rí a bhfuil píosaí cairdiúla ag cur bac air.';
 
   @override
   String get puzzleThemeCastling => 'Caisliú';
 
   @override
-  String get puzzleThemeCastlingDescription => 'Cuir an rí i bhfolach, agus scaoil an caiseal le haghaidh ionsaí.';
+  String get puzzleThemeCastlingDescription =>
+      'Cuir an rí i bhfolach, agus scaoil an caiseal le haghaidh ionsaí.';
 
   @override
   String get puzzleThemeCapturingDefender => 'Marú an cosantóir';
 
   @override
-  String get puzzleThemeCapturingDefenderDescription => 'Bain amach píosa atá ríthábhachtach do cosaint píosa eile, ag ceadaigh an píosa atá anois gan chosaint a mharú an sa chéad bheart ina dhiaidh.';
+  String get puzzleThemeCapturingDefenderDescription =>
+      'Bain amach píosa atá ríthábhachtach do cosaint píosa eile, ag ceadaigh an píosa atá anois gan chosaint a mharú an sa chéad bheart ina dhiaidh.';
 
   @override
   String get puzzleThemeCrushing => 'Tubaisteach';
 
   @override
-  String get puzzleThemeCrushingDescription => 'Féach ar earráid an chéile comhraic chun buntáiste cumhachtach a fháil. (meastóireacht ≥ 600cp)';
+  String get puzzleThemeCrushingDescription =>
+      'Féach ar earráid an chéile comhraic chun buntáiste cumhachtach a fháil. (meastóireacht ≥ 600cp)';
 
   @override
   String get puzzleThemeDoubleBishopMate => 'Marbhsháinn dhá easpag';
 
   @override
-  String get puzzleThemeDoubleBishopMateDescription => 'Dhá ionsaitheoir easpig ar trasnáin cóngarach dá chéile marbhsháinn ar rí ina bhfuil píosaí cairdiúla ag cuir bac air.';
+  String get puzzleThemeDoubleBishopMateDescription =>
+      'Dhá ionsaitheoir easpig ar trasnáin cóngarach dá chéile marbhsháinn ar rí ina bhfuil píosaí cairdiúla ag cuir bac air.';
 
   @override
   String get puzzleThemeDovetailMate => 'Marbhsháinn déada';
 
   @override
-  String get puzzleThemeDovetailMateDescription => 'Déanann banríon marbhsháinn ar rí cóngarach dí, níl ach dhá chearnóg éalaithe aige agus tá a píosaí cairdiúla ag cuir cosc ar a soghluaisteacht chuig na cearnóga seo.';
+  String get puzzleThemeDovetailMateDescription =>
+      'Déanann banríon marbhsháinn ar rí cóngarach dí, níl ach dhá chearnóg éalaithe aige agus tá a píosaí cairdiúla ag cuir cosc ar a soghluaisteacht chuig na cearnóga seo.';
 
   @override
   String get puzzleThemeEquality => 'Comhionannas';
 
   @override
-  String get puzzleThemeEqualityDescription => 'Tar ar ais ó suíomh caillte, agus faigh cluiche cothrom nó suíomh cothrom. (meastóireacht ≤ 200cp)';
+  String get puzzleThemeEqualityDescription =>
+      'Tar ar ais ó suíomh caillte, agus faigh cluiche cothrom nó suíomh cothrom. (meastóireacht ≤ 200cp)';
 
   @override
   String get puzzleThemeKingsideAttack => 'Ionsaí ar taobh an rí';
 
   @override
-  String get puzzleThemeKingsideAttackDescription => 'Ionsaí ar rí an chéile comhraic, tar éis dóibh caisliú ar thaobh an rí.';
+  String get puzzleThemeKingsideAttackDescription =>
+      'Ionsaí ar rí an chéile comhraic, tar éis dóibh caisliú ar thaobh an rí.';
 
   @override
   String get puzzleThemeClearance => 'Glanadh';
 
   @override
-  String get puzzleThemeClearanceDescription => 'Beart, go minic le luas, a ghlanann cearnóg, treas nó fiarthrasnán le haghaidh smaoineamh beartach.';
+  String get puzzleThemeClearanceDescription =>
+      'Beart, go minic le luas, a ghlanann cearnóg, treas nó fiarthrasnán le haghaidh smaoineamh beartach.';
 
   @override
   String get puzzleThemeDefensiveMove => 'Beart cosanta';
 
   @override
-  String get puzzleThemeDefensiveMoveDescription => 'Beart cruinn nó staith bearta atá tábhachtach chun cailliúint ábhair nó buntáiste eile a sheachaint.';
+  String get puzzleThemeDefensiveMoveDescription =>
+      'Beart cruinn nó staith bearta atá tábhachtach chun cailliúint ábhair nó buntáiste eile a sheachaint.';
 
   @override
   String get puzzleThemeDeflection => 'Sraonadh';
 
   @override
-  String get puzzleThemeDeflectionDescription => 'Beart a cureann mearú ar píosa do chomhraic chéile atá gnóthach ar post eile, mar shampla ag déanamh cosaint ar cearnóg. Uaireanta tugtar \"ró-ualú\" air fosta.';
+  String get puzzleThemeDeflectionDescription =>
+      'Beart a cureann mearú ar píosa do chomhraic chéile atá gnóthach ar post eile, mar shampla ag déanamh cosaint ar cearnóg. Uaireanta tugtar \"ró-ualú\" air fosta.';
 
   @override
   String get puzzleThemeDiscoveredAttack => 'Ionsaí nochta';
 
   @override
-  String get puzzleThemeDiscoveredAttackDescription => 'Ag bogadh píosa (ridire b\'fhéidir), a chuir bac ar ionsaí roimhe seo le píosa fadraoin (caiseal b\'fhéidir), as bealach an phíosa sin.';
+  String get puzzleThemeDiscoveredAttackDescription =>
+      'Ag bogadh píosa (ridire b\'fhéidir), a chuir bac ar ionsaí roimhe seo le píosa fadraoin (caiseal b\'fhéidir), as bealach an phíosa sin.';
 
   @override
   String get puzzleThemeDoubleCheck => 'Sáinn faoi dhó';
 
   @override
-  String get puzzleThemeDoubleCheckDescription => 'Ag sáiniú le dhá phíosa ag an am céanna, tar éis ionsaí nochta ina n-ionsaíonn an píosa gluaiseachta agus an píosa nochtaithe araon rí an chéile comhraic.';
+  String get puzzleThemeDoubleCheckDescription =>
+      'Ag sáiniú le dhá phíosa ag an am céanna, tar éis ionsaí nochta ina n-ionsaíonn an píosa gluaiseachta agus an píosa nochtaithe araon rí an chéile comhraic.';
 
   @override
   String get puzzleThemeEndgame => 'Cor deiridh';
@@ -1492,13 +1545,15 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleThemeEndgameDescription => 'Beartaíocht i gcor deiridh na cluiche.';
 
   @override
-  String get puzzleThemeEnPassantDescription => 'Beartaíocht a bhaineann leis an riail en passant, sa tslí gur féidir le ceithearnach ceithearnach an céile comhraic a mharú agus é ag úsáid a ghluaiseachta tosaigh dhá chearnóg.';
+  String get puzzleThemeEnPassantDescription =>
+      'Beartaíocht a bhaineann leis an riail en passant, sa tslí gur féidir le ceithearnach ceithearnach an céile comhraic a mharú agus é ag úsáid a ghluaiseachta tosaigh dhá chearnóg.';
 
   @override
   String get puzzleThemeExposedKing => 'Rí nochtaithe';
 
   @override
-  String get puzzleThemeExposedKingDescription => 'Beartaíocht ina bhfuil rí gan mórán cosantóirí timpeall air, agus marbhsháinn mar thoradh air go minic.';
+  String get puzzleThemeExposedKingDescription =>
+      'Beartaíocht ina bhfuil rí gan mórán cosantóirí timpeall air, agus marbhsháinn mar thoradh air go minic.';
 
   @override
   String get puzzleThemeFork => 'Gabhal';
@@ -1510,43 +1565,50 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleThemeHangingPiece => 'Píosa ar crochadh';
 
   @override
-  String get puzzleThemeHangingPieceDescription => 'Beartaíocht ina bhfuil píosa comhraic gan chosaint nó gan chosaint go leor agus saor le marú.';
+  String get puzzleThemeHangingPieceDescription =>
+      'Beartaíocht ina bhfuil píosa comhraic gan chosaint nó gan chosaint go leor agus saor le marú.';
 
   @override
   String get puzzleThemeHookMate => 'Marbhsháinn corrán';
 
   @override
-  String get puzzleThemeHookMateDescription => 'Marbhsháinn le caiseal, ridire, agus ceithearnach in éineacht le ceithearnach namhaid amháin chun éalú rí an namhaid a chosc.';
+  String get puzzleThemeHookMateDescription =>
+      'Marbhsháinn le caiseal, ridire, agus ceithearnach in éineacht le ceithearnach namhaid amháin chun éalú rí an namhaid a chosc.';
 
   @override
   String get puzzleThemeInterference => 'Bac';
 
   @override
-  String get puzzleThemeInterferenceDescription => 'Ag bogadh píosa idir dhá phíosa do chéile comhraic chun píosa comhraic amháin nó an dá phíosa comhraic a fhágáil gan chosaint, mar ridire ar chearnóg chosanta idir dhá chaiseal.';
+  String get puzzleThemeInterferenceDescription =>
+      'Ag bogadh píosa idir dhá phíosa do chéile comhraic chun píosa comhraic amháin nó an dá phíosa comhraic a fhágáil gan chosaint, mar ridire ar chearnóg chosanta idir dhá chaiseal.';
 
   @override
   String get puzzleThemeIntermezzo => 'Intermezzo';
 
   @override
-  String get puzzleThemeIntermezzoDescription => 'Tarlaíonn Zwischenzug i lár malartú píosaí nó i líne beartaíochta in áit eile ar an gclár nuair a ghluaiseann imreoir píosa ar shlí nach bhfuil an t-imreoir eile ag súil leis chun suíomh níos fearr a fháil.';
+  String get puzzleThemeIntermezzoDescription =>
+      'Tarlaíonn Zwischenzug i lár malartú píosaí nó i líne beartaíochta in áit eile ar an gclár nuair a ghluaiseann imreoir píosa ar shlí nach bhfuil an t-imreoir eile ag súil leis chun suíomh níos fearr a fháil.';
 
   @override
   String get puzzleThemeKillBoxMate => 'Kill box mate';
 
   @override
-  String get puzzleThemeKillBoxMateDescription => 'A rook is next to the enemy king and supported by a queen that also blocks the king\'s escape squares. The rook and the queen catch the enemy king in a 3 by 3 \"kill box\".';
+  String get puzzleThemeKillBoxMateDescription =>
+      'A rook is next to the enemy king and supported by a queen that also blocks the king\'s escape squares. The rook and the queen catch the enemy king in a 3 by 3 \"kill box\".';
 
   @override
   String get puzzleThemeVukovicMate => 'Vukovic mate';
 
   @override
-  String get puzzleThemeVukovicMateDescription => 'A rook and knight team up to mate the king. The rook delivers mate while supported by a third piece, and the knight is used to block the king\'s escape squares.';
+  String get puzzleThemeVukovicMateDescription =>
+      'A rook and knight team up to mate the king. The rook delivers mate while supported by a third piece, and the knight is used to block the king\'s escape squares.';
 
   @override
   String get puzzleThemeKnightEndgame => 'Cor deiridh ridire';
 
   @override
-  String get puzzleThemeKnightEndgameDescription => 'Cor deiridh le ridirí agus ceithearnaigh amháin.';
+  String get puzzleThemeKnightEndgameDescription =>
+      'Cor deiridh le ridirí agus ceithearnaigh amháin.';
 
   @override
   String get puzzleThemeLong => 'Fadhbh fada';
@@ -1558,13 +1620,15 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleThemeMaster => 'Máistir-chluichí';
 
   @override
-  String get puzzleThemeMasterDescription => 'Fadhbhanna ó chluichí a imríonn ficheallaí le teideal.';
+  String get puzzleThemeMasterDescription =>
+      'Fadhbhanna ó chluichí a imríonn ficheallaí le teideal.';
 
   @override
   String get puzzleThemeMasterVsMaster => 'Cluichí Máistir vs Máistir';
 
   @override
-  String get puzzleThemeMasterVsMasterDescription => 'Fadhbhanna ó chluichí idir dhá fhicheallaí le teideal.';
+  String get puzzleThemeMasterVsMasterDescription =>
+      'Fadhbhanna ó chluichí idir dhá fhicheallaí le teideal.';
 
   @override
   String get puzzleThemeMate => 'Marbhsháinn';
@@ -1630,49 +1694,57 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleThemePin => 'Teannta';
 
   @override
-  String get puzzleThemePinDescription => 'Beartaíocht le teannta, nuair nach féidir le píosa bogadh gan ionsaí a nochtadh ar phíosa le cuacht níos mó.';
+  String get puzzleThemePinDescription =>
+      'Beartaíocht le teannta, nuair nach féidir le píosa bogadh gan ionsaí a nochtadh ar phíosa le cuacht níos mó.';
 
   @override
   String get puzzleThemePromotion => 'Ardú';
 
   @override
-  String get puzzleThemePromotionDescription => '\'Sé ceithearnach atá ag ardú nó ag bagairt ardú lár an bartaíocht.';
+  String get puzzleThemePromotionDescription =>
+      '\'Sé ceithearnach atá ag ardú nó ag bagairt ardú lár an bartaíocht.';
 
   @override
   String get puzzleThemeQueenEndgame => 'Cor deiridh na mbanríona';
 
   @override
-  String get puzzleThemeQueenEndgameDescription => 'Cor deiridh le banríonacha agus ceithearnaigh amháin.';
+  String get puzzleThemeQueenEndgameDescription =>
+      'Cor deiridh le banríonacha agus ceithearnaigh amháin.';
 
   @override
   String get puzzleThemeQueenRookEndgame => 'Cor deiridh don Banríon agus Casieal';
 
   @override
-  String get puzzleThemeQueenRookEndgameDescription => 'Cor deiridh gan aon píosa ach banríona, caisil, agus ceithearnaigh.';
+  String get puzzleThemeQueenRookEndgameDescription =>
+      'Cor deiridh gan aon píosa ach banríona, caisil, agus ceithearnaigh.';
 
   @override
   String get puzzleThemeQueensideAttack => 'Ionsaí ar taobh na mbanríona';
 
   @override
-  String get puzzleThemeQueensideAttackDescription => 'Ionsaí ar rí an namhaid, tar éis dóibh caisliú ar taobh na mbanríona.';
+  String get puzzleThemeQueensideAttackDescription =>
+      'Ionsaí ar rí an namhaid, tar éis dóibh caisliú ar taobh na mbanríona.';
 
   @override
   String get puzzleThemeQuietMove => 'Beart cúin';
 
   @override
-  String get puzzleThemeQuietMoveDescription => 'Beart nach ndéanann sáinn nó marú, ach a ullmhaíonn bagairt dosheachanta le haghaidh beart níos déanaí.';
+  String get puzzleThemeQuietMoveDescription =>
+      'Beart nach ndéanann sáinn nó marú, ach a ullmhaíonn bagairt dosheachanta le haghaidh beart níos déanaí.';
 
   @override
   String get puzzleThemeRookEndgame => 'Cor deiridh caiseal';
 
   @override
-  String get puzzleThemeRookEndgameDescription => 'Cor deiridh le caisil agus ceithearnaigh amháin.';
+  String get puzzleThemeRookEndgameDescription =>
+      'Cor deiridh le caisil agus ceithearnaigh amháin.';
 
   @override
   String get puzzleThemeSacrifice => 'Íobairt';
 
   @override
-  String get puzzleThemeSacrificeDescription => 'Beartaíocht a bhaineann le íobairt píosa sa ghearrthéarma, chun buntáiste a fháil tar éis bearta éigeantach.';
+  String get puzzleThemeSacrificeDescription =>
+      'Beartaíocht a bhaineann le íobairt píosa sa ghearrthéarma, chun buntáiste a fháil tar éis bearta éigeantach.';
 
   @override
   String get puzzleThemeShort => 'Fadhbh gearr';
@@ -1684,25 +1756,29 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleThemeSkewer => 'Sá';
 
   @override
-  String get puzzleThemeSkewerDescription => 'Móitíf ina bhfuil píosa cuachtach á ionsaí, ag bogadh amach as bealach, agus ag ligean píosa le cuacht níos ísle a mharú nó a ionsaí, inbhéart teannta.';
+  String get puzzleThemeSkewerDescription =>
+      'Móitíf ina bhfuil píosa cuachtach á ionsaí, ag bogadh amach as bealach, agus ag ligean píosa le cuacht níos ísle a mharú nó a ionsaí, inbhéart teannta.';
 
   @override
   String get puzzleThemeSmotheredMate => 'Sáinn plúchta';
 
   @override
-  String get puzzleThemeSmotheredMateDescription => 'Marbhsháinn ó ridire ina bhfuil an rí faoin ionsaí greimithe (nó plúchta) toisc go bhfuil a phíosaí féin timpeall air.';
+  String get puzzleThemeSmotheredMateDescription =>
+      'Marbhsháinn ó ridire ina bhfuil an rí faoin ionsaí greimithe (nó plúchta) toisc go bhfuil a phíosaí féin timpeall air.';
 
   @override
   String get puzzleThemeSuperGM => 'Cluichí Super GM';
 
   @override
-  String get puzzleThemeSuperGMDescription => 'Fadhbhanna ó chluichí a d’imir na bhficheallaithe is fearr ar an domhan.';
+  String get puzzleThemeSuperGMDescription =>
+      'Fadhbhanna ó chluichí a d’imir na bhficheallaithe is fearr ar an domhan.';
 
   @override
   String get puzzleThemeTrappedPiece => 'Píosa gafa';
 
   @override
-  String get puzzleThemeTrappedPieceDescription => 'Ní féidir le píosa éalú ó marú toisc go bhfuil soghluaiseacht teoranta aige.';
+  String get puzzleThemeTrappedPieceDescription =>
+      'Ní féidir le píosa éalú ó marú toisc go bhfuil soghluaiseacht teoranta aige.';
 
   @override
   String get puzzleThemeUnderPromotion => 'Foardú';
@@ -1720,25 +1796,29 @@ class AppLocalizationsGa extends AppLocalizations {
   String get puzzleThemeXRayAttack => 'Ionsaí x-ghathaithe';
 
   @override
-  String get puzzleThemeXRayAttackDescription => 'Déanann píosa ionsaí nó cosaint ar chearnóg, trí phíosa namhaid.';
+  String get puzzleThemeXRayAttackDescription =>
+      'Déanann píosa ionsaí nó cosaint ar chearnóg, trí phíosa namhaid.';
 
   @override
   String get puzzleThemeZugzwang => 'Zugzwang';
 
   @override
-  String get puzzleThemeZugzwangDescription => 'Ciallaíonn Zugzwang gur gá le himreoir a s(h) eans a \nthógáil cé nár mhaith leis nó léi toisc gur laige a bheith a s(h) uíomh cibé beart a dhéanfaidh sé/sí. Ba mhaith leis / léi \"háram\" a rá ach níl sé sin ceadaithe.';
+  String get puzzleThemeZugzwangDescription =>
+      'Ciallaíonn Zugzwang gur gá le himreoir a s(h) eans a \nthógáil cé nár mhaith leis nó léi toisc gur laige a bheith a s(h) uíomh cibé beart a dhéanfaidh sé/sí. Ba mhaith leis / léi \"háram\" a rá ach níl sé sin ceadaithe.';
 
   @override
   String get puzzleThemeMix => 'Meascán sláintiúil';
 
   @override
-  String get puzzleThemeMixDescription => 'Giota de gach rud. Níl a fhios agat cad tá os do comhair, mar sin fanann tú réidh le haghaidh athan bith! Díreach mar atá i gcluichí fíor.';
+  String get puzzleThemeMixDescription =>
+      'Giota de gach rud. Níl a fhios agat cad tá os do comhair, mar sin fanann tú réidh le haghaidh athan bith! Díreach mar atá i gcluichí fíor.';
 
   @override
   String get puzzleThemePlayerGames => 'Cluichí imreoir';
 
   @override
-  String get puzzleThemePlayerGamesDescription => 'Cuardaigh fadhbanna a ghintear ó do chluichí, nó ó chluichí imreoir eile.';
+  String get puzzleThemePlayerGamesDescription =>
+      'Cuardaigh fadhbanna a ghintear ó do chluichí, nó ó chluichí imreoir eile.';
 
   @override
   String puzzleThemePuzzleDownloadInformation(String param) {
@@ -1755,10 +1835,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get settingsCloseAccount => 'Dún cuntas';
 
   @override
-  String get settingsManagedAccountCannotBeClosed => 'Tá do chuntas á bhainistiú, agus ní féidir é a dhúnadh.';
+  String get settingsManagedAccountCannotBeClosed =>
+      'Tá do chuntas á bhainistiú, agus ní féidir é a dhúnadh.';
 
   @override
-  String get settingsCantOpenSimilarAccount => 'Ní cheadófar duit cuntas nua a oscailt leis an ainm céanna, fiú má tá an cás difriúil.';
+  String get settingsCantOpenSimilarAccount =>
+      'Ní cheadófar duit cuntas nua a oscailt leis an ainm céanna, fiú má tá an cás difriúil.';
 
   @override
   String get settingsCancelKeepAccount => 'Cancel and keep my account';
@@ -1776,7 +1858,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get playWithTheMachine => 'Imir in aghaidh an ríomhaire';
 
   @override
-  String get toInviteSomeoneToPlayGiveThisUrl => 'Chun cuireadh a thabhairt do dhuine, tabhair an URL seo dóibh';
+  String get toInviteSomeoneToPlayGiveThisUrl =>
+      'Chun cuireadh a thabhairt do dhuine, tabhair an URL seo dóibh';
 
   @override
   String get gameOver => 'Cluiche Thart';
@@ -1871,7 +1954,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get newOpponent => 'Céile comhraic nua';
 
   @override
-  String get yourOpponentWantsToPlayANewGameWithYou => 'Ba mhaith le do chéile comhraic cluiche nua a imirt leat';
+  String get yourOpponentWantsToPlayANewGameWithYou =>
+      'Ba mhaith le do chéile comhraic cluiche nua a imirt leat';
 
   @override
   String get joinTheGame => 'Téigh isteach sa chluiche';
@@ -1883,7 +1967,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get blackPlays => 'Is le Dubh an imirt';
 
   @override
-  String get opponentLeftChoices => 'D’fhág do chéile comhraic an cluiche. Féadfaidh tú an bua a fháil, an cluiche a chríochnú ar chomhscór, nó fanacht.';
+  String get opponentLeftChoices =>
+      'D’fhág do chéile comhraic an cluiche. Féadfaidh tú an bua a fháil, an cluiche a chríochnú ar chomhscór, nó fanacht.';
 
   @override
   String get forceResignation => 'Maígh an bua';
@@ -1895,7 +1980,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get talkInChat => 'Bí dea-bhéasach sa chomhrá!';
 
   @override
-  String get theFirstPersonToComeOnThisUrlWillPlayWithYou => 'Imreoidh an chéad duine a thagann go dtí an URL seo leat';
+  String get theFirstPersonToComeOnThisUrlWillPlayWithYou =>
+      'Imreoidh an chéad duine a thagann go dtí an URL seo leat';
 
   @override
   String get whiteResigned => 'D\'éirigh Bán as';
@@ -2039,7 +2125,8 @@ class AppLocalizationsGa extends AppLocalizations {
   }
 
   @override
-  String get dtzWithRounding => 'DTZ50\'\' le slánú, bunaithe ar líon na leathbheart go dtí an chéad ghabháil nó beart ceaithearnach';
+  String get dtzWithRounding =>
+      'DTZ50\'\' le slánú, bunaithe ar líon na leathbheart go dtí an chéad ghabháil nó beart ceaithearnach';
 
   @override
   String get noGameFound => 'Níor aimsíodh cluiche';
@@ -2048,7 +2135,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get maxDepthReached => 'Doimhneacht uasta bainte amach!';
 
   @override
-  String get maybeIncludeMoreGamesFromThePreferencesMenu => 'D\'fheadfaí níos mó cluichí a chur san áireamh ón roghchlár?';
+  String get maybeIncludeMoreGamesFromThePreferencesMenu =>
+      'D\'fheadfaí níos mó cluichí a chur san áireamh ón roghchlár?';
 
   @override
   String get openings => 'Oscailtí';
@@ -2080,7 +2168,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get lossOr50MovesByPriorMistake => 'Cailleadh nó 50 beart trí bhotún roimhe seo';
 
   @override
-  String get unknownDueToRounding => 'Ní ráthaítear bua / caillteanas ach má leanadh an líne mholta boird ón mbeart gabhála nó ceithearnach deireanach, mar gheall ar chothromú féideartha luachanna DTZ i mboscaí tábla Syzygy.';
+  String get unknownDueToRounding =>
+      'Ní ráthaítear bua / caillteanas ach má leanadh an líne mholta boird ón mbeart gabhála nó ceithearnach deireanach, mar gheall ar chothromú féideartha luachanna DTZ i mboscaí tábla Syzygy.';
 
   @override
   String get allSet => 'Réidh le himirt!';
@@ -2128,7 +2217,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get infiniteAnalysis => 'Anailís gan teorainn';
 
   @override
-  String get removesTheDepthLimit => 'Faigheann sé réidh leis an teorainn doimhneachta, agus coinníonn sé do ríomhaire te';
+  String get removesTheDepthLimit =>
+      'Faigheann sé réidh leis an teorainn doimhneachta, agus coinníonn sé do ríomhaire te';
 
   @override
   String get blunder => 'Meancóg';
@@ -2185,7 +2275,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get signUp => 'Cláraigh';
 
   @override
-  String get computersAreNotAllowedToPlay => 'Níl cead ag ríomhair agus imreoirí le cabhair ó ríomhairí imirt. Ná bí ag lorg cabhrach ó innill fichille, bunachair sonraí nó imreoirí eile agus tú ag imirt. Moltar go láidir gan iliomaid cuntais a chruthú agus is féidir cosc a chur ar úsáideoirí as an iomarca cuntais a chruthú.';
+  String get computersAreNotAllowedToPlay =>
+      'Níl cead ag ríomhair agus imreoirí le cabhair ó ríomhairí imirt. Ná bí ag lorg cabhrach ó innill fichille, bunachair sonraí nó imreoirí eile agus tú ag imirt. Moltar go láidir gan iliomaid cuntais a chruthú agus is féidir cosc a chur ar úsáideoirí as an iomarca cuntais a chruthú.';
 
   @override
   String get games => 'Cluichí';
@@ -2262,13 +2353,16 @@ class AppLocalizationsGa extends AppLocalizations {
   String get changeUsername => 'Athraigh ainm úsáideora';
 
   @override
-  String get changeUsernameNotSame => 'Ní féidir ach cás na litreacha a athrú. Mar shampla ó \"seanog\" go \"SeanOg\".';
+  String get changeUsernameNotSame =>
+      'Ní féidir ach cás na litreacha a athrú. Mar shampla ó \"seanog\" go \"SeanOg\".';
 
   @override
-  String get changeUsernameDescription => 'Athraigh d\'ainm úsáideora. Ní féidir é seo a dhéanamh ach uair amháin agus ní cheadaítear duit ach cás na litreacha i d’ainm úsáideora a athrú.';
+  String get changeUsernameDescription =>
+      'Athraigh d\'ainm úsáideora. Ní féidir é seo a dhéanamh ach uair amháin agus ní cheadaítear duit ach cás na litreacha i d’ainm úsáideora a athrú.';
 
   @override
-  String get signupUsernameHint => 'Déan cinnte ainm úsáideora a oireann don teaghlach a roghnú. Ní féidir leat é a athrú ina dhiaidh agus dúnfar aon chuntais a bhfuil ainmneacha úsáideora míchuí orthu!';
+  String get signupUsernameHint =>
+      'Déan cinnte ainm úsáideora a oireann don teaghlach a roghnú. Ní féidir leat é a athrú ina dhiaidh agus dúnfar aon chuntais a bhfuil ainmneacha úsáideora míchuí orthu!';
 
   @override
   String get signupEmailHint => 'Ní úsáidfimid é ach le haghaidh athshocrú pasfhocail.';
@@ -2292,13 +2386,15 @@ class AppLocalizationsGa extends AppLocalizations {
   String get forgotPassword => 'An ndearna tú dearmad ar do phasfhocal?';
 
   @override
-  String get error_weakPassword => 'Tá an pasfhocal seo thar a bheith coitianta, agus ró-éasca le buille faoi thuairim.';
+  String get error_weakPassword =>
+      'Tá an pasfhocal seo thar a bheith coitianta, agus ró-éasca le buille faoi thuairim.';
 
   @override
   String get error_namePassword => 'Ná húsáid d\'ainm úsáideora mar do phasfhocal.';
 
   @override
-  String get blankedPassword => 'D\'úsáid tú an pasfhocal céanna ar shuíomh eile, agus tá an suíomh sin curtha i gcontúirt. Chun sábháilteacht do chuntais Lichess a chinntiú, ní mór dúinn pasfhocal nua a shocrú. Go raibh maith agat as do thuiscint.';
+  String get blankedPassword =>
+      'D\'úsáid tú an pasfhocal céanna ar shuíomh eile, agus tá an suíomh sin curtha i gcontúirt. Chun sábháilteacht do chuntais Lichess a chinntiú, ní mór dúinn pasfhocal nua a shocrú. Go raibh maith agat as do thuiscint.';
 
   @override
   String get youAreLeavingLichess => 'Tá tú ag fágáil Lichess';
@@ -2312,16 +2408,19 @@ class AppLocalizationsGa extends AppLocalizations {
   }
 
   @override
-  String get passwordSuggestion => 'Ná socraigh pasfhocal a mhol duine éigin eile. Úsáidfidh siad é chun do chuntas a ghoid.';
+  String get passwordSuggestion =>
+      'Ná socraigh pasfhocal a mhol duine éigin eile. Úsáidfidh siad é chun do chuntas a ghoid.';
 
   @override
-  String get emailSuggestion => 'Ná socraigh seoladh ríomhphoist a mhol duine éigin eile. Úsáidfidh siad é chun do chuntas a ghoid.';
+  String get emailSuggestion =>
+      'Ná socraigh seoladh ríomhphoist a mhol duine éigin eile. Úsáidfidh siad é chun do chuntas a ghoid.';
 
   @override
   String get emailConfirmHelp => 'Cabhair le deimhniú ríomhphoist';
 
   @override
-  String get emailConfirmNotReceived => 'Nach bhfuair tú do ríomhphost deimhnithe tar éis síniú suas?';
+  String get emailConfirmNotReceived =>
+      'Nach bhfuair tú do ríomhphost deimhnithe tar éis síniú suas?';
 
   @override
   String get whatSignupUsername => 'Cén t-ainm úsáideora a d\'úsáid tú chun clárú?';
@@ -2332,7 +2431,8 @@ class AppLocalizationsGa extends AppLocalizations {
   }
 
   @override
-  String get usernameCanBeUsedForNewAccount => 'Is féidir leat an t-ainm úsáideora seo a úsáid chun cuntas nua a chruthú';
+  String get usernameCanBeUsedForNewAccount =>
+      'Is féidir leat an t-ainm úsáideora seo a úsáid chun cuntas nua a chruthú';
 
   @override
   String emailSent(String param) {
@@ -2346,10 +2446,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get refreshInboxAfterFiveMinutes => 'Fan 5 nóiméad agus athnuachan ríomhphoist.';
 
   @override
-  String get checkSpamFolder => 'Seiceáil freisin d\'fhillteán turscair. Más ansin é marcáil nach turscar é.';
+  String get checkSpamFolder =>
+      'Seiceáil freisin d\'fhillteán turscair. Más ansin é marcáil nach turscar é.';
 
   @override
-  String get emailForSignupHelp => 'Má theipeann ar gach rud eile, seol an ríomhphost seo chugainn:';
+  String get emailForSignupHelp =>
+      'Má theipeann ar gach rud eile, seol an ríomhphost seo chugainn:';
 
   @override
   String copyTextToEmail(String param) {
@@ -2357,7 +2459,8 @@ class AppLocalizationsGa extends AppLocalizations {
   }
 
   @override
-  String get waitForSignupHelp => 'Beimid ar ais chugat go luath chun cabhrú leat do chlárú a chur i gcrích.';
+  String get waitForSignupHelp =>
+      'Beimid ar ais chugat go luath chun cabhrú leat do chlárú a chur i gcrích.';
 
   @override
   String accountConfirmed(String param) {
@@ -2586,7 +2689,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get backToTournament => 'Fill ar an chomórtas';
 
   @override
-  String get noDrawBeforeSwissLimit => 'Ní féidir cluiche cothroma a aontú sula n-imrítear 30 beart i gcomórtas Eilvéiseach.';
+  String get noDrawBeforeSwissLimit =>
+      'Ní féidir cluiche cothroma a aontú sula n-imrítear 30 beart i gcomórtas Eilvéiseach.';
 
   @override
   String get thematic => 'Téamach';
@@ -2635,7 +2739,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get backToGame => 'Fill ar an chluiche';
 
   @override
-  String get siteDescription => 'Freastalaí fichille saor in aisce. Imir ficheall i gcomhéadan glan. Níl aon fógraí agus ní chaithfear clárú nó plugin a úsáid. Imir ficheall leis an ríomhaire, le cairde nó céilí comhraic randamach.';
+  String get siteDescription =>
+      'Freastalaí fichille saor in aisce. Imir ficheall i gcomhéadan glan. Níl aon fógraí agus ní chaithfear clárú nó plugin a úsáid. Imir ficheall leis an ríomhaire, le cairde nó céilí comhraic randamach.';
 
   @override
   String xJoinedTeamY(String param1, String param2) {
@@ -2704,19 +2809,23 @@ class AppLocalizationsGa extends AppLocalizations {
   String get importGame => 'Déan cluiche a iompórtáil';
 
   @override
-  String get importGameExplanation => 'Greamaigh cluiche PGN chun athfhéachaint inbhrabhsala a fháil,\nanailís ríomhaire, comhrá cluiche agus URL inroinnte.';
+  String get importGameExplanation =>
+      'Greamaigh cluiche PGN chun athfhéachaint inbhrabhsala a fháil,\nanailís ríomhaire, comhrá cluiche agus URL inroinnte.';
 
   @override
-  String get importGameCaveat => 'Scriosfar éagsúlachtaí. Chun iad a choinneáil, iompórtáil an PGN trí staidéar.';
+  String get importGameCaveat =>
+      'Scriosfar éagsúlachtaí. Chun iad a choinneáil, iompórtáil an PGN trí staidéar.';
 
   @override
-  String get importGameDataPrivacyWarning => 'This PGN can be accessed by the public. To import a game privately, use a study.';
+  String get importGameDataPrivacyWarning =>
+      'This PGN can be accessed by the public. To import a game privately, use a study.';
 
   @override
   String get thisIsAChessCaptcha => 'Is CAPCHTA fichille é seo.';
 
   @override
-  String get clickOnTheBoardToMakeYourMove => 'Cliceáil ar an bhord le beart a dhéanamh, agus cruthaigh gur duine thú.';
+  String get clickOnTheBoardToMakeYourMove =>
+      'Cliceáil ar an bhord le beart a dhéanamh, agus cruthaigh gur duine thú.';
 
   @override
   String get captcha_fail => 'Réitigh an captcha fichille, le do thoil.';
@@ -2826,13 +2935,16 @@ class AppLocalizationsGa extends AppLocalizations {
   String get safeTournamentName => 'Pioc ainm an-sábháilte don chomórtas.';
 
   @override
-  String get inappropriateNameWarning => 'D\'fhéadfadh do chuntas a dhúnadh má roghnaítear aon rud míchuí.';
+  String get inappropriateNameWarning =>
+      'D\'fhéadfadh do chuntas a dhúnadh má roghnaítear aon rud míchuí.';
 
   @override
-  String get emptyTournamentName => 'Fág folamh chun an comórtas a ainmniú i ndiaidh imreoir fichille suntasach.';
+  String get emptyTournamentName =>
+      'Fág folamh chun an comórtas a ainmniú i ndiaidh imreoir fichille suntasach.';
 
   @override
-  String get makePrivateTournament => 'Déan an comórtas príobháideach, agus cuir srian ar rochtain le pasfhocal';
+  String get makePrivateTournament =>
+      'Déan an comórtas príobháideach, agus cuir srian ar rochtain le pasfhocal';
 
   @override
   String get join => 'Cláraigh';
@@ -2970,7 +3082,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get flair => 'Flair';
 
   @override
-  String get youCanHideFlair => 'There is a setting to hide all user flairs across the entire site.';
+  String get youCanHideFlair =>
+      'There is a setting to hide all user flairs across the entire site.';
 
   @override
   String get biography => 'Beathaisnéis';
@@ -3006,13 +3119,15 @@ class AppLocalizationsGa extends AppLocalizations {
   String get activePlayers => 'Imreoirí gníomhacha';
 
   @override
-  String get bewareTheGameIsRatedButHasNoClock => 'Tabhair aire, tá an cluiche seo rátáilte ach níl clog aige!';
+  String get bewareTheGameIsRatedButHasNoClock =>
+      'Tabhair aire, tá an cluiche seo rátáilte ach níl clog aige!';
 
   @override
   String get success => 'D\'éirigh leat';
 
   @override
-  String get automaticallyProceedToNextGameAfterMoving => 'Téigh ar aghaidh chuig an chéad cluiche eile go huathoibríoch i ndiaidh bogadh';
+  String get automaticallyProceedToNextGameAfterMoving =>
+      'Téigh ar aghaidh chuig an chéad cluiche eile go huathoibríoch i ndiaidh bogadh';
 
   @override
   String get autoSwitch => 'Athrú uathoibríoch';
@@ -3033,7 +3148,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get descPrivate => 'Cur síos príobháideach';
 
   @override
-  String get descPrivateHelp => 'Téacs nach bhfuil le feiceáil ach le baill. Má tá sé socraithe, cuirtear an tuairisc phoiblí in ionad do baill na foirne.';
+  String get descPrivateHelp =>
+      'Téacs nach bhfuil le feiceáil ach le baill. Má tá sé socraithe, cuirtear an tuairisc phoiblí in ionad do baill na foirne.';
 
   @override
   String get no => 'Ná lig';
@@ -3102,16 +3218,20 @@ class AppLocalizationsGa extends AppLocalizations {
   String get other => 'Eile';
 
   @override
-  String get reportCheatBoostHelp => 'Paste the link to the game(s) and explain what is wrong about this user\'s behaviour. Don\'t just say \"they cheat\", but tell us how you came to this conclusion.';
+  String get reportCheatBoostHelp =>
+      'Paste the link to the game(s) and explain what is wrong about this user\'s behaviour. Don\'t just say \"they cheat\", but tell us how you came to this conclusion.';
 
   @override
-  String get reportUsernameHelp => 'Explain what about this username is offensive. Don\'t just say \"it\'s offensive/inappropriate\", but tell us how you came to this conclusion, especially if the insult is obfuscated, not in english, is in slang, or is a historical/cultural reference.';
+  String get reportUsernameHelp =>
+      'Explain what about this username is offensive. Don\'t just say \"it\'s offensive/inappropriate\", but tell us how you came to this conclusion, especially if the insult is obfuscated, not in english, is in slang, or is a historical/cultural reference.';
 
   @override
-  String get reportProcessedFasterInEnglish => 'Your report will be processed faster if written in English.';
+  String get reportProcessedFasterInEnglish =>
+      'Your report will be processed faster if written in English.';
 
   @override
-  String get error_provideOneCheatedGameLink => 'Cuir nasc ar fáil chuig cluiche amháin ar a laghad ar tharla caimiléireacht ann le do thoil.';
+  String get error_provideOneCheatedGameLink =>
+      'Cuir nasc ar fáil chuig cluiche amháin ar a laghad ar tharla caimiléireacht ann le do thoil.';
 
   @override
   String by(String param) {
@@ -3187,7 +3307,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get letOtherPlayersChallengeYou => 'Lig do imreoirí eile dúshláin a sheoladh chugat';
 
   @override
-  String get letOtherPlayersInviteYouToStudy => 'Lig do imreoirí eile cuireadh a sheoladh chugat le haghaidh staidéir';
+  String get letOtherPlayersInviteYouToStudy =>
+      'Lig do imreoirí eile cuireadh a sheoladh chugat le haghaidh staidéir';
 
   @override
   String get sound => 'Fuaim';
@@ -3255,10 +3376,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get starting => 'Ag tosú:';
 
   @override
-  String get allInformationIsPublicAndOptional => 'Tá an t-eolas ar fad roghnach agus tá sé infheicthe do chách.';
+  String get allInformationIsPublicAndOptional =>
+      'Tá an t-eolas ar fad roghnach agus tá sé infheicthe do chách.';
 
   @override
-  String get biographyDescription => 'Labhair fút féin, faoi do shuimeanna, cad is maith leat i bhficheall, na hoscailtí is fearr leat, imreoirí, ...';
+  String get biographyDescription =>
+      'Labhair fút féin, faoi do shuimeanna, cad is maith leat i bhficheall, na hoscailtí is fearr leat, imreoirí, ...';
 
   @override
   String get listBlockedPlayers => 'Liostaigh imreoirí atá blocáilte agat';
@@ -3306,7 +3429,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get error_email => 'Tá an seoladh ríomhphoist seo neamhbhailí';
 
   @override
-  String get error_email_acceptable => 'Ní ghlactar leis an seoladh ríomhphoist seo. Déan é a sheiceáil faoi dhó le do thoil, agus bain triail eile as.';
+  String get error_email_acceptable =>
+      'Ní ghlactar leis an seoladh ríomhphoist seo. Déan é a sheiceáil faoi dhó le do thoil, agus bain triail eile as.';
 
   @override
   String get error_email_unique => 'Seoladh ríomhphoist neamhbhailí nó tógtha cheana féin';
@@ -3446,40 +3570,50 @@ class AppLocalizationsGa extends AppLocalizations {
   String get returnToSimulHomepage => 'Pill ar leathanach baile na gcluichí comhuaineach';
 
   @override
-  String get aboutSimul => 'Bíonn imreoir aonair os comhair roinnt imreoirí ag an am céanna i gcluichí comhuaineacha.';
+  String get aboutSimul =>
+      'Bíonn imreoir aonair os comhair roinnt imreoirí ag an am céanna i gcluichí comhuaineacha.';
 
   @override
-  String get aboutSimulImage => 'As 50 céile comhraic, bhuaigh Fischer 47 cluiche, 2 chomhscór agus chaill sé 1.';
+  String get aboutSimulImage =>
+      'As 50 céile comhraic, bhuaigh Fischer 47 cluiche, 2 chomhscór agus chaill sé 1.';
 
   @override
-  String get aboutSimulRealLife => 'Tá an coincheap bunaithe ar eachtraí an fíorshaol. Sa fíorshaol, baineann sé seo leis an óstach comhuaineach ag bogadh ó thábla go tábla chun aon bheart amháin a dhéanamh.';
+  String get aboutSimulRealLife =>
+      'Tá an coincheap bunaithe ar eachtraí an fíorshaol. Sa fíorshaol, baineann sé seo leis an óstach comhuaineach ag bogadh ó thábla go tábla chun aon bheart amháin a dhéanamh.';
 
   @override
-  String get aboutSimulRules => 'Nuair a thosaíonn an cluiche comhuaineach, tosaíonn gach imreoir cluiche leis an óstach, a imríonn leis na píosaí bána. Críochnaíonn an cluiche comhuaineach nuair a chríochnaíonn gach cluiche.';
+  String get aboutSimulRules =>
+      'Nuair a thosaíonn an cluiche comhuaineach, tosaíonn gach imreoir cluiche leis an óstach, a imríonn leis na píosaí bána. Críochnaíonn an cluiche comhuaineach nuair a chríochnaíonn gach cluiche.';
 
   @override
-  String get aboutSimulSettings => 'Bíonn cluichí comhuaineacha neamhfhoirmiúil i gconaí. Tá athimirt, aistarraing agus am breise díchumasaithe.';
+  String get aboutSimulSettings =>
+      'Bíonn cluichí comhuaineacha neamhfhoirmiúil i gconaí. Tá athimirt, aistarraing agus am breise díchumasaithe.';
 
   @override
   String get create => 'Cruthaigh';
 
   @override
-  String get whenCreateSimul => 'Nuair a chruthaíonn tú cluiche comhuaineach, imríonn tú roinnt imreoirí ag an am céanna.';
+  String get whenCreateSimul =>
+      'Nuair a chruthaíonn tú cluiche comhuaineach, imríonn tú roinnt imreoirí ag an am céanna.';
 
   @override
-  String get simulVariantsHint => 'Má roghnaíonn tú roinnt leaganacha, faigheann gach imreoir deis cluiche a roghnú.';
+  String get simulVariantsHint =>
+      'Má roghnaíonn tú roinnt leaganacha, faigheann gach imreoir deis cluiche a roghnú.';
 
   @override
-  String get simulClockHint => 'Suiteáil Clog Fischer. Braitheann an méid ama a theastaíonn uait ar an méid céile comhraic atá agat.';
+  String get simulClockHint =>
+      'Suiteáil Clog Fischer. Braitheann an méid ama a theastaíonn uait ar an méid céile comhraic atá agat.';
 
   @override
-  String get simulAddExtraTime => 'Féadfaidh tú am breise a chur le do chlog chun cabhrú leat déileáil leis an gcluiche comhuaineach.';
+  String get simulAddExtraTime =>
+      'Féadfaidh tú am breise a chur le do chlog chun cabhrú leat déileáil leis an gcluiche comhuaineach.';
 
   @override
   String get simulHostExtraTime => 'Am breise an óstaigh';
 
   @override
-  String get simulAddExtraTimePerPlayer => 'Cuir am tosaigh le do chlog do gach imreoir a ghlacann páirt sa chluiche comhuaineach.';
+  String get simulAddExtraTimePerPlayer =>
+      'Cuir am tosaigh le do chlog do gach imreoir a ghlacann páirt sa chluiche comhuaineach.';
 
   @override
   String get simulHostExtraTimePerPlayer => 'Óstáil am breise clog do gach imreora';
@@ -3551,7 +3685,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get togglePositionAnnotations => 'Toggle position annotations';
 
   @override
-  String get variationArrowsInfo => 'Variation arrows let you navigate without using the move list.';
+  String get variationArrowsInfo =>
+      'Variation arrows let you navigate without using the move list.';
 
   @override
   String get playSelectedMove => 'play selected move';
@@ -3560,10 +3695,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get newTournament => 'Comórtas nua';
 
   @override
-  String get tournamentHomeTitle => 'Comórtais fichille ina bhfuil srianta ama agus comhathraithe éagsúla';
+  String get tournamentHomeTitle =>
+      'Comórtais fichille ina bhfuil srianta ama agus comhathraithe éagsúla';
 
   @override
-  String get tournamentHomeDescription => 'Imir comortais fichille ag luas tapaigh! Cláraigh do chomórtas oifigiúil sceidealaithe nó cruthaigh do cheann féin. Gasta (Bullet), Tapa (Blitz), Clasaiceach (Classical), Ficheall 960 (Chess960), Rí an Chnoic (King of the Hill), Sáinn faoi thrí (Threecheck), agus tuilleadh roghanna ar fáil le haghaidh spraoi fichille gan críoch.';
+  String get tournamentHomeDescription =>
+      'Imir comortais fichille ag luas tapaigh! Cláraigh do chomórtas oifigiúil sceidealaithe nó cruthaigh do cheann féin. Gasta (Bullet), Tapa (Blitz), Clasaiceach (Classical), Ficheall 960 (Chess960), Rí an Chnoic (King of the Hill), Sáinn faoi thrí (Threecheck), agus tuilleadh roghanna ar fáil le haghaidh spraoi fichille gan críoch.';
 
   @override
   String get tournamentNotFound => 'Níor aimsíodh an comórtas';
@@ -3572,7 +3709,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get tournamentDoesNotExist => 'Níl an comórtas seo ann.';
 
   @override
-  String get tournamentMayHaveBeenCanceled => 'B\'fhéidir gur cuireadh an comórtas seo ar ceal má d\'fhág gach imreoir sular thosaigh sé.';
+  String get tournamentMayHaveBeenCanceled =>
+      'B\'fhéidir gur cuireadh an comórtas seo ar ceal má d\'fhág gach imreoir sular thosaigh sé.';
 
   @override
   String get returnToTournamentsHomepage => 'Fill ar leathanach baile na gcomórtas';
@@ -3620,10 +3758,12 @@ class AppLocalizationsGa extends AppLocalizations {
   String get checkYourEmail => 'Seiceáil do ríomphoist';
 
   @override
-  String get weHaveSentYouAnEmailClickTheLink => 'Seoladh ríomhphost chugat. Cliceáil ar an nasc sa ríomhphost chun do chuntas a ghníomhachtú.';
+  String get weHaveSentYouAnEmailClickTheLink =>
+      'Seoladh ríomhphost chugat. Cliceáil ar an nasc sa ríomhphost chun do chuntas a ghníomhachtú.';
 
   @override
-  String get ifYouDoNotSeeTheEmailCheckOtherPlaces => 'Mura bhfeiceann tú an ríomhphost, seiceáil áiteanna eile a d’fhéadfadh sé a bheith ann, cosúil le junk, spam, sóisialta nó fillteáin eile.';
+  String get ifYouDoNotSeeTheEmailCheckOtherPlaces =>
+      'Mura bhfeiceann tú an ríomhphost, seiceáil áiteanna eile a d’fhéadfadh sé a bheith ann, cosúil le junk, spam, sóisialta nó fillteáin eile.';
 
   @override
   String weHaveSentYouAnEmailTo(String param) {
@@ -3659,13 +3799,16 @@ class AppLocalizationsGa extends AppLocalizations {
   String get crosstable => 'Trastábla';
 
   @override
-  String get youCanAlsoScrollOverTheBoardToMoveInTheGame => 'Is féidir scrolláil thar an gclár freisin chun bogadh sa chluiche.';
+  String get youCanAlsoScrollOverTheBoardToMoveInTheGame =>
+      'Is féidir scrolláil thar an gclár freisin chun bogadh sa chluiche.';
 
   @override
-  String get scrollOverComputerVariationsToPreviewThem => 'Scrollaigh thar athrúcháin ríomhaire chun réamhamharc a dhéanamh orthu.';
+  String get scrollOverComputerVariationsToPreviewThem =>
+      'Scrollaigh thar athrúcháin ríomhaire chun réamhamharc a dhéanamh orthu.';
 
   @override
-  String get analysisShapesHowTo => 'Brúigh shift + cliceáil nó deaschliceáil chun ciorcail agus saigheada a tharraingt ar an gclár.';
+  String get analysisShapesHowTo =>
+      'Brúigh shift + cliceáil nó deaschliceáil chun ciorcail agus saigheada a tharraingt ar an gclár.';
 
   @override
   String get letOtherPlayersMessageYou => 'Lig d\'imreoirí eile teachtaireacht a chur chugat';
@@ -3692,7 +3835,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get kidModeIsEnabled => 'Kid mode is enabled.';
 
   @override
-  String get kidModeExplanation => 'Baineann sé seo le sábháilteacht. I mód na bpáistí, tá gach cumarsáid múchta. Úsáid seo do pháistí agus daltaí scoile, chun iad a chosaint ó úsáideoirí idirlín eile.';
+  String get kidModeExplanation =>
+      'Baineann sé seo le sábháilteacht. I mód na bpáistí, tá gach cumarsáid múchta. Úsáid seo do pháistí agus daltaí scoile, chun iad a chosaint ó úsáideoirí idirlín eile.';
 
   @override
   String inKidModeTheLichessLogoGetsIconX(String param) {
@@ -3700,7 +3844,8 @@ class AppLocalizationsGa extends AppLocalizations {
   }
 
   @override
-  String get askYourChessTeacherAboutLiftingKidMode => 'Tá do chuntas á bhainistiú. Iarr ar do mhúinteoir fichille faoi mhodh ardú na bpáistí.';
+  String get askYourChessTeacherAboutLiftingKidMode =>
+      'Tá do chuntas á bhainistiú. Iarr ar do mhúinteoir fichille faoi mhodh ardú na bpáistí.';
 
   @override
   String get enableKidMode => 'Cuir mód na bpáistí ar siúl';
@@ -3724,7 +3869,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get asFreeAsLichess => 'Chomh saor le Lichess';
 
   @override
-  String get builtForTheLoveOfChessNotMoney => 'Cruthaithe mar gheall ar ghrá don fhicheall, ní d\'airgead';
+  String get builtForTheLoveOfChessNotMoney =>
+      'Cruthaithe mar gheall ar ghrá don fhicheall, ní d\'airgead';
 
   @override
   String get everybodyGetsAllFeaturesForFree => 'Faigheann gach duine gach gné saor in aisce';
@@ -3834,7 +3980,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get embedInYourWebsite => 'Leabaigh i do shuíomh gréasáin';
 
   @override
-  String get usernameAlreadyUsed => 'Tá an t-ainm úsáideora seo in úsáid cheana féin, bain triail as ceann eile.';
+  String get usernameAlreadyUsed =>
+      'Tá an t-ainm úsáideora seo in úsáid cheana féin, bain triail as ceann eile.';
 
   @override
   String get usernamePrefixInvalid => 'Caithfidh an t-ainm úsáideora tosú le litir.';
@@ -3843,7 +3990,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get usernameSuffixInvalid => 'Caithfidh an t-ainm úsáideora críochnú le litir nó uimhir.';
 
   @override
-  String get usernameCharsInvalid => 'Ní mór nach mbeadh ach litreacha, uimhreacha, fo-línte agus fleiscíní san ainm úsáideora. Ní cheadaítear fostríoca agus fleiscíní leanúnacha.';
+  String get usernameCharsInvalid =>
+      'Ní mór nach mbeadh ach litreacha, uimhreacha, fo-línte agus fleiscíní san ainm úsáideora. Ní cheadaítear fostríoca agus fleiscíní leanúnacha.';
 
   @override
   String get usernameUnacceptable => 'Níl an t-ainm úsáideora seo inghlactha.';
@@ -4006,7 +4154,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get addCurrentVariation => 'Cuir athrúchán reatha leis';
 
   @override
-  String get playVariationToCreateConditionalPremoves => 'Imir athrúchán chun réamhbheart coinníollach a chruthú';
+  String get playVariationToCreateConditionalPremoves =>
+      'Imir athrúchán chun réamhbheart coinníollach a chruthú';
 
   @override
   String get noConditionalPremoves => 'Gan aon réamhbhearta coinníollacha';
@@ -4032,13 +4181,16 @@ class AppLocalizationsGa extends AppLocalizations {
   String get why => 'Cén fáth?';
 
   @override
-  String get pleasantChessExperience => 'Ba mhaith linn atmaisféar maith fichille a chur ar fáil do chách.';
+  String get pleasantChessExperience =>
+      'Ba mhaith linn atmaisféar maith fichille a chur ar fáil do chách.';
 
   @override
-  String get goodPractice => 'De bhrí sin, ní mór dúinn a chinntiú go leanann gach ficheallaí dea-chleachtas.';
+  String get goodPractice =>
+      'De bhrí sin, ní mór dúinn a chinntiú go leanann gach ficheallaí dea-chleachtas.';
 
   @override
-  String get potentialProblem => 'Nuair a aimsítear fadhb fhéideartha, taispeánann muid an teachtaireacht seo.';
+  String get potentialProblem =>
+      'Nuair a aimsítear fadhb fhéideartha, taispeánann muid an teachtaireacht seo.';
 
   @override
   String get howToAvoidThis => 'Conas seo a sheachaint?';
@@ -4047,7 +4199,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get playEveryGame => 'Imir gach cluiche a chuireann tú tús leis.';
 
   @override
-  String get tryToWin => 'Déan iarracht gach cluiche a imríonn tú a bhuachaint (nó comhscór a fháil ar a laghad).';
+  String get tryToWin =>
+      'Déan iarracht gach cluiche a imríonn tú a bhuachaint (nó comhscór a fháil ar a laghad).';
 
   @override
   String get resignLostGames => 'Éirigh as cluichí caillte (ná lig don clog rith amach).';
@@ -4068,7 +4221,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get currentMatchScore => 'Scór reatha an chluiche';
 
   @override
-  String get agreementAssistance => 'Aontaím nach nglacfaidh mé le cabhair ar bith i rith mo chluichí (ó ríomhaire fichille, ó leabhar, ó bhunachar sonraí nó ó dhuine eile).';
+  String get agreementAssistance =>
+      'Aontaím nach nglacfaidh mé le cabhair ar bith i rith mo chluichí (ó ríomhaire fichille, ó leabhar, ó bhunachar sonraí nó ó dhuine eile).';
 
   @override
   String get agreementNice => 'Aontaím go mbeidh meas agam i gcónaí ar fhicheallaithe eile.';
@@ -4156,7 +4310,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get theForumEtiquette => 'rialacha iompair an fhóraim';
 
   @override
-  String get thisTopicIsArchived => 'Cuireadh an t-ábhar seo i gcartlann agus ní féidir freagra a thabhairt air a thuilleadh.';
+  String get thisTopicIsArchived =>
+      'Cuireadh an t-ábhar seo i gcartlann agus ní féidir freagra a thabhairt air a thuilleadh.';
 
   @override
   String joinTheTeamXToPost(String param1) {
@@ -4169,7 +4324,8 @@ class AppLocalizationsGa extends AppLocalizations {
   }
 
   @override
-  String get youCannotPostYetPlaySomeGames => 'Níl cead postáil sna fóraim go fóill. Imir roinnt cluichí!';
+  String get youCannotPostYetPlaySomeGames =>
+      'Níl cead postáil sna fóraim go fóill. Imir roinnt cluichí!';
 
   @override
   String get subscribe => 'Liostáil';
@@ -4222,7 +4378,8 @@ class AppLocalizationsGa extends AppLocalizations {
   }
 
   @override
-  String get lostAgainstTOSViolator => 'Chaill tú i gcoinne duine a sháraigh téarmaí seirbhíse Lichess';
+  String get lostAgainstTOSViolator =>
+      'Chaill tú i gcoinne duine a sháraigh téarmaí seirbhíse Lichess';
 
   @override
   String refundXpointsTimeControlY(String param1, String param2) {
@@ -4251,7 +4408,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get tournDescription => 'Cur síos ar an gcomórtas';
 
   @override
-  String get tournDescriptionHelp => 'Rud ar bith speisialta ba mhaith leat a rá leis na rannpháirtithe? Déan iarracht é a choinneáil gearr. Tá naisc Markdown ar fáil: [name](https://url)';
+  String get tournDescriptionHelp =>
+      'Rud ar bith speisialta ba mhaith leat a rá leis na rannpháirtithe? Déan iarracht é a choinneáil gearr. Tá naisc Markdown ar fáil: [name](https://url)';
 
   @override
   String get ratedFormHelp => 'Déantar cluichí a rátáil\nagus rátálacha imreoirí tionchair';
@@ -4352,7 +4510,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get reopenYourAccount => 'Athoscailt do chuntas';
 
   @override
-  String get reopenYourAccountDescription => 'If you closed your account, but have since changed your mind, you get a chance of getting your account back.';
+  String get reopenYourAccountDescription =>
+      'If you closed your account, but have since changed your mind, you get a chance of getting your account back.';
 
   @override
   String get emailAssociatedToaccount => 'Seoladh ríomhphoist a bhaineann leis an gcuntas';
@@ -4378,7 +4537,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get resignTheGame => 'Éirigh as';
 
   @override
-  String get youCantStartNewGame => 'Ní féidir leat cluiche nua a thosú go dtí go mbeidh an ceann seo críochnaithe.';
+  String get youCantStartNewGame =>
+      'Ní féidir leat cluiche nua a thosú go dtí go mbeidh an ceann seo críochnaithe.';
 
   @override
   String get since => 'Ó';
@@ -4393,7 +4553,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get switchSides => 'Athraigh taobhanna';
 
   @override
-  String get closingAccountWithdrawAppeal => 'Má dhúnann tú do chuntas tarraingeofar siar d’achomharc';
+  String get closingAccountWithdrawAppeal =>
+      'Má dhúnann tú do chuntas tarraingeofar siar d’achomharc';
 
   @override
   String get ourEventTips => 'Ár leideanna chun imeachtaí a eagrú';
@@ -4405,7 +4566,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get showMeEverything => 'Show me everything';
 
   @override
-  String get lichessPatronInfo => 'Is carthanas é Lichess, agus agus bogearraí foinse oscailte go hiomlán saor in aisce.\nMaoinítear na costais oibriúcháin, na forbartha agus an t-ábhar go léir trí thabhartais úsáideora amháin.';
+  String get lichessPatronInfo =>
+      'Is carthanas é Lichess, agus agus bogearraí foinse oscailte go hiomlán saor in aisce.\nMaoinítear na costais oibriúcháin, na forbartha agus an t-ábhar go léir trí thabhartais úsáideora amháin.';
 
   @override
   String get nothingToSeeHere => 'Nothing to see here at the moment.';
@@ -4422,7 +4584,8 @@ class AppLocalizationsGa extends AppLocalizations {
       many: 'D’fhág do chéile comhraic an cluiche. Féadfaidh tú an bua a fháil i $count soicind.',
       few: 'D’fhág do chéile comhraic an cluiche. Féadfaidh tú an bua a fháil i $count shoicind.',
       two: 'D’fhág do chéile comhraic an cluiche. Féadfaidh tú an bua a fháil i $count shoicind.',
-      one: 'D’fhág do chéile comhraic an cluiche. Féadfaidh tú an bua a fháil éileamh i $count soicind.',
+      one:
+          'D’fhág do chéile comhraic an cluiche. Féadfaidh tú an bua a fháil éileamh i $count soicind.',
     );
     return '$_temp0';
   }
@@ -5167,7 +5330,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get stormSkipHelp => 'Tá cead beart amháin a scipeáil in aon rás amháin:';
 
   @override
-  String get stormSkipExplanation => 'Scipeáil an beart seo chun do sraithbhuille a chaomhnú! Ní oibríonn sé ach uair amháin in aon rás amháin.';
+  String get stormSkipExplanation =>
+      'Scipeáil an beart seo chun do sraithbhuille a chaomhnú! Ní oibríonn sé ach uair amháin in aon rás amháin.';
 
   @override
   String get stormFailedPuzzles => 'Fadhbanna theip';
@@ -5228,7 +5392,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get streamerLichessStreamers => 'Sruthaithe Lichess';
 
   @override
-  String get studyPrivate => 'Cé na daoine! Tá an leathanach seo príobháideach, ní féidir leat é a rochtain';
+  String get studyPrivate =>
+      'Cé na daoine! Tá an leathanach seo príobháideach, ní féidir leat é a rochtain';
 
   @override
   String get studyMyStudies => 'Mo chuid staidéir';
@@ -5287,7 +5452,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get studyInviteToTheStudy => 'Tabhair cuireadh don staidéar';
 
   @override
-  String get studyPleaseOnlyInvitePeopleYouKnow => 'Ná tabhair cuireadh ach do dhaoine a bhfuil aithne agat orthu, agus ar mian leo go gníomhach a bheith páirteach sa staidéar seo.';
+  String get studyPleaseOnlyInvitePeopleYouKnow =>
+      'Ná tabhair cuireadh ach do dhaoine a bhfuil aithne agat orthu, agus ar mian leo go gníomhach a bheith páirteach sa staidéar seo.';
 
   @override
   String get studySearchByUsername => 'Cuardaigh de réir ainm úsáideora';
@@ -5332,22 +5498,27 @@ class AppLocalizationsGa extends AppLocalizations {
   String get studyAnnotateWithGlyphs => 'Nodaireacht le glifeanna';
 
   @override
-  String get studyTheChapterIsTooShortToBeAnalysed => 'Tá an chaibidil ró-ghearr le hanailís a dhéanamh uirthi.';
+  String get studyTheChapterIsTooShortToBeAnalysed =>
+      'Tá an chaibidil ró-ghearr le hanailís a dhéanamh uirthi.';
 
   @override
-  String get studyOnlyContributorsCanRequestAnalysis => 'Ní féidir ach le rannpháirtithe an staidéir anailís ríomhaire a iarraidh.';
+  String get studyOnlyContributorsCanRequestAnalysis =>
+      'Ní féidir ach le rannpháirtithe an staidéir anailís ríomhaire a iarraidh.';
 
   @override
-  String get studyGetAFullComputerAnalysis => 'Faigh anailís ríomhaire iomlán ón freastalaí ar an bpríomhlíne.';
+  String get studyGetAFullComputerAnalysis =>
+      'Faigh anailís ríomhaire iomlán ón freastalaí ar an bpríomhlíne.';
 
   @override
-  String get studyMakeSureTheChapterIsComplete => 'Bí cinnte go bhfuil an chaibidil críochnaithe. Ní féidir leat iarr ar anailís ach uair amháin.';
+  String get studyMakeSureTheChapterIsComplete =>
+      'Bí cinnte go bhfuil an chaibidil críochnaithe. Ní féidir leat iarr ar anailís ach uair amháin.';
 
   @override
   String get studyAllSyncMembersRemainOnTheSamePosition => 'Fanann gach ball SYNC sa suíomh céanna';
 
   @override
-  String get studyShareChanges => 'Roinn athruithe le lucht féachana agus sábháil iad ar an freastalaí';
+  String get studyShareChanges =>
+      'Roinn athruithe le lucht féachana agus sábháil iad ar an freastalaí';
 
   @override
   String get studyPlaying => 'Ag imirt';
@@ -5398,7 +5569,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get studyCurrentChapterUrl => 'URL caibidil reatha';
 
   @override
-  String get studyYouCanPasteThisInTheForumToEmbed => 'Is féidir é seo a ghreamú san fhóram chun leabú';
+  String get studyYouCanPasteThisInTheForumToEmbed =>
+      'Is féidir é seo a ghreamú san fhóram chun leabú';
 
   @override
   String get studyStartAtInitialPosition => 'Tosaigh ag an suíomh tosaigh';
@@ -5464,7 +5636,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get studyDeleteThisChapter => 'Scrios an chaibidil seo? Níl aon dul ar ais!';
 
   @override
-  String get studyClearAllCommentsInThisChapter => 'Glan gach trácht, glif agus cruthanna tarraingthe sa chaibidil seo?';
+  String get studyClearAllCommentsInThisChapter =>
+      'Glan gach trácht, glif agus cruthanna tarraingthe sa chaibidil seo?';
 
   @override
   String get studyRightUnderTheBoard => 'Díreach faoin gclár';
@@ -5561,7 +5734,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get studyEnableSync => 'Cuir sinc ar chumas';
 
   @override
-  String get studyYesKeepEveryoneOnTheSamePosition => 'Cinnte: coinnigh gach duine ar an suíomh céanna';
+  String get studyYesKeepEveryoneOnTheSamePosition =>
+      'Cinnte: coinnigh gach duine ar an suíomh céanna';
 
   @override
   String get studyNoLetPeopleBrowseFreely => 'Na déan: lig do dhaoine brabhsáil go saor';
@@ -5579,7 +5753,8 @@ class AppLocalizationsGa extends AppLocalizations {
   String get studyClearChat => 'Glan comhrá';
 
   @override
-  String get studyDeleteTheStudyChatHistory => 'Scrios an stair comhrá staidéir? Níl aon dul ar ais!';
+  String get studyDeleteTheStudyChatHistory =>
+      'Scrios an stair comhrá staidéir? Níl aon dul ar ais!';
 
   @override
   String get studyDeleteStudy => 'Scrios an staidéar';
@@ -5590,7 +5765,8 @@ class AppLocalizationsGa extends AppLocalizations {
   }
 
   @override
-  String get studyWhereDoYouWantToStudyThat => 'Cá háit ar mhaith leat staidéar a dhéanamh air sin?';
+  String get studyWhereDoYouWantToStudyThat =>
+      'Cá háit ar mhaith leat staidéar a dhéanamh air sin?';
 
   @override
   String get studyGoodMove => 'Beart maith';
