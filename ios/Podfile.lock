@@ -473,7 +473,7 @@ SPEC CHECKSUMS:
   FirebaseRemoteConfigInterop: 1c6135e8a094cc6368949f5faeeca7ee8948b8aa
   FirebaseSessions: 9b3b30947b97a15370e0902ee7a90f50ef60ead6
   FirebaseSharedSwift: e17c654ef1f1a616b0b33054e663ad1035c8fd40
-  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_appauth: 914057fda669db5073d3ca9d94ea932e7df3c964
   flutter_branch_sdk: 9c9ec6d44145b4fc5168e011bfce824b2c1fe506
   flutter_cashfree_pg_sdk: a5227425f7d58e63e8f6df295b826b944b6adeaf

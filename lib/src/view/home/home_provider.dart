@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/network/http.dart';
@@ -27,7 +28,11 @@ class HomeProvider extends StateNotifier<HomeState> {
 
     try {
       final response = await http.get(
-        Uri.parse('https://api.rooktook.com/api/v1/events'),
+        Uri.parse(
+          releaseMode
+              ? 'https://api.rooktook.com/api/v1/events'
+              : 'http://dev-api.rooktook.com/api/v1/events',
+        ),
         headers: headers,
       );
       if (response.statusCode == 200) {

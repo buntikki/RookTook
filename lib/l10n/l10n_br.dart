@@ -79,12 +79,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get mobilePuzzleStormSubtitle => 'Solve as many puzzles as possible in 3 minutes.';
 
   @override
-  String get mobilePuzzleStreakAbortWarning =>
-      'You will lose your current streak and your score will be saved.';
+  String get mobilePuzzleStreakAbortWarning => 'You will lose your current streak and your score will be saved.';
 
   @override
-  String get mobilePuzzleThemesSubtitle =>
-      'Play puzzles from your favorite openings, or choose a theme.';
+  String get mobilePuzzleThemesSubtitle => 'Play puzzles from your favorite openings, or choose a theme.';
 
   @override
   String get mobilePuzzlesTab => 'Puzzles';
@@ -99,8 +97,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get mobileSettingsImmersiveMode => 'Immersive mode';
 
   @override
-  String get mobileSettingsImmersiveModeSubtitle =>
-      'Hide system UI while playing. Use this if you are bothered by the system\'s navigation gestures at the edges of the screen. Applies to game and Puzzle Storm screens.';
+  String get mobileSettingsImmersiveModeSubtitle => 'Hide system UI while playing. Use this if you are bothered by the system\'s navigation gestures at the edges of the screen. Applies to game and Puzzle Storm screens.';
 
   @override
   String get mobileSettingsTab => 'Settings';
@@ -432,8 +429,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get broadcastHowToUseLichessBroadcasts => 'How to use Lichess Broadcasts.';
 
   @override
-  String get broadcastTheNewRoundHelp =>
-      'The new round will have the same members and contributors as the previous one.';
+  String get broadcastTheNewRoundHelp => 'The new round will have the same members and contributors as the previous one.';
 
   @override
   String get broadcastAddRound => 'Add a round';
@@ -468,8 +464,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get broadcastSourceSingleUrl => 'PGN Source URL';
 
   @override
-  String get broadcastSourceUrlHelp =>
-      'An URL a ray Lichess ganti evit kaout hizivadurioù ar PGN. Ret eo dezhi bezañ digor d\'an holl war Internet.';
+  String get broadcastSourceUrlHelp => 'An URL a ray Lichess ganti evit kaout hizivadurioù ar PGN. Ret eo dezhi bezañ digor d\'an holl war Internet.';
 
   @override
   String get broadcastSourceGameIds => 'Up to 64 Lichess game IDs, separated by spaces.';
@@ -498,8 +493,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get broadcastDefinitivelyDeleteRound => 'Definitively delete the round and all its games.';
 
   @override
-  String get broadcastDeleteAllGamesOfThisRound =>
-      'Delete all games of this round. The source will need to be active in order to re-create them.';
+  String get broadcastDeleteAllGamesOfThisRound => 'Delete all games of this round. The source will need to be active in order to re-create them.';
 
   @override
   String get broadcastEditRoundStudy => 'Edit round study';
@@ -508,8 +502,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get broadcastDeleteTournament => 'Dilemel an tournamant-mañ';
 
   @override
-  String get broadcastDefinitivelyDeleteTournament =>
-      'Dilemel an tournamant da viken, an holl grogadoù ha pep tra penn-da-benn.';
+  String get broadcastDefinitivelyDeleteTournament => 'Dilemel an tournamant da viken, an holl grogadoù ha pep tra penn-da-benn.';
 
   @override
   String get broadcastShowScores => 'Show players scores based on game results';
@@ -557,8 +550,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get broadcastOverview => 'Overview';
 
   @override
-  String get broadcastSubscribeTitle =>
-      'Subscribe to be notified when each round starts. You can toggle bell or push notifications for broadcasts in your account preferences.';
+  String get broadcastSubscribeTitle => 'Subscribe to be notified when each round starts. You can toggle bell or push notifications for broadcasts in your account preferences.';
 
   @override
   String get broadcastUploadImage => 'Upload tournament image';
@@ -652,8 +644,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get broadcastBackToLiveMove => 'Back to live move';
 
   @override
-  String get broadcastSinceHideResults =>
-      'Since you chose to hide the results, all the preview boards are empty to avoid spoilers.';
+  String get broadcastSinceHideResults => 'Since you chose to hide the results, all the preview boards are empty to avoid spoilers.';
 
   @override
   String broadcastNbBroadcasts(int count) {
@@ -715,16 +706,13 @@ class AppLocalizationsBr extends AppLocalizations {
   String get challengeDeclineGeneric => 'Ne zegemeran ket daeoù er mare-mañ.';
 
   @override
-  String get challengeDeclineLater =>
-      'N\'on ket dijabl evit poent, kasit ur goulenn din en-dro diwezhatoc\'h mar plij ganeoc\'h.';
+  String get challengeDeclineLater => 'N\'on ket dijabl evit poent, kasit ur goulenn din en-dro diwezhatoc\'h mar plij ganeoc\'h.';
 
   @override
-  String get challengeDeclineTooFast =>
-      'This time control is too fast for me, please challenge again with a slower game.';
+  String get challengeDeclineTooFast => 'This time control is too fast for me, please challenge again with a slower game.';
 
   @override
-  String get challengeDeclineTooSlow =>
-      'This time control is too slow for me, please challenge again with a faster game.';
+  String get challengeDeclineTooSlow => 'This time control is too slow for me, please challenge again with a faster game.';
 
   @override
   String get challengeDeclineTimeControl => 'I\'m not accepting challenges with this time control.';
@@ -774,8 +762,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get perfStatProvisional => 'da c\'hortoz';
 
   @override
-  String get perfStatNotEnoughRatedGames =>
-      'N\'eo ket bet c\'hoariet trawalc\'h a grogadoù renket evit kaout ur renkadur a glot gant ho live.';
+  String get perfStatNotEnoughRatedGames => 'N\'eo ket bet c\'hoariet trawalc\'h a grogadoù renket evit kaout ur renkadur a glot gant ho live.';
 
   @override
   String perfStatProgressOverLastXGames(String param) {
@@ -887,12 +874,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get preferencesMaterialDifference => 'Diforc\'hioù a-fet dafar';
 
   @override
-  String get preferencesBoardHighlights =>
-      'Gouleier evit sikour war an dablez (fiñvadenn ziwezhañ ha bec\'h d\'ar roue)';
+  String get preferencesBoardHighlights => 'Gouleier evit sikour war an dablez (fiñvadenn ziwezhañ ha bec\'h d\'ar roue)';
 
   @override
-  String get preferencesPieceDestinations =>
-      'Karrezennoù degemer (fiñvadennoù ha rak-fiñvadennoù gwiriek)';
+  String get preferencesPieceDestinations => 'Karrezennoù degemer (fiñvadennoù ha rak-fiñvadennoù gwiriek)';
 
   @override
   String get preferencesBoardCoordinates => 'Daveennoù an dablez (A-H, 1-8)';
@@ -919,8 +904,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get preferencesShowFlairs => 'Show player flairs';
 
   @override
-  String get preferencesExplainShowPlayerRatings =>
-      'This hides all ratings from Lichess, to help focus on the chess. Rated games still impact your rating, this is only about what you get to see.';
+  String get preferencesExplainShowPlayerRatings => 'This hides all ratings from Lichess, to help focus on the chess. Rated games still impact your rating, this is only about what you get to see.';
 
   @override
   String get preferencesDisplayBoardResizeHandle => 'Diskouez an arouez evit cheñch ment an dablez';
@@ -941,8 +925,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get preferencesTenthsOfSeconds => 'Dekvedennoù an eilennoù';
 
   @override
-  String get preferencesWhenTimeRemainingLessThanTenSeconds =>
-      'Pa chom nebeutoc\'h evit < 10 eilenn';
+  String get preferencesWhenTimeRemainingLessThanTenSeconds => 'Pa chom nebeutoc\'h evit < 10 eilenn';
 
   @override
   String get preferencesHorizontalGreenProgressBars => 'Barrennoù dibunañ gwer a-blaen';
@@ -969,12 +952,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get preferencesBothClicksAndDrag => 'An daou';
 
   @override
-  String get preferencesPremovesPlayingDuringOpponentTurn =>
-      'Rak-fiñvadennoù (c\'hoari e-pad tro hoc\'h enebour)';
+  String get preferencesPremovesPlayingDuringOpponentTurn => 'Rak-fiñvadennoù (c\'hoari e-pad tro hoc\'h enebour)';
 
   @override
-  String get preferencesTakebacksWithOpponentApproval =>
-      'Nullañ ar fiñvadenn ziwezhañ (gant asant an enebour)';
+  String get preferencesTakebacksWithOpponentApproval => 'Nullañ ar fiñvadenn ziwezhañ (gant asant an enebour)';
 
   @override
   String get preferencesInCasualGamesOnly => 'E krogadoù a vignoniezh hepken';
@@ -983,26 +964,22 @@ class AppLocalizationsBr extends AppLocalizations {
   String get preferencesPromoteToQueenAutomatically => 'Treiñ da rouanez en un doare emgefreek';
 
   @override
-  String get preferencesExplainPromoteToQueenAutomatically =>
-      'Hold the <ctrl> key while promoting to temporarily disable auto-promotion';
+  String get preferencesExplainPromoteToQueenAutomatically => 'Hold the <ctrl> key while promoting to temporarily disable auto-promotion';
 
   @override
   String get preferencesWhenPremoving => 'E-pad ar rak-fiñvadenn';
 
   @override
-  String get preferencesClaimDrawOnThreefoldRepetitionAutomatically =>
-      'Arc\'hañ bezañ rampo goude fiñvadennoù heñvel-poch en un doare emgefreek';
+  String get preferencesClaimDrawOnThreefoldRepetitionAutomatically => 'Arc\'hañ bezañ rampo goude fiñvadennoù heñvel-poch en un doare emgefreek';
 
   @override
-  String get preferencesWhenTimeRemainingLessThanThirtySeconds =>
-      'Pa chom nebeutoc\'h evit < 30 eilenn';
+  String get preferencesWhenTimeRemainingLessThanThirtySeconds => 'Pa chom nebeutoc\'h evit < 30 eilenn';
 
   @override
   String get preferencesMoveConfirmation => 'Kadarnaat ar fiñvadenn';
 
   @override
-  String get preferencesExplainCanThenBeTemporarilyDisabled =>
-      'Can be disabled during a game with the board menu';
+  String get preferencesExplainCanThenBeTemporarilyDisabled => 'Can be disabled during a game with the board menu';
 
   @override
   String get preferencesInCorrespondenceGames => 'Krogadoù a-bell';
@@ -1011,8 +988,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get preferencesCorrespondenceAndUnlimited => 'A-bell ha diharz';
 
   @override
-  String get preferencesConfirmResignationAndDrawOffers =>
-      'Kadarnaat ar c\'hodianañ hag ar goulenn bezañ rampo';
+  String get preferencesConfirmResignationAndDrawOffers => 'Kadarnaat ar c\'hodianañ hag ar goulenn bezañ rampo';
 
   @override
   String get preferencesCastleByMovingTheKingTwoSquaresOrOntoTheRook => 'Doareoù da rokañ';
@@ -1033,8 +1009,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get preferencesSnapArrowsToValidMoves => 'Snap arrows to valid moves';
 
   @override
-  String get preferencesSayGgWpAfterLosingOrDrawing =>
-      'Say \"Good game, well played\" upon defeat or draw';
+  String get preferencesSayGgWpAfterLosingOrDrawing => 'Say \"Good game, well played\" upon defeat or draw';
 
   @override
   String get preferencesYourPreferencesHaveBeenSaved => 'Savetaet eo bet ho tibaboù.';
@@ -1043,8 +1018,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get preferencesScrollOnTheBoardToReplayMoves => 'Scroll on the board to replay moves';
 
   @override
-  String get preferencesCorrespondenceEmailNotification =>
-      'Daily email listing your correspondence games';
+  String get preferencesCorrespondenceEmailNotification => 'Daily email listing your correspondence games';
 
   @override
   String get preferencesNotifyStreamStart => 'Streamer goes live';
@@ -1134,8 +1108,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleDownVote => 'Down vote puzzle';
 
   @override
-  String get puzzleYourPuzzleRatingWillNotChange =>
-      'Your puzzle rating will not change. Note that puzzles are not a competition. Your rating helps selecting the best puzzles for your current skill.';
+  String get puzzleYourPuzzleRatingWillNotChange => 'Your puzzle rating will not change. Note that puzzles are not a competition. Your rating helps selecting the best puzzles for your current skill.';
 
   @override
   String get puzzleFindTheBestMoveForWhite => 'Find the best move for white.';
@@ -1182,12 +1155,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzlePuzzlesByOpenings => 'Poelladennoù dre zigoradurioù';
 
   @override
-  String get puzzleOpeningsYouPlayedTheMost =>
-      'Digoradurioù ho peus c\'hoariet alies e krogadoù renket';
+  String get puzzleOpeningsYouPlayedTheMost => 'Digoradurioù ho peus c\'hoariet alies e krogadoù renket';
 
   @override
-  String get puzzleUseFindInPage =>
-      'Use \"Find in page\" in the browser menu to find your favourite opening!';
+  String get puzzleUseFindInPage => 'Use \"Find in page\" in the browser menu to find your favourite opening!';
 
   @override
   String get puzzleUseCtrlF => 'Grit gant Ctrl+f evit kavout ho tigoradurioù muiañ-karet!';
@@ -1263,8 +1234,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleFailed => 'n\'eo ket mat';
 
   @override
-  String get puzzleStreakDescription =>
-      'Solve progressively harder puzzles and build a win streak. There is no clock, so take your time. One wrong move, and it\'s game over! But you can skip one move per session.';
+  String get puzzleStreakDescription => 'Solve progressively harder puzzles and build a win streak. There is no clock, so take your time. One wrong move, and it\'s game over! But you can skip one move per session.';
 
   @override
   String puzzleYourStreakX(String param) {
@@ -1272,8 +1242,7 @@ class AppLocalizationsBr extends AppLocalizations {
   }
 
   @override
-  String get puzzleStreakSkipExplanation =>
-      'Skip this move to preserve your streak! Only works once per run.';
+  String get puzzleStreakSkipExplanation => 'Skip this move to preserve your streak! Only works once per run.';
 
   @override
   String get puzzleContinueTheStreak => 'Continue the streak';
@@ -1296,8 +1265,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleSearchPuzzles => 'Search puzzles';
 
   @override
-  String get puzzleFromMyGamesNone =>
-      'N\'eus poelladenn ebet tennet diwar ho krogadoù met gant Lichess oc\'h karet memestra.\nKontant e vefec\'h e vefe savet ur boelladenn diwar unan eus ho partiennoù? C\'hoariit krogadoù prim pe glasel evit kaout muioc\'h a chañs!';
+  String get puzzleFromMyGamesNone => 'N\'eus poelladenn ebet tennet diwar ho krogadoù met gant Lichess oc\'h karet memestra.\nKontant e vefec\'h e vefe savet ur boelladenn diwar unan eus ho partiennoù? C\'hoariit krogadoù prim pe glasel evit kaout muioc\'h a chañs!';
 
   @override
   String puzzleFromXGamesFound(String param1, String param2) {
@@ -1359,13 +1327,21 @@ class AppLocalizationsBr extends AppLocalizations {
 
   @override
   String puzzleNbPlayed(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count played');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count played',
+    );
     return '$_temp0';
   }
 
   @override
   String puzzleNbToReplay(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count to replay');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count to replay',
+    );
     return '$_temp0';
   }
 
@@ -1373,50 +1349,43 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleThemeAdvancedPawn => 'Advanced pawn';
 
   @override
-  String get puzzleThemeAdvancedPawnDescription =>
-      'One of your pawns is deep into the opponent position, maybe threatening to promote.';
+  String get puzzleThemeAdvancedPawnDescription => 'One of your pawns is deep into the opponent position, maybe threatening to promote.';
 
   @override
   String get puzzleThemeAdvantage => 'Advantage';
 
   @override
-  String get puzzleThemeAdvantageDescription =>
-      'Seize your chance to get a decisive advantage. (200cp ≤ eval ≤ 600cp)';
+  String get puzzleThemeAdvantageDescription => 'Seize your chance to get a decisive advantage. (200cp ≤ eval ≤ 600cp)';
 
   @override
   String get puzzleThemeAnastasiaMate => 'Lamm d\'ar roue mod Ananastasia';
 
   @override
-  String get puzzleThemeAnastasiaMateDescription =>
-      'A knight and rook or queen team up to trap the opposing king between the side of the board and a friendly piece.';
+  String get puzzleThemeAnastasiaMateDescription => 'A knight and rook or queen team up to trap the opposing king between the side of the board and a friendly piece.';
 
   @override
   String get puzzleThemeArabianMate => 'Lamm d\'ar roue mod Arabia';
 
   @override
-  String get puzzleThemeArabianMateDescription =>
-      'A knight and a rook team up to trap the opposing king on a corner of the board.';
+  String get puzzleThemeArabianMateDescription => 'A knight and a rook team up to trap the opposing king on a corner of the board.';
 
   @override
   String get puzzleThemeAttackingF2F7 => 'Tagañ f2 pe f7';
 
   @override
-  String get puzzleThemeAttackingF2F7Description =>
-      'An attack focusing on the f2 or f7 pawn, such as in the fried liver opening.';
+  String get puzzleThemeAttackingF2F7Description => 'An attack focusing on the f2 or f7 pawn, such as in the fried liver opening.';
 
   @override
   String get puzzleThemeAttraction => 'Attraction';
 
   @override
-  String get puzzleThemeAttractionDescription =>
-      'An exchange or sacrifice encouraging or forcing an opponent piece to a square that allows a follow-up tactic.';
+  String get puzzleThemeAttractionDescription => 'An exchange or sacrifice encouraging or forcing an opponent piece to a square that allows a follow-up tactic.';
 
   @override
   String get puzzleThemeBackRankMate => 'Back rank mate';
 
   @override
-  String get puzzleThemeBackRankMateDescription =>
-      'Checkmate the king on the home rank, when it is trapped there by its own pieces.';
+  String get puzzleThemeBackRankMateDescription => 'Checkmate the king on the home rank, when it is trapped there by its own pieces.';
 
   @override
   String get puzzleThemeBishopEndgame => 'Bishop endgame';
@@ -1428,8 +1397,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleThemeBodenMate => 'Lamm d\'ar roue mod Boden';
 
   @override
-  String get puzzleThemeBodenMateDescription =>
-      'Two attacking bishops on criss-crossing diagonals deliver mate to a king obstructed by friendly pieces.';
+  String get puzzleThemeBodenMateDescription => 'Two attacking bishops on criss-crossing diagonals deliver mate to a king obstructed by friendly pieces.';
 
   @override
   String get puzzleThemeCastling => 'Rokañ';
@@ -1441,78 +1409,67 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleThemeCapturingDefender => 'Capture the defender';
 
   @override
-  String get puzzleThemeCapturingDefenderDescription =>
-      'Removing a piece that is critical to defence of another piece, allowing the now undefended piece to be captured on a following move.';
+  String get puzzleThemeCapturingDefenderDescription => 'Removing a piece that is critical to defence of another piece, allowing the now undefended piece to be captured on a following move.';
 
   @override
   String get puzzleThemeCrushing => 'Crushing';
 
   @override
-  String get puzzleThemeCrushingDescription =>
-      'Spot the opponent blunder to obtain a crushing advantage. (eval ≥ 600cp)';
+  String get puzzleThemeCrushingDescription => 'Spot the opponent blunder to obtain a crushing advantage. (eval ≥ 600cp)';
 
   @override
   String get puzzleThemeDoubleBishopMate => 'Double bishop mate';
 
   @override
-  String get puzzleThemeDoubleBishopMateDescription =>
-      'Two attacking bishops on adjacent diagonals deliver mate to a king obstructed by friendly pieces.';
+  String get puzzleThemeDoubleBishopMateDescription => 'Two attacking bishops on adjacent diagonals deliver mate to a king obstructed by friendly pieces.';
 
   @override
   String get puzzleThemeDovetailMate => 'Lamm d\'ar roue mod Dovetail';
 
   @override
-  String get puzzleThemeDovetailMateDescription =>
-      'A queen delivers mate to an adjacent king, whose only two escape squares are obstructed by friendly pieces.';
+  String get puzzleThemeDovetailMateDescription => 'A queen delivers mate to an adjacent king, whose only two escape squares are obstructed by friendly pieces.';
 
   @override
   String get puzzleThemeEquality => 'Equality';
 
   @override
-  String get puzzleThemeEqualityDescription =>
-      'Come back from a losing position, and secure a draw or a balanced position. (eval ≤ 200cp)';
+  String get puzzleThemeEqualityDescription => 'Come back from a losing position, and secure a draw or a balanced position. (eval ≤ 200cp)';
 
   @override
   String get puzzleThemeKingsideAttack => 'Tagañ tu ar roue';
 
   @override
-  String get puzzleThemeKingsideAttackDescription =>
-      'An attack of the opponent\'s king, after they castled on the king side.';
+  String get puzzleThemeKingsideAttackDescription => 'An attack of the opponent\'s king, after they castled on the king side.';
 
   @override
   String get puzzleThemeClearance => 'Clearance';
 
   @override
-  String get puzzleThemeClearanceDescription =>
-      'A move, often with tempo, that clears a square, file or diagonal for a follow-up tactical idea.';
+  String get puzzleThemeClearanceDescription => 'A move, often with tempo, that clears a square, file or diagonal for a follow-up tactical idea.';
 
   @override
   String get puzzleThemeDefensiveMove => 'Defensive move';
 
   @override
-  String get puzzleThemeDefensiveMoveDescription =>
-      'A precise move or sequence of moves that is needed to avoid losing material or another advantage.';
+  String get puzzleThemeDefensiveMoveDescription => 'A precise move or sequence of moves that is needed to avoid losing material or another advantage.';
 
   @override
   String get puzzleThemeDeflection => 'Deflection';
 
   @override
-  String get puzzleThemeDeflectionDescription =>
-      'A move that distracts an opponent piece from another duty that it performs, such as guarding a key square. Sometimes also called \"overloading\".';
+  String get puzzleThemeDeflectionDescription => 'A move that distracts an opponent piece from another duty that it performs, such as guarding a key square. Sometimes also called \"overloading\".';
 
   @override
   String get puzzleThemeDiscoveredAttack => 'Discovered attack';
 
   @override
-  String get puzzleThemeDiscoveredAttackDescription =>
-      'Moving a piece (such as a knight), that previously blocked an attack by a long range piece (such as a rook), out of the way of that piece.';
+  String get puzzleThemeDiscoveredAttackDescription => 'Moving a piece (such as a knight), that previously blocked an attack by a long range piece (such as a rook), out of the way of that piece.';
 
   @override
   String get puzzleThemeDoubleCheck => 'Bec\'h d\'ar roue doubl';
 
   @override
-  String get puzzleThemeDoubleCheckDescription =>
-      'Checking with two pieces at once, as a result of a discovered attack where both the moving piece and the unveiled piece attack the opponent\'s king.';
+  String get puzzleThemeDoubleCheckDescription => 'Checking with two pieces at once, as a result of a discovered attack where both the moving piece and the unveiled piece attack the opponent\'s king.';
 
   @override
   String get puzzleThemeEndgame => 'Fin ar c\'hrogad';
@@ -1521,64 +1478,55 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleThemeEndgameDescription => 'A tactic during the last phase of the game.';
 
   @override
-  String get puzzleThemeEnPassantDescription =>
-      'A tactic involving the en passant rule, where a pawn can capture an opponent pawn that has bypassed it using its initial two-square move.';
+  String get puzzleThemeEnPassantDescription => 'A tactic involving the en passant rule, where a pawn can capture an opponent pawn that has bypassed it using its initial two-square move.';
 
   @override
   String get puzzleThemeExposedKing => 'Exposed king';
 
   @override
-  String get puzzleThemeExposedKingDescription =>
-      'A tactic involving a king with few defenders around it, often leading to checkmate.';
+  String get puzzleThemeExposedKingDescription => 'A tactic involving a king with few defenders around it, often leading to checkmate.';
 
   @override
   String get puzzleThemeFork => 'Forc\'h';
 
   @override
-  String get puzzleThemeForkDescription =>
-      'A move where the moved piece attacks two opponent pieces at once.';
+  String get puzzleThemeForkDescription => 'A move where the moved piece attacks two opponent pieces at once.';
 
   @override
   String get puzzleThemeHangingPiece => 'Hanging piece';
 
   @override
-  String get puzzleThemeHangingPieceDescription =>
-      'A tactic involving an opponent piece being undefended or insufficiently defended and free to capture.';
+  String get puzzleThemeHangingPieceDescription => 'A tactic involving an opponent piece being undefended or insufficiently defended and free to capture.';
 
   @override
   String get puzzleThemeHookMate => 'Hook mate';
 
   @override
-  String get puzzleThemeHookMateDescription =>
-      'Checkmate with a rook, knight, and pawn along with one enemy pawn to limit the enemy king\'s escape.';
+  String get puzzleThemeHookMateDescription => 'Checkmate with a rook, knight, and pawn along with one enemy pawn to limit the enemy king\'s escape.';
 
   @override
   String get puzzleThemeInterference => 'Interference';
 
   @override
-  String get puzzleThemeInterferenceDescription =>
-      'Moving a piece between two opponent pieces to leave one or both opponent pieces undefended, such as a knight on a defended square between two rooks.';
+  String get puzzleThemeInterferenceDescription => 'Moving a piece between two opponent pieces to leave one or both opponent pieces undefended, such as a knight on a defended square between two rooks.';
 
   @override
   String get puzzleThemeIntermezzo => 'Intermezzo';
 
   @override
-  String get puzzleThemeIntermezzoDescription =>
-      'Instead of playing the expected move, first interpose another move posing an immediate threat that the opponent must answer. Also known as \"Zwischenzug\" or \"In between\".';
+  String get puzzleThemeIntermezzoDescription => 'Instead of playing the expected move, first interpose another move posing an immediate threat that the opponent must answer. Also known as \"Zwischenzug\" or \"In between\".';
 
   @override
   String get puzzleThemeKillBoxMate => 'Kill box mate';
 
   @override
-  String get puzzleThemeKillBoxMateDescription =>
-      'A rook is next to the enemy king and supported by a queen that also blocks the king\'s escape squares. The rook and the queen catch the enemy king in a 3 by 3 \"kill box\".';
+  String get puzzleThemeKillBoxMateDescription => 'A rook is next to the enemy king and supported by a queen that also blocks the king\'s escape squares. The rook and the queen catch the enemy king in a 3 by 3 \"kill box\".';
 
   @override
   String get puzzleThemeVukovicMate => 'Vukovic mate';
 
   @override
-  String get puzzleThemeVukovicMateDescription =>
-      'A rook and knight team up to mate the king. The rook delivers mate while supported by a third piece, and the knight is used to block the king\'s escape squares.';
+  String get puzzleThemeVukovicMateDescription => 'A rook and knight team up to mate the king. The rook delivers mate while supported by a third piece, and the knight is used to block the king\'s escape squares.';
 
   @override
   String get puzzleThemeKnightEndgame => 'Knight endgame';
@@ -1602,8 +1550,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleThemeMasterVsMaster => 'Master vs Master games';
 
   @override
-  String get puzzleThemeMasterVsMasterDescription =>
-      'Puzzles from games between two titled players.';
+  String get puzzleThemeMasterVsMasterDescription => 'Puzzles from games between two titled players.';
 
   @override
   String get puzzleThemeMate => 'Lamm d\'ar roue';
@@ -1669,15 +1616,13 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleThemePin => 'Tachañ';
 
   @override
-  String get puzzleThemePinDescription =>
-      'A tactic involving pins, where a piece is unable to move without revealing an attack on a higher value piece.';
+  String get puzzleThemePinDescription => 'A tactic involving pins, where a piece is unable to move without revealing an attack on a higher value piece.';
 
   @override
   String get puzzleThemePromotion => 'Promotion';
 
   @override
-  String get puzzleThemePromotionDescription =>
-      'Promote one of your pawn to a queen or minor piece.';
+  String get puzzleThemePromotionDescription => 'Promote one of your pawn to a queen or minor piece.';
 
   @override
   String get puzzleThemeQueenEndgame => 'Queen endgame';
@@ -1689,22 +1634,19 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleThemeQueenRookEndgame => 'Queen and Rook';
 
   @override
-  String get puzzleThemeQueenRookEndgameDescription =>
-      'An endgame with only queens, rooks and pawns.';
+  String get puzzleThemeQueenRookEndgameDescription => 'An endgame with only queens, rooks and pawns.';
 
   @override
   String get puzzleThemeQueensideAttack => 'Queenside attack';
 
   @override
-  String get puzzleThemeQueensideAttackDescription =>
-      'An attack of the opponent\'s king, after they castled on the queen side.';
+  String get puzzleThemeQueensideAttackDescription => 'An attack of the opponent\'s king, after they castled on the queen side.';
 
   @override
   String get puzzleThemeQuietMove => 'Quiet move';
 
   @override
-  String get puzzleThemeQuietMoveDescription =>
-      'A move that does neither make a check or capture, nor an immediate threat to capture, but does prepare a more hidden unavoidable threat for a later move.';
+  String get puzzleThemeQuietMoveDescription => 'A move that does neither make a check or capture, nor an immediate threat to capture, but does prepare a more hidden unavoidable threat for a later move.';
 
   @override
   String get puzzleThemeRookEndgame => 'Rook endgame';
@@ -1716,8 +1658,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleThemeSacrifice => 'Aberzh';
 
   @override
-  String get puzzleThemeSacrificeDescription =>
-      'A tactic involving giving up material in the short-term, to gain an advantage again after a forced sequence of moves.';
+  String get puzzleThemeSacrificeDescription => 'A tactic involving giving up material in the short-term, to gain an advantage again after a forced sequence of moves.';
 
   @override
   String get puzzleThemeShort => 'Poelladenn verr';
@@ -1729,29 +1670,25 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleThemeSkewer => 'Skewer';
 
   @override
-  String get puzzleThemeSkewerDescription =>
-      'A motif involving a high value piece being attacked, moving out the way, and allowing a lower value piece behind it to be captured or attacked, the inverse of a pin.';
+  String get puzzleThemeSkewerDescription => 'A motif involving a high value piece being attacked, moving out the way, and allowing a lower value piece behind it to be captured or attacked, the inverse of a pin.';
 
   @override
   String get puzzleThemeSmotheredMate => 'Smothered mate';
 
   @override
-  String get puzzleThemeSmotheredMateDescription =>
-      'A checkmate delivered by a knight in which the mated king is unable to move because it is surrounded (or smothered) by its own pieces.';
+  String get puzzleThemeSmotheredMateDescription => 'A checkmate delivered by a knight in which the mated king is unable to move because it is surrounded (or smothered) by its own pieces.';
 
   @override
   String get puzzleThemeSuperGM => 'Super GM games';
 
   @override
-  String get puzzleThemeSuperGMDescription =>
-      'Puzzles from games played by the best players in the world.';
+  String get puzzleThemeSuperGMDescription => 'Puzzles from games played by the best players in the world.';
 
   @override
   String get puzzleThemeTrappedPiece => 'Trapped piece';
 
   @override
-  String get puzzleThemeTrappedPieceDescription =>
-      'A piece is unable to escape capture as it has limited moves.';
+  String get puzzleThemeTrappedPieceDescription => 'A piece is unable to escape capture as it has limited moves.';
 
   @override
   String get puzzleThemeUnderPromotion => 'Underpromotion';
@@ -1769,29 +1706,25 @@ class AppLocalizationsBr extends AppLocalizations {
   String get puzzleThemeXRayAttack => 'X-Ray attack';
 
   @override
-  String get puzzleThemeXRayAttackDescription =>
-      'A piece attacks or defends a square, through an enemy piece.';
+  String get puzzleThemeXRayAttackDescription => 'A piece attacks or defends a square, through an enemy piece.';
 
   @override
   String get puzzleThemeZugzwang => 'Zugzwang';
 
   @override
-  String get puzzleThemeZugzwangDescription =>
-      'The opponent is limited in the moves they can make, and all moves worsen their position.';
+  String get puzzleThemeZugzwangDescription => 'The opponent is limited in the moves they can make, and all moves worsen their position.';
 
   @override
   String get puzzleThemeMix => 'A bep seurt';
 
   @override
-  String get puzzleThemeMixDescription =>
-      'A bep seurt. N\'ouzit ket petra gortoz hag e mod-se e voc\'h prest evit pep tra! Heñvel ouzh ar c\'hrogadoù gwir.';
+  String get puzzleThemeMixDescription => 'A bep seurt. N\'ouzit ket petra gortoz hag e mod-se e voc\'h prest evit pep tra! Heñvel ouzh ar c\'hrogadoù gwir.';
 
   @override
   String get puzzleThemePlayerGames => 'Player games';
 
   @override
-  String get puzzleThemePlayerGamesDescription =>
-      'Lookup puzzles generated from your games, or from another player\'s games.';
+  String get puzzleThemePlayerGamesDescription => 'Lookup puzzles generated from your games, or from another player\'s games.';
 
   @override
   String puzzleThemePuzzleDownloadInformation(String param) {
@@ -1808,12 +1741,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get settingsCloseAccount => 'Serriñ ar gont';
 
   @override
-  String get settingsManagedAccountCannotBeClosed =>
-      'Meret eo ho kont ha ne c\'hall ket bezañ serret.';
+  String get settingsManagedAccountCannotBeClosed => 'Meret eo ho kont ha ne c\'hall ket bezañ serret.';
 
   @override
-  String get settingsCantOpenSimilarAccount =>
-      'Ne voc\'h ket aotreet da grouiñ ur gont nevez gant ar memes anv, pa vije gant ur ment lizherennoù disheñvel.';
+  String get settingsCantOpenSimilarAccount => 'Ne voc\'h ket aotreet da grouiñ ur gont nevez gant ar memes anv, pa vije gant ur ment lizherennoù disheñvel.';
 
   @override
   String get settingsCancelKeepAccount => 'Cancel and keep my account';
@@ -1831,8 +1762,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get playWithTheMachine => 'C\'hoari a-enep an urzhiataer';
 
   @override
-  String get toInviteSomeoneToPlayGiveThisUrl =>
-      'Evit pediñ unan bennak da c\'hoari, kasit dezhañ/dezhi an URL -mañ';
+  String get toInviteSomeoneToPlayGiveThisUrl => 'Evit pediñ unan bennak da c\'hoari, kasit dezhañ/dezhi an URL -mañ';
 
   @override
   String get gameOver => 'Krogad echu';
@@ -1927,8 +1857,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get newOpponent => 'Enebour nevez';
 
   @override
-  String get yourOpponentWantsToPlayANewGameWithYou =>
-      'Hoc\'h enebour en deus c\'hoant da c\'hoari a-enep deoc\'h adarre';
+  String get yourOpponentWantsToPlayANewGameWithYou => 'Hoc\'h enebour en deus c\'hoant da c\'hoari a-enep deoc\'h adarre';
 
   @override
   String get joinTheGame => 'Kregiñ ganti';
@@ -1940,8 +1869,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get blackPlays => 'Tro ar re zu';
 
   @override
-  String get opponentLeftChoices =>
-      'Aet eo kuit hoc\'h enebour marteze. Gallout a rit arc\'hañ an trec\'h, dibab bezañ rampo pe gortoz.';
+  String get opponentLeftChoices => 'Aet eo kuit hoc\'h enebour marteze. Gallout a rit arc\'hañ an trec\'h, dibab bezañ rampo pe gortoz.';
 
   @override
   String get forceResignation => 'Arc\'hañ an trec\'h';
@@ -1953,8 +1881,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get talkInChat => 'Bezit hegarat pa flapit!';
 
   @override
-  String get theFirstPersonToComeOnThisUrlWillPlayWithYou =>
-      'An den kentañ a zeuy war an URL -mañ a c\'hoario a-enep deoc\'h.';
+  String get theFirstPersonToComeOnThisUrlWillPlayWithYou => 'An den kentañ a zeuy war an URL -mañ a c\'hoario a-enep deoc\'h.';
 
   @override
   String get whiteResigned => 'Ar re wenn o deus dilezet';
@@ -2098,8 +2025,7 @@ class AppLocalizationsBr extends AppLocalizations {
   }
 
   @override
-  String get dtzWithRounding =>
-      'DTZ50\'\' with rounding, based on number of half-moves until next capture or pawn move';
+  String get dtzWithRounding => 'DTZ50\'\' with rounding, based on number of half-moves until next capture or pawn move';
 
   @override
   String get noGameFound => 'Krogad ebet kavet';
@@ -2108,8 +2034,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get maxDepthReached => 'Max depth reached!';
 
   @override
-  String get maybeIncludeMoreGamesFromThePreferencesMenu =>
-      'Degemer muioc\'h a grogadoù o tont eus lañser an dibaboù?';
+  String get maybeIncludeMoreGamesFromThePreferencesMenu => 'Degemer muioc\'h a grogadoù o tont eus lañser an dibaboù?';
 
   @override
   String get openings => 'Digoradurioù';
@@ -2141,8 +2066,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get lossOr50MovesByPriorMistake => 'Loss or 50 moves by prior mistake';
 
   @override
-  String get unknownDueToRounding =>
-      'Win/loss only guaranteed if recommended tablebase line has been followed since the last capture or pawn move, due to possible rounding of DTZ values in Syzygy tablebases.';
+  String get unknownDueToRounding => 'Win/loss only guaranteed if recommended tablebase line has been followed since the last capture or pawn move, due to possible rounding of DTZ values in Syzygy tablebases.';
 
   @override
   String get allSet => 'Prest eo!';
@@ -2247,8 +2171,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get signUp => 'Lakaat e anv';
 
   @override
-  String get computersAreNotAllowedToPlay =>
-      'Urzhiataerioù ha c\'hoarierien sikouret gant un urzhiataer n\'int ket aotreet da c\'hoari. Na vezit ket skoazellet gant mekanikoù, diaz roadennoù pe c\'hoarierien all pa vezit o c\'hoari. Ne aliomp ket ac\'hanoc\'h da gaout kalz kontoù kennebeut. M\'ho peus re a gontoù e veoc\'h forbannet.';
+  String get computersAreNotAllowedToPlay => 'Urzhiataerioù ha c\'hoarierien sikouret gant un urzhiataer n\'int ket aotreet da c\'hoari. Na vezit ket skoazellet gant mekanikoù, diaz roadennoù pe c\'hoarierien all pa vezit o c\'hoari. Ne aliomp ket ac\'hanoc\'h da gaout kalz kontoù kennebeut. M\'ho peus re a gontoù e veoc\'h forbannet.';
 
   @override
   String get games => 'Krogadoù';
@@ -2325,16 +2248,13 @@ class AppLocalizationsBr extends AppLocalizations {
   String get changeUsername => 'Cheñch anv implijer';
 
   @override
-  String get changeUsernameNotSame =>
-      'Ment al lizherennoù a c\'hall cheñch hepken. Lakaomp \"yannc\'hoarier\" a ya da \"YannC\'hoarier\".';
+  String get changeUsernameNotSame => 'Ment al lizherennoù a c\'hall cheñch hepken. Lakaomp \"yannc\'hoarier\" a ya da \"YannC\'hoarier\".';
 
   @override
-  String get changeUsernameDescription =>
-      'Cheñchit hoc\'h anv implijer. Gallout a rit hen ober ur wech hepken ha ne c\'hallit kemm nemet ment al lizherennoù.';
+  String get changeUsernameDescription => 'Cheñchit hoc\'h anv implijer. Gallout a rit hen ober ur wech hepken ha ne c\'hallit kemm nemet ment al lizherennoù.';
 
   @override
-  String get signupUsernameHint =>
-      'Make sure to choose a family-friendly username. You cannot change it later and any accounts with inappropriate usernames will get closed!';
+  String get signupUsernameHint => 'Make sure to choose a family-friendly username. You cannot change it later and any accounts with inappropriate usernames will get closed!';
 
   @override
   String get signupEmailHint => 'Arveret e vo gant m\'ho peus ezhomm da cheñch ho ker-kuzh.';
@@ -2361,19 +2281,16 @@ class AppLocalizationsBr extends AppLocalizations {
   String get error_weakPassword => 'Ordin eo ho ker-kuzh betek re hag aes-tre da gavout.';
 
   @override
-  String get error_namePassword =>
-      'Disheñvel e vo ho ker-kuzh diouzh hoc\'h anv-implijer mar plij ganeoc\'h.';
+  String get error_namePassword => 'Disheñvel e vo ho ker-kuzh diouzh hoc\'h anv-implijer mar plij ganeoc\'h.';
 
   @override
-  String get blankedPassword =>
-      'Ar memes ger-kuzh ho peus graet gantañ war ul lec\'hienn all hag a zo bet preizhet. Ur ger-kuzh nevez zo ezhomm da gaout neuze evit ma chomfe diarvar ho kont Lichess. Ho trugarekaat a reomp.';
+  String get blankedPassword => 'Ar memes ger-kuzh ho peus graet gantañ war ul lec\'hienn all hag a zo bet preizhet. Ur ger-kuzh nevez zo ezhomm da gaout neuze evit ma chomfe diarvar ho kont Lichess. Ho trugarekaat a reomp.';
 
   @override
   String get youAreLeavingLichess => 'O kuitaat Lichess emaoc\'h';
 
   @override
-  String get neverTypeYourPassword =>
-      'Arabat bizskrivañ ho ker-kuzh Lichess war ul lec\'hienn all!';
+  String get neverTypeYourPassword => 'Arabat bizskrivañ ho ker-kuzh Lichess war ul lec\'hienn all!';
 
   @override
   String proceedToX(String param) {
@@ -2381,12 +2298,10 @@ class AppLocalizationsBr extends AppLocalizations {
   }
 
   @override
-  String get passwordSuggestion =>
-      'Na choazit ket ur ger-kuzh bet silet e pleg ho skouarn gant unan all. Arveriet e vo evit laerezh ho kont diganeoc\'h.';
+  String get passwordSuggestion => 'Na choazit ket ur ger-kuzh bet silet e pleg ho skouarn gant unan all. Arveriet e vo evit laerezh ho kont diganeoc\'h.';
 
   @override
-  String get emailSuggestion =>
-      'Na choazit ket ur chomlec\'h postel bet aliet deoc\'h gant unan all. Arveriet e vo evit laerezh ho kont diganeoc\'h.';
+  String get emailSuggestion => 'Na choazit ket ur chomlec\'h postel bet aliet deoc\'h gant unan all. Arveriet e vo evit laerezh ho kont diganeoc\'h.';
 
   @override
   String get emailConfirmHelp => 'Un tamm sikour evit ar postel kadarnaat';
@@ -2403,8 +2318,7 @@ class AppLocalizationsBr extends AppLocalizations {
   }
 
   @override
-  String get usernameCanBeUsedForNewAccount =>
-      'Gallout a rit ober gant an anv implijer-mañ evit krouiñ ur gont nevez';
+  String get usernameCanBeUsedForNewAccount => 'Gallout a rit ober gant an anv implijer-mañ evit krouiñ ur gont nevez';
 
   @override
   String emailSent(String param) {
@@ -2415,12 +2329,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get emailCanTakeSomeTime => 'Marteze ne vo ket resevet diouzhtu-dak.';
 
   @override
-  String get refreshInboxAfterFiveMinutes =>
-      'Gortozit pemp munutenn ha freskait ho pajenn goude-se.';
+  String get refreshInboxAfterFiveMinutes => 'Gortozit pemp munutenn ha freskait ho pajenn goude-se.';
 
   @override
-  String get checkSpamFolder =>
-      'Taolit ur sell en ho strobelloù e ken kas. Ma c\'hoarvez seul taol ganeoc\'h e vo dav resisaat n\'eo ket ur strobell.';
+  String get checkSpamFolder => 'Taolit ur sell en ho strobelloù e ken kas. Ma c\'hoarvez seul taol ganeoc\'h e vo dav resisaat n\'eo ket ur strobell.';
 
   @override
   String get emailForSignupHelp => 'Kasit deomp ar postel-mañ ma n\'oc\'h ket deuet a-benn:';
@@ -2431,8 +2343,7 @@ class AppLocalizationsBr extends AppLocalizations {
   }
 
   @override
-  String get waitForSignupHelp =>
-      'We will come back to you shortly to help you complete your signup.';
+  String get waitForSignupHelp => 'We will come back to you shortly to help you complete your signup.';
 
   @override
   String accountConfirmed(String param) {
@@ -2616,8 +2527,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get ratingRange => 'Renkadur hoc\'h enebourien';
 
   @override
-  String get thisAccountViolatedTos =>
-      'Perc\'henner ar gont-mañ n\'en deus ket doujet da Reolennoù Lichess';
+  String get thisAccountViolatedTos => 'Perc\'henner ar gont-mañ n\'en deus ket doujet da Reolennoù Lichess';
 
   @override
   String get openingExplorerAndTablebase => 'Furcher an digoradurioù & tablebase';
@@ -2638,12 +2548,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get takebackPropositionAccepted => 'Asantet eo bet nullañ ar fiñvadenn ziwezhañ';
 
   @override
-  String get takebackPropositionCanceled =>
-      'Ar c\'hinnig nullañ ar fiñvadenn ziwezhañ zo bet nullet';
+  String get takebackPropositionCanceled => 'Ar c\'hinnig nullañ ar fiñvadenn ziwezhañ zo bet nullet';
 
   @override
-  String get yourOpponentProposesATakeback =>
-      'Kinnig a ra oc\'h enebour e vefe nullet ho fiñvadenn ziwezhañ';
+  String get yourOpponentProposesATakeback => 'Kinnig a ra oc\'h enebour e vefe nullet ho fiñvadenn ziwezhañ';
 
   @override
   String get bookmarkThisGame => 'Miret ar c\'hrogad-mañ er roll-istor';
@@ -2664,8 +2572,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get backToTournament => 'Distreiñ d\'an tournamant';
 
   @override
-  String get noDrawBeforeSwissLimit =>
-      'You cannot draw before 30 moves are played in a Swiss tournament.';
+  String get noDrawBeforeSwissLimit => 'You cannot draw before 30 moves are played in a Swiss tournament.';
 
   @override
   String get thematic => 'Tematek';
@@ -2714,8 +2621,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get backToGame => 'Distreiñ d\'ar c\'hrogad';
 
   @override
-  String get siteDescription =>
-      'C\'hoari echedoù enlinenn evit netra gant un etrefas simpl. Enskrivadur ebet, bruderezh ebet ha lugant ebet. C\'hoarit a-enep an urzhiataer, a-enep ho mignoned pe a-enep enebourien dianav deus ar bed a-bezh.';
+  String get siteDescription => 'C\'hoari echedoù enlinenn evit netra gant un etrefas simpl. Enskrivadur ebet, bruderezh ebet ha lugant ebet. C\'hoarit a-enep an urzhiataer, a-enep ho mignoned pe a-enep enebourien dianav deus ar bed a-bezh.';
 
   @override
   String xJoinedTeamY(String param1, String param2) {
@@ -2784,23 +2690,19 @@ class AppLocalizationsBr extends AppLocalizations {
   String get importGame => 'Enporzhiañ ur c\'hrogad';
 
   @override
-  String get importGameExplanation =>
-      'Pegit ur c\'hrogad PGN evit gallout e c\'hoari den-dro, e zielfennañ gant an urzhiataer, ober gant ar flaper ha kaout un URL da skignañ.';
+  String get importGameExplanation => 'Pegit ur c\'hrogad PGN evit gallout e c\'hoari den-dro, e zielfennañ gant an urzhiataer, ober gant ar flaper ha kaout un URL da skignañ.';
 
   @override
-  String get importGameCaveat =>
-      'Variations will be erased. To keep them, import the PGN via a study.';
+  String get importGameCaveat => 'Variations will be erased. To keep them, import the PGN via a study.';
 
   @override
-  String get importGameDataPrivacyWarning =>
-      'This PGN can be accessed by the public. To import a game privately, use a study.';
+  String get importGameDataPrivacyWarning => 'This PGN can be accessed by the public. To import a game privately, use a study.';
 
   @override
   String get thisIsAChessCaptcha => 'Ur c\'hCAPTCHA echedoù an hini eo.';
 
   @override
-  String get clickOnTheBoardToMakeYourMove =>
-      'Klikit war an dachenn emgann d\'ober ho fiñvadenn ha prouit oc\'h un den.';
+  String get clickOnTheBoardToMakeYourMove => 'Klikit war an dachenn emgann d\'ober ho fiñvadenn ha prouit oc\'h un den.';
 
   @override
   String get captcha_fail => 'Diskoulmit ar c\'hCAPTCHA echedoù mar plij.';
@@ -2910,16 +2812,13 @@ class AppLocalizationsBr extends AppLocalizations {
   String get safeTournamentName => 'Choazit un anv dereat-tre evit an tournamant.';
 
   @override
-  String get inappropriateNameWarning =>
-      'Un draig ha ne vefe ket dereat a vefe trawalc\'h evit ma serrfemp ho kont.';
+  String get inappropriateNameWarning => 'Un draig ha ne vefe ket dereat a vefe trawalc\'h evit ma serrfemp ho kont.';
 
   @override
-  String get emptyTournamentName =>
-      'Laoskit goullo evit envel an tournamant diouzh anv ur c\'hoarier echedoù brudet.';
+  String get emptyTournamentName => 'Laoskit goullo evit envel an tournamant diouzh anv ur c\'hoarier echedoù brudet.';
 
   @override
-  String get makePrivateTournament =>
-      'Gallout a rit krouiñ un tournamant prevez oc\'h ouzhpennañ ur ger-tremen';
+  String get makePrivateTournament => 'Gallout a rit krouiñ un tournamant prevez oc\'h ouzhpennañ ur ger-tremen';
 
   @override
   String get join => 'Kemer perzh';
@@ -3057,8 +2956,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get flair => 'Flair';
 
   @override
-  String get youCanHideFlair =>
-      'There is a setting to hide all user flairs across the entire site.';
+  String get youCanHideFlair => 'There is a setting to hide all user flairs across the entire site.';
 
   @override
   String get biography => 'Diwar ho penn';
@@ -3094,15 +2992,13 @@ class AppLocalizationsBr extends AppLocalizations {
   String get activePlayers => 'C\'hoarierien oberiat';
 
   @override
-  String get bewareTheGameIsRatedButHasNoClock =>
-      'Diwallit, renket eo ar c\'hrogad met n\'eus horolaj ebet!';
+  String get bewareTheGameIsRatedButHasNoClock => 'Diwallit, renket eo ar c\'hrogad met n\'eus horolaj ebet!';
 
   @override
   String get success => 'Deuet oc\'h a-benn';
 
   @override
-  String get automaticallyProceedToNextGameAfterMoving =>
-      'Cheñch krogad en un doare emgefreek goude ur fiñvadenn';
+  String get automaticallyProceedToNextGameAfterMoving => 'Cheñch krogad en un doare emgefreek goude ur fiñvadenn';
 
   @override
   String get autoSwitch => 'Cheñch tu emgefreek';
@@ -3123,8 +3019,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get descPrivate => 'Deskrivadur prevez';
 
   @override
-  String get descPrivateHelp =>
-      'Testenn a vo gwelet gant izili ar skipailh nemetken. Mard eo roet, lakaet e lec’h an deskrivadur foran evit izili ar skipailh.';
+  String get descPrivateHelp => 'Testenn a vo gwelet gant izili ar skipailh nemetken. Mard eo roet, lakaet e lec’h an deskrivadur foran evit izili ar skipailh.';
 
   @override
   String get no => 'Nann';
@@ -3193,20 +3088,16 @@ class AppLocalizationsBr extends AppLocalizations {
   String get other => 'All';
 
   @override
-  String get reportCheatBoostHelp =>
-      'Paste the link to the game(s) and explain what is wrong about this user\'s behaviour. Don\'t just say \"they cheat\", but tell us how you came to this conclusion.';
+  String get reportCheatBoostHelp => 'Paste the link to the game(s) and explain what is wrong about this user\'s behaviour. Don\'t just say \"they cheat\", but tell us how you came to this conclusion.';
 
   @override
-  String get reportUsernameHelp =>
-      'Explain what about this username is offensive. Don\'t just say \"it\'s offensive/inappropriate\", but tell us how you came to this conclusion, especially if the insult is obfuscated, not in english, is in slang, or is a historical/cultural reference.';
+  String get reportUsernameHelp => 'Explain what about this username is offensive. Don\'t just say \"it\'s offensive/inappropriate\", but tell us how you came to this conclusion, especially if the insult is obfuscated, not in english, is in slang, or is a historical/cultural reference.';
 
   @override
-  String get reportProcessedFasterInEnglish =>
-      'Your report will be processed faster if written in English.';
+  String get reportProcessedFasterInEnglish => 'Your report will be processed faster if written in English.';
 
   @override
-  String get error_provideOneCheatedGameLink =>
-      'Roit d\'an nebeutañ ul liamm hag a gas d\'ur c\'hrogad trucherezh ennañ.';
+  String get error_provideOneCheatedGameLink => 'Roit d\'an nebeutañ ul liamm hag a gas d\'ur c\'hrogad trucherezh ennañ.';
 
   @override
   String by(String param) {
@@ -3231,8 +3122,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get typePrivateNotesHere => 'Bizskrivañ notennoù prevez amañ';
 
   @override
-  String get writeAPrivateNoteAboutThisUser =>
-      'Skrivañ un notenn brevez diwar-benn ar c\'hoarier-mañ';
+  String get writeAPrivateNoteAboutThisUser => 'Skrivañ un notenn brevez diwar-benn ar c\'hoarier-mañ';
 
   @override
   String get noNoteYet => 'Notenn ebet evit poent';
@@ -3283,8 +3173,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get letOtherPlayersChallengeYou => 'Aotreañ ar c\'hoarierien all d\'ho taeañ';
 
   @override
-  String get letOtherPlayersInviteYouToStudy =>
-      'Aotreañ ar c\'hoarerien all d\'ho pediñ da studiañ';
+  String get letOtherPlayersInviteYouToStudy => 'Aotreañ ar c\'hoarerien all d\'ho pediñ da studiañ';
 
   @override
   String get sound => 'Son';
@@ -3352,12 +3241,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get starting => 'Kregiñ a ray da:';
 
   @override
-  String get allInformationIsPublicAndOptional =>
-      'An holl ditouroù a c\'hall bezañ foran ha da zibab.';
+  String get allInformationIsPublicAndOptional => 'An holl ditouroù a c\'hall bezañ foran ha da zibab.';
 
   @override
-  String get biographyDescription =>
-      'Kaozeal diwar ho penn, ho tudioù, ar pezh a blij deoc\'h en echedoù, ho toare da gregiñ gant ur c\'hrogad, c\'hoarierien, ...';
+  String get biographyDescription => 'Kaozeal diwar ho penn, ho tudioù, ar pezh a blij deoc\'h en echedoù, ho toare da gregiñ gant ur c\'hrogad, c\'hoarierien, ...';
 
   @override
   String get listBlockedPlayers => 'Roll ar c\'hoarierien stanket ganeoc\'h';
@@ -3405,8 +3292,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get error_email => 'Diwiriek eo ar chomlec\'h postel-mañ';
 
   @override
-  String get error_email_acceptable =>
-      'Ne c\'hall ket bet degemeret ar chomlec\'h postel-mañ. Gwiriit anezhañ mar plij, ha klaskit en-dro.';
+  String get error_email_acceptable => 'Ne c\'hall ket bet degemeret ar chomlec\'h postel-mañ. Gwiriit anezhañ mar plij, ha klaskit en-dro.';
 
   @override
   String get error_email_unique => 'Chomlec\'h postel fazius pe implijet dija';
@@ -3546,50 +3432,40 @@ class AppLocalizationsBr extends AppLocalizations {
   String get returnToSimulHomepage => 'Distreiñ d\'al lañser abadennoù kempred';
 
   @override
-  String get aboutSimul =>
-      'Abadennoù kempred enne ur c\'hoarier oc\'h enebiñ ouzh meur a hini war an dro.';
+  String get aboutSimul => 'Abadennoù kempred enne ur c\'hoarier oc\'h enebiñ ouzh meur a hini war an dro.';
 
   @override
-  String get aboutSimulImage =>
-      'A-enep 50 enebour eo bet trec\'h Fischer 47 gwech, div wech rampo ha trec\'het ur wech nemetken.';
+  String get aboutSimulImage => 'A-enep 50 enebour eo bet trec\'h Fischer 47 gwech, div wech rampo ha trec\'het ur wech nemetken.';
 
   @override
-  String get aboutSimulRealLife =>
-      'Bezañ ez eus diouzh abadennoù e-giz-se evit gwir. D\'ar c\'hoarier da vont deus un daol d\'eben evit ober ur fiñvadenn bep tro.';
+  String get aboutSimulRealLife => 'Bezañ ez eus diouzh abadennoù e-giz-se evit gwir. D\'ar c\'hoarier da vont deus un daol d\'eben evit ober ur fiñvadenn bep tro.';
 
   @override
-  String get aboutSimulRules =>
-      'Pa grog an abadenn gempred e krog pep krogad gant an ostiz ivez. Gantañ e vez c\'hoariet ar re wenn. Ur wech echu an holl grogadoù e vo fin an abadenn gempred.';
+  String get aboutSimulRules => 'Pa grog an abadenn gempred e krog pep krogad gant an ostiz ivez. Gantañ e vez c\'hoariet ar re wenn. Ur wech echu an holl grogadoù e vo fin an abadenn gempred.';
 
   @override
-  String get aboutSimulSettings =>
-      'Krogadoù a vignoniezh eo an abadennoù kempred bepred. Kinnigoù c\'hoari en-dro, nullañ ar fiñvadenn ziwezhañ pe ouzhpennañ amzer zo diweredekaet.';
+  String get aboutSimulSettings => 'Krogadoù a vignoniezh eo an abadennoù kempred bepred. Kinnigoù c\'hoari en-dro, nullañ ar fiñvadenn ziwezhañ pe ouzhpennañ amzer zo diweredekaet.';
 
   @override
   String get create => 'Krouiñ';
 
   @override
-  String get whenCreateSimul =>
-      'Pa grouit un abadenn gempred ho pez meur a c\'hoarier da enebiñ oute.';
+  String get whenCreateSimul => 'Pa grouit un abadenn gempred ho pez meur a c\'hoarier da enebiñ oute.';
 
   @override
-  String get simulVariantsHint =>
-      'Ma choazit meur a eilstumm en do pep c\'hoarier da zibab pehini c\'hoari.';
+  String get simulVariantsHint => 'Ma choazit meur a eilstumm en do pep c\'hoarier da zibab pehini c\'hoari.';
 
   @override
-  String get simulClockHint =>
-      'Aozet an horolaj e mod Fischer. Seul vuioc\'h a c\'hoarierien seul vuioc\'h a amzer ho po ezhomm da gaout.';
+  String get simulClockHint => 'Aozet an horolaj e mod Fischer. Seul vuioc\'h a c\'hoarierien seul vuioc\'h a amzer ho po ezhomm da gaout.';
 
   @override
-  String get simulAddExtraTime =>
-      'Gallout a rit lakaat amzer ouzhpenn d\'ho horolaj, evit ho sikour d\'ober war-dro ar bartienn gempred.';
+  String get simulAddExtraTime => 'Gallout a rit lakaat amzer ouzhpenn d\'ho horolaj, evit ho sikour d\'ober war-dro ar bartienn gempred.';
 
   @override
   String get simulHostExtraTime => 'Lakaat amzer ouzhpenn d\'ho horolaj';
 
   @override
-  String get simulAddExtraTimePerPlayer =>
-      'Add initial time to your clock for each player joining the simul.';
+  String get simulAddExtraTimePerPlayer => 'Add initial time to your clock for each player joining the simul.';
 
   @override
   String get simulHostExtraTimePerPlayer => 'Host extra clock time per player';
@@ -3661,8 +3537,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get togglePositionAnnotations => 'Toggle position annotations';
 
   @override
-  String get variationArrowsInfo =>
-      'Variation arrows let you navigate without using the move list.';
+  String get variationArrowsInfo => 'Variation arrows let you navigate without using the move list.';
 
   @override
   String get playSelectedMove => 'play selected move';
@@ -3674,8 +3549,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get tournamentHomeTitle => 'Tournamantoù echedoù o zizh hag o variantoù liesseurt';
 
   @override
-  String get tournamentHomeDescription =>
-      'C\'hoariit tournamantoù echedoù fonnus! Kemerit perzh en un tournamant ofisiel raktreset, pe krouit hoc\'h hini. Bullet, Blitz, Klasel, Echedoù960, Roue d\'ar c\'hreiz, Tribec\'h, ha dibaboù all evit ur blijadur beurbadus gant an echedoù.';
+  String get tournamentHomeDescription => 'C\'hoariit tournamantoù echedoù fonnus! Kemerit perzh en un tournamant ofisiel raktreset, pe krouit hoc\'h hini. Bullet, Blitz, Klasel, Echedoù960, Roue d\'ar c\'hreiz, Tribec\'h, ha dibaboù all evit ur blijadur beurbadus gant an echedoù.';
 
   @override
   String get tournamentNotFound => 'N\'eo ket bet kavet an tournamant';
@@ -3684,8 +3558,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get tournamentDoesNotExist => 'N\'eus ket diouzh an tournamant-mañ.';
 
   @override
-  String get tournamentMayHaveBeenCanceled =>
-      'Marteze eo bet nullet an tournamant dre ma \'z eo aet kuit an holl c\'hoarerien a-raok ma krogfe.';
+  String get tournamentMayHaveBeenCanceled => 'Marteze eo bet nullet an tournamant dre ma \'z eo aet kuit an holl c\'hoarerien a-raok ma krogfe.';
 
   @override
   String get returnToTournamentsHomepage => 'Distreiñ da lañser an tournamantoù';
@@ -3733,12 +3606,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get checkYourEmail => 'Gwiriañ ar posteloù';
 
   @override
-  String get weHaveSentYouAnEmailClickTheLink =>
-      'Kaset zo bet ur postel deoc\'h. Klikit war al liamm er postel evit gweredekaat ho kont.';
+  String get weHaveSentYouAnEmailClickTheLink => 'Kaset zo bet ur postel deoc\'h. Klikit war al liamm er postel evit gweredekaat ho kont.';
 
   @override
-  String get ifYouDoNotSeeTheEmailCheckOtherPlaces =>
-      'Ma ne zeuit ket a-benn gwelet ar postel-mañ, klaskit e lec\'hioù all evel ar boubellenn, ar stroboù pe teuliadoù all c\'hoazh.';
+  String get ifYouDoNotSeeTheEmailCheckOtherPlaces => 'Ma ne zeuit ket a-benn gwelet ar postel-mañ, klaskit e lec\'hioù all evel ar boubellenn, ar stroboù pe teuliadoù all c\'hoazh.';
 
   @override
   String weHaveSentYouAnEmailTo(String param) {
@@ -3759,8 +3630,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get networkLagBetweenYouAndLichess => '\"Lag\" zo etrezoc\'h ha Lichess';
 
   @override
-  String get timeToProcessAMoveOnLichessServer =>
-      'Amzer ret evit ober ur fiñvadenn war servijer Lichess';
+  String get timeToProcessAMoveOnLichessServer => 'Amzer ret evit ober ur fiñvadenn war servijer Lichess';
 
   @override
   String get downloadAnnotated => 'Pellgargañ gant an notennoù';
@@ -3775,16 +3645,13 @@ class AppLocalizationsBr extends AppLocalizations {
   String get crosstable => 'Roll-istor ar c\'hrogadoù';
 
   @override
-  String get youCanAlsoScrollOverTheBoardToMoveInTheGame =>
-      'Gallout a rit ivez treiñ rodell al logodenn evit mont eus an eil taolioù d\'ar re all.';
+  String get youCanAlsoScrollOverTheBoardToMoveInTheGame => 'Gallout a rit ivez treiñ rodell al logodenn evit mont eus an eil taolioù d\'ar re all.';
 
   @override
-  String get scrollOverComputerVariationsToPreviewThem =>
-      'Scroll over computer variations to preview them.';
+  String get scrollOverComputerVariationsToPreviewThem => 'Scroll over computer variations to preview them.';
 
   @override
-  String get analysisShapesHowTo =>
-      'Pouezit war shift+klik pe klik-dehou da dresañ kelc\'hioù ha biroù war an tablez.';
+  String get analysisShapesHowTo => 'Pouezit war shift+klik pe klik-dehou da dresañ kelc\'hioù ha biroù war an tablez.';
 
   @override
   String get letOtherPlayersMessageYou => 'Aotreañ ar c\'hoarierien da gas kemennadennoù deoc\'h';
@@ -3811,8 +3678,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get kidModeIsEnabled => 'Kid mode is enabled.';
 
   @override
-  String get kidModeExplanation =>
-      'Un afer a surentez an hini eo. Ne c\'haller ket mont e darempred gant ar re all pa c\'hoarier er mod evit ar vugale. Mat eo evit ho pugale pe ho skolidi evit o gwareziñ diouzh ar c\'hoarierien all war internet.';
+  String get kidModeExplanation => 'Un afer a surentez an hini eo. Ne c\'haller ket mont e darempred gant ar re all pa c\'hoarier er mod evit ar vugale. Mat eo evit ho pugale pe ho skolidi evit o gwareziñ diouzh ar c\'hoarierien all war internet.';
 
   @override
   String inKidModeTheLichessLogoGetsIconX(String param) {
@@ -3820,8 +3686,7 @@ class AppLocalizationsBr extends AppLocalizations {
   }
 
   @override
-  String get askYourChessTeacherAboutLiftingKidMode =>
-      'Your account is managed. Ask your chess teacher about lifting kid mode.';
+  String get askYourChessTeacherAboutLiftingKidMode => 'Your account is managed. Ask your chess teacher about lifting kid mode.';
 
   @override
   String get enableKidMode => 'Gweredekaat ar mod evit ar vugale';
@@ -3845,12 +3710,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get asFreeAsLichess => 'Ken digoust ha lichess';
 
   @override
-  String get builtForTheLoveOfChessNotMoney =>
-      'Krouiñ evit an echedoù ha n\'eo ket evit an arc\'hant';
+  String get builtForTheLoveOfChessNotMoney => 'Krouiñ evit an echedoù ha n\'eo ket evit an arc\'hant';
 
   @override
-  String get everybodyGetsAllFeaturesForFree =>
-      'Forzh piv a c\'hall kaout an holl arc\'hweladurioù, digoust eo';
+  String get everybodyGetsAllFeaturesForFree => 'Forzh piv a c\'hall kaout an holl arc\'hweladurioù, digoust eo';
 
   @override
   String get zeroAdvertisement => 'Tamm bruderezh ebet';
@@ -3963,12 +3826,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get usernamePrefixInvalid => 'Gant ul lizherenn e rank kregiñ an anv implijer.';
 
   @override
-  String get usernameSuffixInvalid =>
-      'Gant ul lizherenn pe ur sifr e echu an anv-implijer, dre ret.';
+  String get usernameSuffixInvalid => 'Gant ul lizherenn pe ur sifr e echu an anv-implijer, dre ret.';
 
   @override
-  String get usernameCharsInvalid =>
-      'Lizherennoù, sifroù ha tiretennoù a c\'haller kavout er anv-implijer.';
+  String get usernameCharsInvalid => 'Lizherennoù, sifroù ha tiretennoù a c\'haller kavout er anv-implijer.';
 
   @override
   String get usernameUnacceptable => 'Ne c\'haller degemer an anv-implijer-mañ.';
@@ -4131,8 +3992,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get addCurrentVariation => 'Ouzhpennañ an eilstumm o ren';
 
   @override
-  String get playVariationToCreateConditionalPremoves =>
-      'C\'hoariit ur variant evit krouiñ raktaolioù rekiz';
+  String get playVariationToCreateConditionalPremoves => 'C\'hoariit ur variant evit krouiñ raktaolioù rekiz';
 
   @override
   String get noConditionalPremoves => 'Raktaol rekiz ebet';
@@ -4158,16 +4018,13 @@ class AppLocalizationsBr extends AppLocalizations {
   String get why => 'Perak?';
 
   @override
-  String get pleasantChessExperience =>
-      'Plijout a rafe deomp e vourrfe pep hini c\'hoari echedoù war Lichess.';
+  String get pleasantChessExperience => 'Plijout a rafe deomp e vourrfe pep hini c\'hoari echedoù war Lichess.';
 
   @override
-  String get goodPractice =>
-      'Evit hen ober e dav deomp bezañ sur e vez graet gant doareoù dereat gant an holl.';
+  String get goodPractice => 'Evit hen ober e dav deomp bezañ sur e vez graet gant doareoù dereat gant an holl.';
 
   @override
-  String get potentialProblem =>
-      'Pa vez merzhet ar pezh a c\'hallfe bezañ ur gudenn e vez dispaket ar gemennadenn-mañ ganeomp.';
+  String get potentialProblem => 'Pa vez merzhet ar pezh a c\'hallfe bezañ ur gudenn e vez dispaket ar gemennadenn-mañ ganeomp.';
 
   @override
   String get howToAvoidThis => 'Penaos ober kuit ma c\'hoarvezfe an dra-mañ en-dro?';
@@ -4179,8 +4036,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get tryToWin => 'Klaskit gounit pep krogad (pe bezañ rampo diantav).';
 
   @override
-  String get resignLostGames =>
-      'Dilezit ar c\'hrogadoù pa ne vez ket an tu kreñv ganeoc\'h (ha n\'eo ket gortoz ez afe an amzer e-biou).';
+  String get resignLostGames => 'Dilezit ar c\'hrogadoù pa ne vez ket an tu kreñv ganeoc\'h (ha n\'eo ket gortoz ez afe an amzer e-biou).';
 
   @override
   String get temporaryInconvenience => 'Hon digarezit evit an diaezamant berrbad,';
@@ -4198,8 +4054,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get currentMatchScore => 'Taolenn an disoc\'hoù etrezoc\'h';
 
   @override
-  String get agreementAssistance =>
-      'Biken ne vin sikouret e-pad ma c\'hrogadoù (na gant un urzhiataer echedoù, na gant ul levr, un diaz roadennoù pe un den all).';
+  String get agreementAssistance => 'Biken ne vin sikouret e-pad ma c\'hrogadoù (na gant un urzhiataer echedoù, na gant ul levr, un diaz roadennoù pe un den all).';
 
   @override
   String get agreementNice => 'Prometiñ a ran bezañ bepred hegarat ouzh ar c\'hoarierien all.';
@@ -4246,8 +4101,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get classicalDesc => 'Krogadoù klasel: 25 munutenn ha muioc\'h';
 
   @override
-  String get correspondenceDesc =>
-      'Krogadoù war hir dermen: un deiz pe meur a hini evit bep fiñvadenn';
+  String get correspondenceDesc => 'Krogadoù war hir dermen: un deiz pe meur a hini evit bep fiñvadenn';
 
   @override
   String get puzzleDesc => 'Gourdoner poelladennoù echedoù';
@@ -4288,8 +4142,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get theForumEtiquette => 'reolennoù ar forom';
 
   @override
-  String get thisTopicIsArchived =>
-      'Diellaouet eo bet ar sujed-mañ ha ne c\'haller ket respont ken.';
+  String get thisTopicIsArchived => 'Diellaouet eo bet ar sujed-mañ ha ne c\'haller ket respont ken.';
 
   @override
   String joinTheTeamXToPost(String param1) {
@@ -4302,8 +4155,7 @@ class AppLocalizationsBr extends AppLocalizations {
   }
 
   @override
-  String get youCannotPostYetPlaySomeGames =>
-      'Ne c\'hallit ket skrivañ ur gemennadenn war ar foromoù evit poent. C\'hoarit un tamm a-raok!';
+  String get youCannotPostYetPlaySomeGames => 'Ne c\'hallit ket skrivañ ur gemennadenn war ar foromoù evit poent. C\'hoarit un tamm a-raok!';
 
   @override
   String get subscribe => 'Heuliañ';
@@ -4340,8 +4192,7 @@ class AppLocalizationsBr extends AppLocalizations {
   }
 
   @override
-  String get someoneYouReportedWasBanned =>
-      'Skarzhet eo bet kuit unan bennak ho peus savet klemm outañ';
+  String get someoneYouReportedWasBanned => 'Skarzhet eo bet kuit unan bennak ho peus savet klemm outañ';
 
   @override
   String get congratsYouWon => 'Gourc’hemennoù, aet eo ar maout ganeoc’h!';
@@ -4357,8 +4208,7 @@ class AppLocalizationsBr extends AppLocalizations {
   }
 
   @override
-  String get lostAgainstTOSViolator =>
-      'Kollet ho peus poentoù a-enep unan ha n\'en deus ket doujet d\'ar reolennoù';
+  String get lostAgainstTOSViolator => 'Kollet ho peus poentoù a-enep unan ha n\'en deus ket doujet d\'ar reolennoù';
 
   @override
   String refundXpointsTimeControlY(String param1, String param2) {
@@ -4387,12 +4237,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get tournDescription => 'Ur gerig diwar-benn an tournamant';
 
   @override
-  String get tournDescriptionHelp =>
-      'Un dra bennak a fell deoc\'h lâret d\'ar re a gemero perzh? E berr gomzoù mar plij. Liammoù Markdown zo: [name](https://url)';
+  String get tournDescriptionHelp => 'Un dra bennak a fell deoc\'h lâret d\'ar re a gemero perzh? E berr gomzoù mar plij. Liammoù Markdown zo: [name](https://url)';
 
   @override
-  String get ratedFormHelp =>
-      'Renket eo ar c\'hrogadoù ha cheñch a reont renkadur ar c\'hoarierien';
+  String get ratedFormHelp => 'Renket eo ar c\'hrogadoù ha cheñch a reont renkadur ar c\'hoarierien';
 
   @override
   String get onlyMembersOfTeam => 'Izili ar skipailh hepken';
@@ -4490,8 +4338,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get reopenYourAccount => 'Addigeriñ ho kont';
 
   @override
-  String get reopenYourAccountDescription =>
-      'If you closed your account, but have since changed your mind, you get a chance of getting your account back.';
+  String get reopenYourAccountDescription => 'If you closed your account, but have since changed your mind, you get a chance of getting your account back.';
 
   @override
   String get emailAssociatedToaccount => 'Postel liammet ouzh ar gont';
@@ -4517,8 +4364,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get resignTheGame => 'Dilezel ar c\'hrogad';
 
   @override
-  String get youCantStartNewGame =>
-      'Ne c\'haller ket kregiñ gant ur c\'hrogad all keit ha ma ne vo ket echu gant ar c\'hrogad-mañ.';
+  String get youCantStartNewGame => 'Ne c\'haller ket kregiñ gant ur c\'hrogad all keit ha ma ne vo ket echu gant ar c\'hrogad-mañ.';
 
   @override
   String get since => 'Adalek';
@@ -4545,8 +4391,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get showMeEverything => 'Show me everything';
 
   @override
-  String get lichessPatronInfo =>
-      'Lichess is a charity and entirely free/libre open source software.\nAll operating costs, development, and content are funded solely by user donations.';
+  String get lichessPatronInfo => 'Lichess is a charity and entirely free/libre open source software.\nAll operating costs, development, and content are funded solely by user donations.';
 
   @override
   String get nothingToSeeHere => 'Nothing to see here at the moment.';
@@ -4559,16 +4404,11 @@ class AppLocalizationsBr extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other:
-          'Hoc\'h enebour en deus kuitaet ar c\'hrogad. Gallout a reoc\'h goulenn bezañ trec\'h a-benn $count eilenn.',
-      many:
-          'Hoc\'h enebour en deus kuitaet ar c\'hrogad. Gallout a reoc\'h goulenn bezañ trec\'h a-benn $count eilenn.',
-      few:
-          'Hoc\'h enebourien o deus kuitaet ar c\'hrogad. Gallout a reoc\'h goulenn bezañ trec\'h a-benn $count eilenn.',
-      two:
-          'Hoc\'h enebour en deus kuitaet ar c\'hrogad. Gallout a reoc\'h goulenn bezañ trec\'h a-benn $count eilenn.',
-      one:
-          'Hoc\'h enebour en deus kuitaet ar c\'hrogad. Gallout a reoc\'h goulenn bezañ trec\'h a-benn $count eilenn.',
+      other: 'Hoc\'h enebour en deus kuitaet ar c\'hrogad. Gallout a reoc\'h goulenn bezañ trec\'h a-benn $count eilenn.',
+      many: 'Hoc\'h enebour en deus kuitaet ar c\'hrogad. Gallout a reoc\'h goulenn bezañ trec\'h a-benn $count eilenn.',
+      few: 'Hoc\'h enebourien o deus kuitaet ar c\'hrogad. Gallout a reoc\'h goulenn bezañ trec\'h a-benn $count eilenn.',
+      two: 'Hoc\'h enebour en deus kuitaet ar c\'hrogad. Gallout a reoc\'h goulenn bezañ trec\'h a-benn $count eilenn.',
+      one: 'Hoc\'h enebour en deus kuitaet ar c\'hrogad. Gallout a reoc\'h goulenn bezañ trec\'h a-benn $count eilenn.',
     );
     return '$_temp0';
   }
@@ -5190,12 +5030,10 @@ class AppLocalizationsBr extends AppLocalizations {
   String get stormMoveToStart => 'Grit un taol evit kregiñ';
 
   @override
-  String get stormYouPlayTheWhitePiecesInAllPuzzles =>
-      'C\'hoari a rit gant ar re wenn e pep poelladenn';
+  String get stormYouPlayTheWhitePiecesInAllPuzzles => 'C\'hoari a rit gant ar re wenn e pep poelladenn';
 
   @override
-  String get stormYouPlayTheBlackPiecesInAllPuzzles =>
-      'C\'hoari a rit gant ar re zu e pep poelladenn';
+  String get stormYouPlayTheBlackPiecesInAllPuzzles => 'C\'hoari a rit gant ar re zu e pep poelladenn';
 
   @override
   String get stormPuzzlesSolved => 'poelladennoù diskoulmet';
@@ -5318,8 +5156,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get stormSkipHelp => 'Gallout a rit lammat un taol eus pep redadeg:';
 
   @override
-  String get stormSkipExplanation =>
-      'Lammit war an taol-se evit derc\'hel ho kombo! Ur wech e pep redadeg hepken.';
+  String get stormSkipExplanation => 'Lammit war an taol-se evit derc\'hel ho kombo! Ur wech e pep redadeg hepken.';
 
   @override
   String get stormFailedPuzzles => 'Failed puzzles';
@@ -5436,8 +5273,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get studyInviteToTheStudy => 'Pediñ d\'ar studiadenn';
 
   @override
-  String get studyPleaseOnlyInvitePeopleYouKnow =>
-      'Na bedit nemet tud a anavezit hag o deus c\'hoant da gemer perzh da vat en ho studiadenn.';
+  String get studyPleaseOnlyInvitePeopleYouKnow => 'Na bedit nemet tud a anavezit hag o deus c\'hoant da gemer perzh da vat en ho studiadenn.';
 
   @override
   String get studySearchByUsername => 'Klask dre anv implijer';
@@ -5485,24 +5321,19 @@ class AppLocalizationsBr extends AppLocalizations {
   String get studyTheChapterIsTooShortToBeAnalysed => 'Re verr eo ar pennad evit bezañ dielfennet.';
 
   @override
-  String get studyOnlyContributorsCanRequestAnalysis =>
-      'N\'eus nemet perzhidi ar studiadenn a c\'hall goulenn un dielfennañ urzhiataer.';
+  String get studyOnlyContributorsCanRequestAnalysis => 'N\'eus nemet perzhidi ar studiadenn a c\'hall goulenn un dielfennañ urzhiataer.';
 
   @override
-  String get studyGetAFullComputerAnalysis =>
-      'Kaout un dielfennañ klok eus ar bennlinenn graet gant un urzhiataer.';
+  String get studyGetAFullComputerAnalysis => 'Kaout un dielfennañ klok eus ar bennlinenn graet gant un urzhiataer.';
 
   @override
-  String get studyMakeSureTheChapterIsComplete =>
-      'Bezit sur eo klok ar pennad. Ne c\'hallit goulenn un dielfennañ nemet ur wech.';
+  String get studyMakeSureTheChapterIsComplete => 'Bezit sur eo klok ar pennad. Ne c\'hallit goulenn un dielfennañ nemet ur wech.';
 
   @override
-  String get studyAllSyncMembersRemainOnTheSamePosition =>
-      'Er memes lec\'hiadur e chom holl izili ar SYNC';
+  String get studyAllSyncMembersRemainOnTheSamePosition => 'Er memes lec\'hiadur e chom holl izili ar SYNC';
 
   @override
-  String get studyShareChanges =>
-      'Rannañ cheñchamantoù gant an arvesterien ha saveteiñ anezhe war ar servor';
+  String get studyShareChanges => 'Rannañ cheñchamantoù gant an arvesterien ha saveteiñ anezhe war ar servor';
 
   @override
   String get studyPlaying => 'O c\'hoari';
@@ -5553,8 +5384,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get studyCurrentChapterUrl => 'URL ar pennad evit poent';
 
   @override
-  String get studyYouCanPasteThisInTheForumToEmbed =>
-      'Gallout a rit pegañ se er forom evit ensoc\'hañ';
+  String get studyYouCanPasteThisInTheForumToEmbed => 'Gallout a rit pegañ se er forom evit ensoc\'hañ';
 
   @override
   String get studyStartAtInitialPosition => 'Kregiñ el lec\'hiadur kentañ';
@@ -5571,8 +5401,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get studyReadMoreAboutEmbedding => 'Goût hiroc\'h diwar-benn an ensoc\'hañ';
 
   @override
-  String get studyOnlyPublicStudiesCanBeEmbedded =>
-      'Ar studiadennoù foran a c\'hall bezañ ensoc\'het!';
+  String get studyOnlyPublicStudiesCanBeEmbedded => 'Ar studiadennoù foran a c\'hall bezañ ensoc\'het!';
 
   @override
   String get studyOpen => 'Digeriñ';
@@ -5621,8 +5450,7 @@ class AppLocalizationsBr extends AppLocalizations {
   String get studyDeleteThisChapter => 'Dilemel ar pennad-mañ? Hep distro e vo!';
 
   @override
-  String get studyClearAllCommentsInThisChapter =>
-      'Diverkañ an holl evezhiadennoù ha notennoù er pennad?';
+  String get studyClearAllCommentsInThisChapter => 'Diverkañ an holl evezhiadennoù ha notennoù er pennad?';
 
   @override
   String get studyRightUnderTheBoard => 'Dindan an dablez';

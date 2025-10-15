@@ -5,6 +5,7 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/account/account_repository.dart';
 import 'package:rooktook/src/model/account/ongoing_game.dart';
@@ -91,7 +92,6 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       if (session != null) {
         ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.rapid));
         ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.blitz));
-        // ref.read(homeProvider.notifier).fetchHomeBanners();
       }
     });
   }
@@ -526,17 +526,17 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       //     },
       //   ),
       // ),
-      const HomeTournamentContainer(),
-      const SizedBox(height: 8),
-      InkWell(
-        onTap: () {
-          Navigator.of(
-            context,
-            rootNavigator: true,
-          ).push(MaterialPageRoute(builder: (context) => const PuzzleTabScreen()));
-        },
-        child: ChessPuzzleScreen(puzzleRank: puzzleRank),
-      ),
+      // const HomeTournamentContainer(),
+      // const SizedBox(height: 8),
+      // InkWell(
+      //   onTap: () {
+      //     Navigator.of(
+      //       context,
+      //       rootNavigator: true,
+      //     ).push(MaterialPageRoute(builder: (context) => const PuzzleTabScreen()));
+      //   },
+      //   child: ChessPuzzleScreen(puzzleRank: puzzleRank),
+      // ),
       Center(child: SvgPicture.asset('assets/images/svg/footer.svg')),
       // RecentGamesWidget(
       //   recentGames: recentGames,
@@ -605,8 +605,34 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         )
       else ...[
         const HomeBannersWidget(),
-        const SizedBox(height: 24),
+        const CompeteSection(),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text('Practice', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+        ),
         ChessRatingCards(rapidRank: '$rapidRank', blitzRank: '$blitzRank'),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            spacing: 16,
+            children: [
+              Expanded(
+                child: PracticeGameCard(
+                  image: 'assets/images/puzzle_streak.png',
+                  title: 'Puzzle Streak',
+                  onTap: () {},
+                ),
+              ),
+              Expanded(
+                child: PracticeGameCard(
+                  image: 'assets/images/healthy_mix.png',
+                  title: 'Healthy Mix',
+                  onTap: () {},
+                ),
+              ),
+            ],
+          ),
+        ),
         // if (status.isOnline)
         //   const _EditableWidget(
         //     widget: HomeEditableWidget.quickPairing,
@@ -684,7 +710,332 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       if (isOnline) ref.refresh(accountProvider.future),
       if (isOnline) ref.refresh(ongoingGamesProvider.future),
       if (isOnline) ref.refresh(fetchHomeBannersProvider.future),
+      if (isOnline) ref.refresh(fetchTournamentsProvider.future),
     ]);
+  }
+}
+
+class CompeteSection extends ConsumerWidget {
+  const CompeteSection({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final fetchTournamentsPr = ref.watch(fetchTournamentsProvider);
+    return fetchTournamentsPr.when(
+      skipLoadingOnRefresh: false,
+      skipError: true,
+      data: (tournaments) {
+        if (tournaments.isEmpty) {
+          return const SizedBox.shrink();
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text('Compete', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+              ),
+              const SizedBox(height: 24),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  spacing: 16,
+                  children: List.generate(tournaments.length > 5 ? 5 : tournaments.length, (index) {
+                    final endIndex = tournaments.length > 5 ? 5 : tournaments.length;
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        right: index == endIndex ? 16 : 0,
+                        left: index == 0 ? 16 : 0,
+                      ),
+                      child: CompeteTournamentCard(tournament: tournaments[index]),
+                    );
+                  }),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    handleTournamentBannerNavigation(ref);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xff54C339)),
+                    ),
+                    child: const Text(
+                      'VIEW ALL ',
+                      style: TextStyle(
+                        color: Color(0xff54C339),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+          );
+        }
+      },
+      error: (error, stackTrace) => const SizedBox.shrink(),
+      loading: () => const Center(child: CenterLoadingIndicator()),
+    );
+  }
+}
+
+class CompeteTournamentCard extends ConsumerWidget {
+  const CompeteTournamentCard({super.key, required this.tournament});
+  final Tournament tournament;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => TournamentDetailScreen(
+                  tournament: tournament,
+                  isPlayed: tournament.players.any(
+                    (element) =>
+                        element.userId == ref.watch(authSessionProvider)!.user.id.value &&
+                        element.time > 0,
+                  ),
+                ),
+          ),
+        );
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.85,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
+        decoration: BoxDecoration(
+          color: const Color(0xff2B2D30),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xff464A4F)),
+          gradient: const LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Color(0xff3C3C3C), Color(0xff222222)],
+          ),
+        ),
+        child: Column(
+          children: [
+            Row(
+              spacing: 12,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 64,
+                  width: 64,
+                  decoration: const BoxDecoration(
+                    color: Color(0xff494745),
+                    shape: BoxShape.circle,
+                    // image: DecorationImage(
+                    //   image: NetworkImage(tournament.bannerImage ?? ''),
+                    //   fit: BoxFit.cover,
+                    // ),
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        tournament.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        spacing: 16,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Entry Fee:',
+                            style: TextStyle(
+                              color: Color(0xff7D8082),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              SvgPicture.asset('assets/images/svg/silver_coin.svg', height: 12),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${tournament.entrySilverCoins}',
+                                style: const TextStyle(
+                                  color: Color(0xffEFEDED),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Reward',
+                            style: TextStyle(
+                              color: Color(0xff7D8082),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Row(
+                            spacing: 4,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/svg/${tournament.rewardCoinType}_coin.svg',
+                                height: 16,
+                              ),
+                              Text(
+                                '${tournament.rewardCoins}',
+                                style: const TextStyle(
+                                  color: Color(0xffEFEDED),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xff35373A), width: .5),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    spacing: 4,
+                    children: [
+                      SvgPicture.asset('assets/images/svg/tournament_clock.svg', height: 18.0),
+                      Text(
+                        DateFormat(
+                          'hh:mm a, MMM dd',
+                        ).format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime)),
+                        textScaler: TextScaler.noScaling,
+                        style: const TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    spacing: 4,
+                    children: [
+                      SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
+                      Text(
+                        '${tournament.players.length}/${tournament.maxParticipants} Joined',
+                        textScaler: TextScaler.noScaling,
+                        style: const TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            MaterialButton(
+              height: 40,
+              color: const Color(0xff54C339),
+              onPressed: () {},
+              minWidth: double.infinity,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              child: const Text(
+                'JOIN NOW',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PracticeGameCard extends StatelessWidget {
+  const PracticeGameCard({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.onTap,
+  });
+  final String image;
+  final String title;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xff2B2D30),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xff464A4F), width: .5),
+          gradient: const LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Color(0xff3C3C3C), Color(0xff222222)],
+          ),
+        ),
+        child: Column(
+          children: [
+            Image.asset(image, height: 58),
+            const SizedBox(height: 20),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+                textScaler: TextScaler.noScaling,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xff54C339)),
+              ),
+              child: const Text(
+                'PLAY',
+                style: TextStyle(
+                  color: Color(0xff54C339),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -711,7 +1062,7 @@ class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
             children: [
               const SizedBox(height: 20),
               SizedBox(
-                width: MediaQuery.of(context).size.width - 32,
+                width: MediaQuery.of(context).size.width,
                 height: 130,
                 child: PageView.builder(
                   onPageChanged: (value) {
@@ -781,6 +1132,7 @@ class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
                         }
                       },
                       child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                           // color: const Color(0xff2B2D30),
                           borderRadius: BorderRadius.circular(12),
@@ -807,7 +1159,7 @@ class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
                           width: 10,
                           height: 10,
                           decoration: BoxDecoration(
-                            color: const Color(0xff54C339).withValues(alpha: isActive ? 0.5 : 1),
+                            color: const Color(0xff54C339).withValues(alpha: isActive ? 1 : .5),
                             shape: BoxShape.circle,
                           ),
                         );
@@ -815,6 +1167,7 @@ class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
                     ),
                   ],
                 ),
+              const SizedBox(height: 24),
             ],
           );
         }
@@ -1106,14 +1459,47 @@ class ChessRatingCards extends StatelessWidget {
           //     rating: blitzRank,
           //   ),
           // ),
-          Expanded(
-            child: _buildRatingCard(
-              context: context,
-              icon: Image.asset('assets/images/rapid_game.png'),
+          // Expanded(
+          //   child: _buildRatingCard(
+          //     context: context,
+          //     icon: Image.asset('assets/images/rapid_game.png'),
 
-              iconColor: const Color(0xffE5FFF1),
-              title: 'Rapid',
-              rating: rapidRank,
+          //     iconColor: const Color(0xffE5FFF1),
+          //     title: 'Rapid',
+          //     rating: rapidRank,
+          //   ),
+          // ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xff2B2D30),
+                borderRadius: BorderRadius.circular(12),
+                gradient: const LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    spacing: 12,
+                    children: [
+                      SvgPicture.asset('assets/images/svg/puzzle_rating.svg', height: 32),
+                      const Text(
+                        'Puzzle Rating',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    rapidRank,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

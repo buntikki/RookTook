@@ -97,8 +97,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get mobileSettingsImmersiveMode => '沉浸模式';
 
   @override
-  String get mobileSettingsImmersiveModeSubtitle =>
-      '下棋时隐藏系统界面。 如果您的操作受到屏幕边缘的系统导航手势干扰，请使用此功能。 适用于棋局和 Puzzle Storm 界面。';
+  String get mobileSettingsImmersiveModeSubtitle => '下棋时隐藏系统界面。 如果您的操作受到屏幕边缘的系统导航手势干扰，请使用此功能。 适用于棋局和 Puzzle Storm 界面。';
 
   @override
   String get mobileSettingsTab => '设置';
@@ -178,13 +177,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String activitySolvedNbPuzzles(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '解决了 $count 道谜题');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '解决了 $count 道谜题',
+    );
     return '$_temp0';
   }
 
   @override
   String activityPlayedNbGames(int count, String param2) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '下了 $count 局 $param2');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '下了 $count 局 $param2',
+    );
     return '$_temp0';
   }
 
@@ -200,19 +207,31 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String activityPlayedNbMoves(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '下了 $count 手棋');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '下了 $count 手棋',
+    );
     return '$_temp0';
   }
 
   @override
   String activityInNbCorrespondenceGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在 $count 局通讯棋局中');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在 $count 局通讯棋局中',
+    );
     return '$_temp0';
   }
 
   @override
   String activityCompletedNbGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '完成了 $count 盘通讯棋');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '完成了 $count 盘通讯棋',
+    );
     return '$_temp0';
   }
 
@@ -228,37 +247,61 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String activityFollowedNbPlayers(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '新关注 $count 个用户');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '新关注 $count 个用户',
+    );
     return '$_temp0';
   }
 
   @override
   String activityGainedNbFollowers(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '新增 $count 个关注者');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '新增 $count 个关注者',
+    );
     return '$_temp0';
   }
 
   @override
   String activityHostedNbSimuls(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '主持了 $count 场车轮战');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '主持了 $count 场车轮战',
+    );
     return '$_temp0';
   }
 
   @override
   String activityJoinedNbSimuls(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '参与了 $count 场车轮战');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '参与了 $count 场车轮战',
+    );
     return '$_temp0';
   }
 
   @override
   String activityCreatedNbStudies(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '创建了 $count 个新的研讨');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '创建了 $count 个新的研讨',
+    );
     return '$_temp0';
   }
 
   @override
   String activityCompetedInNbTournaments(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '参与了 $count 场锦标赛');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '参与了 $count 场锦标赛',
+    );
     return '$_temp0';
   }
 
@@ -284,7 +327,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String activityJoinedNbTeams(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '加入了 $count 个团队');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '加入了 $count 个团队',
+    );
     return '$_temp0';
   }
 
@@ -532,7 +579,11 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String broadcastNbBroadcasts(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 直播');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 直播',
+    );
     return '$_temp0';
   }
 
@@ -1144,8 +1195,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get puzzleSearchPuzzles => '搜索谜题';
 
   @override
-  String get puzzleFromMyGamesNone =>
-      '你下过的棋局暂时没有被纳入到谜题数据库中，但 Lichess 将一如既往地记着你所走的每一步。\n多下快棋和慢棋可以提升你的棋局被纳入谜题数据库的概率哦！';
+  String get puzzleFromMyGamesNone => '你下过的棋局暂时没有被纳入到谜题数据库中，但 Lichess 将一如既往地记着你所走的每一步。\n多下快棋和慢棋可以提升你的棋局被纳入谜题数据库的概率哦！';
 
   @override
   String puzzleFromXGamesFound(String param1, String param2) {
@@ -1171,31 +1221,51 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String puzzlePlayedXTimes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '共 $count 次尝试');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '共 $count 次尝试',
+    );
     return '$_temp0';
   }
 
   @override
   String puzzleNbPointsBelowYourPuzzleRating(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '比你的谜题等级分低$count');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '比你的谜题等级分低$count',
+    );
     return '$_temp0';
   }
 
   @override
   String puzzleNbPointsAboveYourPuzzleRating(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '比你的谜题等级分高$count');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '比你的谜题等级分高$count',
+    );
     return '$_temp0';
   }
 
   @override
   String puzzleNbPlayed(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '玩过 $count');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '玩过 $count',
+    );
     return '$_temp0';
   }
 
   @override
   String puzzleNbToReplay(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 重玩');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 重玩',
+    );
     return '$_temp0';
   }
 
@@ -1362,8 +1432,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get puzzleThemeInterference => '拦截';
 
   @override
-  String get puzzleThemeInterferenceDescription =>
-      '走动棋子到对手的两个棋子之间，使其中的一个或两个棋子消除保护，例如将一个马走到两个车之间的防守格上。';
+  String get puzzleThemeInterferenceDescription => '走动棋子到对手的两个棋子之间，使其中的一个或两个棋子消除保护，例如将一个马走到两个车之间的防守格上。';
 
   @override
   String get puzzleThemeIntermezzo => '过渡着';
@@ -1375,8 +1444,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get puzzleThemeKillBoxMate => 'Kill box mate';
 
   @override
-  String get puzzleThemeKillBoxMateDescription =>
-      'A rook is next to the enemy king and supported by a queen that also blocks the king\'s escape squares. The rook and the queen catch the enemy king in a 3 by 3 \"kill box\".';
+  String get puzzleThemeKillBoxMateDescription => 'A rook is next to the enemy king and supported by a queen that also blocks the king\'s escape squares. The rook and the queen catch the enemy king in a 3 by 3 \"kill box\".';
 
   @override
   String get puzzleThemeVukovicMate => 'Vukovic mate';
@@ -2027,8 +2095,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get signUp => '注册';
 
   @override
-  String get computersAreNotAllowedToPlay =>
-      '电脑与电脑辅助棋手不允许参加对局。下棋时，请不要从国际象棋引擎、数据库或其他棋手得到帮助。另外，强烈建议你不要创建备用账户。过度使用多余的账户会导致账号被封禁。';
+  String get computersAreNotAllowedToPlay => '电脑与电脑辅助棋手不允许参加对局。下棋时，请不要从国际象棋引擎、数据库或其他棋手得到帮助。另外，强烈建议你不要创建备用账户。过度使用多余的账户会导致账号被封禁。';
 
   @override
   String get games => '棋局';
@@ -2948,8 +3015,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reportCheatBoostHelp => '请附上棋局链接解释该用户的行为问题。请不要只说 “对手作弊”，而是解释为什么你认为对手作弊。';
 
   @override
-  String get reportUsernameHelp =>
-      '解释这个用户名为何具有冒犯性。不要只说“它具有冒犯性/不恰当”，而是要告诉我们你是如何得出这个结论的，特别是如果侮辱性内容是隐晦的、非英语的、俚语或有历史/文化参考。';
+  String get reportUsernameHelp => '解释这个用户名为何具有冒犯性。不要只说“它具有冒犯性/不恰当”，而是要告诉我们你是如何得出这个结论的，特别是如果侮辱性内容是隐晦的、非英语的、俚语或有历史/文化参考。';
 
   @override
   String get reportProcessedFasterInEnglish => '如果您使用英语举报，我们将会更快作出答复。';
@@ -3407,8 +3473,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tournamentHomeTitle => '国际象棋锦标赛均设有不同的时间限制和变体';
 
   @override
-  String get tournamentHomeDescription =>
-      '参加快节奏的国际象棋锦标赛！欢迎参与 Lichess 官方的锦标赛，或创建自己的锦标赛。子弹超快棋，闪电超快棋，经典，菲舍尔任意制，王居中，三次将军，并提供更多的选择给你带来无尽的国际象棋乐趣。';
+  String get tournamentHomeDescription => '参加快节奏的国际象棋锦标赛！欢迎参与 Lichess 官方的锦标赛，或创建自己的锦标赛。子弹超快棋，闪电超快棋，经典，菲舍尔任意制，王居中，三次将军，并提供更多的选择给你带来无尽的国际象棋乐趣。';
 
   @override
   String get tournamentNotFound => '找不到该锦标赛';
@@ -4270,55 +4335,91 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String mateInXHalfMoves(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '离将死剩$count着');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '离将死剩$count着',
+    );
     return '$_temp0';
   }
 
   @override
   String nbBlunders(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次漏着');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次漏着',
+    );
     return '$_temp0';
   }
 
   @override
   String numberBlunders(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次漏着');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次漏着',
+    );
     return '$_temp0';
   }
 
   @override
   String nbMistakes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次错着');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次错着',
+    );
     return '$_temp0';
   }
 
   @override
   String numberMistakes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次错着');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次错着',
+    );
     return '$_temp0';
   }
 
   @override
   String nbInaccuracies(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次失准');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次失准',
+    );
     return '$_temp0';
   }
 
   @override
   String numberInaccuracies(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次失准');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次失准',
+    );
     return '$_temp0';
   }
 
   @override
   String nbPlayers(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 位在线棋手');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 位在线棋手',
+    );
     return '$_temp0';
   }
 
   @override
   String nbGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '查看所有$count个对局');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '查看所有$count个对局',
+    );
     return '$_temp0';
   }
 
@@ -4334,103 +4435,171 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String nbBookmarks(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count收藏');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count收藏',
+    );
     return '$_temp0';
   }
 
   @override
   String nbDays(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 天');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 天',
+    );
     return '$_temp0';
   }
 
   @override
   String nbHours(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 个小时');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个小时',
+    );
     return '$_temp0';
   }
 
   @override
   String nbMinutes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 分钟');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 分钟',
+    );
     return '$_temp0';
   }
 
   @override
   String rankIsUpdatedEveryNbMinutes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '每$count分钟更新排名');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '每$count分钟更新排名',
+    );
     return '$_temp0';
   }
 
   @override
   String nbPuzzles(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '训练题$count题');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '训练题$count题',
+    );
     return '$_temp0';
   }
 
   @override
   String nbGamesWithYou(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '与你下了$count盘棋');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '与你下了$count盘棋',
+    );
     return '$_temp0';
   }
 
   @override
   String nbRated(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 排位赛');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 排位赛',
+    );
     return '$_temp0';
   }
 
   @override
   String nbWins(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count胜');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count胜',
+    );
     return '$_temp0';
   }
 
   @override
   String nbLosses(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count负');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count负',
+    );
     return '$_temp0';
   }
 
   @override
   String nbDraws(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count和');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count和',
+    );
     return '$_temp0';
   }
 
   @override
   String nbPlaying(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 正在进行');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 正在进行',
+    );
     return '$_temp0';
   }
 
   @override
   String giveNbSeconds(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '添加对方$count秒');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '添加对方$count秒',
+    );
     return '$_temp0';
   }
 
   @override
   String nbTournamentPoints(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count锦标赛积分');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count锦标赛积分',
+    );
     return '$_temp0';
   }
 
   @override
   String nbStudies(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count研讨');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count研讨',
+    );
     return '$_temp0';
   }
 
   @override
   String nbSimuls(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 个进行的车轮战棋局');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个进行的车轮战棋局',
+    );
     return '$_temp0';
   }
 
   @override
   String moreThanNbRatedGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '完成至少 $count 局排位赛');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '完成至少 $count 局排位赛',
+    );
     return '$_temp0';
   }
 
@@ -4456,61 +4625,101 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String needNbMoreGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '你需要再完成 $count 局排位赛');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '你需要再完成 $count 局排位赛',
+    );
     return '$_temp0';
   }
 
   @override
   String nbImportedGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count盘导入的棋局');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count盘导入的棋局',
+    );
     return '$_temp0';
   }
 
   @override
   String nbFriendsOnline(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在线好友：$count');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在线好友：$count',
+    );
     return '$_temp0';
   }
 
   @override
   String nbFollowers(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 关注者');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 关注者',
+    );
     return '$_temp0';
   }
 
   @override
   String nbFollowing(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '关注$count人');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '关注$count人',
+    );
     return '$_temp0';
   }
 
   @override
   String lessThanNbMinutes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '小于 $count 分钟');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '小于 $count 分钟',
+    );
     return '$_temp0';
   }
 
   @override
   String nbGamesInPlay(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 场对局进行中');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 场对局进行中',
+    );
     return '$_temp0';
   }
 
   @override
   String maximumNbCharacters(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '最多$count个字符');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '最多$count个字符',
+    );
     return '$_temp0';
   }
 
   @override
   String blocks(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count位黑名单用戶');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count位黑名单用戶',
+    );
     return '$_temp0';
   }
 
   @override
   String nbForumPosts(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '发了$count个论坛帖子');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '发了$count个论坛帖子',
+    );
     return '$_temp0';
   }
 
@@ -4526,25 +4735,41 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String availableInNbLanguages(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '支持$count种语言！');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '支持$count种语言！',
+    );
     return '$_temp0';
   }
 
   @override
   String nbSecondsToPlayTheFirstMove(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '还剩$count秒走第一步');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '还剩$count秒走第一步',
+    );
     return '$_temp0';
   }
 
   @override
   String nbSeconds(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count秒');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count秒',
+    );
     return '$_temp0';
   }
 
   @override
   String andSaveNbPremoveLines(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '已保存 $count 条先前的走子');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已保存 $count 条先前的走子',
+    );
     return '$_temp0';
   }
 
@@ -4709,13 +4934,21 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String stormXRuns(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count组');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count组',
+    );
     return '$_temp0';
   }
 
   @override
   String stormPlayedNbRunsOfPuzzleStorm(int count, String param2) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '玩了$count组的$param2');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '玩了$count组的$param2',
+    );
     return '$_temp0';
   }
 
@@ -5199,19 +5432,31 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String studyNbChapters(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '共 $count 章');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '共 $count 章',
+    );
     return '$_temp0';
   }
 
   @override
   String studyNbGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '共 $count 盘棋');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '共 $count 盘棋',
+    );
     return '$_temp0';
   }
 
   @override
   String studyNbMembers(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 位成员');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 位成员',
+    );
     return '$_temp0';
   }
 
@@ -5236,98 +5481,158 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String timeagoInNbSeconds(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在 $count 秒内');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在 $count 秒内',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbMinutes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在 $count 分钟内');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在 $count 分钟内',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbHours(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在 $count 小时内');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在 $count 小时内',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbDays(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在 $count 天内');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在 $count 天内',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbWeeks(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在 $count 周内');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在 $count 周内',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbMonths(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在 $count 月内');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在 $count 月内',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbYears(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在 $count 年内');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在 $count 年内',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbMinutesAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 分钟前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 分钟前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbHoursAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 小时前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 小时前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbDaysAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 天前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 天前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbWeeksAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 周前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 周前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbMonthsAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 月前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 月前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbYearsAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 年前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 年前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbMinutesRemaining(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '还剩 $count 分钟');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '还剩 $count 分钟',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbHoursRemaining(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '还剩 $count 小时');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '还剩 $count 小时',
+    );
     return '$_temp0';
   }
 }
 
 /// The translations for Chinese, as used in Taiwan (`zh_TW`).
 class AppLocalizationsZhTw extends AppLocalizationsZh {
-  AppLocalizationsZhTw() : super('zh_TW');
+  AppLocalizationsZhTw(): super('zh_TW');
 
   @override
   String get mobileAllGames => '所有棋局';
@@ -5418,8 +5723,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get mobileSettingsImmersiveMode => '沉浸模式';
 
   @override
-  String get mobileSettingsImmersiveModeSubtitle =>
-      '在下棋和 Puzzle Storm 時隱藏系統界面。如果您受到螢幕邊緣的系統導航手勢干擾，可以使用此功能。';
+  String get mobileSettingsImmersiveModeSubtitle => '在下棋和 Puzzle Storm 時隱藏系統界面。如果您受到螢幕邊緣的系統導航手勢干擾，可以使用此功能。';
 
   @override
   String get mobileSettingsTab => '設定';
@@ -5499,7 +5803,11 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String activitySolvedNbPuzzles(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '解決了 $count 個戰術題目');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '解決了 $count 個戰術題目',
+    );
     return '$_temp0';
   }
 
@@ -5525,19 +5833,31 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String activityPlayedNbMoves(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '下了 $count 步');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '下了 $count 步',
+    );
     return '$_temp0';
   }
 
   @override
   String activityInNbCorrespondenceGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在 $count 場通信棋局中');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在 $count 場通信棋局中',
+    );
     return '$_temp0';
   }
 
   @override
   String activityCompletedNbGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '完成了 $count 場通信棋局');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '完成了 $count 場通信棋局',
+    );
     return '$_temp0';
   }
 
@@ -5553,37 +5873,61 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String activityFollowedNbPlayers(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '開始關注 $count 個玩家');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '開始關注 $count 個玩家',
+    );
     return '$_temp0';
   }
 
   @override
   String activityGainedNbFollowers(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '增加了 $count 個追蹤者');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '增加了 $count 個追蹤者',
+    );
     return '$_temp0';
   }
 
   @override
   String activityHostedNbSimuls(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '主持了$count場車輪戰');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '主持了$count場車輪戰',
+    );
     return '$_temp0';
   }
 
   @override
   String activityJoinedNbSimuls(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '加入了$count場車輪戰');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '加入了$count場車輪戰',
+    );
     return '$_temp0';
   }
 
   @override
   String activityCreatedNbStudies(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '創造了$count個新的研究');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '創造了$count個新的研究',
+    );
     return '$_temp0';
   }
 
   @override
   String activityCompetedInNbTournaments(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '完成了$count場錦標賽');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '完成了$count場錦標賽',
+    );
     return '$_temp0';
   }
 
@@ -5599,13 +5943,21 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String activityCompetedInNbSwissTournaments(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '參與過 $count 場瑞士制錦標賽');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '參與過 $count 場瑞士制錦標賽',
+    );
     return '$_temp0';
   }
 
   @override
   String activityJoinedNbTeams(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '加入 $count 團隊');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '加入 $count 團隊',
+    );
     return '$_temp0';
   }
 
@@ -5847,7 +6199,11 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String broadcastNbBroadcasts(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 個直播');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個直播',
+    );
     return '$_temp0';
   }
 
@@ -6098,8 +6454,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get preferencesShowFlairs => '顯示玩家身分';
 
   @override
-  String get preferencesExplainShowPlayerRatings =>
-      '這允許隱藏本網站上的所有等級分，以輔助專心下棋。每局遊戲仍可以計算及改變等級分，這個設定只會影響到你是否看得到此分數。';
+  String get preferencesExplainShowPlayerRatings => '這允許隱藏本網站上的所有等級分，以輔助專心下棋。每局遊戲仍可以計算及改變等級分，這個設定只會影響到你是否看得到此分數。';
 
   @override
   String get preferencesDisplayBoardResizeHandle => '顯示盤面大小調整區塊';
@@ -6429,8 +6784,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get puzzleFailed => '失敗';
 
   @override
-  String get puzzleStreakDescription =>
-      '累積你的連勝，解著漸漸變難的題目。 沒有時間限制，不要急。走錯一步，將會是遊戲結束！\n不過每一局中你都有跳過一步棋的機會。';
+  String get puzzleStreakDescription => '累積你的連勝，解著漸漸變難的題目。 沒有時間限制，不要急。走錯一步，將會是遊戲結束！\n不過每一局中你都有跳過一步棋的機會。';
 
   @override
   String puzzleYourStreakX(String param) {
@@ -6487,31 +6841,51 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String puzzlePlayedXTimes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '已被嘗試$count次');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已被嘗試$count次',
+    );
     return '$_temp0';
   }
 
   @override
   String puzzleNbPointsBelowYourPuzzleRating(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '低於你的謎題積分$count點');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '低於你的謎題積分$count點',
+    );
     return '$_temp0';
   }
 
   @override
   String puzzleNbPointsAboveYourPuzzleRating(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '高於你的謎題積分$count點');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '高於你的謎題積分$count點',
+    );
     return '$_temp0';
   }
 
   @override
   String puzzleNbPlayed(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 已遊玩');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 已遊玩',
+    );
     return '$_temp0';
   }
 
   @override
   String puzzleNbToReplay(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 重玩');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 重玩',
+    );
     return '$_temp0';
   }
 
@@ -6684,8 +7058,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get puzzleThemeIntermezzo => 'Intermezzo';
 
   @override
-  String get puzzleThemeIntermezzoDescription =>
-      '與其走正常的棋譜，不如威脅敵方子吧！這樣不但可以破壞敵方原先計畫，還可以讓敵人必須對威脅採取對應的動作。這種戰術又稱為「Zwischenzug」或「In between」。';
+  String get puzzleThemeIntermezzoDescription => '與其走正常的棋譜，不如威脅敵方子吧！這樣不但可以破壞敵方原先計畫，還可以讓敵人必須對威脅採取對應的動作。這種戰術又稱為「Zwischenzug」或「In between」。';
 
   @override
   String get puzzleThemeKnightEndgame => '馬殘局';
@@ -7330,8 +7703,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get signUp => '註冊';
 
   @override
-  String get computersAreNotAllowedToPlay =>
-      '電腦與電腦輔助棋手不允許參加對弈。對弈時，請勿從國際象棋引擎、資料庫以及其他棋手那裡獲取幫助。另外，強烈建議不要創建多個帳號；過分地使用多個帳號將導致封號。';
+  String get computersAreNotAllowedToPlay => '電腦與電腦輔助棋手不允許參加對弈。對弈時，請勿從國際象棋引擎、資料庫以及其他棋手那裡獲取幫助。另外，強烈建議不要創建多個帳號；過分地使用多個帳號將導致封號。';
 
   @override
   String get games => '棋局';
@@ -8251,8 +8623,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get reportCheatBoostHelp => '請詳細說明你舉報此使用者的具體原因並貼上遊戲連結。「他作弊」等簡短說明是不被接受的。';
 
   @override
-  String get reportUsernameHelp =>
-      '請詳細說明你舉報此使用者的具體原因。若必要請解釋其名詞的歷史意義、網路用語、或是此使用者名稱如何指桑罵槐。「他的使用者名稱不妥」等簡短說明是不被接受的。';
+  String get reportUsernameHelp => '請詳細說明你舉報此使用者的具體原因。若必要請解釋其名詞的歷史意義、網路用語、或是此使用者名稱如何指桑罵槐。「他的使用者名稱不妥」等簡短說明是不被接受的。';
 
   @override
   String get reportProcessedFasterInEnglish => '若舉報內容為英文將會更快的被處理。';
@@ -8710,8 +9081,7 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
   String get tournamentHomeTitle => '富有各種時間以及變體的西洋棋錦標賽';
 
   @override
-  String get tournamentHomeDescription =>
-      '加入快節奏的國際象棋比賽！加入定時賽事，或創建自己的。子彈，閃電，經典，菲舍爾任意制，王到中心，三次將軍，並提供更多的選擇為無盡的國際象棋樂趣。';
+  String get tournamentHomeDescription => '加入快節奏的國際象棋比賽！加入定時賽事，或創建自己的。子彈，閃電，經典，菲舍爾任意制，王到中心，三次將軍，並提供更多的選擇為無盡的國際象棋樂趣。';
 
   @override
   String get tournamentNotFound => '找不到該錦標賽';
@@ -9567,55 +9937,91 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String mateInXHalfMoves(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在$count步內將死對手');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在$count步內將死對手',
+    );
     return '$_temp0';
   }
 
   @override
   String nbBlunders(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次漏著');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次漏著',
+    );
     return '$_temp0';
   }
 
   @override
   String numberBlunders(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次漏著');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次漏著',
+    );
     return '$_temp0';
   }
 
   @override
   String nbMistakes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次失誤');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次失誤',
+    );
     return '$_temp0';
   }
 
   @override
   String numberMistakes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次失誤');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次失誤',
+    );
     return '$_temp0';
   }
 
   @override
   String nbInaccuracies(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次輕微失誤');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次輕微失誤',
+    );
     return '$_temp0';
   }
 
   @override
   String numberInaccuracies(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 次輕微失誤');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 次輕微失誤',
+    );
     return '$_temp0';
   }
 
   @override
   String nbPlayers(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count位棋手目前在線');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count位棋手目前在線',
+    );
     return '$_temp0';
   }
 
   @override
   String nbGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '查看所有$count盤棋');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '查看所有$count盤棋',
+    );
     return '$_temp0';
   }
 
@@ -9631,109 +10037,181 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String nbBookmarks(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count個收藏');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count個收藏',
+    );
     return '$_temp0';
   }
 
   @override
   String nbDays(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count天');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count天',
+    );
     return '$_temp0';
   }
 
   @override
   String nbHours(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count小時');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count小時',
+    );
     return '$_temp0';
   }
 
   @override
   String nbMinutes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 分鐘');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 分鐘',
+    );
     return '$_temp0';
   }
 
   @override
   String rankIsUpdatedEveryNbMinutes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '評分每 $count 分鐘更新一次');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '評分每 $count 分鐘更新一次',
+    );
     return '$_temp0';
   }
 
   @override
   String nbPuzzles(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count個題目');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count個題目',
+    );
     return '$_temp0';
   }
 
   @override
   String nbGamesWithYou(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '與您下過$count盤棋');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '與您下過$count盤棋',
+    );
     return '$_temp0';
   }
 
   @override
   String nbRated(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 場排位賽');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 場排位賽',
+    );
     return '$_temp0';
   }
 
   @override
   String nbWins(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count局勝');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count局勝',
+    );
     return '$_temp0';
   }
 
   @override
   String nbLosses(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count局負');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count局負',
+    );
     return '$_temp0';
   }
 
   @override
   String nbDraws(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count局和');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count局和',
+    );
     return '$_temp0';
   }
 
   @override
   String nbPlaying(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count下棋中');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count下棋中',
+    );
     return '$_temp0';
   }
 
   @override
   String giveNbSeconds(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '給對方加$count秒');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '給對方加$count秒',
+    );
     return '$_temp0';
   }
 
   @override
   String nbTournamentPoints(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count錦標賽得分');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count錦標賽得分',
+    );
     return '$_temp0';
   }
 
   @override
   String nbStudies(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count個研究');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count個研究',
+    );
     return '$_temp0';
   }
 
   @override
   String nbSimuls(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 個進行的車輪戰棋局');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個進行的車輪戰棋局',
+    );
     return '$_temp0';
   }
 
   @override
   String moreThanNbRatedGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '完成至少 $count 場排位賽');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '完成至少 $count 場排位賽',
+    );
     return '$_temp0';
   }
 
   @override
   String moreThanNbPerfRatedGames(int count, String param2) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '≥ $count $param2 排位賽');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '≥ $count $param2 排位賽',
+    );
     return '$_temp0';
   }
 
@@ -9749,61 +10227,101 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String needNbMoreGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '您需要再完成 $count 場排位賽');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '您需要再完成 $count 場排位賽',
+    );
     return '$_temp0';
   }
 
   @override
   String nbImportedGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '已導入$count盤棋局');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已導入$count盤棋局',
+    );
     return '$_temp0';
   }
 
   @override
   String nbFriendsOnline(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 位好友在線');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 位好友在線',
+    );
     return '$_temp0';
   }
 
   @override
   String nbFollowers(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count個關注者');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count個關注者',
+    );
     return '$_temp0';
   }
 
   @override
   String nbFollowing(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '關注$count人');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '關注$count人',
+    );
     return '$_temp0';
   }
 
   @override
   String lessThanNbMinutes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '小於$count分鐘');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '小於$count分鐘',
+    );
     return '$_temp0';
   }
 
   @override
   String nbGamesInPlay(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count場對局正在進行中');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count場對局正在進行中',
+    );
     return '$_temp0';
   }
 
   @override
   String maximumNbCharacters(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '最多包含 $count 個字符');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '最多包含 $count 個字符',
+    );
     return '$_temp0';
   }
 
   @override
   String blocks(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count位黑名單使用者');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count位黑名單使用者',
+    );
     return '$_temp0';
   }
 
   @override
   String nbForumPosts(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count個論壇貼文');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count個論壇貼文',
+    );
     return '$_temp0';
   }
 
@@ -9819,25 +10337,41 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String availableInNbLanguages(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '支援$count種語言！');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '支援$count種語言！',
+    );
     return '$_temp0';
   }
 
   @override
   String nbSecondsToPlayTheFirstMove(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '在$count秒前須下出第一步');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '在$count秒前須下出第一步',
+    );
     return '$_temp0';
   }
 
   @override
   String nbSeconds(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count 秒');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 秒',
+    );
     return '$_temp0';
   }
 
   @override
   String andSaveNbPremoveLines(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '以省略$count個預走的棋步');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '以省略$count個預走的棋步',
+    );
     return '$_temp0';
   }
 
@@ -10002,13 +10536,21 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String stormXRuns(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count輪');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count輪',
+    );
     return '$_temp0';
   }
 
   @override
   String stormPlayedNbRunsOfPuzzleStorm(int count, String param2) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '玩了$count輪的$param2');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '玩了$count輪的$param2',
+    );
     return '$_temp0';
   }
 
@@ -10489,19 +11031,31 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String studyNbChapters(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '第$count章');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '第$count章',
+    );
     return '$_temp0';
   }
 
   @override
   String studyNbGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count對局');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count對局',
+    );
     return '$_temp0';
   }
 
   @override
   String studyNbMembers(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count位成員');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count位成員',
+    );
     return '$_temp0';
   }
 
@@ -10526,91 +11080,151 @@ class AppLocalizationsZhTw extends AppLocalizationsZh {
 
   @override
   String timeagoInNbSeconds(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count秒後');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count秒後',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbMinutes(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count分後');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count分後',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbHours(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count小時後');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count小時後',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbDays(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count天後');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count天後',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbWeeks(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count週後');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count週後',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbMonths(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count個月後');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count個月後',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoInNbYears(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count年後');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count年後',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbMinutesAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count分前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count分前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbHoursAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count小時前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count小時前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbDaysAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count天前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count天前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbWeeksAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count週前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count週前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbMonthsAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count個月前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count個月前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbYearsAgo(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count年前');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count年前',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbMinutesRemaining(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '剩下 $count 分鐘');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '剩下 $count 分鐘',
+    );
     return '$_temp0';
   }
 
   @override
   String timeagoNbHoursRemaining(int count) {
-    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '剩下 $count 小時');
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '剩下 $count 小時',
+    );
     return '$_temp0';
   }
 }
