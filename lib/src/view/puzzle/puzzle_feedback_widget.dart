@@ -34,7 +34,8 @@ class PuzzleFeedbackWidget extends ConsumerWidget {
           title:
               state.result == PuzzleResult.win
                   ? Icon(Icons.check, size: 36, color: context.lichessColors.good)
-                  : Text(puzzleRating),
+                  // : Text(puzzleRating),
+                  : const SizedBox.shrink(),
           leading:
               onStreak && state.result == PuzzleResult.lose
                   ? const Text(

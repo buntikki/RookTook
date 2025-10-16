@@ -51,6 +51,7 @@ import 'package:rooktook/src/view/play/play_screen.dart';
 import 'package:rooktook/src/view/play/quick_game_button.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_tab_screen.dart';
+import 'package:rooktook/src/view/puzzle/streak_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_screen.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
@@ -158,16 +159,23 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         final shouldShowWelcomeScreen =
             session == null &&
             recentGames.maybeWhen(data: (data) => data.isEmpty, orElse: () => false);
-        // final puzzlePr = ref.watch(nextPuzzleProvider(const PuzzleTheme(PuzzleThemeKey.mix)));
+        final puzzlePr = ref.watch(nextPuzzleProvider(const PuzzleTheme(PuzzleThemeKey.mix)));
 
-        // final ctrlProvider = puzzleControllerProvider(puzzlePr.value!);
-        // final puzzleState = ref.watch(ctrlProvider);
+        int puzzleGlickoRating = 1500;
+        puzzlePr.whenData((value) {
+          if (value != null) {
+            final ctrlProvider = puzzleControllerProvider(value);
+            final puzzleState = ref.watch(ctrlProvider);
+            puzzleGlickoRating = puzzleState.glicko?.rating.toInt() ?? 1500;
+          }
+        });
         final puzzleRank = puzzle?.rating ?? 1500;
         // final puzzleRank = 1750;
         final widgets =
             shouldShowWelcomeScreen
                 ? _welcomeScreenWidgets(
                   puzzleRank: puzzleRank,
+                  puzzleGlickoRating: puzzleGlickoRating,
                   session: session,
                   status: status,
                   isTablet: isTablet,
@@ -214,6 +222,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   isTablet: isTablet,
                   recentGames: recentGames,
                   nbOfGames: nbOfGames,
+                  puzzleGlickoRating: puzzleGlickoRating,
                 );
         // _handsetWidgets(
         //   session: session,
@@ -303,7 +312,31 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         // } else {
         return Scaffold(
           appBar: AppBar(
-            title: const Text(''),
+            // title: Container(
+            //   padding: const EdgeInsets.all(12),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(8),
+            //     border: Border.all(color: const Color(0xff464A4F), width: .5),
+            //     gradient: const LinearGradient(
+            //       begin: Alignment.topRight,
+            //       end: Alignment.bottomLeft,
+            //       colors: [Color(0xff3C3C3C), Color(0xff222222)],
+            //     ),
+            //   ),
+            //   child: Row(
+            //     spacing: 8,
+            //     mainAxisSize: MainAxisSize.min,
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       SvgPicture.asset('assets/images/svg/streak_fire.svg', height: 20),
+            //       const Text(
+            //         '3 Days Streak',
+            //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            centerTitle: true,
             automaticallyImplyLeading: false,
             actions: [
               // IconButton(
@@ -313,24 +346,24 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               //   icon: Icon(isEditing ? Icons.save_outlined : Icons.app_registration),
               //   tooltip: isEditing ? 'Save' : 'Edit',
               // ),
-              GestureDetector(
-                onTap: () {
-                  BranchRepository.trackCustomEvent('wallet_clicked', ref: ref);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const WalletPage()),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: const Color(0xff2B2D30),
-                    border: Border.all(color: const Color(0xff464A4F)),
-                  ),
-                  child: SvgPicture.asset('assets/images/svg/wallet.svg', height: 20),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     BranchRepository.trackCustomEvent('wallet_clicked', ref: ref);
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(builder: (context) => const WalletPage()),
+              //     );
+              //   },
+              //   child: Container(
+              //     padding: const EdgeInsets.all(8),
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(12),
+              //       color: const Color(0xff2B2D30),
+              //       border: Border.all(color: const Color(0xff464A4F)),
+              //     ),
+              //     child: SvgPicture.asset('assets/images/svg/wallet.svg', height: 20),
+              //   ),
+              // ),
               // const _PlayerScreenButton(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -481,6 +514,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required int rapidRank,
     required int blitzRank,
     required int puzzleRank,
+    required int puzzleGlickoRating,
   }) {
     // fetch the account user to be sure we have the latest data (flair, etc.)
     final accountUser = ref
@@ -608,9 +642,9 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         const CompeteSection(),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text('Practice', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+          child: Text('Practice', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
         ),
-        ChessRatingCards(rapidRank: '$rapidRank', blitzRank: '$blitzRank'),
+        ChessRatingCards(rapidRank: '$puzzleGlickoRating', blitzRank: '$blitzRank'),
         Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -620,14 +654,26 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                 child: PracticeGameCard(
                   image: 'assets/images/puzzle_streak.png',
                   title: 'Puzzle Streak',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).push(StreakScreen.buildRoute(context));
+                  },
                 ),
               ),
               Expanded(
                 child: PracticeGameCard(
                   image: 'assets/images/healthy_mix.png',
                   title: 'Healthy Mix',
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context, rootNavigator: true).push(
+                      PuzzleScreen.buildRoute(
+                        context,
+                        angle: const PuzzleTheme(PuzzleThemeKey.mix),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
@@ -733,9 +779,9 @@ class CompeteSection extends ConsumerWidget {
             children: [
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text('Compete', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+                child: Text('Compete', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -744,7 +790,7 @@ class CompeteSection extends ConsumerWidget {
                     final endIndex = tournaments.length > 5 ? 5 : tournaments.length;
                     return Padding(
                       padding: EdgeInsets.only(
-                        right: index == endIndex ? 16 : 0,
+                        right: index == endIndex - 1 ? 16 : 0,
                         left: index == 0 ? 16 : 0,
                       ),
                       child: CompeteTournamentCard(tournament: tournaments[index]),
@@ -826,20 +872,31 @@ class CompeteTournamentCard extends ConsumerWidget {
           children: [
             Row(
               spacing: 12,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   height: 64,
                   width: 64,
-                  decoration: const BoxDecoration(
-                    color: Color(0xff494745),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff494745),
                     shape: BoxShape.circle,
-                    // image: DecorationImage(
-                    //   image: NetworkImage(tournament.bannerImage ?? ''),
-                    //   fit: BoxFit.cover,
-                    // ),
+                    image: DecorationImage(
+                      image: AssetImage(
+                        tournament.entrySilverCoins > 0
+                            ? 'assets/images/home_paid_tournament.png'
+                            : 'assets/images/home_free_tournament.png',
+                      ),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
+                // Image.asset(
+                //   tournament.entrySilverCoins > 0
+                //       ? 'assets/images/home_paid_tournament.png'
+                //       : 'assets/images/home_free_tournament.png',
+                //   height: 64,
+                //   width: 64,
+                // ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -865,20 +922,30 @@ class CompeteTournamentCard extends ConsumerWidget {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Row(
-                            children: [
-                              SvgPicture.asset('assets/images/svg/silver_coin.svg', height: 12),
-                              const SizedBox(width: 4),
-                              Text(
-                                '${tournament.entrySilverCoins}',
-                                style: const TextStyle(
-                                  color: Color(0xffEFEDED),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
+                          if (tournament.entrySilverCoins > 0)
+                            Row(
+                              children: [
+                                SvgPicture.asset('assets/images/svg/silver_coin.svg', height: 12),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${tournament.entrySilverCoins}',
+                                  style: const TextStyle(
+                                    color: Color(0xffEFEDED),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
+                              ],
+                            )
+                          else
+                            const Text(
+                              'Free To Join',
+                              style: TextStyle(
+                                color: Color(0xffEFEDED),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
                               ),
-                            ],
-                          ),
+                            ),
                         ],
                       ),
                       const SizedBox(height: 4),
@@ -904,8 +971,8 @@ class CompeteTournamentCard extends ConsumerWidget {
                                 '${tournament.rewardCoins}',
                                 style: const TextStyle(
                                   color: Color(0xffEFEDED),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ],
@@ -958,7 +1025,22 @@ class CompeteTournamentCard extends ConsumerWidget {
             MaterialButton(
               height: 40,
               color: const Color(0xff54C339),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => TournamentDetailScreen(
+                          tournament: tournament,
+                          isPlayed: tournament.players.any(
+                            (element) =>
+                                element.userId == ref.watch(authSessionProvider)!.user.id.value &&
+                                element.time > 0,
+                          ),
+                        ),
+                  ),
+                );
+              },
               minWidth: double.infinity,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               child: const Text(

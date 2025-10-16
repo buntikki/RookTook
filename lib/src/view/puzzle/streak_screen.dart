@@ -144,7 +144,7 @@ class _Body extends ConsumerWidget {
                 ),
                 topTable: Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0).copyWith(top: 10),
                     child: PuzzleFeedbackWidget(
                       puzzle: puzzleState.puzzle,
                       state: puzzleState,
@@ -180,7 +180,7 @@ class _Body extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      Text(context.l10n.puzzleRatingX(puzzleState.puzzle.puzzle.rating.toString())),
+                      // Text(context.l10n.puzzleRatingX(puzzleState.puzzle.puzzle.rating.toString())),
                     ],
                   ),
                 ),
@@ -248,41 +248,41 @@ class _BottomBar extends ConsumerWidget {
                     ? null
                     : () => ref.read(ctrlProvider.notifier).skipMove(),
           ),
-        if (puzzleState.streak!.finished)
-          BottomBarButton(
-            onTap: () {
-              launchShareDialog(
-                context,
-                text: lichessUri('/training/${puzzleState.puzzle.puzzle.id}').toString(),
-              );
-            },
-            label: 'Share this puzzle',
-            icon:
-                Theme.of(context).platform == TargetPlatform.iOS
-                    ? CupertinoIcons.share
-                    : Icons.share,
-          ),
-        if (puzzleState.streak!.finished)
-          BottomBarButton(
-            onTap: () {
-              Navigator.of(context, rootNavigator: true).push(
-                AnalysisScreen.buildRoute(
-                  context,
-                  AnalysisOptions(
-                    orientation: puzzleState.pov,
-                    standalone: (
-                      pgn: ref.read(ctrlProvider.notifier).makePgn(),
-                      isComputerAnalysisAllowed: true,
-                      variant: Variant.standard,
-                    ),
-                    initialMoveCursor: 0,
-                  ),
-                ),
-              );
-            },
-            label: context.l10n.analysis,
-            icon: Icons.biotech,
-          ),
+        // if (puzzleState.streak!.finished)
+        //   BottomBarButton(
+        //     onTap: () {
+        //       launchShareDialog(
+        //         context,
+        //         text: lichessUri('/training/${puzzleState.puzzle.puzzle.id}').toString(),
+        //       );
+        //     },
+        //     label: 'Share this puzzle',
+        //     icon:
+        //         Theme.of(context).platform == TargetPlatform.iOS
+        //             ? CupertinoIcons.share
+        //             : Icons.share,
+        //   ),
+        // if (puzzleState.streak!.finished)
+        //   BottomBarButton(
+        //     onTap: () {
+        //       Navigator.of(context, rootNavigator: true).push(
+        //         AnalysisScreen.buildRoute(
+        //           context,
+        //           AnalysisOptions(
+        //             orientation: puzzleState.pov,
+        //             standalone: (
+        //               pgn: ref.read(ctrlProvider.notifier).makePgn(),
+        //               isComputerAnalysisAllowed: true,
+        //               variant: Variant.standard,
+        //             ),
+        //             initialMoveCursor: 0,
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //     label: context.l10n.analysis,
+        //     icon: Icons.biotech,
+        //   ),
         if (puzzleState.streak!.finished)
           BottomBarButton(
             onTap:

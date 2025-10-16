@@ -380,7 +380,7 @@ class _Body extends ConsumerWidget {
                         ),
                       ),
                     ),
-                   PuzzleSessionWidget(
+                  PuzzleSessionWidget(
                     initialPuzzleContext: initialPuzzleContext,
                     ctrlProvider: ctrlProvider,
                   ),
