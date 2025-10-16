@@ -346,24 +346,24 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
               //   icon: Icon(isEditing ? Icons.save_outlined : Icons.app_registration),
               //   tooltip: isEditing ? 'Save' : 'Edit',
               // ),
-              // GestureDetector(
-              //   onTap: () {
-              //     BranchRepository.trackCustomEvent('wallet_clicked', ref: ref);
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => const WalletPage()),
-              //     );
-              //   },
-              //   child: Container(
-              //     padding: const EdgeInsets.all(8),
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(12),
-              //       color: const Color(0xff2B2D30),
-              //       border: Border.all(color: const Color(0xff464A4F)),
-              //     ),
-              //     child: SvgPicture.asset('assets/images/svg/wallet.svg', height: 20),
-              //   ),
-              // ),
+              GestureDetector(
+                onTap: () {
+                  BranchRepository.trackCustomEvent('wallet_clicked', ref: ref);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const WalletPage()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xff2B2D30),
+                    border: Border.all(color: const Color(0xff464A4F)),
+                  ),
+                  child: SvgPicture.asset('assets/images/svg/wallet.svg', height: 20),
+                ),
+              ),
               // const _PlayerScreenButton(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
