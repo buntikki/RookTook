@@ -52,6 +52,8 @@ import 'package:rooktook/src/view/play/quick_game_button.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_tab_screen.dart';
 import 'package:rooktook/src/view/puzzle/streak_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/new_details_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/promote_tournament_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_screen.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
@@ -63,10 +65,12 @@ import 'package:rooktook/src/view/wallet/presentation/wallet_page.dart';
 import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 import 'package:rooktook/src/widgets/buttons.dart';
 import 'package:rooktook/src/widgets/feedback.dart';
+import 'package:rooktook/src/widgets/i_button.dart';
 import 'package:rooktook/src/widgets/match_result_popup.dart';
 import 'package:rooktook/src/widgets/user_full_name.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 final editModeProvider = StateProvider<bool>((ref) => false);
 
@@ -756,6 +760,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       if (isOnline) ref.refresh(accountProvider.future),
       if (isOnline) ref.refresh(ongoingGamesProvider.future),
       if (isOnline) ref.refresh(fetchHomeBannersProvider.future),
+      if (isOnline) ref.refresh(fetchBattleRatingsProvider.future),
       if (isOnline) ref.refresh(fetchTournamentsProvider.future),
     ]);
   }
@@ -767,8 +772,8 @@ class CompeteSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final fetchTournamentsPr = ref.watch(fetchTournamentsProvider);
+    final fetchBattleRatingPr = ref.watch(fetchBattleRatingsProvider);
     return fetchTournamentsPr.when(
-      skipLoadingOnRefresh: false,
       skipError: true,
       data: (tournaments) {
         if (tournaments.isEmpty) {
@@ -781,7 +786,48 @@ class CompeteSection extends ConsumerWidget {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text('Compete', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
               ),
-              const SizedBox(height: 16),
+              fetchBattleRatingPr.when(
+                data:
+                    (battleRating) => Container(
+                      margin: const EdgeInsets.all(16).copyWith(bottom: 24),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff2B2D30),
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            spacing: 12,
+                            children: [
+                              Image.asset('assets/images/battle_rating.png', height: 32),
+                              const Text(
+                                'Battle Rating',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                              ),
+                              const IButton(
+                                title: 'Battle Rating',
+                                text:
+                                    'Battle Rating shows how good you are - it goes up when you solve puzzles faster, drops if you play poorly or skips a game and we match you with players of similar rating for fair battles.',
+                              ),
+                            ],
+                          ),
+                          Text(
+                            '$battleRating',
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                    ),
+                error: (error, stackTrace) => const SizedBox.shrink(),
+                loading: () => const SizedBox.shrink(),
+              ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -833,8 +879,9 @@ class CompeteSection extends ConsumerWidget {
 }
 
 class CompeteTournamentCard extends ConsumerWidget {
-  const CompeteTournamentCard({super.key, required this.tournament});
+  const CompeteTournamentCard({super.key, required this.tournament, this.width});
   final Tournament tournament;
+  final double? width;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -842,21 +889,11 @@ class CompeteTournamentCard extends ConsumerWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder:
-                (context) => TournamentDetailScreen(
-                  tournament: tournament,
-                  isPlayed: tournament.players.any(
-                    (element) =>
-                        element.userId == ref.watch(authSessionProvider)!.user.id.value &&
-                        element.time > 0,
-                  ),
-                ),
-          ),
+          MaterialPageRoute(builder: (context) => NewDetailsScreen(tournamentId: tournament.id)),
         );
       },
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.85,
+        width: width ?? MediaQuery.of(context).size.width * 0.85,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
         decoration: BoxDecoration(
           color: const Color(0xff2B2D30),
@@ -903,6 +940,8 @@ class CompeteTournamentCard extends ConsumerWidget {
                     children: [
                       Text(
                         tournament.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -1274,6 +1313,35 @@ class HomeTournamentContainer extends ConsumerWidget {
         child: Image.asset('assets/images/home_tournament.png', fit: BoxFit.cover),
       ),
     );
+  }
+}
+
+class WebViewScree extends StatefulWidget {
+  const WebViewScree({super.key, required this.url});
+  final String url;
+
+  static Route<dynamic> route(String url) =>
+      MaterialPageRoute(builder: (context) => WebViewScree(url: url));
+
+  @override
+  State<WebViewScree> createState() => _WebViewScreeState();
+}
+
+class _WebViewScreeState extends State<WebViewScree> {
+  late WebViewController _webViewController;
+  @override
+  void initState() {
+    super.initState();
+    _webViewController =
+        WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setBackgroundColor(const Color(0x00000000))
+          ..loadRequest(Uri.parse(widget.url));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: WebViewWidget(controller: _webViewController));
   }
 }
 

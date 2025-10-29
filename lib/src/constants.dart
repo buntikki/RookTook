@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-const releaseMode = true;
+const releaseMode = false;
 
 const kLichessHost = String.fromEnvironment(
   'LICHESS_HOST',

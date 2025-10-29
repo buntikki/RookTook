@@ -2,21 +2,24 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:rooktook/l10n/l10n.dart';
 import 'package:rooktook/src/binding.dart';
 import 'package:rooktook/src/localizations.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/common/preloaded_data.dart';
 import 'package:rooktook/src/model/notifications/notifications.dart';
+import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/network/connectivity.dart';
 import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/utils/badge_service.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:rooktook/src/view/tournament/pages/new_details_screen.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 part 'notification_service.g.dart';
@@ -229,6 +232,8 @@ class NotificationService {
   static void onDidReceiveNotificationResponse(NotificationResponse response) {
     _logger.fine('received local notification ${response.id} response in foreground.');
 
+    print(response.payload);
+
     final rawPayload = response.payload;
 
     if (rawPayload == null) {
@@ -237,6 +242,15 @@ class NotificationService {
     }
 
     final json = jsonDecode(rawPayload) as Map<String, dynamic>;
+    final isTournament = (json['eventType'] as String).toLowerCase() == 'tournament';
+    if (isTournament) {
+      Navigator.push(
+        rootNavigatorKey.currentContext!,
+        CupertinoPageRoute(
+          builder: (context) => NewDetailsScreen(tournamentId: json['tournamentId'] as String),
+        ),
+      );
+    }
     final notification = LocalNotification.fromJson(json);
 
     _responseStreamController.add((response, notification));
@@ -312,6 +326,7 @@ class NotificationService {
           NormalNotification(
             message.notification?.title ?? '',
             message.notification?.body ?? '',
+            message.data,
             DateTime.now().toIso8601String().hashCode,
           ),
         );

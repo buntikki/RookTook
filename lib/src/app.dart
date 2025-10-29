@@ -238,7 +238,6 @@ class _AppState extends ConsumerState<Application> {
 
   Future<void> initBranchSetup() async {
     await FlutterBranchSdk.init();
-    FlutterBranchSdk.disableTracking(false);
     FlutterBranchSdk.listSession().listen(
       (event) async {
         print('Branch Event $event');
@@ -332,20 +331,20 @@ class _AppState extends ConsumerState<Application> {
         ).copyWith(height: remainingHeight < kSmallRemainingHeightLeftBoardThreshold ? 60 : null),
       ),
       themeMode: ThemeMode.dark,
-      builder: (context, child) {
-        Widget base = child ?? const SizedBox();
+      // builder: (context, child) {
+      //   Widget base = child ?? const SizedBox();
 
-        // Apply your existing iOS IconTheme wrapper
-        if (isIOS) {
-          base = IconTheme.merge(
-            data: IconThemeData(color: CupertinoTheme.of(context).textTheme.textStyle.color),
-            child: Material(color: Colors.transparent, child: base),
-          );
-        }
+      //   // Apply your existing iOS IconTheme wrapper
+      //   if (isIOS) {
+      //     base = IconTheme.merge(
+      //       data: IconThemeData(color: CupertinoTheme.of(context).textTheme.textStyle.color),
+      //       child: Material(color: Colors.transparent, child: base),
+      //     );
+      //   }
 
-        // Always wrap with the connectivity overlay
-        return ConnectivityOverlay(child: base);
-      },
+      //   // Always wrap with the connectivity overlay
+      //   return ConnectivityOverlay(child: base);
+      // },
       // onGenerateRoute:
       //     (settings) =>
       //         settings.name != null ? resolveAppLinkUri(context, Uri.parse(settings.name!)) : null,

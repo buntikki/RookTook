@@ -92,7 +92,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.listen<AuthSessionState?>(authSessionProvider, (previous, current) {
       if (previous == null && current != null) {
         // Navigate to main screen
-        Navigator.of(context).pushAndRemoveUntil(
+        Navigator.pushAndRemoveUntil(
+          context,
           buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
           (route) => false,
         );
@@ -134,7 +135,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   return Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(top: 20),
                         child: Text(
                           item.title,
                           style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800),
@@ -249,6 +250,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

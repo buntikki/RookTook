@@ -21,6 +21,7 @@ import 'package:rooktook/src/utils/gestures_exclusion.dart';
 import 'package:rooktook/src/utils/immersive_mode.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/home/home_provider.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_history_screen.dart';
 import 'package:rooktook/src/view/puzzle/storm_clock.dart';
 import 'package:rooktook/src/view/puzzle/storm_dashboard.dart';
@@ -553,6 +554,10 @@ Future<void> _showStats(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   onPressed: () async {
+                    final userId = ref.read(authSessionProvider)?.user.name;
+                    if (userId != null) {
+                      ref.read(homeProvider.notifier).fetchBattleRatings(userId);
+                    }
                     final now = await NTP.now();
                     final isEnded = (await NTP.now()).isAfter(
                       DateTime.fromMillisecondsSinceEpoch(

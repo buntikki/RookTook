@@ -22,10 +22,16 @@ class ShopItemDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(item.imageUrl, errorBuilder: (context, error, stackTrace) {
-              // Show a placeholder or error widget
-              return const Icon(Icons.broken_image);
-            },)),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                item.imageUrl,
+                errorBuilder: (context, error, stackTrace) {
+                  // Show a placeholder or error widget
+                  return const Icon(Icons.broken_image);
+                },
+              ),
+            ),
             Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
             CustomPaint(
               painter: BorderPainter(),
@@ -82,20 +88,23 @@ class ShopItemDetailsScreen extends StatelessWidget {
                         builder:
                             (context) => Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                spacing: 16,
-                                children: [
-                                  Container(
-                                    height: 4,
-                                    width: 40,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[600],
-                                      borderRadius: BorderRadius.circular(2),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  spacing: 16,
+                                  children: [
+                                    Container(
+                                      height: 4,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[600],
+                                        borderRadius: BorderRadius.circular(2),
+                                      ),
                                     ),
-                                  ),
-                                  Text(item.description),
-                                ],
+                                    Text(item.description),
+                                  ],
+                                ),
                               ),
                             ),
                       );
@@ -196,6 +205,7 @@ class ShopItemDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

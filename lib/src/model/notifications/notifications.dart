@@ -162,13 +162,15 @@ sealed class LocalNotification {
 }
 
 class NormalNotification extends LocalNotification {
-  const NormalNotification(String title, String body, int id)
+  const NormalNotification(String title, String body, Map<String, dynamic> payload, int id)
     : _title = title,
       _body = body,
+      _payload = payload,
       _id = id;
 
   final String _title;
   final String _body;
+  final Map<String, dynamic> _payload;
   final int _id;
 
   @override
@@ -178,10 +180,9 @@ class NormalNotification extends LocalNotification {
   String? body(AppLocalizations l10n) => _body;
 
   @override
-  Map<String, dynamic> get _concretePayload => {'title': _title, 'body': _body};
+  Map<String, dynamic> get _concretePayload => _payload;
 
   @override
-  // TODO: implement channelId
   String get channelId => 'normal';
 
   @override
@@ -198,7 +199,6 @@ class NormalNotification extends LocalNotification {
   }
 
   @override
-  // TODO: implement id
   int get id => _id;
 }
 
