@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/view/home/home_provider.dart';
+import 'package:rooktook/src/view/home/home_tab_screen.dart';
+import 'package:rooktook/src/view/home/iap_provider.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
@@ -26,39 +28,79 @@ class TournamentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isAvailableRemote = ref.watch(iapProvider).isAvailableRemote;
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute<TournamentDetailScreen>(
-            builder:
-                (_) => TournamentDetailScreen(
-                  tournament: tournament,
-                  isPlayed: tournament.players.any(
-                    (element) =>
-                        element.userId == ref.watch(authSessionProvider)!.user.id.value &&
-                        element.time > 0,
-                  ),
-                ),
-          ),
-        );
+        final isPremium = ref.watch(homeProvider).isPremium;
+        if (!isAvailableRemote) {
+          Navigator.push(
+            context,
+            MaterialPageRoute<TournamentDetailScreen>(
+              builder: (_) => TournamentDetailScreen(tournamentId: tournament.id),
+            ),
+          );
+        } else if (!isPremium && tournament.isPremium) {
+          openBattlepassUpgradeSheet(context, ref);
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute<TournamentDetailScreen>(
+              builder: (_) => TournamentDetailScreen(tournamentId: tournament.id),
+            ),
+          );
+        }
       },
       child: ClipRRect(
         child: Stack(
           children: [
             Container(
               clipBehavior: Clip.hardEdge,
-              // margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.only(top: 12),
               decoration: BoxDecoration(
                 color: backgroundColor ?? const Color(0xFF2B2D30),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: const Color(0xff464a4f), width: .5),
               ),
               child: Column(
-                spacing: 12,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (tournament.isPremium && isAvailableRemote)
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff2B2D30),
+                          gradient: RadialGradient(
+                            center: Alignment.center,
+                            radius: 1.2,
+                            colors: [
+                              Colors.transparent,
+                              const Color(0xff54C339).withValues(alpha: .2),
+                            ],
+                          ),
+                          border: Border.all(color: const Color(0xff54C339), width: .5),
+                          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 4,
+                          children: [
+                            SvgPicture.asset('assets/images/svg/pro_icon.svg', height: 12),
+                            const Text(
+                              'PRO',
+                              style: TextStyle(
+                                color: Color(0xff54C339),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  else
+                    const SizedBox(height: 12),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Row(
@@ -78,14 +120,16 @@ class TournamentCard extends ConsumerWidget {
                             children: [
                               Row(
                                 children: [
-                                  Text(
-                                    tournament.name,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
+                                  Expanded(
+                                    child: Text(
+                                      tournament.name,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(width: 8.0),
@@ -107,7 +151,7 @@ class TournamentCard extends ConsumerWidget {
                                 children: [
                                   if (tournament.entrySilverCoins > 0)
                                     SvgPicture.asset(
-                                      'assets/images/svg/silver_coin.svg',
+                                      'assets/images/svg/${tournament.entryCoinType.toLowerCase()}_coin.svg',
                                       height: 18.0,
                                     ),
                                   if (tournament.entrySilverCoins > 0) const SizedBox(width: 4),
@@ -137,6 +181,7 @@ class TournamentCard extends ConsumerWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -223,10 +268,10 @@ class TournamentCard extends ConsumerWidget {
             ),
             if (tournament.haveParticipated && isShowJoinedTag)
               Positioned(
-                right: -24,
-                top: 8,
+                left: -26,
+                top: 10,
                 child: Transform.rotate(
-                  angle: pi / 4,
+                  angle: -pi / 4,
                   child: Container(
                     // width: 400,
                     padding: const EdgeInsets.symmetric(horizontal: 24),

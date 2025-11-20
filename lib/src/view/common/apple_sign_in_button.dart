@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rooktook/src/model/auth/auth_controller.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/utils/apple_sign_in_service.dart';
+import 'package:rooktook/src/view/auth/providers/auth_provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AppleSignInButton extends ConsumerWidget {
@@ -39,6 +40,9 @@ class AppleSignInButton extends ConsumerWidget {
                 );
 
                 if (result.userAlreadyRegistered) {
+                  ref
+                      .read(authProvider.notifier)
+                      .signInWithEmail(appleUserInfo.email.isNotEmpty ? appleUserInfo.email : '');
                   await authController.signInWithApple(result);
                   loadingOverlay.remove();
                 } else {

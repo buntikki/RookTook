@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/shop/presentation/create_order_form_screen.dart';
 import 'package:rooktook/src/view/shop/provider/shop_provider.dart';
 
-class ShopItemDetailsScreen extends StatelessWidget {
+class ShopItemDetailsScreen extends ConsumerWidget {
   const ShopItemDetailsScreen({super.key, required this.item});
   final ShopItemModel item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
@@ -58,10 +59,23 @@ class ShopItemDetailsScreen extends StatelessWidget {
               minWidth: double.infinity,
               color: const Color(0xff54C339),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CreateOrderFormScreen(item: item)),
-                );
+                final orders = ref.watch(shopProvider).orders;
+                if (orders.any((order) => order.status.toLowerCase() == 'processing')) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'You have a pending order. Please wait for it to be processed.',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CreateOrderFormScreen(item: item)),
+                  );
+                }
               },
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               height: 54,

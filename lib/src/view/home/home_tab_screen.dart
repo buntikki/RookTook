@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
@@ -39,11 +40,13 @@ import 'package:rooktook/src/utils/screen.dart';
 import 'package:rooktook/src/view/account/new_profile_screen.dart';
 import 'package:rooktook/src/view/account/profile_screen.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
+import 'package:rooktook/src/view/common/pro_tag.dart';
 import 'package:rooktook/src/view/correspondence/offline_correspondence_game_screen.dart';
 import 'package:rooktook/src/view/game/game_screen.dart';
 import 'package:rooktook/src/view/game/offline_correspondence_games_screen.dart';
 import 'package:rooktook/src/view/home/games_carousel.dart';
 import 'package:rooktook/src/view/home/home_provider.dart';
+import 'package:rooktook/src/view/home/iap_provider.dart';
 import 'package:rooktook/src/view/over_the_board/over_the_board_screen.dart';
 import 'package:rooktook/src/view/play/create_game_options.dart';
 import 'package:rooktook/src/view/play/ongoing_games_screen.dart';
@@ -97,6 +100,8 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       if (session != null) {
         ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.rapid));
         ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.blitz));
+        final userId = session.user.id.value;
+        ref.read(homeProvider.notifier).fetchUserSubscription(userId);
       }
     });
   }
@@ -175,6 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         });
         final puzzleRank = puzzle?.rating ?? 1500;
         // final puzzleRank = 1750;
+        final isPremium = ref.watch(homeProvider).isPremium;
         final widgets =
             shouldShowWelcomeScreen
                 ? _welcomeScreenWidgets(
@@ -340,7 +346,8 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
             //     ],
             //   ),
             // ),
-            centerTitle: true,
+            centerTitle: false,
+            title: isPremium ? const ProTag(isProTag: true) : null,
             automaticallyImplyLeading: false,
             actions: [
               // IconButton(
@@ -643,6 +650,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         )
       else ...[
         const HomeBannersWidget(),
+        const BattlepassUpgradeCard(),
         const CompeteSection(),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -659,6 +667,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   image: 'assets/images/puzzle_streak.png',
                   title: 'Puzzle Streak',
                   onTap: () {
+                    BranchRepository.trackCustomEvent('puzzle_streak', ref: ref);
                     Navigator.of(
                       context,
                       rootNavigator: true,
@@ -671,6 +680,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   image: 'assets/images/healthy_mix.png',
                   title: 'Healthy Mix',
                   onTap: () {
+                    BranchRepository.trackCustomEvent('healthy_mix', ref: ref);
                     Navigator.of(context, rootNavigator: true).push(
                       PuzzleScreen.buildRoute(
                         context,
@@ -761,8 +771,225 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       if (isOnline) ref.refresh(ongoingGamesProvider.future),
       if (isOnline) ref.refresh(fetchHomeBannersProvider.future),
       if (isOnline) ref.refresh(fetchBattleRatingsProvider.future),
-      if (isOnline) ref.refresh(fetchTournamentsProvider.future),
+      if (isOnline) ref.refresh(fetchFeaturedTournamentsProvider.future),
     ]);
+  }
+}
+
+class BattlepassUpgradeCard extends ConsumerWidget {
+  const BattlepassUpgradeCard({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final iapPr = ref.watch(iapProvider);
+    final isAvailable = iapPr.isAvailable;
+    final isAvailableRemote = iapPr.isAvailableRemote;
+    final isLoading = ref.watch(iapLoadingProvider);
+    final isPremium = ref.watch(homeProvider).isPremium;
+    final available = isAvailable && isAvailableRemote && !isPremium;
+    if (!available) {
+      return const SizedBox.shrink();
+    } else {
+      return GestureDetector(
+        onTap: () {
+          if (isLoading) return;
+          openBattlepassUpgradeSheet(context, ref);
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20).copyWith(top: 0),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xff2B2D30),
+            borderRadius: BorderRadius.circular(12),
+            gradient: const LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [Color(0xff3C3C3C), Color(0xff222222)],
+            ),
+          ),
+          child: Row(
+            spacing: 12,
+            children: [
+              Expanded(
+                child: Column(
+                  spacing: 12,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      spacing: 8,
+                      children: [
+                        const Text(
+                          'Get the Battle Pass',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xffEFEDED),
+                          ),
+                          textScaler: TextScaler.noScaling,
+                        ),
+                        Image.asset('assets/images/battlepass_thunder.png', height: 16),
+                      ],
+                    ),
+                    const Text(
+                      'Unlock instant rewards, premium tournaments, and your exclusive pro badge.',
+                      textScaler: TextScaler.noScaling,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff7D8082),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xff2B2D30),
+                  gradient: RadialGradient(
+                    center: Alignment.center,
+                    radius: 1,
+                    colors: [Colors.transparent, const Color(0xff54C339).withValues(alpha: .5)],
+                  ),
+                  border: Border.all(color: const Color(0xff54C339), width: .5),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child:
+                    isLoading
+                        ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                        : const Text(
+                          'Upgrade',
+                          style: TextStyle(
+                            color: Color(0xff54C339),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textScaler: TextScaler.noScaling,
+                        ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+}
+
+Future<void> openBattlepassUpgradeSheet(
+  BuildContext context,
+  WidgetRef ref, {
+  bool isProTag = false,
+}) async {
+  return await showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+    ),
+    builder:
+        (context) => BattlepassUpgradeSheet(
+          isProTag: isProTag,
+          onPressed: () async {
+            ref.read(iapLoadingProvider.notifier).state = true;
+            Navigator.pop(context);
+            final userId = ref.watch(authSessionProvider)?.user.id.value ?? '';
+            BranchRepository.trackCustomEvent('user_purchase_pass_initiated', ref: ref);
+            if (userId.isNotEmpty) await ref.read(iapProvider.notifier).buyProduct(userId, ref);
+          },
+        ),
+  );
+}
+
+class BattlepassUpgradeSheet extends ConsumerWidget {
+  const BattlepassUpgradeSheet({super.key, required this.onPressed, required this.isProTag});
+  final bool isProTag;
+  final VoidCallback onPressed;
+  List<String> get benefitsText => const [
+    'Unlimited games',
+    'Instant reward redemption',
+    'No minimum redemption limit',
+    'Premium Tournaments',
+    'Exclusive Events',
+    'Unlock Pro Badge',
+    'Priority support',
+  ];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final subscriptionPrice = ref.watch(homeProvider).subscriptionPrice;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            border: Border.all(color: const Color(0xff464A4F), width: 1),
+          ),
+          child: Row(
+            children: [
+              Text(
+                isProTag ? 'You are a ' : 'Become a  ',
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+              const ProTag(),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            spacing: 16,
+            children: List.generate(benefitsText.length, (index) {
+              final benefitText = benefitsText[index];
+              return Row(
+                spacing: 8,
+                children: [
+                  SvgPicture.asset('assets/images/svg/subscription${index + 1}.svg', height: 24),
+                  Expanded(
+                    child: Text(
+                      benefitText,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+        ),
+        if (!isProTag)
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: MaterialButton(
+              height: 60,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              minWidth: double.infinity,
+              color: const Color(0xff54C339),
+              onPressed: onPressed,
+              child: Text(
+                'Unlock for ₹$subscriptionPrice/month'.toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+
+        const SizedBox(height: 48),
+      ],
+    );
   }
 }
 
@@ -771,7 +998,7 @@ class CompeteSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final fetchTournamentsPr = ref.watch(fetchTournamentsProvider);
+    final fetchTournamentsPr = ref.watch(fetchFeaturedTournamentsProvider);
     final fetchBattleRatingPr = ref.watch(fetchBattleRatingsProvider);
     return fetchTournamentsPr.when(
       skipError: true,
@@ -814,7 +1041,7 @@ class CompeteSection extends ConsumerWidget {
                               const IButton(
                                 title: 'Battle Rating',
                                 text:
-                                    'Battle Rating shows how good you are - it goes up when you solve puzzles faster, drops if you play poorly or skips a game and we match you with players of similar rating for fair battles.',
+                                    "Battle Rating (BR) represents your overall skill level in puzzle tournaments. It increases when you perform better than others and decreases when you perform poorly or skip games.\n\nYour BR change depends on your final score, move combo, number of errors and your current rating. Higher-rated players gain less for easy wins and lose more when they underperform. Each wrong move adds a small penalty to your BR, so accuracy and consistency matter as much as speed.\n\nIf you join a tournament but don't play, a fixed penalty is applied to discourage inactivity. Over time, your BR evolves to reflect your true performance, accuracy, and improvement across RookTook games.",
                               ),
                             ],
                           ),
@@ -879,22 +1106,50 @@ class CompeteSection extends ConsumerWidget {
 }
 
 class CompeteTournamentCard extends ConsumerWidget {
-  const CompeteTournamentCard({super.key, required this.tournament, this.width});
+  const CompeteTournamentCard({
+    super.key,
+    required this.tournament,
+    this.width,
+    this.promoteTournament = false,
+  });
   final Tournament tournament;
   final double? width;
+  final bool promoteTournament;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isAvailableRemote = ref.watch(iapProvider).isAvailableRemote;
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => NewDetailsScreen(tournamentId: tournament.id)),
-        );
+        final isPremium = ref.watch(homeProvider).isPremium;
+        if (!isAvailableRemote) {
+          Navigator.push(
+            context,
+            MaterialPageRoute<TournamentDetailScreen>(
+              builder: (_) => TournamentDetailScreen(tournamentId: tournament.id),
+            ),
+          );
+        } else if (!isPremium && tournament.isPremium) {
+          openBattlepassUpgradeSheet(context, ref);
+        } else {
+          if (promoteTournament) {
+            BranchRepository.trackCustomEvent(
+              'first_play_onboarding',
+              ref: ref,
+              data: {'tournamentId': tournament.id},
+            );
+          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TournamentDetailScreen(tournamentId: tournament.id),
+            ),
+          );
+        }
       },
       child: Container(
         width: width ?? MediaQuery.of(context).size.width * 0.85,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22).copyWith(top: 0),
         decoration: BoxDecoration(
           color: const Color(0xff2B2D30),
           borderRadius: BorderRadius.circular(12),
@@ -907,6 +1162,40 @@ class CompeteTournamentCard extends ConsumerWidget {
         ),
         child: Column(
           children: [
+            if (tournament.isPremium && isAvailableRemote)
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff2B2D30),
+                    gradient: RadialGradient(
+                      center: Alignment.center,
+                      radius: 1.2,
+                      colors: [Colors.transparent, const Color(0xff54C339).withValues(alpha: .2)],
+                    ),
+                    border: Border.all(color: const Color(0xff54C339), width: .5),
+                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 4,
+                    children: [
+                      SvgPicture.asset('assets/images/svg/pro_icon.svg', height: 12),
+                      const Text(
+                        'PRO',
+                        style: TextStyle(
+                          color: Color(0xff54C339),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              const SizedBox(height: 22),
             Row(
               spacing: 12,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -964,7 +1253,10 @@ class CompeteTournamentCard extends ConsumerWidget {
                           if (tournament.entrySilverCoins > 0)
                             Row(
                               children: [
-                                SvgPicture.asset('assets/images/svg/silver_coin.svg', height: 12),
+                                SvgPicture.asset(
+                                  'assets/images/svg/${tournament.entryCoinType.toLowerCase()}_coin.svg',
+                                  height: 12,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   '${tournament.entrySilverCoins}',
@@ -1068,15 +1360,7 @@ class CompeteTournamentCard extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder:
-                        (context) => TournamentDetailScreen(
-                          tournament: tournament,
-                          isPlayed: tournament.players.any(
-                            (element) =>
-                                element.userId == ref.watch(authSessionProvider)!.user.id.value &&
-                                element.time > 0,
-                          ),
-                        ),
+                    builder: (context) => TournamentDetailScreen(tournamentId: tournament.id),
                   ),
                 );
               },
@@ -1169,6 +1453,35 @@ class HomeBannersWidget extends ConsumerStatefulWidget {
 
 class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
   int activeBanner = 0;
+  late PageController _pageController;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+
+    // Auto Scroll
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
+      if (!mounted) return;
+      final fetchHomeBanners = ref.read(homeProvider).banners;
+      if (fetchHomeBanners.isEmpty) return;
+
+      final nextPage = (activeBanner + 1) % fetchHomeBanners.length;
+      _pageController.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeIn,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1186,6 +1499,7 @@ class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
                 width: MediaQuery.of(context).size.width,
                 height: 130,
                 child: PageView.builder(
+                  controller: _pageController,
                   onPageChanged: (value) {
                     setState(() {
                       activeBanner = value;
@@ -1197,7 +1511,7 @@ class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
                     final eventType = banner.eventType;
                     final redirectUrl = banner.redirectUrl;
                     return GestureDetector(
-                      onTap: () async {
+                      onTap: () {
                         BranchRepository.trackCustomEvent(
                           'banner_clicked',
                           ref: ref,
@@ -1205,37 +1519,15 @@ class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
                         );
                         switch (eventType) {
                           case BannerEventType.tournament:
-                            final tournament = await ref
-                                .read(tournamentProvider.notifier)
-                                .fetchSingleTournament(redirectUrl.split('/').last);
-                            if (tournament != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (context) => TournamentDetailScreen(
-                                        tournament: tournament,
-                                        isPlayed: tournament.players.any(
-                                          (element) =>
-                                              element.userId ==
-                                                  (ref.watch(authSessionProvider)?.user.id.value ??
-                                                      '') &&
-                                              element.time > 0,
-                                        ),
-                                      ),
-                                ),
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Tournament not found',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => TournamentDetailScreen(
+                                      tournamentId: redirectUrl.split('/').last,
+                                    ),
+                              ),
+                            );
                           case BannerEventType.store:
                             handleShopBannerNavigation(ref);
                           case BannerEventType.wallet:
@@ -1276,7 +1568,8 @@ class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
                       spacing: 8,
                       children: List.generate(banners.length, (index) {
                         final isActive = index == activeBanner;
-                        return Container(
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
                           width: 10,
                           height: 10,
                           decoration: BoxDecoration(

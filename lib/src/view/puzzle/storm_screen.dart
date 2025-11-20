@@ -567,7 +567,11 @@ Future<void> _showStats(
                     Navigator.pop(context);
                     Navigator.pushReplacement(
                       context,
-                      TournamentResult.route(tournamentId: tournamentId, isShowLoading: isEnded),
+                      TournamentResult.route(
+                        tournamentId: tournamentId,
+                        isShowLoading: isEnded,
+                        battleRating: ref.read(homeProvider).ratings.battleRating,
+                      ),
                     );
                   },
                   child: const Text(

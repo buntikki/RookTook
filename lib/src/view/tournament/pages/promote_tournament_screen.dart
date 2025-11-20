@@ -87,6 +87,7 @@ class _PromoteTournamentScreenState extends ConsumerState<PromoteTournamentScree
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 32),
                             child: CompeteTournamentCard(
+                              promoteTournament: true,
                               width: MediaQuery.of(context).size.width,
                               tournament: tournaments[index],
                             ),

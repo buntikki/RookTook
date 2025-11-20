@@ -7,7 +7,6 @@ import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
-import 'package:rooktook/src/network/http.dart';
 
 final homeProvider = StateNotifierProvider((ref) => HomeProvider());
 
@@ -33,6 +32,8 @@ class HomeProvider extends StateNotifier<HomeState> {
       'Access-Control-Allow-Origin': '*',
       'Origin': 'https://lichess.dev',
       'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+      'X-API-Key':
+          '00033dbbd7e3c2388d922359abe33193012c6fb36f3854706c2a6b1c7187b5154292acc867fb4e54db67635b5d8ef3ce2d58403ac51e15c95cba3e81e48f01b9',
     };
 
     try {
@@ -40,7 +41,7 @@ class HomeProvider extends StateNotifier<HomeState> {
         Uri.parse(
           releaseMode
               ? 'https://api.rooktook.com/api/v1/events'
-              : 'http://dev-api.rooktook.com/api/v1/events',
+              : 'https://dev-api.rooktook.com/api/v1/events',
         ),
         headers: headers,
       );
@@ -70,6 +71,8 @@ class HomeProvider extends StateNotifier<HomeState> {
       'Access-Control-Allow-Origin': '*',
       'Origin': 'https://lichess.dev',
       'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+      'X-API-Key':
+          '00033dbbd7e3c2388d922359abe33193012c6fb36f3854706c2a6b1c7187b5154292acc867fb4e54db67635b5d8ef3ce2d58403ac51e15c95cba3e81e48f01b9',
     };
 
     try {
@@ -77,7 +80,7 @@ class HomeProvider extends StateNotifier<HomeState> {
         Uri.parse(
           releaseMode
               ? 'https://api.rooktook.com/api/v1/rankings/player/$userId'
-              : 'http://dev-api.rooktook.com/api/v1/rankings/player/$userId',
+              : 'https://dev-api.rooktook.com/api/v1/rankings/player/$userId',
         ),
         headers: headers,
       );
@@ -95,17 +98,68 @@ class HomeProvider extends StateNotifier<HomeState> {
     }
     return 0;
   }
+
+  Future<bool> fetchUserSubscription(String userId) async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+      'X-API-Key':
+          '00033dbbd7e3c2388d922359abe33193012c6fb36f3854706c2a6b1c7187b5154292acc867fb4e54db67635b5d8ef3ce2d58403ac51e15c95cba3e81e48f01b9',
+    };
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          releaseMode
+              ? 'https://api.rooktook.com/api/v1/subscription?userId=$userId'
+              : 'https://dev-api.rooktook.com/api/v1/subscription?userId=$userId',
+        ),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        log(response.body);
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+        final subscriptionPrice = decodedResponse['data']['subscriptionPrice']?.toString();
+        state = state.copyWith(
+          isPremium: (decodedResponse['data']['hasActiveSubscription'] as bool?) ?? false,
+          subscriptionPrice: subscriptionPrice ?? '0',
+        );
+        return state.isPremium;
+      }
+    } catch (e) {
+      log('Error fetching user subscription: $e');
+    }
+    return false;
+  }
+
+  void updateIsPremium(bool isPremium) {
+    state = state.copyWith(isPremium: isPremium);
+  }
 }
 
 class HomeState {
   final List<BannerModel> banners;
   final int battleRating;
+  final bool isPremium;
+  final String subscriptionPrice;
   final RatingsModel ratings;
-  HomeState({required this.banners, required this.battleRating, required this.ratings});
+  HomeState({
+    required this.banners,
+    required this.battleRating,
+    required this.isPremium,
+    required this.subscriptionPrice,
+    required this.ratings,
+  });
   factory HomeState.initial() {
     return HomeState(
       banners: [],
       battleRating: 0,
+      isPremium: false,
+      subscriptionPrice: '0',
       ratings: RatingsModel(
         totalTournamentsWon: 0,
         totalTournamentsPlayed: 0,
@@ -117,10 +171,18 @@ class HomeState {
     );
   }
 
-  HomeState copyWith({List<BannerModel>? banners, int? battleRating, RatingsModel? ratings}) {
+  HomeState copyWith({
+    List<BannerModel>? banners,
+    int? battleRating,
+    bool? isPremium,
+    String? subscriptionPrice,
+    RatingsModel? ratings,
+  }) {
     return HomeState(
       banners: banners ?? this.banners,
       battleRating: battleRating ?? this.battleRating,
+      isPremium: isPremium ?? this.isPremium,
+      subscriptionPrice: subscriptionPrice ?? this.subscriptionPrice,
       ratings: ratings ?? this.ratings,
     );
   }
@@ -181,7 +243,7 @@ BannerEventType nameToEventType(String type) {
 class RatingsModel {
   final int totalTournamentsWon;
   final int totalTournamentsPlayed;
-  final int winRate;
+  final double winRate;
   final int currentStreak;
   final int battleRating;
   final int maxStreak;
@@ -199,7 +261,7 @@ class RatingsModel {
     return RatingsModel(
       totalTournamentsWon: double.parse(map['totalTournamentsWon'].toString()).toInt(),
       totalTournamentsPlayed: double.parse(map['totalTournamentsPlayed'].toString()).toInt(),
-      winRate: double.parse(map['winRate'].toString()).toInt(),
+      winRate: double.parse(map['winRate'].toString()),
       currentStreak: double.parse(map['currentStreak'].toString()).toInt(),
       battleRating: double.parse(map['battleRating'].toString()).toInt(),
       maxStreak: double.parse(map['maxStreak'].toString()).toInt(),

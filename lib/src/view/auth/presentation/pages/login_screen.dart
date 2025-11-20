@@ -12,6 +12,7 @@ import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/utils/toast_widget.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/create_password_screen.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/set_username_screen.dart';
+import 'package:rooktook/src/view/auth/providers/auth_provider.dart';
 import 'package:rooktook/src/view/common/apple_sign_in_button.dart';
 import 'package:rooktook/src/view/common/google_sign_in_button.dart';
 
@@ -45,6 +46,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _handleNewGoogleUser(String email, String idToken) {
     // Navigate to username selection screen for Google sign-up
+    ref.read(authProvider.notifier).signInWithEmail(email);
     Navigator.of(context).push(
       SetUsernameScreen.buildRoute(
         context,
@@ -57,6 +59,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _handleNewAppleUser(String email, String appleUserId) {
     // Navigate to username selection screen for Apple sign-up
+    ref.read(authProvider.notifier).signInWithEmail(email);
     Navigator.of(context).push(
       SetUsernameScreen.buildRoute(
         context,

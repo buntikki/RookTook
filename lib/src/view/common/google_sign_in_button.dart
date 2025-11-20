@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rooktook/src/model/auth/auth_controller.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/utils/google_sign_in_service.dart';
+import 'package:rooktook/src/view/auth/providers/auth_provider.dart';
 
 class GoogleSignInButton extends ConsumerWidget {
   final GoogleSignInService _googleSignInService = GoogleSignInService();
@@ -32,6 +33,7 @@ class GoogleSignInButton extends ConsumerWidget {
 
           if (result.userAlreadyRegistered) {
             // User already exists, complete sign in
+            ref.read(authProvider.notifier).signInWithEmail(googleSignInInfo.email);
             await authController.signInWithGoogle(result);
             loadingOverlay.remove();
           } else {

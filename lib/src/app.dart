@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:l10n_esperanto/l10n_esperanto.dart';
 import 'package:lottie/lottie.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rooktook/l10n/l10n.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/maintenance_screen.dart';
@@ -30,9 +31,11 @@ import 'package:rooktook/src/network/connectivity_overlay.dart';
 import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/network/socket.dart';
 import 'package:rooktook/src/theme.dart';
-import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/utils/screen.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/login_screen.dart';
+import 'package:rooktook/src/view/auth/providers/auth_provider.dart';
+import 'package:rooktook/src/view/home/home_provider.dart';
+import 'package:rooktook/src/view/home/iap_provider.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,6 +47,7 @@ class AppInitializationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(maintenanceModeProvider.notifier).init();
+    ref.read(forceUpdateProvider.notifier).init();
 
     // Keep your splash removal listener
     ref.listen<AsyncValue<PreloadedData>>(preloadedDataProvider, (_, state) {
@@ -193,6 +197,17 @@ class _AppState extends ConsumerState<Application> {
     });*/
 
     super.initState();
+    _initAuth();
+    ref.read(iapProvider.notifier).init();
+    ref.read(iapProvider.notifier).initializeIAP(ref);
+  }
+
+  Future<void> _initAuth() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email');
+    if (email != null) {
+      ref.read(authProvider.notifier).signInWithEmail(email);
+    }
   }
 
   void _startServices({required bool initiallyOnline}) {
@@ -248,29 +263,15 @@ class _AppState extends ConsumerState<Application> {
             prefs.setString('referralCode', event['ref'].toString());
           }
           if (branchLink.contains('tournament') && event.containsKey('id')) {
-            final tournament = await ref
-                .read(tournamentProvider.notifier)
-                .fetchSingleTournament(event['id'].toString());
-            if (tournament != null) {
-              // Wait until WidgetsBinding is done and Navigator is ready
-              if (rootNavigatorKey.currentState?.mounted ?? false) {
-                rootNavigatorKey.currentState!.push(
-                  MaterialPageRoute(
-                    builder:
-                        (context) => TournamentDetailScreen(
-                          tournament: tournament,
-                          isPlayed: tournament.players.any(
-                            (element) =>
-                                element.userId ==
-                                    (ref.watch(authSessionProvider)?.user.id.value ?? '') &&
-                                element.time > 0,
-                          ),
-                        ),
-                  ),
-                );
-              } else {
-                debugPrint('Navigator not yet mounted.');
-              }
+            if (rootNavigatorKey.currentState?.mounted ?? false) {
+              rootNavigatorKey.currentState!.push(
+                MaterialPageRoute(
+                  builder:
+                      (context) => TournamentDetailScreen(tournamentId: event['id'].toString()),
+                ),
+              );
+            } else {
+              debugPrint('Navigator not yet mounted.');
             }
           }
         }
@@ -292,6 +293,7 @@ class _AppState extends ConsumerState<Application> {
   @override
   Widget build(BuildContext context) {
     final isMaintenance = ref.watch(maintenanceModeProvider);
+    final isForceUpdate = ref.watch(forceUpdateProvider);
     final generalPrefs = ref.watch(generalPreferencesProvider);
     final userSession = ref.watch(authSessionProvider)?.user;
     final boardPrefs = ref.watch(boardPreferencesProvider);
@@ -331,20 +333,20 @@ class _AppState extends ConsumerState<Application> {
         ).copyWith(height: remainingHeight < kSmallRemainingHeightLeftBoardThreshold ? 60 : null),
       ),
       themeMode: ThemeMode.dark,
-      // builder: (context, child) {
-      //   Widget base = child ?? const SizedBox();
+      builder: (context, child) {
+        Widget base = child ?? const SizedBox();
 
-      //   // Apply your existing iOS IconTheme wrapper
-      //   if (isIOS) {
-      //     base = IconTheme.merge(
-      //       data: IconThemeData(color: CupertinoTheme.of(context).textTheme.textStyle.color),
-      //       child: Material(color: Colors.transparent, child: base),
-      //     );
-      //   }
+        // Apply your existing iOS IconTheme wrapper
+        if (isIOS) {
+          base = IconTheme.merge(
+            data: IconThemeData(color: CupertinoTheme.of(context).textTheme.textStyle.color),
+            child: Material(color: Colors.transparent, child: base),
+          );
+        }
 
-      //   // Always wrap with the connectivity overlay
-      //   return ConnectivityOverlay(child: base);
-      // },
+        // Always wrap with the connectivity overlay
+        return ConnectivityOverlay(child: base);
+      },
       // onGenerateRoute:
       //     (settings) =>
       //         settings.name != null ? resolveAppLinkUri(context, Uri.parse(settings.name!)) : null,
@@ -363,8 +365,8 @@ class _AppState extends ConsumerState<Application> {
       //   // ].nonNulls.toList(growable: false);
       // },
       home:
-          isMaintenance
-              ? const MaintenanceScreen()
+          isMaintenance || isForceUpdate
+              ? MaintenanceScreen(forceUpdate: isForceUpdate)
               : userSession != null
               ? const BottomNavScaffold()
               : const LoginScreen(),
@@ -407,7 +409,6 @@ class MaintenanceNotifier extends StateNotifier<bool> {
           log(error.toString());
           return false;
         });
-        ;
         final value = _remoteConfig.getBool('maintenanceMode');
 
         if (value != state) {
@@ -424,4 +425,74 @@ class MaintenanceNotifier extends StateNotifier<bool> {
     _timer?.cancel();
     super.dispose();
   }
+}
+
+final forceUpdateProvider = StateNotifierProvider<ForceUpdateNotifier, bool>((ref) {
+  return ForceUpdateNotifier();
+});
+
+class ForceUpdateNotifier extends StateNotifier<bool> {
+  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
+  Timer? _timer;
+
+  ForceUpdateNotifier() : super(false);
+
+  Future<void> init() async {
+    try {
+      await _remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 10),
+          minimumFetchInterval: const Duration(minutes: 1),
+        ),
+      );
+      await _remoteConfig.fetchAndActivate().onError((error, stackTrace) {
+        log(error.toString());
+        return false;
+      });
+      final version = _remoteConfig.getString('forceUpdateVersion');
+      state = !isVersionCompatible(await packageInfoVersion(), version);
+      // poll every 2 minutes
+      _timer = Timer.periodic(const Duration(minutes: 1), (_) async {
+        await _remoteConfig.fetchAndActivate().onError((error, stackTrace) {
+          log(error.toString());
+          return false;
+        });
+        final value =
+            !isVersionCompatible(
+              await packageInfoVersion(),
+              _remoteConfig.getString('forceUpdateVersion'),
+            );
+
+        if (value != state) {
+          state = value;
+        }
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+}
+
+bool isVersionCompatible(String currentVersion, String minVersion) {
+  final currentVersionParts = currentVersion.split('.');
+  final minVersionParts = minVersion.split('.');
+  for (int i = 0; i < currentVersionParts.length; i++) {
+    if (int.parse(currentVersionParts[i]) < int.parse(minVersionParts[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+Future<String> packageInfoVersion() async {
+  final PackageInfo packageInfo =
+      await PackageInfo.fromPlatform()
+        ..version;
+  return packageInfo.version;
 }

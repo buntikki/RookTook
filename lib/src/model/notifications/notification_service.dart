@@ -4,9 +4,10 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rooktook/l10n/l10n.dart';
 import 'package:rooktook/src/binding.dart';
 import 'package:rooktook/src/localizations.dart';
@@ -17,9 +18,7 @@ import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/network/connectivity.dart';
 import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/utils/badge_service.dart';
-import 'package:logging/logging.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rooktook/src/view/tournament/pages/new_details_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 part 'notification_service.g.dart';
@@ -247,7 +246,8 @@ class NotificationService {
       Navigator.push(
         rootNavigatorKey.currentContext!,
         CupertinoPageRoute(
-          builder: (context) => NewDetailsScreen(tournamentId: json['tournamentId'] as String),
+          builder:
+              (context) => TournamentDetailScreen(tournamentId: json['tournamentId'] as String),
         ),
       );
     }
@@ -259,7 +259,18 @@ class NotificationService {
   /// Handle an FCM message that caused the application to open
   void _handleFcmMessageOpenedApp(RemoteMessage message) {
     final parsedMessage = FcmMessage.fromRemoteMessage(message);
-
+    final json = message.data;
+    print(json);
+    final isTournament = (json['eventType'] as String).toLowerCase() == 'tournament';
+    if (isTournament) {
+      Navigator.push(
+        rootNavigatorKey.currentContext!,
+        CupertinoPageRoute(
+          builder:
+              (context) => TournamentDetailScreen(tournamentId: json['tournamentId'] as String),
+        ),
+      );
+    }
     switch (parsedMessage) {
       case final CorresGameUpdateFcmMessage corresMessage:
         final notification = CorresGameUpdateNotification.fromFcmMessage(corresMessage);
@@ -305,6 +316,18 @@ class NotificationService {
     );
 
     final parsedMessage = FcmMessage.fromRemoteMessage(message);
+    final json = message.data;
+    print(json);
+    final isTournament = (json['eventType'] as String?)?.toLowerCase() == 'tournament';
+    if (isTournament) {
+      Navigator.push(
+        rootNavigatorKey.currentContext!,
+        CupertinoPageRoute(
+          builder:
+              (context) => TournamentDetailScreen(tournamentId: json['tournamentId'] as String),
+        ),
+      );
+    }
 
     _fcmMessageStreamController.add((message: parsedMessage, fromBackground: fromBackground));
 

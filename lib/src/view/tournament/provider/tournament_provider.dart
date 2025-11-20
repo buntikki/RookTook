@@ -17,6 +17,9 @@ final fetchTournamentsProvider = FutureProvider<List<Tournament>>((ref) async {
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
   return await tournamentNotifier.fetchTournaments();
 });
+final fetchFeaturedTournamentsProvider = FutureProvider<List<Tournament>>((ref) async {
+  return await ref.read(tournamentProvider.notifier).fetchFeaturedTournaments();
+});
 final fetchUserTournamentsProvider = FutureProvider<List<Tournament>>((ref) async {
   final tournamentNotifier = ref.read(tournamentProvider.notifier);
   return await tournamentNotifier.fetchUserTournaments();
@@ -75,6 +78,37 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
       }
     } catch (e) {
       log('Error fetching tournaments: $e');
+    }
+    return [];
+  }
+
+  Future<List<Tournament>> fetchFeaturedTournaments() async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+    };
+
+    try {
+      final response = await http.get(
+        lichessUri('/api/rt-tournament-with-players/active'),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        log(response.body);
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+        final tournaments =
+            (decodedResponse['rtTournaments'] as List<dynamic>)
+                .map((x) => Tournament.fromMap(x as Map<String, dynamic>))
+                .toList();
+        final featuredTournaments = tournaments.where((element) => element.isFeatured).toList();
+        return featuredTournaments.isEmpty ? tournaments : featuredTournaments;
+      }
+    } catch (e) {
+      log('Error fetching featured tournaments: $e');
     }
     return [];
   }
@@ -243,6 +277,11 @@ class Tournament {
   final String customRules;
   final String howToPlay;
   final List<Player> players;
+  final int minBattleRating;
+  final int maxBattleRating;
+  final bool isPremium;
+  final bool isFeatured;
+  final String entryCoinType;
 
   Tournament({
     required this.startTime,
@@ -264,6 +303,11 @@ class Tournament {
     required this.customRules,
     required this.howToPlay,
     required this.players,
+    required this.minBattleRating,
+    required this.maxBattleRating,
+    required this.isPremium,
+    required this.isFeatured,
+    required this.entryCoinType,
   });
 
   factory Tournament.fromMap(Map<String, dynamic> map) {
@@ -276,6 +320,7 @@ class Tournament {
       access: map['access'] as String,
       puzzleDuration: map['puzzleDuration'] as int,
       entrySilverCoins: map['entrySilverCoins'] as int,
+      entryCoinType: map['entryCoinType'] as String? ?? 'silver',
       name: map['name'] as String,
       maxParticipants: map['maxParticipants'] as int,
       id: map['id'] as String,
@@ -293,6 +338,10 @@ class Tournament {
                   .map((x) => Player.fromMap(x as Map<String, dynamic>))
                   .toList()
               : []),
+      minBattleRating: map['minRating'] as int? ?? 0,
+      maxBattleRating: map['maxRating'] as int? ?? 9999,
+      isPremium: map['isPremium'] as bool? ?? false,
+      isFeatured: map['isFeatured'] as bool? ?? false,
     );
   }
 }

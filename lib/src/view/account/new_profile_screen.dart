@@ -1,4 +1,5 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,7 +21,11 @@ import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/view/account/profile_screen.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/login_screen.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
+import 'package:rooktook/src/view/common/pro_tag.dart';
 import 'package:rooktook/src/view/home/home_provider.dart';
+import 'package:rooktook/src/view/home/home_tab_screen.dart';
+import 'package:rooktook/src/view/home/iap_provider.dart';
+import 'package:rooktook/src/view/settings/settings_tab_screen.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/view/user/refer_and_earn_screen.dart';
 import 'package:rooktook/src/widgets/adaptive_action_sheet.dart';
@@ -104,6 +109,8 @@ class _NewProfileScreenState extends ConsumerState<NewProfileScreen> {
     final String avatarSeed = userSession?.user.name ?? 'default';
     final accountName = ref.watch(accountProvider.selectAsync((user) => user?.lightUser.name));
     final ratings = ref.watch(homeProvider).ratings;
+    final isAvailableRemote = ref.watch(iapProvider).isAvailableRemote;
+    final isPremium = ref.watch(homeProvider).isPremium && isAvailableRemote;
     return Scaffold(
       backgroundColor: const Color(0xFF0F151A),
       appBar: AppBar(
@@ -137,7 +144,51 @@ class _NewProfileScreenState extends ConsumerState<NewProfileScreen> {
                 FutureBuilder(
                   future: accountName,
                   builder: (context, snapshot) {
-                    return Text(snapshot.data ?? userSession.user.name);
+                    return Column(
+                      spacing: 8,
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(snapshot.data ?? userSession.user.name),
+                        if (isPremium)
+                          GestureDetector(
+                            onTap: () {
+                              openBattlepassUpgradeSheet(context, ref, isProTag: true);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff2B2D30),
+                                gradient: RadialGradient(
+                                  center: Alignment.center,
+                                  radius: 1.2,
+                                  colors: [
+                                    Colors.transparent,
+                                    const Color(0xff54C339).withValues(alpha: .2),
+                                  ],
+                                ),
+                                border: Border.all(color: const Color(0xff54C339), width: .5),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                spacing: 4,
+                                children: [
+                                  SvgPicture.asset('assets/images/svg/pro_icon.svg', height: 12),
+                                  const Text(
+                                    'PRO',
+                                    style: TextStyle(
+                                      color: Color(0xff54C339),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
                   },
                 ),
               // const Text(
@@ -222,7 +273,7 @@ class _NewProfileScreenState extends ConsumerState<NewProfileScreen> {
                       ProfileCardsModel(
                         title: 'Win Rate%',
                         icon: 'assets/images/svg/win_rate.svg',
-                        value: '${ratings.winRate}',
+                        value: '${ratings.winRate.toStringAsFixed(2)}%',
                       ),
                     ];
                     final profileCard = profileCards[index];
@@ -330,7 +381,7 @@ class _NewProfileScreenState extends ConsumerState<NewProfileScreen> {
                         const IButton(
                           title: 'Battle Rating',
                           text:
-                              'Battle Rating shows how good you are - it goes up when you solve puzzles faster, drops if you play poorly or skips a game and we match you with players of similar rating for fair battles.',
+                              "Battle Rating (BR) represents your overall skill level in puzzle tournaments. It increases when you perform better than others and decreases when you perform poorly or skip games.\n\nYour BR change depends on your final score, move combo, number of errors and your current rating. Higher-rated players gain less for easy wins and lose more when they underperform. Each wrong move adds a small penalty to your BR, so accuracy and consistency matter as much as speed.\n\nIf you join a tournament but don't play, a fixed penalty is applied to discourage inactivity. Over time, your BR evolves to reflect your true performance, accuracy, and improvement across RookTook games.",
                         ),
                       ],
                     ),
@@ -418,6 +469,16 @@ class _NewProfileScreenState extends ConsumerState<NewProfileScreen> {
                       title: 'Rate this App',
                       onTap: () {
                         launchUrl(Uri.parse('https://onelink.to/u9ktwp'));
+                      },
+                    ),
+                    const Divider(color: Color(0xff464A4F), height: .5),
+                    _MenuItem(
+                      icon: 'assets/images/settings.svg',
+                      title: 'Settings',
+                      onTap: () {
+                        Navigator.of(
+                          context,
+                        ).push(CupertinoPageRoute(builder: (context) => const SettingsTabScreen()));
                       },
                     ),
                   ],

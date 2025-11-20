@@ -5,17 +5,24 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:rooktook/src/constants.dart';
 
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/view/shop/presentation/shop_orders_screen.dart';
+import 'package:rooktook/src/view/shop/presentation/xoxo_webview.dart';
 import 'package:rooktook/src/widgets/success_failed_overlay.dart';
 
 final shopProvider = StateNotifierProvider((ref) => ShopNotifier());
+final openXoxoLoadingProvider = StateProvider<bool>((ref) => false);
 
 final fetchShopItems = FutureProvider((ref) => ref.read(shopProvider.notifier).fetchShopItems());
 final fetchOrders = FutureProvider((ref) => ref.read(shopProvider.notifier).fetchOrders());
+
+final openXOXO = FutureProvider.family(
+  (ref, OpenXOXOParams params) => ref.read(shopProvider.notifier).openXOXO(params: params),
+);
 
 class ShopNotifier extends StateNotifier<ShopState> {
   ShopNotifier() : super(ShopState.initial());
@@ -71,6 +78,40 @@ class ShopNotifier extends StateNotifier<ShopState> {
     }
   }
 
+  Future<void> openXOXO({required OpenXOXOParams params}) async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+      'Content-Type': 'application/json',
+      'X-API-Key':
+          '00033dbbd7e3c2388d922359abe33193012c6fb36f3854706c2a6b1c7187b5154292acc867fb4e54db67635b5d8ef3ce2d58403ac51e15c95cba3e81e48f01b9',
+    };
+    try {
+      final response = await http.post(
+        Uri.parse(
+          releaseMode
+              ? 'https://api.rooktook.com/api/v1/xoxoday/sso/token'
+              : 'https://dev-api.rooktook.com/api/v1/xoxoday/sso/token',
+        ),
+        headers: headers,
+        body: jsonEncode({'userId': params.uniqueId}),
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+        Navigator.push(
+          params.context,
+          XoxoWebview.route(decodedResponse['data']['redirectUrl'] as String),
+        );
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   Future<void> createOrder({
     required String name,
     required String email,
@@ -104,12 +145,9 @@ class ShopNotifier extends StateNotifier<ShopState> {
       if (response.statusCode == 200) {
         if (decodedResponse['status'] == 'success') {
           showSuccessOverlay(context);
-          await Future.delayed(const Duration(seconds: 1), () {
+          await Future.delayed(const Duration(seconds: 1), () async {
             Navigator.pop(context);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const ShopOrdersScreen()),
-            );
+            await fetchOrders();
           });
           return;
         }
@@ -136,7 +174,6 @@ class ShopNotifier extends StateNotifier<ShopState> {
 class ShopState {
   final List<ShopItemModel> items;
   final List<OrderModel> orders;
-
   ShopState({required this.items, required this.orders});
 
   factory ShopState.initial() {
@@ -252,4 +289,11 @@ class OrderModel {
       updatedAt: map['updatedAt'] as int,
     );
   }
+}
+
+class OpenXOXOParams {
+  final String uniqueId;
+  final BuildContext context;
+
+  OpenXOXOParams({required this.uniqueId, required this.context});
 }

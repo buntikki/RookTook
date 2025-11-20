@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:rooktook/src/view/shop/provider/shop_provider.dart';
 
 class ShopOrdersScreen extends ConsumerStatefulWidget {
@@ -92,10 +91,14 @@ class OrderCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6),
-                      child: Image.network(item.productUrl, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) {
-                        // Show a placeholder or error widget
-                        return const Icon(Icons.broken_image);
-                      },),
+                      child: Image.network(
+                        item.productUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          // Show a placeholder or error widget
+                          return const Icon(Icons.broken_image);
+                        },
+                      ),
                     ),
                   ),
                 ),
