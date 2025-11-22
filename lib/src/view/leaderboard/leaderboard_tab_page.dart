@@ -117,25 +117,25 @@ class _LeaderboardTabPageState extends ConsumerState<LeaderboardTabPage> {
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                          if (user.isPro && isAvailableRemote)
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              spacing: 4,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  'assets/images/svg/pro_icon.svg',
-                                                  height: 12,
+                                          // if (user.isPro && isAvailableRemote)
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            spacing: 4,
+                                            children: [
+                                              SvgPicture.asset(
+                                                'assets/images/svg/pro_icon.svg',
+                                                height: 12,
+                                              ),
+                                              const Text(
+                                                'PRO',
+                                                style: TextStyle(
+                                                  color: Color(0xff54C339),
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w800,
                                                 ),
-                                                const Text(
-                                                  'PRO',
-                                                  style: TextStyle(
-                                                    color: Color(0xff54C339),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w800,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ),

@@ -124,8 +124,9 @@ class HomeProvider extends StateNotifier<HomeState> {
         final Map<String, dynamic> decodedResponse =
             jsonDecode(response.body) as Map<String, dynamic>;
         final subscriptionPrice = decodedResponse['data']['subscriptionPrice']?.toString();
+        final isPremium = decodedResponse['data']['hasActiveSubscription'] as bool?;
         state = state.copyWith(
-          isPremium: (decodedResponse['data']['hasActiveSubscription'] as bool?) ?? false,
+          isPremium: isPremium ?? false,
           subscriptionPrice: subscriptionPrice ?? '0',
         );
         return state.isPremium;
