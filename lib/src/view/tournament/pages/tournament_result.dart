@@ -1,20 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:random_avatar/random_avatar.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
+import 'package:rooktook/src/styles/lichess_icons.dart';
+import 'package:rooktook/src/view/home/home_provider.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 
 class TournamentResult extends ConsumerStatefulWidget {
-  const TournamentResult({super.key, required this.tournamentId, required this.isShowLoading});
+  const TournamentResult({
+    super.key,
+    required this.tournamentId,
+    required this.isShowLoading,
+    required this.battleRating,
+  });
   final String tournamentId;
   final bool isShowLoading;
-  static MaterialPageRoute route({required String tournamentId, required bool isShowLoading}) =>
-      MaterialPageRoute(
-        builder:
-            (context) => TournamentResult(tournamentId: tournamentId, isShowLoading: isShowLoading),
-      );
+  final int battleRating;
+
+  static MaterialPageRoute route({
+    required String tournamentId,
+    required bool isShowLoading,
+    required int battleRating,
+  }) => MaterialPageRoute(
+    builder:
+        (context) => TournamentResult(
+          tournamentId: tournamentId,
+          isShowLoading: isShowLoading,
+          battleRating: battleRating,
+        ),
+  );
 
   @override
   ConsumerState<TournamentResult> createState() => _TournamentResultState();
@@ -29,6 +46,7 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
     } else {
       ref.invalidate(fetchLeaderboardProvider(widget.tournamentId));
     }
+    ref.invalidate(fetchBattleRatingsProvider);
   }
 
   @override
@@ -39,116 +57,154 @@ class _TournamentResultState extends ConsumerState<TournamentResult> {
           : fetchLeaderboardProvider(widget.tournamentId),
     );
     final session = ref.watch(authSessionProvider);
+    final newBattleRating = ref.watch(homeProvider).ratings.battleRating;
     return leaderboardPr.when(
       skipLoadingOnRefresh: false,
       data: (data) {
-        final players = data.$1;
-        final coinType = data.$2;
-        return Scaffold(
-          appBar: AppBar(
-            surfaceTintColor: Colors.transparent,
-            title: const Text(
-              'Results',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 28),
+        final players = data.players;
+        final coinType = data.rewardCoinType;
+        final tournament = data.tournament;
+        final isEnded = DateTime.now().isAfter(
+          DateTime.fromMillisecondsSinceEpoch(tournament.endTime),
+        );
+        return PopScope(
+          onPopInvokedWithResult: (didPop, result) {
+            // // Navigator.pop(context);
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (_) => TournamentDetailScreen(tournament: tournament, isPlayed: true),
+            //   ),
+            // );
+            // ref.invalidate(fetchTournamentsProvider);
+            // ref.invalidate(fetchUserTournamentsProvider);
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              surfaceTintColor: Colors.transparent,
+              title: Text(
+                isEnded ? 'Results' : 'Leaderboard',
+                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 28),
+              ),
             ),
-          ),
-          body: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF2B2D30),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Row(
-                    //   spacing: 8,
-                    //   children: [
-                    //     // SvgPicture.asset('assets/images/svg/puzzle.svg', height: 18.0),
-                    //     const Text(
-                    //       '# Rank',
-                    //       style: TextStyle(color: Color(0xff7D8082), fontSize: 12),
-                    //     ),
-                    //   ],
-                    // ),
-                    Row(
-                      spacing: 8,
-                      children: [
-                        SvgPicture.asset('assets/images/svg/puzzle.svg', height: 18.0),
-                        const Text('Score', style: TextStyle(color: Colors.white, fontSize: 12)),
-                      ],
+            body: Column(
+              children: [
+                if (!isEnded)
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2B2D30),
+                      borderRadius: BorderRadius.circular(8),
                     ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                    child: Text(
+                      'The tournament is live. Final results will be out at ${DateFormat('hh:mm a, MMM dd').format(DateTime.fromMillisecondsSinceEpoch(tournament.endTime))}',
+                      style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2B2D30),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        spacing: 8,
+                        children: [
+                          Icon(
+                            LichessIcons.storm,
+                            size: 18.0,
+                            color: Color(0xFF54C339),
+                            // : ColorScheme.of(context).primary,
+                          ),
+                          Text('Score', style: TextStyle(color: Colors.white, fontSize: 12)),
+                        ],
+                      ),
 
-                    Row(
-                      spacing: 8,
-                      children: [
-                        SvgPicture.asset('assets/images/svg/fire.svg', height: 18.0),
-                        const Text(
-                          'Moves Combo',
-                          style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      spacing: 8,
-                      children: [
-                        SvgPicture.asset('assets/images/svg/error.svg', height: 16.0),
-                        const Text('Errors', style: TextStyle(color: Colors.white, fontSize: 12)),
-                      ],
-                    ),
-                  ],
+                      Row(
+                        spacing: 8,
+                        children: [
+                          SvgPicture.asset('assets/images/svg/fire.svg', height: 18.0),
+                          const Text(
+                            'Moves Combo',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        spacing: 8,
+                        children: [
+                          SvgPicture.asset('assets/images/svg/error.svg', height: 16.0),
+                          const Text('Errors', style: TextStyle(color: Colors.white, fontSize: 12)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: players.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 16),
-                  itemBuilder: (BuildContext context, int index) {
-                    Color? color1;
-                    Color? color2;
-                    if (index == 0) {
-                      color1 = const Color(0xff2B291F);
-                      color2 = const Color(0xff463F24);
-                    }
-                    if (index == 1) {
-                      color1 = const Color(0xff202C33);
-                      color2 = const Color(0xff2E4755);
-                    }
-                    if (index == 2) {
-                      color1 = const Color(0xff312F3D);
-                      color2 = const Color(0xff413C60);
-                    }
-                    final player = players[index];
-                    return TournamentResultCard(
-                      player: player,
-                      color1: color1,
-                      color2: color2,
-                      coinType: coinType,
-                      isUserCard: session!.user.name == player.userId,
-                      rank: (index + 1).toString().padLeft(2, '0'),
-                    );
-                  },
+                Expanded(
+                  child: RefreshIndicator.adaptive(
+                    onRefresh: () async {
+                      ref.invalidate(fetchLeaderboardProvider(widget.tournamentId));
+                    },
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: players.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 16),
+                      itemBuilder: (BuildContext context, int index) {
+                        Color? color1;
+                        Color? color2;
+                        if (index == 0) {
+                          color1 = const Color(0xff2B291F);
+                          color2 = const Color(0xff463F24);
+                        }
+                        if (index == 1) {
+                          color1 = const Color(0xff202C33);
+                          color2 = const Color(0xff2E4755);
+                        }
+                        if (index == 2) {
+                          color1 = const Color(0xff312F3D);
+                          color2 = const Color(0xff413C60);
+                        }
+                        final player = players[index];
+                        final finalRating = newBattleRating - widget.battleRating;
+                        return TournamentResultCard(
+                          player: player,
+                          color1: color1,
+                          color2: color2,
+                          coinType: coinType,
+                          activeLeaderboardCoins:
+                              !isEnded && index < tournament.rewardPool.split(',').length
+                                  ? tournament.rewardPool.split(',')[index]
+                                  : null,
+                          isUserCard: session!.user.name == player.userId,
+                          battleRating: finalRating == 0 ? null : finalRating,
+                          rank: (index + 1).toString().padLeft(2, '0'),
+                        );
+                      },
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+            // bottomSheet: BottomSheet(
+            //   shape: const BeveledRectangleBorder(),
+            //   backgroundColor: Colors.transparent,
+            //   onClosing: () {},
+            //   builder:
+            //       (context) => IntrinsicHeight(
+            //         child: TournamentResultCard(
+            //           rank: '',
+            //           margin: const EdgeInsets.all(16).copyWith(top: 0),
+            //           isUserCard: true,
+            //         ),
+            //       ),
+            // ),
           ),
-          // bottomSheet: BottomSheet(
-          //   shape: const BeveledRectangleBorder(),
-          //   backgroundColor: Colors.transparent,
-          //   onClosing: () {},
-          //   builder:
-          //       (context) => IntrinsicHeight(
-          //         child: TournamentResultCard(
-          //           rank: '',
-          //           margin: const EdgeInsets.all(16).copyWith(top: 0),
-          //           isUserCard: true,
-          //         ),
-          //       ),
-          // ),
         );
       },
       error: (error, stackTrace) => Scaffold(body: Center(child: Text('$error'))),
@@ -179,6 +235,8 @@ class TournamentResultCard extends StatelessWidget {
     required this.rank,
     required this.player,
     required this.coinType,
+    this.activeLeaderboardCoins,
+    this.battleRating,
   });
   final EdgeInsetsGeometry? margin;
   final Color? color1;
@@ -187,7 +245,8 @@ class TournamentResultCard extends StatelessWidget {
   final String rank;
   final String coinType;
   final Player player;
-
+  final String? activeLeaderboardCoins;
+  final int? battleRating;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -250,7 +309,7 @@ class TournamentResultCard extends StatelessWidget {
                           width: 16,
                         ),
                         Text(
-                          ' ${player.rewardCoins}',
+                          ' ${activeLeaderboardCoins ?? player.rewardCoins}',
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             color: isUserCard ? const Color(0xff222222) : const Color(0xffEFEDED),
@@ -267,6 +326,40 @@ class TournamentResultCard extends StatelessWidget {
               ],
             ),
           ),
+          if (battleRating != null && isUserCard)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Image.asset(
+                        'assets/images/rating_${battleRating!.isNegative ? 'down' : 'up'}.png',
+                        height: 32,
+                      ),
+                      const Text(
+                        'Battle Rating',
+                        style: TextStyle(
+                          color: Color(0xff222222),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '${battleRating!.isNegative ? '' : '+'}$battleRating',
+                    style: const TextStyle(
+                      color: Color(0xff222222),
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -310,7 +403,12 @@ class TournamentResultCard extends StatelessWidget {
                     Row(
                       spacing: 8,
                       children: [
-                        SvgPicture.asset('assets/images/svg/puzzle.svg', height: 18.0),
+                        const Icon(
+                          LichessIcons.storm,
+                          size: 18.0,
+                          color: Color(0xFF54C339),
+                          // : ColorScheme.of(context).primary,
+                        ),
                         Text(
                           '${player.score}',
                           style: const TextStyle(color: Color(0xff7D8082), fontSize: 12),

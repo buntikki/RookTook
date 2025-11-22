@@ -8,6 +8,7 @@ import 'package:rooktook/l10n/l10n.dart';
 import 'package:rooktook/src/network/connectivity.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/view/home/home_tab_screen.dart';
+import 'package:rooktook/src/view/leaderboard/leaderboard_tab_page.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_tab_screen.dart';
 import 'package:rooktook/src/view/settings/settings_tab_screen.dart';
 import 'package:rooktook/src/view/shop/presentation/shop_screen.dart';
@@ -38,7 +39,7 @@ enum BottomTab {
       // case BottomTab.watch:
       //   return strings.mobileWatchTab;
       case BottomTab.settings:
-        return strings.mobileSettingsTab;
+        return 'Leaderboard';
     }
   }
 
@@ -60,7 +61,7 @@ enum BottomTab {
       // case BottomTab.watch:
       //   return Icons.live_tv_outlined;
       case BottomTab.settings:
-        return 'assets/images/setting.svg';
+        return 'assets/images/leaderboard.svg';
 
       // return Icons.settings_outlined;
     }
@@ -133,6 +134,7 @@ final toolsScrollController = ScrollController(debugLabel: 'ToolsScroll');
 final settingsScrollController = ScrollController(debugLabel: 'SettingsScroll');
 
 final RouteObserver<PageRoute<void>> rootNavPageRouteObserver = RouteObserver<PageRoute<void>>();
+final RouteObserver<ModalRoute<void>> routeObserver = RouteObserver<ModalRoute<void>>();
 
 final _cupertinoTabController = CupertinoTabController();
 
@@ -159,7 +161,8 @@ final List<Widget> tabs = [
   const HomeTabScreen(),
   const TournamentScreen(),
   const ShopScreen(),
-  const SettingsTabScreen(),
+  // const SettingsTabScreen(),
+  const LeaderboardTabPage(),
 ];
 
 class _BottomTabInteraction extends ChangeNotifier {
@@ -308,6 +311,13 @@ void handleTournamentBannerNavigation(WidgetRef ref) {
   }
 }
 
+void handleShopBannerNavigation(WidgetRef ref) {
+  ref.read(currentBottomTabProvider.notifier).state = BottomTab.shop;
+  if (Platform.isIOS) {
+    _cupertinoTabController.index = BottomTab.shop.index;
+  }
+}
+
 Widget _androidTabBuilder(BuildContext context, int index) {
   switch (index) {
     case 0:
@@ -340,7 +350,8 @@ Widget _androidTabBuilder(BuildContext context, int index) {
       return _MaterialTabView(
         navigatorKey: settingsNavigatorKey,
         tab: BottomTab.settings,
-        builder: (context) => const SettingsTabScreen(),
+        // builder: (context) => const SettingsTabScreen(),
+        builder: (context) => const LeaderboardTabPage(),
       );
     default:
       assert(false, 'Unexpected tab');
@@ -380,7 +391,8 @@ Widget _iOSTabBuilder(BuildContext context, int index) {
       return CupertinoTabView(
         defaultTitle: context.l10n.mobileSettingsTab,
         navigatorKey: settingsNavigatorKey,
-        builder: (context) => const SettingsTabScreen(),
+        // builder: (context) => const SettingsTabScreen(),
+        builder: (context) => const LeaderboardTabPage(),
       );
     default:
       assert(false, 'Unexpected tab');

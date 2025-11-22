@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rooktook/src/model/auth/auth_controller.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/utils/apple_sign_in_service.dart';
+import 'package:rooktook/src/view/auth/providers/auth_provider.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AppleSignInButton extends ConsumerWidget {
@@ -20,16 +21,8 @@ class AppleSignInButton extends ConsumerWidget {
       builder: (context, snapshot) {
         // Only show the button if Apple Sign In is available on this device
         if (snapshot.data == true) {
-          return ElevatedButton.icon(
-            icon: const Icon(Icons.apple, color: Colors.white, size: 24),
-            label: Text('Continue with Apple', style: Theme.of(context).textTheme.titleMedium),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff464A4F),
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            onPressed: () async {
+          return GestureDetector(
+            onTap: () async {
               // Show loading indicator
               final loadingOverlay = _showLoadingOverlay(context);
 
@@ -47,6 +40,9 @@ class AppleSignInButton extends ConsumerWidget {
                 );
 
                 if (result.userAlreadyRegistered) {
+                  ref
+                      .read(authProvider.notifier)
+                      .signInWithEmail(appleUserInfo.email.isNotEmpty ? appleUserInfo.email : '');
                   await authController.signInWithApple(result);
                   loadingOverlay.remove();
                 } else {
@@ -61,7 +57,75 @@ class AppleSignInButton extends ConsumerWidget {
                 onSignInError(e.toString());
               }
             },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xff464A4F), width: .5),
+                gradient: const LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 8,
+                children: [
+                  const Icon(Icons.apple, color: Colors.white, size: 24),
+                  Text(
+                    'Continue with Apple',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: const Color(0xffEFEDED),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
+          // return ElevatedButton.icon(
+          //   icon: const Icon(Icons.apple, color: Colors.white, size: 24),
+          //   label: Text('Continue with Apple', style: Theme.of(context).textTheme.titleMedium),
+          //   style: ElevatedButton.styleFrom(
+          //     backgroundColor: const Color(0xff464A4F),
+          //     foregroundColor: Colors.white,
+          //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          //   ),
+          //   onPressed: () async {
+          //     // Show loading indicator
+          //     final loadingOverlay = _showLoadingOverlay(context);
+
+          //     try {
+          //       // Get Apple sign in result
+          //       final appleUserInfo = await _appleSignInService.signInWithApple();
+
+          //       // Get auth controller
+          //       final authController = ref.read(authControllerProvider.notifier);
+
+          //       // Verify with server
+          //       final result = await authController.verifyAppleSignIn(
+          //         appleUserInfo.identityToken,
+          //         appleUserInfo.userId,
+          //       );
+
+          //       if (result.userAlreadyRegistered) {
+          //         await authController.signInWithApple(result);
+          //         loadingOverlay.remove();
+          //       } else {
+          //         loadingOverlay.remove();
+          //         onNewUserVerified(
+          //           appleUserInfo.email.isNotEmpty ? appleUserInfo.email : '',
+          //           appleUserInfo.userId,
+          //         );
+          //       }
+          //     } catch (e) {
+          //       loadingOverlay.remove();
+          //       onSignInError(e.toString());
+          //     }
+          //   },
+          // );
         }
         return const SizedBox.shrink(); // Don't show the button if Apple Sign In is not available
       },

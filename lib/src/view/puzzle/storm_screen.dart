@@ -1,10 +1,12 @@
 import 'package:chessground/chessground.dart';
 import 'package:collection/collection.dart';
 import 'package:dartchess/dartchess.dart';
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ntp/ntp.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/puzzle/puzzle_providers.dart';
@@ -12,12 +14,14 @@ import 'package:rooktook/src/model/puzzle/puzzle_repository.dart';
 import 'package:rooktook/src/model/puzzle/storm.dart';
 import 'package:rooktook/src/model/puzzle/storm_controller.dart';
 import 'package:rooktook/src/model/settings/board_preferences.dart';
+import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/styles/lichess_icons.dart';
 import 'package:rooktook/src/styles/styles.dart';
 import 'package:rooktook/src/utils/gestures_exclusion.dart';
 import 'package:rooktook/src/utils/immersive_mode.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/home/home_provider.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_history_screen.dart';
 import 'package:rooktook/src/view/puzzle/storm_clock.dart';
 import 'package:rooktook/src/view/puzzle/storm_dashboard.dart';
@@ -57,16 +61,231 @@ class _StormScreenState extends ConsumerState<StormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WakelockWidget(
-      child: PlatformScaffold(
-        appBarActions: [
-          // _StormDashboardButton(),
-          const ToggleSoundButton(),
-        ],
-        appBarTitle: const Text('Puzzle Rush'),
-        body: _Load(_boardKey, widget.tournamentId, widget.startTime),
+    return WillPopScope(
+      onWillPop: () async {
+        final shouldPop = await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF13191D),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Are you sure you want to exit?',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'If you decide to leave the game, your score will be reset to 0, and you won’t be able to play again.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      spacing: 16,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              // if (context.mounted) {
+                              final data = await ref
+                                  .read(tournamentProvider.notifier)
+                                  .fetchTournamentResult(
+                                    id: widget.tournamentId,
+                                    stats: const StormRunStats(
+                                      moves: 0,
+                                      score: 0,
+                                      comboBest: 0,
+                                      history: IList.empty(),
+                                      time: Duration(seconds: 1),
+                                      slowPuzzleIds: IList.empty(),
+                                      timePerMove: 0,
+                                      highest: 0,
+                                      errors: 0,
+                                    ),
+                                    numSolved: 0,
+                                  );
+                              Navigator.pop(context, true); // Close bottom sheet
+                              // Future.delayed(const Duration(milliseconds: 100), () {
+
+                              // });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF54C339),
+                              minimumSize: const Size.fromHeight(50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Yes',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context, false);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF2B2D30),
+                              minimumSize: const Size.fromHeight(50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'No',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+
+        // return true to pop page, false to stay
+        return shouldPop ?? false;
+      },
+      child: WakelockWidget(
+        child: PlatformScaffold(
+          appBarActions: const [
+            // _StormDashboardButton(),
+            ToggleSoundButton(),
+          ],
+          appBarTitle: const Text('Puzzle Rush'),
+          body: _Load(_boardKey, widget.tournamentId, widget.startTime),
+        ),
       ),
     );
+    // return PopScope(
+    //   canPop: false,
+    //   onPopInvokedWithResult: (bool didPop, result) {
+    //     showDialog(
+    //       context: context,
+    //       builder: (dialogContext) {
+    //         return AlertDialog(
+    //           contentPadding: EdgeInsets.zero,
+    //           content: Container(
+    //             padding: const EdgeInsets.all(16),
+    //             decoration: BoxDecoration(
+    //               color: const Color(0xFF13191D),
+    //               borderRadius: BorderRadius.circular(12),
+    //             ),
+    //             child: Column(
+    //               mainAxisSize: MainAxisSize.min,
+    //               children: [
+    //                 const Text(
+    //                   'Are you sure you want to exit?',
+    //                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+    //                 ),
+    //                 const SizedBox(height: 8),
+    //                 const Text(
+    //                   'If you decide to leave the game, your score will be reset to 0, and you won’t be able to play again.',
+    //                   style: TextStyle(
+    //                     fontSize: 12,
+    //                     fontWeight: FontWeight.w400,
+    //                     color: Colors.grey,
+    //                   ),
+    //                 ),
+    //                 const SizedBox(height: 20),
+    //                 Row(
+    //                   spacing: 16,
+    //                   children: [
+    //                     Expanded(
+    //                       child: ElevatedButton(
+    //                         onPressed: () async {
+    //                           // if (context.mounted) {
+    //                           // final data = await ref
+    //                           //     .read(tournamentProvider.notifier)
+    //                           //     .fetchTournamentResult(
+    //                           //       id: widget.tournamentId,
+    //                           //       stats: const StormRunStats(
+    //                           //         moves: 0,
+    //                           //         score: 0,
+    //                           //         comboBest: 0,
+    //                           //         history: IList.empty(),
+    //                           //         time: Duration.zero,
+    //                           //         slowPuzzleIds: IList.empty(),
+    //                           //         timePerMove: 0,
+    //                           //         highest: 0,
+    //                           //         errors: 0,
+    //                           //       ),
+    //                           //       numSolved: 0,
+    //                           //     );
+    //                           Navigator.pop(dialogContext); // Close bottom sheet
+    //                           // Future.delayed(const Duration(milliseconds: 100), () {
+
+    //                           // });
+    //                         },
+    //                         style: ElevatedButton.styleFrom(
+    //                           backgroundColor: const Color(0xFF54C339),
+    //                           minimumSize: const Size.fromHeight(50),
+    //                           shape: RoundedRectangleBorder(
+    //                             borderRadius: BorderRadius.circular(12),
+    //                           ),
+    //                         ),
+    //                         child: const Text(
+    //                           'Yes',
+    //                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+    //                         ),
+    //                       ),
+    //                     ),
+    //                     Expanded(
+    //                       child: ElevatedButton(
+    //                         onPressed: () {
+    //                           Navigator.pop(context);
+    //                         },
+    //                         style: ElevatedButton.styleFrom(
+    //                           backgroundColor: const Color(0xFF2B2D30),
+    //                           minimumSize: const Size.fromHeight(50),
+    //                           shape: RoundedRectangleBorder(
+    //                             borderRadius: BorderRadius.circular(12),
+    //                           ),
+    //                         ),
+    //                         child: const Text(
+    //                           'No',
+    //                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+    //                         ),
+    //                       ),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         );
+    //       },
+    //     );
+    //   },
+
+    //   child: WakelockWidget(
+    //     child: PlatformScaffold(
+    //       appBarActions: const [
+    //         // _StormDashboardButton(),
+    //         ToggleSoundButton(),
+    //       ],
+    //       appBarTitle: const Text('Puzzle Rush'),
+    //       body: _Load(_boardKey, widget.tournamentId, widget.startTime),
+    //     ),
+    //   ),
+    // );
   }
 }
 
@@ -106,7 +325,7 @@ class _Load extends ConsumerWidget {
   }
 }
 
-class _Body extends ConsumerWidget {
+class _Body extends ConsumerStatefulWidget {
   const _Body({
     required this.data,
     required this.boardKey,
@@ -120,8 +339,17 @@ class _Body extends ConsumerWidget {
   final Duration startTime;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final ctrlProvider = stormControllerProvider(data.puzzles, data.timestamp, startTime);
+  ConsumerState<_Body> createState() => _BodyState();
+}
+
+class _BodyState extends ConsumerState<_Body> {
+  @override
+  Widget build(BuildContext context) {
+    final ctrlProvider = stormControllerProvider(
+      widget.data.puzzles,
+      widget.data.timestamp,
+      widget.startTime,
+    );
     final boardPreferences = ref.watch(boardPreferencesProvider);
     final stormState = ref.watch(ctrlProvider);
 
@@ -133,7 +361,7 @@ class _Body extends ConsumerWidget {
               context,
               ref.read(ctrlProvider).stats!,
               ref,
-              tournamentId,
+              widget.tournamentId,
               state.numSolved,
             );
           }
@@ -144,74 +372,49 @@ class _Body extends ConsumerWidget {
         clearAndroidBoardGesturesExclusion();
       }
     });
-
-    final content = PopScope(
-      canPop: stormState.mode != StormMode.running,
-      onPopInvokedWithResult: (bool didPop, _) async {
-        if (didPop) {
-          return;
-        }
-        final NavigatorState navigator = Navigator.of(context);
-        final shouldPop = await showAdaptiveDialog<bool>(
-          context: context,
-          builder:
-              (context) => YesNoDialog(
-                title: Text(context.l10n.mobileAreYouSure),
-                content: Text(context.l10n.mobilePuzzleStormConfirmEndRun),
-                onYes: () {
-                  return Navigator.of(context).pop(true);
-                },
-                onNo: () => Navigator.of(context).pop(false),
-              ),
-        );
-        if (shouldPop ?? false) {
-          navigator.pop();
-        }
-      },
-      child: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: SafeArea(
-                bottom: false,
-                child: BoardTable(
-                  boardKey: boardKey,
-                  orientation: stormState.pov,
-                  lastMove: stormState.lastMove as NormalMove?,
-                  fen: stormState.position.fen,
-                  gameData: GameData(
-                    playerSide:
-                        !stormState.firstMovePlayed ||
-                                stormState.mode == StormMode.ended ||
-                                stormState.position.isGameOver
-                            ? PlayerSide.none
-                            : stormState.pov == Side.white
-                            ? PlayerSide.white
-                            : PlayerSide.black,
-                    isCheck: boardPreferences.boardHighlights && stormState.position.isCheck,
-                    sideToMove: stormState.position.turn,
-                    validMoves: stormState.validMoves,
-                    promotionMove: stormState.promotionMove,
-                    onMove:
-                        (move, {isDrop, captured}) =>
-                            ref.read(ctrlProvider.notifier).onUserMove(move),
-                    onPromotionSelection:
-                        (role) => ref.read(ctrlProvider.notifier).onPromotionSelection(role),
-                  ),
-                  topTable: _TopTable(data, startTime),
-                  bottomTable: _Combo(stormState.combo),
+    final content = Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: SafeArea(
+              bottom: false,
+              child: BoardTable(
+                boardKey: widget.boardKey,
+                orientation: stormState.pov,
+                lastMove: stormState.lastMove as NormalMove?,
+                fen: stormState.position.fen,
+                gameData: GameData(
+                  playerSide:
+                      !stormState.firstMovePlayed ||
+                              stormState.mode == StormMode.ended ||
+                              stormState.position.isGameOver
+                          ? PlayerSide.none
+                          : stormState.pov == Side.white
+                          ? PlayerSide.white
+                          : PlayerSide.black,
+                  isCheck: boardPreferences.boardHighlights && stormState.position.isCheck,
+                  sideToMove: stormState.position.turn,
+                  validMoves: stormState.validMoves,
+                  promotionMove: stormState.promotionMove,
+                  onMove:
+                      (move, {isDrop, captured}) =>
+                          ref.read(ctrlProvider.notifier).onUserMove(move),
+                  onPromotionSelection:
+                      (role) => ref.read(ctrlProvider.notifier).onPromotionSelection(role),
                 ),
+                topTable: _TopTable(widget.data, widget.startTime),
+                bottomTable: _Combo(stormState.combo),
               ),
             ),
           ),
-          // _BottomBar(ctrlProvider),
-        ],
-      ),
+        ),
+        // _BottomBar(ctrlProvider),
+      ],
     );
 
     return Theme.of(context).platform == TargetPlatform.android
         ? AndroidGesturesExclusionWidget(
-          boardKey: boardKey,
+          boardKey: widget.boardKey,
           shouldExcludeGesturesOnFocusGained:
               () => stormState.mode == StormMode.initial || stormState.mode == StormMode.running,
           shouldSetImmersiveMode: boardPreferences.immersiveModeWhilePlaying ?? false,
@@ -289,9 +492,100 @@ Future<void> _showStats(
       .read(tournamentProvider.notifier)
       .fetchTournamentResult(id: tournamentId, stats: stats, numSolved: numSolved);
   if (data) {
-    Navigator.pushReplacement(
-      context,
-      TournamentResult.route(tournamentId: tournamentId, isShowLoading: true),
+    final tournament = await ref
+        .read(tournamentProvider.notifier)
+        .fetchSingleTournament(tournamentId);
+    final titles = ['Score', 'Combo', 'Moves', 'Puzzles', 'Errors'];
+    final values = [
+      numSolved,
+      stats.comboBest,
+      stats.moves,
+      stats.slowPuzzleIds.length,
+      stats.errors,
+    ];
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            insetPadding: const EdgeInsets.all(16),
+            content: Column(
+              spacing: 8,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Your Score',
+                  style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                ...List.generate(
+                  values.length,
+                  (index) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        titles[index],
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        values[index].toString(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Result will be announced when the tournament ends',
+                  style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF54C339),
+                    minimumSize: const Size.fromHeight(50),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () async {
+                    final userId = ref.read(authSessionProvider)?.user.name;
+                    if (userId != null) {
+                      ref.read(homeProvider.notifier).fetchBattleRatings(userId);
+                    }
+                    final now = await NTP.now();
+                    final isEnded = (await NTP.now()).isAfter(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        tournament?.endTime ?? now.millisecondsSinceEpoch,
+                      ),
+                    );
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      TournamentResult.route(
+                        tournamentId: tournamentId,
+                        isShowLoading: isEnded,
+                        battleRating: ref.read(homeProvider).ratings.battleRating,
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Got It',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
     );
   }
 }

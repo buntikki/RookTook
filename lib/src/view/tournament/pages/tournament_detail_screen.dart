@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,9 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/notifications/notification_service.dart';
+import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/utils/branch_repository.dart';
-import 'package:rooktook/src/view/common/container_clipper.dart';
+import 'package:rooktook/src/view/home/home_provider.dart';
 import 'package:rooktook/src/view/puzzle/storm_screen.dart';
 import 'package:rooktook/src/view/settings/faq_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/participants_screen.dart';
@@ -22,47 +23,80 @@ import 'package:share_plus/share_plus.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TournamentDetailScreen extends ConsumerStatefulWidget {
-  final Tournament tournament;
+  final String tournamentId;
 
-  const TournamentDetailScreen({super.key, required this.tournament});
+  const TournamentDetailScreen({super.key, required this.tournamentId});
 
   @override
   ConsumerState<TournamentDetailScreen> createState() => _TournamentDetailScreenState();
 }
 
-class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen> {
-  Tournament? _tournament;
+class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen> with RouteAware {
+  Tournament? tournament;
+  bool isPlayed = false;
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
+    fetchTournament();
+  }
 
-    // ref.read(tournamentProvider.notifier).fetchTournamentResult(id: widget.tournament.id);
+  Future<void> fetchTournament() async {
+    final tournament = await ref
+        .read(tournamentProvider.notifier)
+        .fetchSingleTournament(widget.tournamentId);
+    if (tournament != null) {
+      setState(() {
+        this.tournament = tournament;
+        isPlayed = tournament.players.any(
+          (element) =>
+              element.userId == ref.watch(authSessionProvider)!.user.id.value && element.time > 0,
+        );
+      });
+    }
+  }
+
+  @override
+  void didPopNext() {
+    // Called when coming back to this page
+    fetchTournament();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(context)!);
+  }
+
+  @override
+  void dispose() {
+    routeObserver.unsubscribe(this);
+    super.dispose();
   }
 
   Future<void> handleJoinTournament({required String id, String? inviteCode}) async {
-    await ref.read(walletProvider.notifier).getUserLedger();
-    final walletState = ref.read(walletProvider);
-    if (walletState.walletInfo.silverCoins >= widget.tournament.entrySilverCoins) {
-      final data = await ref.read(tournamentProvider.notifier).fetchSingleTournament(id);
-
-      if (data == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error joining tournament', style: TextStyle(color: Colors.white)),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } else {
-        setState(() {
-          _tournament = data;
-        });
+    if (!mounted || isLoading || (tournament?.haveParticipated ?? false)) return;
+    try {
+      isLoading = true;
+      await ref.read(walletProvider.notifier).getUserLedger();
+      if (!mounted) return;
+      final walletState = ref.read(walletProvider);
+      final walletCoins =
+          tournament!.entryCoinType.toLowerCase() == 'silver'
+              ? walletState.walletInfo.silverCoins
+              : walletState.walletInfo.goldCoins;
+      if (walletCoins >= tournament!.entrySilverCoins) {
+        if (!mounted) return;
         final tournaStartTime = DateTime.fromMillisecondsSinceEpoch(
-          data.startTime,
+          tournament!.startTime,
         ).subtract(const Duration(seconds: 10));
         if ((await NTP.now()).isAfter(tournaStartTime)) {
-          if (data.minParticipants <= data.players.length) {
+          if (!mounted) return;
+          if (tournament!.minParticipants <= tournament!.players.length) {
             tournamentSuccessFn(id, inviteCode);
           } else {
+            if (!mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Tournament Terminated', style: TextStyle(color: Colors.white)),
@@ -72,16 +106,44 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             Navigator.pop(context);
           }
         } else {
+          if (!mounted) return;
           tournamentSuccessFn(id, inviteCode);
         }
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Not enough coins in the wallet', style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Not enough coins in the wallet', style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.red,
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  void handleButtonFn() {
+    if (tournament!.access.toLowerCase() == 'invite') {
+      showModalBottomSheet(
+        context: context,
+        backgroundColor: const Color(0xFF1A1F23),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
+        isScrollControlled: true,
+        builder: (_) {
+          return InviteCodeSheet(
+            onPressed: (code) {
+              handleJoinTournament(id: widget.tournamentId, inviteCode: code);
+              Navigator.pop(context);
+            },
+            scaffoldContext: context,
+          );
+        },
       );
+    } else {
+      handleJoinTournament(id: widget.tournamentId);
     }
   }
 
@@ -89,6 +151,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     final data = await ref
         .read(tournamentProvider.notifier)
         .joinTournament(id: id, inviteCode: inviteCode);
+    if (!mounted) return;
+
     if (data == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -98,7 +162,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
       );
     } else {
       setState(() {
-        _tournament = data;
+        tournament = data;
       });
       final baseId = int.tryParse(data.id) ?? 0;
       final service = ref.read(notificationServiceProvider);
@@ -118,6 +182,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             data.startTime,
           ).subtract(const Duration(minutes: 1)),
         );
+        if (!mounted) return;
       }
       if (DateTime.fromMillisecondsSinceEpoch(
         data.startTime,
@@ -130,6 +195,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             data.startTime,
           ).subtract(const Duration(minutes: 2)),
         );
+        if (!mounted) return;
       }
       if (DateTime.fromMillisecondsSinceEpoch(
         data.startTime,
@@ -142,6 +208,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
             data.startTime,
           ).subtract(const Duration(minutes: 5)),
         );
+        if (!mounted) return;
       }
       await service.scheduleNotification(
         id: baseId + 10,
@@ -149,6 +216,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
         body: '${data.name} has ended. Check your results.!',
         scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.endTime),
       );
+      if (!mounted) return;
       if (DateTime.fromMillisecondsSinceEpoch(data.startTime).isAfter(DateTime.now())) {
         await service.scheduleNotification(
           id: baseId,
@@ -156,6 +224,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
           body: '${data.name} started!',
           scheduledTime: DateTime.fromMillisecondsSinceEpoch(data.startTime),
         );
+        if (!mounted) return;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -166,6 +235,8 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
       );
       final time =
           DateTime.fromMillisecondsSinceEpoch(data.startTime).difference(await NTP.now()).inSeconds;
+
+      if (!mounted) return;
       if (time > 30) {
         showHowToPlaySheet(context, data.howToPlay, 'How To Play');
       }
@@ -263,10 +334,7 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     lp.addControlParam('\$deeplink_path', 'tournament/$tournamentId');
 
     // Step 3: Get short link
-    final BranchResponse response = await FlutterBranchSdk.getShortUrl(
-      buo: buo,
-      linkProperties: lp,
-    );
+    final response = await FlutterBranchSdk.getShortUrl(buo: buo, linkProperties: lp);
 
     if (response.success) {
       final String link = response.result as String;
@@ -282,369 +350,406 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    final tournament = _tournament ?? widget.tournament;
-    final bool isUserJoined = tournament.haveParticipated;
-    return PopScope(
-      canPop: true,
-      onPopInvokedWithResult: (didPop, result) {
-        ref.invalidate(fetchTournamentsProvider);
-        ref.invalidate(fetchUserTournamentsProvider);
-      },
-      child: Scaffold(
-        backgroundColor: const Color(0xFF13191D),
-        appBar: AppBar(
+    final bool isUserJoined = tournament?.haveParticipated ?? false;
+    if (tournament == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    } else {
+      return PopScope(
+        canPop: true,
+        onPopInvokedWithResult: (didPop, result) {
+          ref.refresh(fetchTournamentsProvider.future);
+          ref.refresh(fetchUserTournamentsProvider.future);
+        },
+        child: Scaffold(
           backgroundColor: const Color(0xFF13191D),
-          surfaceTintColor: const Color(0xFF13191D),
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-          ),
-          actions: [
-            howToPlayButton(context, tournament.howToPlay),
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: IconButton(
-                onPressed: () {
-                  shareBranchTournamentLink(tournamentId: tournament.id);
-                },
-                icon: const Icon(Icons.share, color: Colors.white),
+          appBar: AppBar(
+            backgroundColor: const Color(0xFF13191D),
+            surfaceTintColor: const Color(0xFF13191D),
+            elevation: 0,
+            // leading: IconButton(
+            //   icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            //   onPressed: () => Navigator.pop(context),
+            // ),
+            actions: [
+              howToPlayButton(context, tournament!.howToPlay),
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: IconButton(
+                  onPressed: () {
+                    shareBranchTournamentLink(tournamentId: widget.tournamentId);
+                  },
+                  icon: const Icon(Icons.share, color: Colors.white),
+                ),
               ),
-            ),
-          ],
-        ),
-        body: RefreshIndicator.adaptive(
-          onRefresh: () async {
-            final data = await ref
-                .read(tournamentProvider.notifier)
-                .fetchSingleTournament(tournament.id);
-            setState(() {
-              _tournament = data;
-            });
-          },
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(16).copyWith(bottom: 24), // Optional bottom padding
-            child: Column(
-              spacing: 8,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 8),
-                Text(
-                  tournament.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  spacing: 12,
-                  children: [
-                    _coinCard(
-                      icon: 'assets/images/svg/${tournament.rewardCoinType}_coin.svg',
-                      label: 'Reward',
-                      value: '${tournament.rewardCoins} C',
+            ],
+          ),
+          body: RefreshIndicator.adaptive(
+            onRefresh: () async {
+              final data = await ref
+                  .read(tournamentProvider.notifier)
+                  .fetchSingleTournament(widget.tournamentId);
+              setState(() {
+                tournament = data;
+              });
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16).copyWith(bottom: 24),
+              // Optional bottom padding
+              child: Column(
+                spacing: 8,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 8),
+                  Text(
+                    tournament!.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                    _coinCard(
-                      icon: 'assets/images/svg/silver_coin.svg',
-                      label: 'Entry Fee',
-                      value: '${tournament.entrySilverCoins} C',
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xff464a4f), width: .5),
-                    color: const Color(0xFF2B2D30),
-                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Row(
-                    spacing: 8,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  const SizedBox(height: 8),
+                  Row(
+                    spacing: 12,
                     children: [
-                      Expanded(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            spacing: 4,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/svg/tournament_clock.svg',
-                                height: 18.0,
-                              ),
-                              Text(
-                                DateFormat(
-                                  'hh:mm a, MMM dd',
-                                ).format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime)),
-                                style: const TextStyle(color: Color(0xff7D8082), fontSize: 14),
-                                textScaler: TextScaler.noScaling,
-                              ),
-                            ],
-                          ),
-                        ),
+                      _coinCard(
+                        icon: 'assets/images/svg/${tournament!.rewardCoinType}_coin.svg',
+                        label: 'Reward',
+                        value: '${tournament!.rewardCoins} C',
                       ),
-                      // Vertical divider
-                      Container(width: 1, height: 16, color: const Color(0xff464A4F)),
-                      Expanded(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            spacing: 4,
-                            children: [
-                              SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
-                              Text(
-                                DateTime.now().isAfter(
-                                      DateTime.fromMillisecondsSinceEpoch(tournament.endTime),
-                                    )
-                                    ? '${tournament.players.length} Participants'
-                                    : '${tournament.players.length}/${tournament.maxParticipants} Joined',
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(color: Color(0xff7D8082)),
-                                textScaler: TextScaler.noScaling,
-                              ),
-                            ],
-                          ),
-                        ),
+                      _coinCard(
+                        icon:
+                            'assets/images/svg/${tournament!.entryCoinType.toLowerCase()}_coin.svg',
+                        label: 'Entry Fee',
+                        value: '${tournament!.entrySilverCoins} C',
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 8),
-                Consumer(
-                  builder: (context, ref, child) {
-                    final status = ref.watch(
-                      tournamentStatusProvider((tournament.startTime, tournament.endTime)),
-                    );
-                    final bool isTournamentStarted = status.isStarted;
-                    final bool isTournamentEnded = status.isEnded;
-                    // print(
-                    //   DateTime.fromMillisecondsSinceEpoch(
-                    //     tournament.endTime,
-                    //   ).difference(DateTime.now()),
-                    // );
-                    // print(Duration(seconds: 10));
-                    return Column(
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: const Color(0xff464a4f), width: .5),
+                      color: const Color(0xFF2B2D30),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
                       spacing: 8,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF54C339),
-                            minimumSize: const Size.fromHeight(50),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        Expanded(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 4,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/svg/tournament_clock.svg',
+                                  height: 18.0,
+                                ),
+                                Text(
+                                  DateFormat('hh:mm a, MMM dd').format(
+                                    DateTime.fromMillisecondsSinceEpoch(tournament!.startTime),
+                                  ),
+                                  style: const TextStyle(color: Color(0xff7D8082), fontSize: 14),
+                                  textScaler: TextScaler.noScaling,
+                                ),
+                              ],
+                            ),
                           ),
-                          onPressed:
-                              isUserJoined
-                                  ? isTournamentStarted
-                                      ? () async {
-                                        if (isTournamentEnded) {
-                                          Navigator.push(
-                                            context,
-                                            TournamentResult.route(
-                                              tournamentId: tournament.id,
-                                              isShowLoading:
-                                                  (await NTP.now())
-                                                      .difference(
-                                                        DateTime.fromMillisecondsSinceEpoch(
-                                                          tournament.endTime,
-                                                        ),
-                                                      )
-                                                      .inMinutes <
-                                                  1,
-                                            ),
-                                          );
-                                        } else {
-                                          await ref
-                                              .read(tournamentProvider.notifier)
-                                              .fetchSingleTournament(tournament.id)
-                                              .then(
-                                                (data) => setState(() {
-                                                  _tournament = data;
-                                                }),
-                                              );
-
-                                          if (tournament.minParticipants <=
-                                              tournament.players.length) {
+                        ),
+                        // Vertical divider
+                        Container(width: 1, height: 16, color: const Color(0xff464A4F)),
+                        Expanded(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              spacing: 4,
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/svg/participants.svg',
+                                  height: 18.0,
+                                ),
+                                Text(
+                                  DateTime.now().isAfter(
+                                        DateTime.fromMillisecondsSinceEpoch(tournament!.endTime),
+                                      )
+                                      ? '${tournament!.players.length} Participants'
+                                      : '${tournament!.players.length}/${tournament!.maxParticipants} Joined',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(color: Color(0xff7D8082)),
+                                  textScaler: TextScaler.noScaling,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final status = ref.watch(
+                        tournamentStatusProvider((tournament!.startTime, tournament!.endTime)),
+                      );
+                      final bool isTournamentStarted = status.isStarted;
+                      final bool isTournamentEnded = status.isEnded;
+                      return Column(
+                        spacing: 8,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF54C339),
+                              minimumSize: const Size.fromHeight(50),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            onPressed:
+                                isLoading
+                                    ? () {}
+                                    : isUserJoined
+                                    ? isTournamentStarted
+                                        ? () async {
+                                          if (isLoading) return;
+                                          if (isTournamentEnded || isPlayed) {
                                             Navigator.push(
                                               context,
-                                              StormScreen.buildRoute(
-                                                context,
-                                                tournament.id,
-                                                // Duration(seconds: 10),
-                                                Duration(
-                                                  seconds:
-                                                      DateTime.fromMillisecondsSinceEpoch(
-                                                        tournament.endTime,
-                                                      ).difference(await NTP.now()).inSeconds,
-                                                ),
+                                              TournamentResult.route(
+                                                tournamentId: widget.tournamentId,
+                                                battleRating:
+                                                    ref.read(homeProvider).ratings.battleRating,
+                                                isShowLoading:
+                                                    isTournamentEnded &&
+                                                    DateTime.now()
+                                                            .difference(
+                                                              DateTime.fromMillisecondsSinceEpoch(
+                                                                tournament!.endTime,
+                                                              ),
+                                                            )
+                                                            .inMinutes ==
+                                                        1,
                                               ),
                                             );
                                           } else {
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                  'Tournament Terminated',
-                                                  style: TextStyle(color: Colors.white),
+                                            await ref
+                                                .read(tournamentProvider.notifier)
+                                                .fetchSingleTournament(widget.tournamentId)
+                                                .then(
+                                                  (data) => setState(() {
+                                                    tournament = data;
+                                                  }),
+                                                );
+
+                                            if (tournament!.minParticipants <=
+                                                    tournament!.players.length &&
+                                                !isLoading) {
+                                              try {
+                                                isLoading = true;
+                                                final remainingTimeInSeconds =
+                                                    DateTime.fromMillisecondsSinceEpoch(
+                                                      tournament!.endTime,
+                                                    ).difference(await NTP.now()).inSeconds;
+                                                Navigator.push(
+                                                  context,
+                                                  StormScreen.buildRoute(
+                                                    context,
+                                                    widget.tournamentId,
+                                                    // Duration(seconds: 10),
+                                                    Duration(
+                                                      seconds:
+                                                          remainingTimeInSeconds <
+                                                                  tournament!.puzzleDuration
+                                                              ? remainingTimeInSeconds
+                                                              : tournament!.puzzleDuration,
+                                                    ),
+                                                  ),
+                                                );
+                                              } finally {
+                                                isLoading = false;
+                                              }
+                                            } else {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    'Tournament Terminated',
+                                                    style: TextStyle(color: Colors.white),
+                                                  ),
+                                                  backgroundColor: Colors.red,
                                                 ),
-                                                backgroundColor: Colors.red,
-                                              ),
-                                            );
-                                            Navigator.pop(context);
-                                          }
-                                        }
-                                      }
-                                      : null
-                                  : () {
-                                    if (tournament.access.toLowerCase() == 'invite') {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        backgroundColor: const Color(0xFF1A1F23),
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(20),
-                                          ),
-                                        ),
-                                        isScrollControlled: true,
-                                        builder: (_) {
-                                          return InviteCodeSheet(
-                                            onPressed: (code) {
-                                              handleJoinTournament(
-                                                id: tournament.id,
-                                                inviteCode: code,
                                               );
                                               Navigator.pop(context);
-                                            },
-                                            scaffoldContext: context,
-                                          );
-                                        },
-                                      );
-                                    } else {
-                                      handleJoinTournament(id: tournament.id);
-                                    }
-                                  },
-                          child: Row(
-                            spacing: 4,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                isTournamentEnded
-                                    ? 'View Results'
-                                    : isUserJoined
-                                    ? isTournamentStarted
-                                        ? 'PLAY NOW'
-                                        : 'JOINED'
-                                    : 'JOIN NOW',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
+                                            }
+                                          }
+                                        }
+                                        : null
+                                    : tournament!.maxParticipants <= tournament!.players.length
+                                    ? null
+                                    : () {
+                                      if (isLoading) return;
+                                      final battleRating =
+                                          ref.watch(homeProvider).ratings.battleRating;
+                                      final maxBattleRating = tournament!.maxBattleRating;
+                                      final minBattleRating = tournament!.minBattleRating;
+                                      if (battleRating < minBattleRating) {
+                                        showDialog(
+                                          context: context,
+                                          builder:
+                                              (context) => BattleRatingDisclaimerPopup(
+                                                title: 'Stronger Opponents Ahead',
+                                                description:
+                                                    "This tournament is above your rating level ($battleRating / $minBattleRating). Proceed only if you're up for a challenge.",
+                                                buttonText: 'Join Anyway',
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  handleButtonFn();
+                                                },
+                                              ),
+                                        );
+                                      } else if (battleRating > maxBattleRating) {
+                                        showDialog(
+                                          context: context,
+                                          builder:
+                                              (context) => BattleRatingDisclaimerPopup(
+                                                title: 'This Battle Is Too Easy For You',
+                                                description:
+                                                    'This tournament is meant for players rated around $minBattleRating - $maxBattleRating. Your Battle Rating ($battleRating) is higher, we recommend competing in our higher rating events where the competition matches your rating.',
+                                                buttonText: 'GOT IT',
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                        );
+                                      } else {
+                                        handleButtonFn();
+                                      }
+                                    },
+                            child: Row(
+                              spacing: 4,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  isTournamentEnded || isPlayed
+                                      ? 'View ${isTournamentEnded ? 'Results' : 'Active Leaderboard'}'
+                                      : isUserJoined
+                                      ? isTournamentStarted
+                                          ? 'PLAY NOW'
+                                          : 'JOINED'
+                                      : tournament!.maxParticipants <= tournament!.players.length
+                                      ? 'TOURNAMENT FULL'
+                                      : 'JOIN NOW',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                if (tournament!.access == 'invite' && !isUserJoined)
+                                  const Icon(Icons.lock_rounded, color: Colors.white),
+                              ],
+                            ),
+                          ),
+                          if (!isTournamentEnded)
+                            Center(
+                              child:
+                                  isTournamentStarted
+                                      ? TournamentEndTimerWidget(startTime: tournament!.endTime)
+                                      : TournamentTimerWidget(startTime: tournament!.startTime),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: const Color(0xff2B2D30),
+                    ),
+                    child: Column(
+                      children: [
+                        _MenuItem(
+                          icon: 'assets/images/svg/reward_logo.svg',
+                          title: 'Reward Distribution',
+                          onTap:
+                              () => showModalBottomSheet(
+                                useSafeArea: true,
+                                enableDrag: true,
+                                context: context,
+                                backgroundColor: const Color(0xFF1A1F23),
+                                isScrollControlled: true,
+                                builder: (context) {
+                                  return RewardDistributionSheet(
+                                    coinType: tournament!.rewardCoinType,
+                                    rewards: tournament!.rewardPool.split(',').toList(),
+                                  );
+                                },
+                              ),
+                        ),
+                        const Divider(color: Colors.white24, height: 1),
+                        _MenuItem(
+                          icon: 'assets/images/svg/tournament_rules.svg',
+                          title: 'Tournament Rules',
+                          onTap:
+                              () => showHowToPlaySheet(
+                                context,
+                                tournament!.customRules.isEmpty ? rules : tournament!.customRules,
+                                'Tournament Rules',
+                              ),
+                        ),
+                        const Divider(color: Colors.white24, height: 1),
+                        _MenuItem(
+                          icon: 'assets/images/svg/participants_list.svg',
+                          title: 'Participants',
+                          onTap:
+                              () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => ParticipantsScreen(players: tournament!.players),
                                 ),
                               ),
-                              if (tournament.access == 'invite' && !isUserJoined)
-                                const Icon(Icons.lock_rounded, color: Colors.white),
-                            ],
-                          ),
                         ),
-                        if (!isTournamentEnded)
-                          Center(
-                            child:
-                                isTournamentStarted
-                                    ? TournamentEndTimerWidget(startTime: tournament.endTime)
-                                    : TournamentTimerWidget(startTime: tournament.startTime),
-                          ),
+                        const Divider(color: Colors.white24, height: 1),
+
+                        // _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
+                        // const Divider(color: Colors.white24),
+                        // _MenuItem(
+                        //   icon: 'assets/images/svg/how_to_play.svg',
+                        //   title: 'How to Play',
+                        //   onTap:
+                        //       () => _showHowToPlaySheet(
+                        //         context,
+                        //         tournament.howToPlay.isEmpty ? howToPlay : tournament.howToPlay,
+                        //         'How To Play',
+                        //       ),
+                        // ),
+                        // const Divider(color: Colors.white24, height: 1),
+                        _MenuItem(
+                          icon: 'assets/images/document.svg',
+                          title: 'FAQs',
+                          onTap:
+                              () => Navigator.of(
+                                context,
+                              ).push(FAQScreen.buildRoute(context, faqList)),
+                        ),
                       ],
-                    );
-                  },
-                ),
-
-                const SizedBox(height: 16),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: const Color(0xff2B2D30),
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      _MenuItem(
-                        icon: 'assets/images/svg/reward_logo.svg',
-                        title: 'Reward Distribution',
-                        onTap:
-                            () => showModalBottomSheet(
-                              useSafeArea: true,
-                              enableDrag: true,
-                              context: context,
-                              backgroundColor: const Color(0xFF1A1F23),
-                              isScrollControlled: true,
-                              builder: (context) {
-                                return RewardDistributionSheet(
-                                  coinType: tournament.rewardCoinType,
-                                  rewards: tournament.rewardPool.split(',').toList(),
-                                );
-                              },
-                            ),
-                      ),
-                      const Divider(color: Colors.white24, height: 1),
-                      _MenuItem(
-                        icon: 'assets/images/svg/tournament_rules.svg',
-                        title: 'Tournament Rules',
-                        onTap:
-                            () => showHowToPlaySheet(
-                              context,
-                              tournament.customRules.isEmpty ? rules : tournament.customRules,
-                              'Tournament Rules',
-                            ),
-                      ),
-                      const Divider(color: Colors.white24, height: 1),
-                      _MenuItem(
-                        icon: 'assets/images/svg/participants_list.svg',
-                        title: 'Participants',
-                        onTap:
-                            () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => ParticipantsScreen(players: tournament.players),
-                              ),
-                            ),
-                      ),
-                      const Divider(color: Colors.white24, height: 1),
-
-                      // _MenuItem(icon: Icons.notifications_none, title: 'Notification'),
-                      // const Divider(color: Colors.white24),
-                      // _MenuItem(
-                      //   icon: 'assets/images/svg/how_to_play.svg',
-                      //   title: 'How to Play',
-                      //   onTap:
-                      //       () => _showHowToPlaySheet(
-                      //         context,
-                      //         tournament.howToPlay.isEmpty ? howToPlay : tournament.howToPlay,
-                      //         'How To Play',
-                      //       ),
-                      // ),
-                      // const Divider(color: Colors.white24, height: 1),
-                      _MenuItem(
-                        icon: 'assets/images/document.svg',
-                        title: 'FAQs',
-                        onTap:
-                            () =>
-                                Navigator.of(context).push(FAQScreen.buildRoute(context, faqList)),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   Widget _coinCard({required String icon, required String label, required String value}) {
@@ -695,6 +800,7 @@ class HowToPlayVideoSheet extends StatefulWidget {
     required this.title,
     required this.scrollController,
   });
+
   final String data;
   final String title;
   final ScrollController scrollController;
@@ -709,11 +815,10 @@ class _HowToPlayVideoSheetState extends State<HowToPlayVideoSheet> {
   @override
   void initState() {
     super.initState();
-    const videoUrl = 'https://youtu.be/16cb7Q0ks30';
-    final videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
+    const videoUrl = 'https://www.youtube.com/watch?v=16cb7Q0ks30';
 
     _controller = YoutubePlayerController(
-      initialVideoId: videoId,
+      initialVideoId: '16cb7Q0ks30',
       flags: const YoutubePlayerFlags(autoPlay: true, mute: false),
     );
   }
@@ -806,8 +911,74 @@ class _HowToPlayVideoSheetState extends State<HowToPlayVideoSheet> {
   }
 }
 
+class BattleRatingDisclaimerPopup extends StatelessWidget {
+  const BattleRatingDisclaimerPopup({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.buttonText,
+    required this.onPressed,
+  });
+  final String title;
+  final String description;
+  final String buttonText;
+  final VoidCallback onPressed;
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      content: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xff2B2D30),
+          borderRadius: BorderRadius.circular(12),
+          gradient: const LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Color(0xff3C3C3C), Color(0xff222222)],
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              description,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff7D8082),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            MaterialButton(
+              onPressed: onPressed,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              minWidth: double.infinity,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              color: const Color(0xFF54C339),
+              child: Text(
+                buttonText,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class RewardDistributionSheet extends StatelessWidget {
   const RewardDistributionSheet({super.key, required this.rewards, required this.coinType});
+
   final List<String> rewards;
   final String coinType;
 
@@ -910,6 +1081,7 @@ class RewardDistributionSheet extends StatelessWidget {
 
 class InviteCodeSheet extends StatefulWidget {
   const InviteCodeSheet({super.key, required this.onPressed, required this.scaffoldContext});
+
   final void Function(String code) onPressed;
   final BuildContext scaffoldContext;
 
@@ -975,7 +1147,8 @@ class _InviteCodeSheetState extends State<InviteCodeSheet> {
               minWidth: double.infinity,
               color: const Color(0xFF54C339),
               onPressed: () {
-                if (_formkey.currentState!.validate()) {
+                final form = _formkey.currentState;
+                if (form != null && form.validate()) {
                   widget.onPressed(codeController.text.trim());
                 }
               },
@@ -1012,6 +1185,7 @@ class TournamentTimerWidget extends StatefulWidget {
   const TournamentTimerWidget({super.key, required this.startTime});
 
   final int startTime;
+
   @override
   State<TournamentTimerWidget> createState() => _TournamentTimerWidgetState();
 }
@@ -1020,6 +1194,7 @@ class _TournamentTimerWidgetState extends State<TournamentTimerWidget> {
   int timeLeft = 00;
   Timer? scheduledTimer;
   Timer? eventTimer;
+
   @override
   void initState() {
     super.initState();
@@ -1090,6 +1265,7 @@ class TournamentEndTimerWidget extends StatefulWidget {
   const TournamentEndTimerWidget({super.key, required this.startTime});
 
   final int startTime;
+
   @override
   State<TournamentEndTimerWidget> createState() => _TournamentEndTimerWidgetState();
 }
@@ -1098,6 +1274,7 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
   int timeLeft = 00;
   Timer? scheduledTimer;
   Timer? eventTimer;
+
   @override
   void initState() {
     super.initState();
@@ -1116,7 +1293,9 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
       startTimer();
     } else {
       scheduledTimer = Timer(delayUntilStart, () {
-        startTimer();
+        if (mounted) {
+          startTimer();
+        }
       });
     }
   }
@@ -1133,8 +1312,10 @@ class _TournamentEndTimerWidgetState extends State<TournamentEndTimerWidget> {
 
       if (remaining <= 0) {
         timer.cancel();
+        if (!mounted) return;
         setState(() => timeLeft = 0);
       } else {
+        if (!mounted) return;
         setState(() => timeLeft = remaining);
       }
     });
@@ -1198,6 +1379,7 @@ void showHowToPlaySheet(BuildContext context, String data, String title) {
 
 class RuleItem extends StatelessWidget {
   final String text;
+
   const RuleItem({super.key, required this.text});
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier();
@@ -10,16 +11,11 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> signInWithEmail(String email) async {
     state = state.copyWith(isLoading: true);
     try {
-      // TODO: Implement email sign in logic
-      state = state.copyWith(
-        isLoading: false,
-        email: email,
-      );
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('email', email);
+      state = state.copyWith(isLoading: false, email: email);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -29,10 +25,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // TODO: Implement Google sign in logic
       state = state.copyWith(isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -42,10 +35,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       // TODO: Implement Apple sign in logic
       state = state.copyWith(isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 }
@@ -55,23 +45,13 @@ class AuthState {
   final String? error;
   final String? email;
 
-  AuthState({
-    required this.isLoading,
-    this.error,
-    this.email,
-  });
+  AuthState({required this.isLoading, this.error, this.email});
 
   factory AuthState.initial() {
-    return AuthState(
-      isLoading: false,
-    );
+    return AuthState(isLoading: false);
   }
 
-  AuthState copyWith({
-    bool? isLoading,
-    String? error,
-    String? email,
-  }) {
+  AuthState copyWith({bool? isLoading, String? error, String? email}) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,

@@ -8,15 +8,9 @@ class PasswordState {
   final String password;
   final bool isPasswordVisible;
 
-  PasswordState({
-    this.password = '',
-    this.isPasswordVisible = false,
-  });
+  PasswordState({this.password = '', this.isPasswordVisible = false});
 
-  PasswordState copyWith({
-    String? password,
-    bool? isPasswordVisible,
-  }) {
+  PasswordState copyWith({String? password, bool? isPasswordVisible}) {
     return PasswordState(
       password: password ?? this.password,
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,

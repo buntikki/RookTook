@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
 import 'package:rooktook/src/view/shop/presentation/create_order_form_screen.dart';
 import 'package:rooktook/src/view/shop/provider/shop_provider.dart';
 
-class ShopItemDetailsScreen extends StatelessWidget {
+class ShopItemDetailsScreen extends ConsumerWidget {
   const ShopItemDetailsScreen({super.key, required this.item});
   final ShopItemModel item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
@@ -22,7 +23,16 @@ class ShopItemDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(item.imageUrl)),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(
+                item.imageUrl,
+                errorBuilder: (context, error, stackTrace) {
+                  // Show a placeholder or error widget
+                  return const Icon(Icons.broken_image);
+                },
+              ),
+            ),
             Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20)),
             CustomPaint(
               painter: BorderPainter(),
@@ -35,7 +45,7 @@ class ShopItemDetailsScreen extends StatelessWidget {
                   child: Row(
                     spacing: 16,
                     children: [
-                      SvgPicture.asset('assets/images/svg/gold_coin.svg', height: 28),
+                      SvgPicture.asset('assets/images/svg/${item.coinType}_coin.svg', height: 28),
                       Text(
                         item.coinRequired.toString(),
                         style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
@@ -49,10 +59,23 @@ class ShopItemDetailsScreen extends StatelessWidget {
               minWidth: double.infinity,
               color: const Color(0xff54C339),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => CreateOrderFormScreen(item: item)),
-                );
+                final orders = ref.watch(shopProvider).orders;
+                if (orders.any((order) => order.status.toLowerCase() == 'processing')) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'You have a pending order. Please wait for it to be processed.',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CreateOrderFormScreen(item: item)),
+                  );
+                }
               },
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               height: 54,
@@ -79,20 +102,23 @@ class ShopItemDetailsScreen extends StatelessWidget {
                         builder:
                             (context) => Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                spacing: 16,
-                                children: [
-                                  Container(
-                                    height: 4,
-                                    width: 40,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[600],
-                                      borderRadius: BorderRadius.circular(2),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  spacing: 16,
+                                  children: [
+                                    Container(
+                                      height: 4,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[600],
+                                        borderRadius: BorderRadius.circular(2),
+                                      ),
                                     ),
-                                  ),
-                                  Text(item.description),
-                                ],
+                                    Text(item.description),
+                                  ],
+                                ),
                               ),
                             ),
                       );
@@ -193,6 +219,7 @@ class ShopItemDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

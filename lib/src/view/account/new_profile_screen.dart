@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,24 +11,39 @@ import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/common/perf.dart';
 import 'package:rooktook/src/model/game/archived_game.dart';
 import 'package:rooktook/src/model/game/game_history.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_angle.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_controller.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_providers.dart';
+import 'package:rooktook/src/model/puzzle/puzzle_theme.dart';
 import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/view/account/profile_screen.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/login_screen.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
+import 'package:rooktook/src/view/common/pro_tag.dart';
+import 'package:rooktook/src/view/home/home_provider.dart';
+import 'package:rooktook/src/view/home/home_tab_screen.dart';
+import 'package:rooktook/src/view/home/iap_provider.dart';
+import 'package:rooktook/src/view/settings/settings_tab_screen.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/view/user/refer_and_earn_screen.dart';
 import 'package:rooktook/src/widgets/adaptive_action_sheet.dart';
+import 'package:rooktook/src/widgets/i_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class NewProfileScreen extends ConsumerWidget {
+class NewProfileScreen extends ConsumerStatefulWidget {
   const NewProfileScreen({super.key});
 
   static Route<dynamic> buildRoute(BuildContext context) {
     return buildScreenRoute(context, screen: const NewProfileScreen(), title: context.l10n.profile);
   }
 
+  @override
+  ConsumerState<NewProfileScreen> createState() => _NewProfileScreenState();
+}
+
+class _NewProfileScreenState extends ConsumerState<NewProfileScreen> {
   void _refreshData(WidgetRef ref) {
     ref.invalidate(getDbSizeInBytesProvider);
   }
@@ -41,8 +55,18 @@ class NewProfileScreen extends ConsumerWidget {
     return youAre;
   }
 
+  int puzzleGlickoRating = 1500;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final puzzlePr = ref.watch(nextPuzzleProvider(const PuzzleTheme(PuzzleThemeKey.mix)));
+    puzzlePr.whenData((value) {
+      if (value != null) {
+        final ctrlProvider = puzzleControllerProvider(value);
+        final puzzleState = ref.watch(ctrlProvider);
+        puzzleGlickoRating = puzzleState.glicko?.rating.toInt() ?? 1500;
+      }
+    });
     final userSession = ref.watch(authSessionProvider);
     ref.listen(currentBottomTabProvider, (prev, current) {
       if (prev != BottomTab.settings && current == BottomTab.settings) {
@@ -83,10 +107,16 @@ class NewProfileScreen extends ConsumerWidget {
             .length;*/
 
     final String avatarSeed = userSession?.user.name ?? 'default';
-
+    final accountName = ref.watch(accountProvider.selectAsync((user) => user?.lightUser.name));
+    final ratings = ref.watch(homeProvider).ratings;
+    final isAvailableRemote = ref.watch(iapProvider).isAvailableRemote;
+    final isPremium = ref.watch(homeProvider).isPremium && isAvailableRemote;
     return Scaffold(
       backgroundColor: const Color(0xFF0F151A),
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF0F151A),
+        surfaceTintColor: const Color(0xFF0F151A),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -110,7 +140,57 @@ class NewProfileScreen extends ConsumerWidget {
               //   },
               // ),
               const SizedBox(height: 10),
-              if (userSession != null) Text('${userSession.user.name}'),
+              if (userSession != null)
+                FutureBuilder(
+                  future: accountName,
+                  builder: (context, snapshot) {
+                    return Column(
+                      spacing: 8,
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(snapshot.data ?? userSession.user.name),
+                        if (isPremium)
+                          GestureDetector(
+                            onTap: () {
+                              openBattlepassUpgradeSheet(context, ref, isProTag: true);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff2B2D30),
+                                gradient: RadialGradient(
+                                  center: Alignment.center,
+                                  radius: 1.2,
+                                  colors: [
+                                    Colors.transparent,
+                                    const Color(0xff54C339).withValues(alpha: .2),
+                                  ],
+                                ),
+                                border: Border.all(color: const Color(0xff54C339), width: .5),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                spacing: 4,
+                                children: [
+                                  SvgPicture.asset('assets/images/svg/pro_icon.svg', height: 12),
+                                  const Text(
+                                    'PRO',
+                                    style: TextStyle(
+                                      color: Color(0xff54C339),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
               // const Text(
               //   'Magnus Carlsen 🇺🇸',
               //   style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
@@ -119,45 +199,242 @@ class NewProfileScreen extends ConsumerWidget {
               // const Text('@magnuscarlsen', style: TextStyle(color: Colors.grey, fontSize: 16)),
               const SizedBox(height: 30),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(
-                      child: _StatCard(
-                        label: 'Wins',
-                        count: win,
-                        color: Colors.green,
-                        labelIcon: 'W',
+                  spacing: 10,
+                  children: List.generate(2, (index) {
+                    final profileCards = [
+                      ProfileCardsModel(
+                        title: 'Tournaments Participated',
+                        icon: 'assets/images/svg/tournment_participated.svg',
+                        value: '${ratings.totalTournamentsPlayed}',
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _StatCard(
-                        label: 'Losses',
-                        count: loose,
-                        color: Colors.red,
-                        labelIcon: 'L',
+                      ProfileCardsModel(
+                        title: 'Tournaments Won',
+                        icon: 'assets/images/svg/tournaments_won.svg',
+                        value: '${ratings.totalTournamentsWon}',
                       ),
-                    ),
-                    const SizedBox(width: 10),
+                    ];
+                    final profileCard = profileCards[index];
+                    return Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff2B2D30),
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(profileCard.icon),
+                            const SizedBox(height: 16),
+                            Text(
+                              profileCard.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: Color(0xff7D8082),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              profileCard.value,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                color: Color(0xffEFEDED),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  spacing: 10,
+                  children: List.generate(2, (index) {
+                    final profileCards = [
+                      ProfileCardsModel(
+                        title: 'Max Streak/Combo',
+                        icon: 'assets/images/svg/max_streak.svg',
+                        value: '${ratings.maxStreak}',
+                      ),
+                      ProfileCardsModel(
+                        title: 'Win Rate%',
+                        icon: 'assets/images/svg/win_rate.svg',
+                        value: '${ratings.winRate.toStringAsFixed(2)}%',
+                      ),
+                    ];
+                    final profileCard = profileCards[index];
+                    return Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff2B2D30),
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topRight,
+                            end: Alignment.bottomLeft,
+                            colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            SvgPicture.asset(profileCard.icon),
+                            const SizedBox(height: 16),
+                            Text(
+                              profileCard.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: Color(0xff7D8082),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              profileCard.value,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                color: Color(0xffEFEDED),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              //   child: Row(
+              //     // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //     children: [
+              //       Expanded(
+              //         child: _StatCard(
+              //           label: 'Wins',
+              //           count: win,
+              //           color: Colors.green,
+              //           labelIcon: 'W',
+              //         ),
+              //       ),
+              //       const SizedBox(width: 10),
+              //       Expanded(
+              //         child: _StatCard(
+              //           label: 'Losses',
+              //           count: loose,
+              //           color: Colors.red,
+              //           labelIcon: 'L',
+              //         ),
+              //       ),
+              //       const SizedBox(width: 10),
 
-                    Expanded(
-                      child: _StatCard(
-                        label: 'Draws',
-                        count: draw,
-                        color: Colors.blue,
-                        labelIcon: 'D',
-                      ),
+              //       Expanded(
+              //         child: _StatCard(
+              //           label: 'Draws',
+              //           count: draw,
+              //           color: Colors.blue,
+              //           labelIcon: 'D',
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              const SizedBox(height: 24),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xff2B2D30),
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      spacing: 12,
+                      children: [
+                        Image.asset('assets/images/battle_rating.png', height: 32),
+                        const Text(
+                          'Battle Rating',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                        ),
+                        const IButton(
+                          title: 'Battle Rating',
+                          text:
+                              "Battle Rating (BR) represents your overall skill level in puzzle tournaments. It increases when you perform better than others and decreases when you perform poorly or skip games.\n\nYour BR change depends on your final score, move combo, number of errors and your current rating. Higher-rated players gain less for easy wins and lose more when they underperform. Each wrong move adds a small penalty to your BR, so accuracy and consistency matter as much as speed.\n\nIf you join a tournament but don't play, a fixed penalty is applied to discourage inactivity. Over time, your BR evolves to reflect your true performance, accuracy, and improvement across RookTook games.",
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '${ratings.battleRating}',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 24),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xff2B2D30),
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      spacing: 12,
+                      children: [
+                        SvgPicture.asset('assets/images/svg/puzzle_rating.svg', height: 32),
+                        const Text(
+                          'Puzzle Rating',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '$puzzleGlickoRating',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: const Color(0xff464A4F),
+                  color: const Color(0xff2B2D30),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                  ),
                 ),
                 margin: const EdgeInsets.all(16),
                 child: Column(
@@ -170,14 +447,14 @@ class NewProfileScreen extends ConsumerWidget {
                         Navigator.of(context).push(ProfileScreen.buildRoute(context));
                       },
                     ),
-                    const Divider(color: Colors.white24, height: 1),
+                    const Divider(color: Color(0xff464A4F), height: .5),
                     _MenuItem(
                       icon: 'assets/images/svg/refer.svg',
                       title: 'Refer & Earn',
                       onTap:
                           () => Navigator.of(context).push(ReferAndEarnScreen.buildRoute(context)),
                     ),
-                    const Divider(color: Colors.white24, height: 1),
+                    const Divider(color: Color(0xff464A4F), height: .5),
                     /*_MenuItem(
                       icon: 'assets/images/leaderboard.svg',
                       title: 'Leaderboard',
@@ -194,13 +471,28 @@ class NewProfileScreen extends ConsumerWidget {
                         launchUrl(Uri.parse('https://onelink.to/u9ktwp'));
                       },
                     ),
+                    const Divider(color: Color(0xff464A4F), height: .5),
+                    _MenuItem(
+                      icon: 'assets/images/settings.svg',
+                      title: 'Settings',
+                      onTap: () {
+                        Navigator.of(
+                          context,
+                        ).push(CupertinoPageRoute(builder: (context) => const SettingsTabScreen()));
+                      },
+                    ),
                   ],
                 ),
               ),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: const Color(0xff464A4F),
+                  color: const Color(0xff2B2D30),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                  ),
                 ),
                 margin: const EdgeInsets.all(16),
                 child: _MenuItem(
@@ -693,4 +985,12 @@ class NewGameScreen extends StatelessWidget {
       body: Center(child: GameWonCard(score: 500)),
     );
   }
+}
+
+class ProfileCardsModel {
+  final String title;
+  final String icon;
+  final String value;
+
+  ProfileCardsModel({required this.title, required this.icon, required this.value});
 }

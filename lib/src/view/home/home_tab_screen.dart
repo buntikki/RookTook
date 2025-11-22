@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
@@ -5,6 +6,7 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/account/account_repository.dart';
 import 'package:rooktook/src/model/account/ongoing_game.dart';
@@ -38,10 +40,13 @@ import 'package:rooktook/src/utils/screen.dart';
 import 'package:rooktook/src/view/account/new_profile_screen.dart';
 import 'package:rooktook/src/view/account/profile_screen.dart';
 import 'package:rooktook/src/view/common/container_clipper.dart';
+import 'package:rooktook/src/view/common/pro_tag.dart';
 import 'package:rooktook/src/view/correspondence/offline_correspondence_game_screen.dart';
 import 'package:rooktook/src/view/game/game_screen.dart';
 import 'package:rooktook/src/view/game/offline_correspondence_games_screen.dart';
 import 'package:rooktook/src/view/home/games_carousel.dart';
+import 'package:rooktook/src/view/home/home_provider.dart';
+import 'package:rooktook/src/view/home/iap_provider.dart';
 import 'package:rooktook/src/view/over_the_board/over_the_board_screen.dart';
 import 'package:rooktook/src/view/play/create_game_options.dart';
 import 'package:rooktook/src/view/play/ongoing_games_screen.dart';
@@ -49,17 +54,26 @@ import 'package:rooktook/src/view/play/play_screen.dart';
 import 'package:rooktook/src/view/play/quick_game_button.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_screen.dart';
 import 'package:rooktook/src/view/puzzle/puzzle_tab_screen.dart';
+import 'package:rooktook/src/view/puzzle/streak_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/new_details_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/promote_tournament_screen.dart';
+import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_screen.dart';
+import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 import 'package:rooktook/src/view/user/challenge_requests_screen.dart';
 import 'package:rooktook/src/view/user/player_screen.dart';
 import 'package:rooktook/src/view/user/recent_games.dart';
+import 'package:rooktook/src/view/user/refer_and_earn_screen.dart';
 import 'package:rooktook/src/view/wallet/presentation/wallet_page.dart';
 import 'package:rooktook/src/view/wallet/provider/wallet_provider.dart';
 import 'package:rooktook/src/widgets/buttons.dart';
 import 'package:rooktook/src/widgets/feedback.dart';
+import 'package:rooktook/src/widgets/i_button.dart';
 import 'package:rooktook/src/widgets/match_result_popup.dart';
 import 'package:rooktook/src/widgets/user_full_name.dart';
 import 'package:random_avatar/random_avatar.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 final editModeProvider = StateProvider<bool>((ref) => false);
 
@@ -86,6 +100,8 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       if (session != null) {
         ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.rapid));
         ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.blitz));
+        final userId = session.user.id.value;
+        ref.read(homeProvider.notifier).fetchUserSubscription(userId);
       }
     });
   }
@@ -152,16 +168,24 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         final shouldShowWelcomeScreen =
             session == null &&
             recentGames.maybeWhen(data: (data) => data.isEmpty, orElse: () => false);
-        // final puzzlePr = ref.watch(nextPuzzleProvider(const PuzzleTheme(PuzzleThemeKey.mix)));
+        final puzzlePr = ref.watch(nextPuzzleProvider(const PuzzleTheme(PuzzleThemeKey.mix)));
 
-        // final ctrlProvider = puzzleControllerProvider(puzzlePr.value!);
-        // final puzzleState = ref.watch(ctrlProvider);
+        int puzzleGlickoRating = 1500;
+        puzzlePr.whenData((value) {
+          if (value != null) {
+            final ctrlProvider = puzzleControllerProvider(value);
+            final puzzleState = ref.watch(ctrlProvider);
+            puzzleGlickoRating = puzzleState.glicko?.rating.toInt() ?? 1500;
+          }
+        });
         final puzzleRank = puzzle?.rating ?? 1500;
         // final puzzleRank = 1750;
+        final isPremium = ref.watch(homeProvider).isPremium;
         final widgets =
             shouldShowWelcomeScreen
                 ? _welcomeScreenWidgets(
                   puzzleRank: puzzleRank,
+                  puzzleGlickoRating: puzzleGlickoRating,
                   session: session,
                   status: status,
                   isTablet: isTablet,
@@ -208,6 +232,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
                   isTablet: isTablet,
                   recentGames: recentGames,
                   nbOfGames: nbOfGames,
+                  puzzleGlickoRating: puzzleGlickoRating,
                 );
         // _handsetWidgets(
         //   session: session,
@@ -297,7 +322,32 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         // } else {
         return Scaffold(
           appBar: AppBar(
-            title: const Text(''),
+            // title: Container(
+            //   padding: const EdgeInsets.all(12),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(8),
+            //     border: Border.all(color: const Color(0xff464A4F), width: .5),
+            //     gradient: const LinearGradient(
+            //       begin: Alignment.topRight,
+            //       end: Alignment.bottomLeft,
+            //       colors: [Color(0xff3C3C3C), Color(0xff222222)],
+            //     ),
+            //   ),
+            //   child: Row(
+            //     spacing: 8,
+            //     mainAxisSize: MainAxisSize.min,
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       SvgPicture.asset('assets/images/svg/streak_fire.svg', height: 20),
+            //       const Text(
+            //         '3 Days Streak',
+            //         style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            centerTitle: false,
+            title: isPremium ? const ProTag(isProTag: true) : null,
             automaticallyImplyLeading: false,
             actions: [
               // IconButton(
@@ -475,6 +525,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
     required int rapidRank,
     required int blitzRank,
     required int puzzleRank,
+    required int puzzleGlickoRating,
   }) {
     // fetch the account user to be sure we have the latest data (flair, etc.)
     final accountUser = ref
@@ -520,18 +571,17 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       //     },
       //   ),
       // ),
-      // const SizedBox(height: 24),
-      const HomeTournamentContainer(),
-      const SizedBox(height: 8),
-      InkWell(
-        onTap: () {
-          Navigator.of(
-            context,
-            rootNavigator: true,
-          ).push(MaterialPageRoute(builder: (context) => const PuzzleTabScreen()));
-        },
-        child: ChessPuzzleScreen(puzzleRank: puzzleRank),
-      ),
+      // const HomeTournamentContainer(),
+      // const SizedBox(height: 8),
+      // InkWell(
+      //   onTap: () {
+      //     Navigator.of(
+      //       context,
+      //       rootNavigator: true,
+      //     ).push(MaterialPageRoute(builder: (context) => const PuzzleTabScreen()));
+      //   },
+      //   child: ChessPuzzleScreen(puzzleRank: puzzleRank),
+      // ),
       Center(child: SvgPicture.asset('assets/images/svg/footer.svg')),
       // RecentGamesWidget(
       //   recentGames: recentGames,
@@ -599,7 +649,50 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
           ],
         )
       else ...[
-        ChessRatingCards(rapidRank: '$rapidRank', blitzRank: '$blitzRank'),
+        const HomeBannersWidget(),
+        const BattlepassUpgradeCard(),
+        const CompeteSection(),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Text('Practice', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+        ),
+        ChessRatingCards(rapidRank: '$puzzleGlickoRating', blitzRank: '$blitzRank'),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            spacing: 16,
+            children: [
+              Expanded(
+                child: PracticeGameCard(
+                  image: 'assets/images/puzzle_streak.png',
+                  title: 'Puzzle Streak',
+                  onTap: () {
+                    BranchRepository.trackCustomEvent('puzzle_streak', ref: ref);
+                    Navigator.of(
+                      context,
+                      rootNavigator: true,
+                    ).push(StreakScreen.buildRoute(context));
+                  },
+                ),
+              ),
+              Expanded(
+                child: PracticeGameCard(
+                  image: 'assets/images/healthy_mix.png',
+                  title: 'Healthy Mix',
+                  onTap: () {
+                    BranchRepository.trackCustomEvent('healthy_mix', ref: ref);
+                    Navigator.of(context, rootNavigator: true).push(
+                      PuzzleScreen.buildRoute(
+                        context,
+                        angle: const PuzzleTheme(PuzzleThemeKey.mix),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
         // if (status.isOnline)
         //   const _EditableWidget(
         //     widget: HomeEditableWidget.quickPairing,
@@ -676,7 +769,826 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
       ref.refresh(myRecentGamesProvider.future),
       if (isOnline) ref.refresh(accountProvider.future),
       if (isOnline) ref.refresh(ongoingGamesProvider.future),
+      if (isOnline) ref.refresh(fetchHomeBannersProvider.future),
+      if (isOnline) ref.refresh(fetchBattleRatingsProvider.future),
+      if (isOnline) ref.refresh(fetchFeaturedTournamentsProvider.future),
     ]);
+  }
+}
+
+class BattlepassUpgradeCard extends ConsumerWidget {
+  const BattlepassUpgradeCard({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final iapPr = ref.watch(iapProvider);
+    final isAvailable = iapPr.isAvailable;
+    final isAvailableRemote = iapPr.isAvailableRemote;
+    final isLoading = ref.watch(iapLoadingProvider);
+    final isPremium = ref.watch(homeProvider).isPremium;
+    final available = isAvailable && isAvailableRemote && !isPremium;
+    if (!available) {
+      return const SizedBox.shrink();
+    } else {
+      return GestureDetector(
+        onTap: () {
+          if (isLoading) return;
+          openBattlepassUpgradeSheet(context, ref);
+        },
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20).copyWith(top: 0),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xff2B2D30),
+            borderRadius: BorderRadius.circular(12),
+            gradient: const LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [Color(0xff3C3C3C), Color(0xff222222)],
+            ),
+          ),
+          child: Row(
+            spacing: 12,
+            children: [
+              Expanded(
+                child: Column(
+                  spacing: 12,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      spacing: 8,
+                      children: [
+                        const Text(
+                          'Get the Battle Pass',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xffEFEDED),
+                          ),
+                          textScaler: TextScaler.noScaling,
+                        ),
+                        Image.asset('assets/images/battlepass_thunder.png', height: 16),
+                      ],
+                    ),
+                    const Text(
+                      'Unlock instant rewards, premium tournaments, and your exclusive pro badge.',
+                      textScaler: TextScaler.noScaling,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff7D8082),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xff2B2D30),
+                  gradient: RadialGradient(
+                    center: Alignment.center,
+                    radius: 1,
+                    colors: [Colors.transparent, const Color(0xff54C339).withValues(alpha: .5)],
+                  ),
+                  border: Border.all(color: const Color(0xff54C339), width: .5),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child:
+                    isLoading
+                        ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                        : const Text(
+                          'Upgrade',
+                          style: TextStyle(
+                            color: Color(0xff54C339),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textScaler: TextScaler.noScaling,
+                        ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+}
+
+Future<void> openBattlepassUpgradeSheet(
+  BuildContext context,
+  WidgetRef ref, {
+  bool isProTag = false,
+}) async {
+  return await showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    useSafeArea: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+    ),
+    builder:
+        (context) => BattlepassUpgradeSheet(
+          isProTag: isProTag,
+          onPressed: () async {
+            ref.read(iapLoadingProvider.notifier).state = true;
+            Navigator.pop(context);
+            final userId = ref.watch(authSessionProvider)?.user.id.value ?? '';
+            BranchRepository.trackCustomEvent('user_purchase_pass_initiated', ref: ref);
+            if (userId.isNotEmpty) await ref.read(iapProvider.notifier).buyProduct(userId, ref);
+          },
+        ),
+  );
+}
+
+class BattlepassUpgradeSheet extends ConsumerWidget {
+  const BattlepassUpgradeSheet({super.key, required this.onPressed, required this.isProTag});
+  final bool isProTag;
+  final VoidCallback onPressed;
+  List<String> get benefitsText => const [
+    'Unlimited games',
+    'Instant reward redemption',
+    'No minimum redemption limit',
+    'Premium Tournaments',
+    'Exclusive Events',
+    'Unlock Pro Badge',
+    'Priority support',
+  ];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final subscriptionPrice = ref.watch(homeProvider).subscriptionPrice;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            border: Border.all(color: const Color(0xff464A4F), width: 1),
+          ),
+          child: Row(
+            children: [
+              Text(
+                isProTag ? 'You are a ' : 'Become a  ',
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+              const ProTag(),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            spacing: 16,
+            children: List.generate(benefitsText.length, (index) {
+              final benefitText = benefitsText[index];
+              return Row(
+                spacing: 8,
+                children: [
+                  SvgPicture.asset('assets/images/svg/subscription${index + 1}.svg', height: 24),
+                  Expanded(
+                    child: Text(
+                      benefitText,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+        ),
+        if (!isProTag)
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: MaterialButton(
+              height: 60,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              minWidth: double.infinity,
+              color: const Color(0xff54C339),
+              onPressed: onPressed,
+              child: Text(
+                'Unlock for ₹$subscriptionPrice/month'.toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+
+        const SizedBox(height: 48),
+      ],
+    );
+  }
+}
+
+class CompeteSection extends ConsumerWidget {
+  const CompeteSection({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final fetchTournamentsPr = ref.watch(fetchFeaturedTournamentsProvider);
+    final fetchBattleRatingPr = ref.watch(fetchBattleRatingsProvider);
+    return fetchTournamentsPr.when(
+      skipError: true,
+      data: (tournaments) {
+        if (tournaments.isEmpty) {
+          return const SizedBox.shrink();
+        } else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text('Compete', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700)),
+              ),
+              fetchBattleRatingPr.when(
+                data:
+                    (battleRating) => Container(
+                      margin: const EdgeInsets.all(16).copyWith(bottom: 24),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff2B2D30),
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            spacing: 12,
+                            children: [
+                              Image.asset('assets/images/battle_rating.png', height: 32),
+                              const Text(
+                                'Battle Rating',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                              ),
+                              const IButton(
+                                title: 'Battle Rating',
+                                text:
+                                    "Battle Rating (BR) represents your overall skill level in puzzle tournaments. It increases when you perform better than others and decreases when you perform poorly or skip games.\n\nYour BR change depends on your final score, move combo, number of errors and your current rating. Higher-rated players gain less for easy wins and lose more when they underperform. Each wrong move adds a small penalty to your BR, so accuracy and consistency matter as much as speed.\n\nIf you join a tournament but don't play, a fixed penalty is applied to discourage inactivity. Over time, your BR evolves to reflect your true performance, accuracy, and improvement across RookTook games.",
+                              ),
+                            ],
+                          ),
+                          Text(
+                            '$battleRating',
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                          ),
+                        ],
+                      ),
+                    ),
+                error: (error, stackTrace) => const SizedBox.shrink(),
+                loading: () => const SizedBox.shrink(),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  spacing: 16,
+                  children: List.generate(tournaments.length > 5 ? 5 : tournaments.length, (index) {
+                    final endIndex = tournaments.length > 5 ? 5 : tournaments.length;
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        right: index == endIndex - 1 ? 16 : 0,
+                        left: index == 0 ? 16 : 0,
+                      ),
+                      child: CompeteTournamentCard(tournament: tournaments[index]),
+                    );
+                  }),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    handleTournamentBannerNavigation(ref);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xff54C339)),
+                    ),
+                    child: const Text(
+                      'VIEW ALL ',
+                      style: TextStyle(
+                        color: Color(0xff54C339),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+          );
+        }
+      },
+      error: (error, stackTrace) => const SizedBox.shrink(),
+      loading: () => const Center(child: CenterLoadingIndicator()),
+    );
+  }
+}
+
+class CompeteTournamentCard extends ConsumerWidget {
+  const CompeteTournamentCard({
+    super.key,
+    required this.tournament,
+    this.width,
+    this.promoteTournament = false,
+  });
+  final Tournament tournament;
+  final double? width;
+  final bool promoteTournament;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isAvailableRemote = ref.watch(iapProvider).isAvailableRemote;
+    return GestureDetector(
+      onTap: () {
+        final isPremium = ref.watch(homeProvider).isPremium;
+        if (!isAvailableRemote) {
+          Navigator.push(
+            context,
+            MaterialPageRoute<TournamentDetailScreen>(
+              builder: (_) => TournamentDetailScreen(tournamentId: tournament.id),
+            ),
+          );
+        } else if (!isPremium && tournament.isPremium) {
+          openBattlepassUpgradeSheet(context, ref);
+        } else {
+          if (promoteTournament) {
+            BranchRepository.trackCustomEvent(
+              'first_play_onboarding',
+              ref: ref,
+              data: {'tournamentId': tournament.id},
+            );
+          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TournamentDetailScreen(tournamentId: tournament.id),
+            ),
+          );
+        }
+      },
+      child: Container(
+        width: width ?? MediaQuery.of(context).size.width * 0.85,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 22).copyWith(top: 0),
+        decoration: BoxDecoration(
+          color: const Color(0xff2B2D30),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xff464A4F)),
+          gradient: const LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Color(0xff3C3C3C), Color(0xff222222)],
+          ),
+        ),
+        child: Column(
+          children: [
+            if (tournament.isPremium && isAvailableRemote)
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff2B2D30),
+                    gradient: RadialGradient(
+                      center: Alignment.center,
+                      radius: 1.2,
+                      colors: [Colors.transparent, const Color(0xff54C339).withValues(alpha: .2)],
+                    ),
+                    border: Border.all(color: const Color(0xff54C339), width: .5),
+                    borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 4,
+                    children: [
+                      SvgPicture.asset('assets/images/svg/pro_icon.svg', height: 12),
+                      const Text(
+                        'PRO',
+                        style: TextStyle(
+                          color: Color(0xff54C339),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              const SizedBox(height: 22),
+            Row(
+              spacing: 12,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  height: 64,
+                  width: 64,
+                  decoration: BoxDecoration(
+                    color: const Color(0xff494745),
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage(
+                        tournament.entrySilverCoins > 0
+                            ? 'assets/images/home_paid_tournament.png'
+                            : 'assets/images/home_free_tournament.png',
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                // Image.asset(
+                //   tournament.entrySilverCoins > 0
+                //       ? 'assets/images/home_paid_tournament.png'
+                //       : 'assets/images/home_free_tournament.png',
+                //   height: 64,
+                //   width: 64,
+                // ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        tournament.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        spacing: 16,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Entry Fee:',
+                            style: TextStyle(
+                              color: Color(0xff7D8082),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          if (tournament.entrySilverCoins > 0)
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  'assets/images/svg/${tournament.entryCoinType.toLowerCase()}_coin.svg',
+                                  height: 12,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${tournament.entrySilverCoins}',
+                                  style: const TextStyle(
+                                    color: Color(0xffEFEDED),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            )
+                          else
+                            const Text(
+                              'Free To Join',
+                              style: TextStyle(
+                                color: Color(0xffEFEDED),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Reward',
+                            style: TextStyle(
+                              color: Color(0xff7D8082),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Row(
+                            spacing: 4,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/svg/${tournament.rewardCoinType}_coin.svg',
+                                height: 16,
+                              ),
+                              Text(
+                                '${tournament.rewardCoins}',
+                                style: const TextStyle(
+                                  color: Color(0xffEFEDED),
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xff35373A), width: .5),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    spacing: 4,
+                    children: [
+                      SvgPicture.asset('assets/images/svg/tournament_clock.svg', height: 18.0),
+                      Text(
+                        DateFormat(
+                          'hh:mm a, MMM dd',
+                        ).format(DateTime.fromMillisecondsSinceEpoch(tournament.startTime)),
+                        textScaler: TextScaler.noScaling,
+                        style: const TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    spacing: 4,
+                    children: [
+                      SvgPicture.asset('assets/images/svg/participants.svg', height: 18.0),
+                      Text(
+                        '${tournament.players.length}/${tournament.maxParticipants} Joined',
+                        textScaler: TextScaler.noScaling,
+                        style: const TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            MaterialButton(
+              height: 40,
+              color: const Color(0xff54C339),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TournamentDetailScreen(tournamentId: tournament.id),
+                  ),
+                );
+              },
+              minWidth: double.infinity,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              child: const Text(
+                'JOIN NOW',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PracticeGameCard extends StatelessWidget {
+  const PracticeGameCard({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.onTap,
+  });
+  final String image;
+  final String title;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xff2B2D30),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xff464A4F), width: .5),
+          gradient: const LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Color(0xff3C3C3C), Color(0xff222222)],
+          ),
+        ),
+        child: Column(
+          children: [
+            Image.asset(image, height: 58),
+            const SizedBox(height: 20),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+                textScaler: TextScaler.noScaling,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xff54C339)),
+              ),
+              child: const Text(
+                'PLAY',
+                style: TextStyle(
+                  color: Color(0xff54C339),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HomeBannersWidget extends ConsumerStatefulWidget {
+  const HomeBannersWidget();
+
+  @override
+  ConsumerState<HomeBannersWidget> createState() => _HomeBannersWidgetState();
+}
+
+class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
+  int activeBanner = 0;
+  late PageController _pageController;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+
+    // Auto Scroll
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
+      if (!mounted) return;
+      final fetchHomeBanners = ref.read(homeProvider).banners;
+      if (fetchHomeBanners.isEmpty) return;
+
+      final nextPage = (activeBanner + 1) % fetchHomeBanners.length;
+      _pageController.animateToPage(
+        nextPage,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeIn,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final fetchHomeBannersPr = ref.watch(fetchHomeBannersProvider);
+    return fetchHomeBannersPr.when(
+      skipLoadingOnRefresh: false,
+      data: (banners) {
+        if (banners.isEmpty) {
+          return const SizedBox.shrink();
+        } else {
+          return Column(
+            children: [
+              const SizedBox(height: 20),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 130,
+                child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (value) {
+                    setState(() {
+                      activeBanner = value;
+                    });
+                  },
+                  itemCount: banners.length,
+                  itemBuilder: (context, index) {
+                    final banner = banners[index];
+                    final eventType = banner.eventType;
+                    final redirectUrl = banner.redirectUrl;
+                    return GestureDetector(
+                      onTap: () {
+                        BranchRepository.trackCustomEvent(
+                          'banner_clicked',
+                          ref: ref,
+                          data: {'bannerId': banner.id},
+                        );
+                        switch (eventType) {
+                          case BannerEventType.tournament:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => TournamentDetailScreen(
+                                      tournamentId: redirectUrl.split('/').last,
+                                    ),
+                              ),
+                            );
+                          case BannerEventType.store:
+                            handleShopBannerNavigation(ref);
+                          case BannerEventType.wallet:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const WalletPage()),
+                            );
+                          case BannerEventType.referral:
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ReferAndEarnScreen()),
+                            );
+                          default:
+                            launchUrl(Uri.parse(banner.redirectUrl));
+                        }
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          // color: const Color(0xff2B2D30),
+                          borderRadius: BorderRadius.circular(12),
+                          image: DecorationImage(
+                            image: NetworkImage(banner.imageUrl),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              if (banners.length > 1)
+                Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 8,
+                      children: List.generate(banners.length, (index) {
+                        final isActive = index == activeBanner;
+                        return AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            color: const Color(0xff54C339).withValues(alpha: isActive ? 1 : .5),
+                            shape: BoxShape.circle,
+                          ),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 24),
+            ],
+          );
+        }
+      },
+      error: (error, stackTrace) => Text(error.toString()),
+      loading: () => const SizedBox(height: 200, child: Center(child: CenterLoadingIndicator())),
+    );
   }
 }
 
@@ -694,6 +1606,35 @@ class HomeTournamentContainer extends ConsumerWidget {
         child: Image.asset('assets/images/home_tournament.png', fit: BoxFit.cover),
       ),
     );
+  }
+}
+
+class WebViewScree extends StatefulWidget {
+  const WebViewScree({super.key, required this.url});
+  final String url;
+
+  static Route<dynamic> route(String url) =>
+      MaterialPageRoute(builder: (context) => WebViewScree(url: url));
+
+  @override
+  State<WebViewScree> createState() => _WebViewScreeState();
+}
+
+class _WebViewScreeState extends State<WebViewScree> {
+  late WebViewController _webViewController;
+  @override
+  void initState() {
+    super.initState();
+    _webViewController =
+        WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setBackgroundColor(const Color(0x00000000))
+          ..loadRequest(Uri.parse(widget.url));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: WebViewWidget(controller: _webViewController));
   }
 }
 
@@ -719,7 +1660,7 @@ class ChessPuzzleScreen extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Image.asset('assets/images/puzzle_board.png'),
+                    child: Image.asset('assets/images/home_puzzle_board.png'),
                   ),
                 ),
 
@@ -961,14 +1902,47 @@ class ChessRatingCards extends StatelessWidget {
           //     rating: blitzRank,
           //   ),
           // ),
-          Expanded(
-            child: _buildRatingCard(
-              context: context,
-              icon: Image.asset('assets/images/rapid_game.png'),
+          // Expanded(
+          //   child: _buildRatingCard(
+          //     context: context,
+          //     icon: Image.asset('assets/images/rapid_game.png'),
 
-              iconColor: const Color(0xffE5FFF1),
-              title: 'Rapid',
-              rating: rapidRank,
+          //     iconColor: const Color(0xffE5FFF1),
+          //     title: 'Rapid',
+          //     rating: rapidRank,
+          //   ),
+          // ),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xff2B2D30),
+                borderRadius: BorderRadius.circular(12),
+                gradient: const LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    spacing: 12,
+                    children: [
+                      SvgPicture.asset('assets/images/svg/puzzle_rating.svg', height: 32),
+                      const Text(
+                        'Puzzle Rating',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    rapidRank,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

@@ -103,7 +103,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        title: const Text('Wallet'),
+        title: const Text('Coins'),
         actions: [
           GestureDetector(
             onTap: () {

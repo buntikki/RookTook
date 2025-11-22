@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:l10n_esperanto/l10n_esperanto.dart';
+import 'package:lottie/lottie.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rooktook/l10n/l10n.dart';
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/maintenance_screen.dart';
@@ -24,12 +27,15 @@ import 'package:rooktook/src/model/settings/board_preferences.dart';
 import 'package:rooktook/src/model/settings/general_preferences.dart';
 import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/network/connectivity.dart';
+import 'package:rooktook/src/network/connectivity_overlay.dart';
 import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/network/socket.dart';
 import 'package:rooktook/src/theme.dart';
-import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/utils/screen.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/login_screen.dart';
+import 'package:rooktook/src/view/auth/providers/auth_provider.dart';
+import 'package:rooktook/src/view/home/home_provider.dart';
+import 'package:rooktook/src/view/home/iap_provider.dart';
 import 'package:rooktook/src/view/tournament/pages/tournament_detail_screen.dart';
 import 'package:rooktook/src/view/tournament/provider/tournament_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,23 +47,67 @@ class AppInitializationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(maintenanceModeProvider.notifier).init();
+    ref.read(forceUpdateProvider.notifier).init();
+
+    // Keep your splash removal listener
     ref.listen<AsyncValue<PreloadedData>>(preloadedDataProvider, (_, state) {
       if (state.hasValue || state.hasError) {
         FlutterNativeSplash.remove();
       }
     });
 
-    return ref
-        .watch(preloadedDataProvider)
-        .when(
-          data: (_) => const Application(),
-          // loading screen is handled by the native splash screen
-          loading: () => const SizedBox.shrink(),
-          error: (err, st) {
-            debugPrint('SEVERE: [App] could not initialize app; $err\n$st');
-            return const SizedBox.shrink();
-          },
+    final connectivity = ref.watch(connectivityChangesProvider);
+
+    // 1) While connectivity is loading, keep native splash
+    // 2) If offline, show a simple offline screen and DO NOT touch preloadedDataProvider
+    // 3) Only when online, start (watch) preloadedDataProvider
+    return connectivity.whenIsLoading(
+      loading: () => const SizedBox.shrink(),
+      offline: () {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Stack(
+              children: [
+                // optional: keep it empty so native splash is still visible underneath
+                Center(
+                  child: SafeArea(
+                    top: false,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset('assets/no_network.json', height: 200),
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                          color: Colors.red,
+                          child: const DefaultTextStyle(
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+                            child: Text('No Internet Connection', textAlign: TextAlign.center),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
+      },
+      online: () {
+        return ref
+            .watch(preloadedDataProvider)
+            .when(
+              data: (_) => const Application(),
+              loading: () => const SizedBox.shrink(), // native splash covers this
+              error: (err, st) {
+                debugPrint('SEVERE: [App] could not initialize app; $err\n$st');
+                return const SizedBox.shrink();
+              },
+            );
+      },
+    );
   }
 }
 
@@ -79,6 +129,7 @@ class _AppState extends ConsumerState<Application> {
   AppLifecycleListener? _appLifecycleListener;
 
   DateTime? _pausedAt;
+
   @override
   void initState() {
     _appLifecycleListener = AppLifecycleListener(
@@ -99,7 +150,18 @@ class _AppState extends ConsumerState<Application> {
       },
     );
 
-    // Start services
+    // ⬇️ Wait for the first connectivity status ONCE, then start services.
+    scheduleMicrotask(() async {
+      final initialStatus = await ref.read(connectivityChangesProvider.future);
+      _startServices(initiallyOnline: initialStatus.isOnline);
+
+      // Keep your existing listener for transitions
+      _listenConnectivityTransitions();
+    });
+
+    initBranchSetup();
+
+    /*// Start services
     ref.read(notificationServiceProvider).start();
     ref.read(challengeServiceProvider).start();
     ref.read(accountServiceProvider).start();
@@ -132,15 +194,65 @@ class _AppState extends ConsumerState<Application> {
       } else if (current.value?.isOnline == false) {
         socketClient.close();
       }
-    });
+    });*/
 
     super.initState();
-    initBranchSetup();
+    _initAuth();
+    ref.read(iapProvider.notifier).init();
+    ref.read(iapProvider.notifier).initializeIAP(ref);
+  }
+
+  Future<void> _initAuth() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email');
+    if (email != null) {
+      ref.read(authProvider.notifier).signInWithEmail(email);
+    }
+  }
+
+  void _startServices({required bool initiallyOnline}) {
+    ref.read(notificationServiceProvider).start();
+    ref.read(challengeServiceProvider).start();
+    ref.read(accountServiceProvider).start();
+    ref.read(correspondenceServiceProvider).start();
+
+    final socketClient = ref.read(socketPoolProvider).currentClient;
+    if (initiallyOnline) {
+      ref.read(correspondenceServiceProvider).syncGames();
+      if (!socketClient.isActive) socketClient.connect();
+    } else {
+      socketClient.close();
+    }
+  }
+
+  void _listenConnectivityTransitions() {
+    ref.listenManual(connectivityChangesProvider, (prev, current) async {
+      final prevWasOffline = prev?.value?.isOnline == false;
+      final currentIsOnline = current.value?.isOnline == true;
+
+      if (prevWasOffline && currentIsOnline) {
+        final nb = await ref.read(correspondenceServiceProvider).playRegisteredMoves();
+        if (nb > 0) ref.invalidate(ongoingGamesProvider);
+      }
+
+      if (currentIsOnline && !_firstTimeOnlineCheck) {
+        _firstTimeOnlineCheck = true;
+        ref.read(correspondenceServiceProvider).syncGames();
+      }
+
+      final socketClient = ref.read(socketPoolProvider).currentClient;
+      if (currentIsOnline &&
+          current.value?.appState == AppLifecycleState.resumed &&
+          !socketClient.isActive) {
+        socketClient.connect();
+      } else if (!currentIsOnline) {
+        socketClient.close();
+      }
+    });
   }
 
   Future<void> initBranchSetup() async {
     await FlutterBranchSdk.init();
-    FlutterBranchSdk.disableTracking(false);
     FlutterBranchSdk.listSession().listen(
       (event) async {
         print('Branch Event $event');
@@ -151,20 +263,15 @@ class _AppState extends ConsumerState<Application> {
             prefs.setString('referralCode', event['ref'].toString());
           }
           if (branchLink.contains('tournament') && event.containsKey('id')) {
-            final tournament = await ref
-                .read(tournamentProvider.notifier)
-                .fetchSingleTournament(event['id'].toString());
-            if (tournament != null) {
-              // Wait until WidgetsBinding is done and Navigator is ready
-              if (rootNavigatorKey.currentState?.mounted ?? false) {
-                rootNavigatorKey.currentState!.push(
-                  MaterialPageRoute(
-                    builder: (context) => TournamentDetailScreen(tournament: tournament),
-                  ),
-                );
-              } else {
-                debugPrint('Navigator not yet mounted.');
-              }
+            if (rootNavigatorKey.currentState?.mounted ?? false) {
+              rootNavigatorKey.currentState!.push(
+                MaterialPageRoute(
+                  builder:
+                      (context) => TournamentDetailScreen(tournamentId: event['id'].toString()),
+                ),
+              );
+            } else {
+              debugPrint('Navigator not yet mounted.');
             }
           }
         }
@@ -186,6 +293,7 @@ class _AppState extends ConsumerState<Application> {
   @override
   Widget build(BuildContext context) {
     final isMaintenance = ref.watch(maintenanceModeProvider);
+    final isForceUpdate = ref.watch(forceUpdateProvider);
     final generalPrefs = ref.watch(generalPreferencesProvider);
     final userSession = ref.watch(authSessionProvider)?.user;
     final boardPrefs = ref.watch(boardPreferencesProvider);
@@ -225,13 +333,20 @@ class _AppState extends ConsumerState<Application> {
         ).copyWith(height: remainingHeight < kSmallRemainingHeightLeftBoardThreshold ? 60 : null),
       ),
       themeMode: ThemeMode.dark,
-      builder:
-          isIOS
-              ? (context, child) => IconTheme.merge(
-                data: IconThemeData(color: CupertinoTheme.of(context).textTheme.textStyle.color),
-                child: Material(color: Colors.transparent, child: child),
-              )
-              : null,
+      builder: (context, child) {
+        Widget base = child ?? const SizedBox();
+
+        // Apply your existing iOS IconTheme wrapper
+        if (isIOS) {
+          base = IconTheme.merge(
+            data: IconThemeData(color: CupertinoTheme.of(context).textTheme.textStyle.color),
+            child: Material(color: Colors.transparent, child: base),
+          );
+        }
+
+        // Always wrap with the connectivity overlay
+        return ConnectivityOverlay(child: base);
+      },
       // onGenerateRoute:
       //     (settings) =>
       //         settings.name != null ? resolveAppLinkUri(context, Uri.parse(settings.name!)) : null,
@@ -250,12 +365,16 @@ class _AppState extends ConsumerState<Application> {
       //   // ].nonNulls.toList(growable: false);
       // },
       home:
-          isMaintenance
-              ? const MaintenanceScreen()
+          isMaintenance || isForceUpdate
+              ? MaintenanceScreen(forceUpdate: isForceUpdate)
               : userSession != null
               ? const BottomNavScaffold()
               : const LoginScreen(),
-      navigatorObservers: [rootNavPageRouteObserver],
+      navigatorObservers: [
+        rootNavPageRouteObserver,
+        routeObserver,
+        FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+      ],
     );
   }
 }
@@ -290,7 +409,6 @@ class MaintenanceNotifier extends StateNotifier<bool> {
           log(error.toString());
           return false;
         });
-        ;
         final value = _remoteConfig.getBool('maintenanceMode');
 
         if (value != state) {
@@ -307,4 +425,74 @@ class MaintenanceNotifier extends StateNotifier<bool> {
     _timer?.cancel();
     super.dispose();
   }
+}
+
+final forceUpdateProvider = StateNotifierProvider<ForceUpdateNotifier, bool>((ref) {
+  return ForceUpdateNotifier();
+});
+
+class ForceUpdateNotifier extends StateNotifier<bool> {
+  final FirebaseRemoteConfig _remoteConfig = FirebaseRemoteConfig.instance;
+  Timer? _timer;
+
+  ForceUpdateNotifier() : super(false);
+
+  Future<void> init() async {
+    try {
+      await _remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 10),
+          minimumFetchInterval: const Duration(minutes: 1),
+        ),
+      );
+      await _remoteConfig.fetchAndActivate().onError((error, stackTrace) {
+        log(error.toString());
+        return false;
+      });
+      final version = _remoteConfig.getString('forceUpdateVersion');
+      state = !isVersionCompatible(await packageInfoVersion(), version);
+      // poll every 2 minutes
+      _timer = Timer.periodic(const Duration(minutes: 1), (_) async {
+        await _remoteConfig.fetchAndActivate().onError((error, stackTrace) {
+          log(error.toString());
+          return false;
+        });
+        final value =
+            !isVersionCompatible(
+              await packageInfoVersion(),
+              _remoteConfig.getString('forceUpdateVersion'),
+            );
+
+        if (value != state) {
+          state = value;
+        }
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+}
+
+bool isVersionCompatible(String currentVersion, String minVersion) {
+  final currentVersionParts = currentVersion.split('.');
+  final minVersionParts = minVersion.split('.');
+  for (int i = 0; i < currentVersionParts.length; i++) {
+    if (int.parse(currentVersionParts[i]) < int.parse(minVersionParts[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+Future<String> packageInfoVersion() async {
+  final PackageInfo packageInfo =
+      await PackageInfo.fromPlatform()
+        ..version;
+  return packageInfo.version;
 }

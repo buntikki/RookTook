@@ -56,7 +56,6 @@ class AuthRepository {
 
     final token = authResp.accessToken;
 
-
     if (token == null) {
       throw Exception('Access token not found.');
     }
@@ -71,19 +70,12 @@ class AuthRepository {
   }
 
   Future<AuthSessionState> signUp(String email, String username, String password) async {
-    final body = {
-      'username': username,
-      'password': password,
-      'email': email
-    };
+    final body = {'username': username, 'password': password, 'email': email};
 
     final authResp = await _client.postReadJson(
       Uri(path: '/api/sign-up'),
       body: json.encode(body),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
       mapper: (json) => LoginResponse.fromJson(json),
     );
 
@@ -102,21 +94,14 @@ class AuthRepository {
     return AuthSessionState(token: token, user: user.lightUser);
   }
 
-
   Future<AuthSessionState> signInWithPassword(String username, String password) async {
-    final body = {
-      'username': username,
-      'password': password
-    };
+    final body = {'username': username, 'password': password};
 
     // Make the login API call
     final authResp = await _client.postReadJson(
       Uri(path: '/api/login'),
       body: json.encode(body),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
       mapper: (json) => LoginResponse.fromJson(json),
     );
 
@@ -136,9 +121,7 @@ class AuthRepository {
   }
 
   Future<GoogleSignInResult> verifyGoogleSignIn(String idToken) async {
-    final body = {
-      'idToken': idToken,
-    };
+    final body = {'idToken': idToken};
     // Make the verification request
     final response = await _client.postReadJson(
       Uri(path: '/api/auth/google/verify'),
@@ -146,13 +129,15 @@ class AuthRepository {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Cookie': 'lila2=6ef19f22350c0866429ba528222d6dcf61604d47-sid=D4Tde5f5NQISuDLoavepMU&access_uri=%2Faccount%2Femail'
+        'Cookie':
+            'lila2=6ef19f22350c0866429ba528222d6dcf61604d47-sid=D4Tde5f5NQISuDLoavepMU&access_uri=%2Faccount%2Femail',
       },
       mapper: (json) => json,
     );
 
     // Check if response contains token fields which indicates successful login
-    final bool isLoginResponse = response.containsKey('access_token') &&
+    final bool isLoginResponse =
+        response.containsKey('access_token') &&
         response.containsKey('token') &&
         response.containsKey('token_type');
 
@@ -169,45 +154,34 @@ class AuthRepository {
       // We received a verification response
       final bool userAlreadyRegistered = response['user_already_registered'] as bool? ?? false;
 
-      return GoogleSignInResult(
-        userAlreadyRegistered: userAlreadyRegistered,
-        idToken: idToken,
-      );
+      return GoogleSignInResult(userAlreadyRegistered: userAlreadyRegistered, idToken: idToken);
     }
   }
 
   Future<AuthSessionState?> signInWithGoogle(GoogleSignInResult verificationResult) async {
-      // User already exists, complete the sign-in
-      final loginResponse = verificationResult.loginResponse;
-      if (loginResponse == null || loginResponse.accessToken == null) {
-        throw Exception('Login failed: Invalid response from server');
-      }
+    // User already exists, complete the sign-in
+    final loginResponse = verificationResult.loginResponse;
+    if (loginResponse == null || loginResponse.accessToken == null) {
+      throw Exception('Login failed: Invalid response from server');
+    }
 
-      final token = loginResponse.accessToken!;
+    final token = loginResponse.accessToken!;
 
-      final user = await _client.readJson(
-        Uri(path: '/api/account'),
-        headers: {'Authorization': 'Bearer ${signBearerToken(token)}'},
-        mapper: User.fromServerJson,
-      );
-      return AuthSessionState(token: token, user: user.lightUser);
+    final user = await _client.readJson(
+      Uri(path: '/api/account'),
+      headers: {'Authorization': 'Bearer ${signBearerToken(token)}'},
+      mapper: User.fromServerJson,
+    );
+    return AuthSessionState(token: token, user: user.lightUser);
   }
 
-
   Future<AuthSessionState> signUpWithGoogle(String email, String username, String idToken) async {
-    final body = {
-      'username': username,
-      'email': email,
-      'idToken': idToken
-    };
+    final body = {'username': username, 'email': email, 'idToken': idToken};
 
     final authResp = await _client.postReadJson(
       Uri(path: '/api/sign-up'),
       body: json.encode(body),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
       mapper: (json) => LoginResponse.fromJson(json),
     );
 
@@ -227,23 +201,19 @@ class AuthRepository {
   }
 
   Future<AppleSignInResult> verifyAppleSignIn(String identityToken, String appleUserId) async {
-    final body = {
-      'idToken': identityToken,
-    };
+    final body = {'idToken': identityToken};
 
     // Make the verification request
     final response = await _client.postReadJson(
       Uri(path: '/api/auth/apple/verify'),
       body: json.encode(body),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
       mapper: (json) => json,
     );
 
     // Check if response contains token fields which indicates successful login
-    final bool isLoginResponse = response.containsKey('access_token') &&
+    final bool isLoginResponse =
+        response.containsKey('access_token') &&
         response.containsKey('token') &&
         response.containsKey('token_type');
 
@@ -294,20 +264,17 @@ class AuthRepository {
     }
   }
 
-  Future<AuthSessionState> signUpWithApple(String email, String username, String appleUserId) async {
-    final body = {
-      'username': username,
-      'email': email,
-      'appleUserId': appleUserId
-    };
+  Future<AuthSessionState> signUpWithApple(
+    String email,
+    String username,
+    String appleUserId,
+  ) async {
+    final body = {'username': username, 'email': email, 'appleUserId': appleUserId};
 
     final authResp = await _client.postReadJson(
       Uri(path: '/api/sign-up'),
       body: json.encode(body),
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
+      headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
       mapper: (json) => LoginResponse.fromJson(json),
     );
 
@@ -343,17 +310,12 @@ class AuthRepository {
   }
 }
 
-
 class AppleSignInResult {
   final bool userAlreadyRegistered;
   final String? appleUserId;
   final LoginResponse? loginResponse;
 
-  AppleSignInResult({
-    required this.userAlreadyRegistered,
-    this.appleUserId,
-    this.loginResponse,
-  });
+  AppleSignInResult({required this.userAlreadyRegistered, this.appleUserId, this.loginResponse});
 }
 
 class GoogleSignInResult {
@@ -361,9 +323,5 @@ class GoogleSignInResult {
   final String? idToken;
   final LoginResponse? loginResponse;
 
-  GoogleSignInResult({
-    required this.userAlreadyRegistered,
-    this.idToken,
-    this.loginResponse,
-  });
+  GoogleSignInResult({required this.userAlreadyRegistered, this.idToken, this.loginResponse});
 }

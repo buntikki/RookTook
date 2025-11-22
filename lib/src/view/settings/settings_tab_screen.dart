@@ -17,6 +17,7 @@ import 'package:rooktook/src/styles/styles.dart';
 import 'package:rooktook/src/utils/l10n.dart';
 import 'package:rooktook/src/utils/l10n_context.dart';
 import 'package:rooktook/src/view/account/profile_screen.dart';
+import 'package:rooktook/src/view/home/iap_provider.dart';
 import 'package:rooktook/src/view/settings/account_preferences_screen.dart';
 import 'package:rooktook/src/view/settings/app_background_mode_screen.dart';
 import 'package:rooktook/src/view/settings/board_settings_screen.dart';
@@ -48,7 +49,7 @@ class SettingsTabScreen extends ConsumerWidget {
 
   Widget _androidBuilder(BuildContext context, WidgetRef ref) {
     return PopScope(
-      canPop: false,
+      canPop: true,
       onPopInvokedWithResult: (bool didPop, _) {
         if (!didPop) {
           ref.read(currentBottomTabProvider.notifier).state = BottomTab.home;
@@ -137,7 +138,7 @@ class _Body extends ConsumerWidget {
     final userSession = ref.watch(authSessionProvider);
     final packageInfo = ref.read(preloadedDataProvider).requireValue.packageInfo;
     final dbSize = ref.watch(getDbSizeInBytesProvider);
-
+    final isLoading = ref.watch(iapLoadingProvider);
     final Widget? donateButton =
         userSession == null || userSession.user.isPatron != true
             ? PlatformListTile(
@@ -225,7 +226,7 @@ class _Body extends ConsumerWidget {
       //   ],
       // ),
       ListSection(
-        backgroundColor: Color(0xff2B2D30),
+        backgroundColor: const Color(0xff2B2D30),
         hasLeading: true,
         children: [
           SettingsListTile(
@@ -294,6 +295,42 @@ class _Body extends ConsumerWidget {
               Navigator.of(context).push(BoardSettingsScreen.buildRoute(context));
             },
           ),
+          PlatformListTile(
+            leading: const Icon(Icons.restore_rounded),
+            // leading: const Icon(Icons.privacy_tip_outlined),
+            title: const Text('Restore Purchases'),
+            trailing:
+                isLoading
+                    ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(color: Colors.white),
+                    )
+                    : Theme.of(context).platform == TargetPlatform.iOS
+                    ? const CupertinoListTileChevron()
+                    : null,
+            onTap: () async {
+              if (isLoading) return;
+              final userId = userSession?.user.id.value;
+              if (userId == null) {
+                return;
+              }
+              ref.read(iapLoadingProvider.notifier).state = true;
+              await ref.read(iapProvider.notifier).restorePurchases(userId);
+            },
+          ),
+          PlatformListTile(
+            leading: const Icon(Icons.subscriptions_rounded),
+            // leading: const Icon(Icons.privacy_tip_outlined),
+            title: const Text('Manage Subscription'),
+            trailing:
+                Theme.of(context).platform == TargetPlatform.iOS
+                    ? const CupertinoListTileChevron()
+                    : null,
+            onTap: () async {
+              await ref.read(iapProvider.notifier).manageSubscription();
+            },
+          ),
 
           // SettingsListTile(
           //   icon: const Icon(Icons.language_outlined),
@@ -320,7 +357,7 @@ class _Body extends ConsumerWidget {
         ],
       ),
       ListSection(
-        backgroundColor: Color(0xff2B2D30),
+        backgroundColor: const Color(0xff2B2D30),
         hasLeading: true,
         children: [
           /*PlatformListTile(
@@ -343,7 +380,7 @@ class _Body extends ConsumerWidget {
           PlatformListTile(
             leading: SvgPicture.asset('assets/images/chat.svg'),
             // leading: const Icon(Icons.feedback_outlined),
-            title: Text('Support'),
+            title: const Text('Support'),
             trailing: const _OpenInNewIcon(),
             onTap: () async {
               // final Uri emailUri = Uri(

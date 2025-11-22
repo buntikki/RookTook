@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/utils/navigation.dart';
+import 'package:rooktook/src/view/tournament/pages/promote_tournament_screen.dart';
 import 'package:rooktook/src/view/user/provider/referral_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -97,8 +98,9 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    PromoteTournamentScreen.route(),
                     (route) => false,
                   );
                 },
@@ -128,8 +130,9 @@ class _ReferralCodeScreenState extends ConsumerState<ReferralCodeScreen> {
                       .read(referralProvider.notifier)
                       .createReferral(controller.text.trim())
                       .then(
-                        (_) => Navigator.of(context).pushAndRemoveUntil(
-                          buildScreenRoute<void>(context, screen: const BottomNavScaffold()),
+                        (_) => Navigator.pushAndRemoveUntil(
+                          context,
+                          PromoteTournamentScreen.route(),
                           (route) => false,
                         ),
                       );

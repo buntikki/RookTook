@@ -12,6 +12,7 @@ import 'package:rooktook/src/network/http.dart';
 import 'package:rooktook/src/utils/branch_repository.dart';
 import 'package:rooktook/src/utils/navigation.dart';
 import 'package:rooktook/src/view/auth/presentation/pages/referral_code_screen.dart';
+import 'package:rooktook/src/view/auth/providers/auth_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum RegistrationType { email, google, apple }
@@ -76,6 +77,9 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
       ref
           .read(authInputControllerProvider.notifier)
           .setInputType(_isSocialSignIn || _isInputEmail ? InputType.username : InputType.email);
+      if (_isInputEmail) {
+        ref.read(authProvider.notifier).signInWithEmail(widget.previousInput);
+      }
     });
 
     _inputController.addListener(() {
@@ -106,10 +110,12 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
       final username = _inputController.text.trim();
 
       ref.read(authControllerProvider.notifier).signUpWithGoogle(email, username, widget.idToken!);
+      ref.read(authProvider.notifier).signInWithEmail(email);
     } else if (widget.registrationType == RegistrationType.apple) {
       // Handle Apple sign-up with username
       final email = widget.previousInput;
       final username = _inputController.text.trim();
+      ref.read(authProvider.notifier).signInWithEmail(email);
 
       ref
           .read(authControllerProvider.notifier)
@@ -118,6 +124,8 @@ class _UsernameScreenState extends ConsumerState<SetUsernameScreen> {
       // Handle regular email/password sign-up
       final email = _isInputEmail ? widget.previousInput : _inputController.text.trim();
       final username = _isInputEmail ? _inputController.text.trim() : widget.previousInput;
+
+      ref.read(authProvider.notifier).signInWithEmail(email);
 
       ref.read(authControllerProvider.notifier).signUp(email, username, widget.password!);
     }
