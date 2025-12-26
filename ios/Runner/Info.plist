@@ -182,5 +182,12 @@
 		<key>live</key>
 		<string>key_live_aEtdmLbVHIp9RqegNcdHgjoiwwmhLyr1</string>
 	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Your app needs access to local network services.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_http._tcp</string>
+		<string>_https._tcp</string>
+	</array>
 </dict>
 </plist>

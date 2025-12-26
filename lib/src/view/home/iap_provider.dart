@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:rooktook/src/constants.dart';
+import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
 import 'package:rooktook/src/utils/branch_repository.dart';
@@ -73,17 +74,13 @@ class IapProvider extends StateNotifier<IapState> {
 
   Future<void> initializeIAP(WidgetRef ref) async {
     final available = await _iap.isAvailable();
-    print('available: $available');
     state = state.copyWith(isAvailable: available);
     if (available) {
-      print('IAP is available');
       final response = await _iap.queryProductDetails(_kProductIds);
       if (response.error != null) {
-        print('Error fetching products: ${response.error}');
         state = state.copyWith(isAvailable: false);
         return;
       } else {
-        print('products: ${response.productDetails}');
         state = state.copyWith(
           products: response.productDetails,
           isAvailable: response.productDetails.isNotEmpty,
@@ -92,17 +89,14 @@ class IapProvider extends StateNotifier<IapState> {
       _subscription = _iap.purchaseStream.listen(
         (purchases) {
           _handlePurchaseUpdates(purchases, ref);
-          print('Purchase Stream purchases: ${purchases.length}');
         },
         onDone: () {
-          print('Purchase Stream done');
           ref.read(iapLoadingProvider.notifier).state = false;
           _subscription.cancel();
         },
         onError: (Object? error) {
+          log('onError: $error');
           ref.read(iapLoadingProvider.notifier).state = false;
-          print('Purchase Stream Error: $error');
-          // ref.read(iapLoadingProvider.notifier).state = false;
         },
       );
     }
@@ -121,10 +115,6 @@ class IapProvider extends StateNotifier<IapState> {
   }
 
   Future<void> buyProduct(String userId, WidgetRef ref) async {
-    print('buyProduct');
-
-    print('userId: $userId');
-    print('products: ${state.products}');
     try {
       final PurchaseParam purchaseParam = PurchaseParam(
         productDetails: state.products.first,
@@ -144,11 +134,9 @@ class IapProvider extends StateNotifier<IapState> {
       // real error
       _showError('Purchase failed: ${e.message ?? e.code}');
     } catch (e) {
-      print('buyProduct error: $e');
+      log(e.toString());
     }
     ref.read(iapLoadingProvider.notifier).state = false;
-    // }
-    print('buyProduct done');
   }
 
   bool _isUserCancelled(PlatformException e) {
@@ -204,16 +192,23 @@ class IapProvider extends StateNotifier<IapState> {
 
   Future<void> _deliverProduct(PurchaseDetails purchase, WidgetRef ref) async {
     // Unlock features or credit coins
-
+    final product = state.products.firstWhere((element) => element.id == purchase.productID);
     BranchRepository.trackCustomEvent(
-      'user_purchase_pass_completed',
+      purchase.status == PurchaseStatus.restored
+          ? 'user_restore_pass_completed'
+          : 'user_purchase_pass_completed',
       ref: ref,
-      data: {'productId': purchase.purchaseID ?? '', 'status': purchase.status.name},
+      data: {
+        if (purchase.purchaseID != null) 'productId': purchase.purchaseID!,
+        'status': purchase.status.name,
+        'price': product.price,
+        'currencyCode': product.currencyCode,
+      },
     );
     await submitPurchase(
       params: SubmitPurchaseParams(
         productId: purchase.productID,
-        userId: '',
+        userId: ref.watch(authSessionProvider)?.user.id.value ?? '',
         status: purchase.status.toString(),
         transactionDate: purchase.transactionDate.toString(),
         purchaseId: purchase.purchaseID ?? '',
@@ -235,20 +230,16 @@ class IapProvider extends StateNotifier<IapState> {
   }
 
   Future<void> _handlePurchaseUpdates(List<PurchaseDetails> purchases, WidgetRef ref) async {
-    print('handlePurchaseUpdates: ${purchases.length}');
     try {
       for (final purchase in purchases) {
         if (purchase.status == PurchaseStatus.purchased ||
             purchase.status == PurchaseStatus.restored) {
-          print('purchase: ${purchase.status}');
           _deliverProduct(purchase, ref);
           if (purchase.pendingCompletePurchase) {
-            print('purchase pendingCompletePurchase: ${purchase.status}');
             await _iap.completePurchase(purchase);
           }
           ref.read(iapLoadingProvider.notifier).state = false;
         } else if (purchase.status == PurchaseStatus.error) {
-          print('purchase error: ${purchase.status}');
           final errMsg = (purchase.error?.message ?? '').toLowerCase();
           final errCode = (purchase.error?.code ?? '').toLowerCase();
           final userCancelled = errCode.contains('cancel') || errMsg.contains('cancel');
@@ -273,9 +264,7 @@ class IapProvider extends StateNotifier<IapState> {
             ),
           );
           ref.read(homeProvider.notifier).updateIsPremium(false);
-        } else {
-          print('purchase: ${purchase.status}');
-        }
+        } else {}
       }
       ref.read(homeProvider.notifier).updateIsPremium(false);
     } on PlatformException catch (e) {
@@ -288,9 +277,7 @@ class IapProvider extends StateNotifier<IapState> {
       }
       // real error
       _showError('Purchase failed: ${e.message ?? e.code}');
-    } catch (e) {
-      print('handlePurchaseUpdates error: $e');
-    }
+    } catch (e) {}
     ref.read(iapLoadingProvider.notifier).state = false;
   }
 }

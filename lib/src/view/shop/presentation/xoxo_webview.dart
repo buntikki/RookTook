@@ -25,7 +25,6 @@ class _XoxoWebviewState extends State<XoxoWebview> {
           ..setNavigationDelegate(
             NavigationDelegate(
               onNavigationRequest: (request) {
-                print(request.url);
                 return NavigationDecision.navigate;
               },
             ),

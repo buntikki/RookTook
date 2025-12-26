@@ -153,7 +153,7 @@ class _NewProfileScreenState extends ConsumerState<NewProfileScreen> {
                         if (isPremium)
                           GestureDetector(
                             onTap: () {
-                              openBattlepassUpgradeSheet(context, ref, isProTag: true);
+                              Navigator.push(context, BattlepassUpgradePage.route(isProTag: true));
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),

@@ -40,7 +40,7 @@ class TournamentCard extends ConsumerWidget {
             ),
           );
         } else if (!isPremium && tournament.isPremium) {
-          openBattlepassUpgradeSheet(context, ref);
+          Navigator.push(context, BattlepassUpgradePage.route());
         } else {
           Navigator.push(
             context,

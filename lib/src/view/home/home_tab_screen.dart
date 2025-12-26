@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -101,7 +102,7 @@ class _HomeScreenState extends ConsumerState<HomeTabScreen> with RouteAware {
         ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.rapid));
         ref.invalidate(userPerfStatsProvider(id: session.user.id, perf: Perf.blitz));
         final userId = session.user.id.value;
-        ref.read(homeProvider.notifier).fetchUserSubscription(userId);
+        ref.read(homeProvider.notifier).fetchUserSubscription(userId, context);
       }
     });
   }
@@ -793,7 +794,8 @@ class BattlepassUpgradeCard extends ConsumerWidget {
       return GestureDetector(
         onTap: () {
           if (isLoading) return;
-          openBattlepassUpgradeSheet(context, ref);
+          // openBattlepassUpgradeSheet(context, ref);
+          Navigator.push(context, BattlepassUpgradePage.route());
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20).copyWith(top: 0),
@@ -879,31 +881,336 @@ class BattlepassUpgradeCard extends ConsumerWidget {
   }
 }
 
-Future<void> openBattlepassUpgradeSheet(
-  BuildContext context,
-  WidgetRef ref, {
-  bool isProTag = false,
-}) async {
-  return await showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    useSafeArea: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-    ),
-    builder:
-        (context) => BattlepassUpgradeSheet(
-          isProTag: isProTag,
-          onPressed: () async {
-            ref.read(iapLoadingProvider.notifier).state = true;
-            Navigator.pop(context);
-            final userId = ref.watch(authSessionProvider)?.user.id.value ?? '';
-            BranchRepository.trackCustomEvent('user_purchase_pass_initiated', ref: ref);
-            if (userId.isNotEmpty) await ref.read(iapProvider.notifier).buyProduct(userId, ref);
-          },
-        ),
+class BattlepassUpgradePage extends ConsumerWidget {
+  const BattlepassUpgradePage({super.key, required this.isProTag});
+  final bool isProTag;
+
+  static Route<dynamic> route({bool isProTag = false}) => CupertinoPageRoute(
+    builder: (context) => BattlepassUpgradePage(isProTag: isProTag),
+    fullscreenDialog: true,
   );
+
+  List<String> get icons => [
+    'unlimited_games',
+    'instant_reward',
+    'minimum_redeem',
+    'premium_tournaments',
+    'exclusive_events',
+    'pro_badge',
+    'priority_support',
+  ];
+
+  List<String> get titles => const [
+    'Unlimited games',
+    'Instant reward redemption',
+    'No minimum redemption limit',
+    'Premium Tournaments',
+    'Exclusive Events',
+    'Unlock Pro Badge',
+    'Priority support',
+  ];
+
+  List<String> get subtitles => const [
+    'Play as much as you want. No Limits.',
+    'No more waiting for rewards. Redeem instantly.',
+    'Redeem any amount, anytime',
+    'Exclusive access to premium tournaments.',
+    'VIP-only seasonal events.',
+    'Stand out with a verified Pro status.',
+    'Skip the wait with 24/7 support.',
+  ];
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final subscriptionPrice = ref.watch(homeProvider).subscriptionPrice;
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title:
+            isProTag
+                ? null
+                : Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(width: .5, color: const Color(0xff54C339)),
+                    color: const Color(0xff51BC38).withValues(alpha: .1),
+                  ),
+                  child: const Text(
+                    'Upgrade Today',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xff54C339),
+                    ),
+                  ),
+                ),
+        surfaceTintColor: Colors.transparent,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            if (isProTag)
+              const Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Your ',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xffffffff),
+                      ),
+                    ),
+                    TextSpan(
+                      text: 'Benefits',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xff54C339),
+                      ),
+                    ),
+                  ],
+                ),
+                textAlign: TextAlign.center,
+              )
+            else
+              Column(
+                children: [
+                  const SizedBox(height: 16),
+                  const Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Get ',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xffffffff),
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Battle Pass',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xff54C339),
+                          ),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Unlock the unlimited competitive chess experience with zero limits',
+                    style: TextStyle(color: Color(0xff8F9193)),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 32),
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      gradient: const LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [Color(0xff51BC38), Color(0xff2A5627), Color(0xff17241F)],
+                      ),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: const Color(0xff2B2D30),
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                        ),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/Trophy.png'),
+                          alignment: Alignment.topRight,
+                          scale: .8,
+                        ),
+                      ),
+                      child: Column(
+                        spacing: 12,
+                        children: [
+                          const Text(
+                            'FULL ACCESS AT',
+                            style: TextStyle(fontSize: 12, color: Color(0xff7D8082)),
+                          ),
+                          Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: '₹$subscriptionPrice/-',
+                                  style: const TextStyle(
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xffEFEDED),
+                                  ),
+                                ),
+                                // TextSpan(
+                                //   text: '₹349',
+                                //   style: TextStyle(
+                                //     fontSize: 20,
+                                //     fontWeight: FontWeight.w700,
+                                //     color: Color(0xff7D8082),
+                                //     decoration: TextDecoration.lineThrough,
+                                //     decorationColor: Color(0xff7D8082),
+                                //     // decorationThickness: 1,
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                          ),
+                          const Text(
+                            'Exclusive price for you. Limited time only.',
+                            style: TextStyle(fontSize: 12, color: Color(0xff7D8082)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 32),
+            ListView.separated(
+              itemCount: icons.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                final icon = icons[index];
+                final title = titles[index];
+                final subtitle = subtitles[index];
+                return Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff2B2D30),
+                    borderRadius: BorderRadius.circular(12),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [Color(0xff3C3C3C), Color(0xff222222)],
+                    ),
+                  ),
+                  child: Row(
+                    spacing: 8,
+                    children: [
+                      SvgPicture.asset('assets/images/svg/$icon.svg'),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xffEFEDED),
+                              ),
+                            ),
+                            Text(
+                              subtitle,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xff7D8082),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 32),
+          ],
+        ),
+      ),
+      bottomNavigationBar:
+          isProTag
+              ? null
+              : Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 32.0,
+                ).copyWith(top: 8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    MaterialButton(
+                      minWidth: double.infinity,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      color: const Color(0xff54C339),
+                      onPressed: () async {
+                        ref.read(iapLoadingProvider.notifier).state = true;
+                        Navigator.pop(context);
+                        final userId = ref.watch(authSessionProvider)?.user.id.value ?? '';
+                        BranchRepository.trackCustomEvent('user_purchase_pass_initiated', ref: ref);
+                        if (userId.isNotEmpty) {
+                          await ref.read(iapProvider.notifier).buyProduct(userId, ref);
+                        }
+                      },
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        spacing: 4,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Get Battle Pass today'.toUpperCase(),
+                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+                          ),
+                          const Icon(Icons.arrow_forward_ios, size: 16),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Get Instant access. Cancel anytime',
+                      style: TextStyle(color: Color(0xff7D8082), fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+    );
+  }
 }
+
+// Future<void> openBattlepassUpgradeSheet(
+//   BuildContext context,
+//   WidgetRef ref, {
+//   bool isProTag = false,
+// }) async {
+//   return await showModalBottomSheet(
+//     context: context,
+//     isScrollControlled: true,
+//     useSafeArea: true,
+//     shape: const RoundedRectangleBorder(
+//       borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+//     ),
+//     builder:
+//         (context) => BattlepassUpgradeSheet(
+//           isProTag: isProTag,
+//           onPressed: () async {
+//             ref.read(iapLoadingProvider.notifier).state = true;
+//             Navigator.pop(context);
+//             final userId = ref.watch(authSessionProvider)?.user.id.value ?? '';
+//             BranchRepository.trackCustomEvent('user_purchase_pass_initiated', ref: ref);
+//             if (userId.isNotEmpty) await ref.read(iapProvider.notifier).buyProduct(userId, ref);
+//           },
+//         ),
+//   );
+// }
 
 class BattlepassUpgradeSheet extends ConsumerWidget {
   const BattlepassUpgradeSheet({super.key, required this.onPressed, required this.isProTag});
@@ -1121,7 +1428,7 @@ class CompeteTournamentCard extends ConsumerWidget {
     final isAvailableRemote = ref.watch(iapProvider).isAvailableRemote;
     return GestureDetector(
       onTap: () {
-        final isPremium = ref.watch(homeProvider).isPremium;
+        final isPremium = ref.read(homeProvider).isPremium;
         if (!isAvailableRemote) {
           Navigator.push(
             context,
@@ -1130,7 +1437,7 @@ class CompeteTournamentCard extends ConsumerWidget {
             ),
           );
         } else if (!isPremium && tournament.isPremium) {
-          openBattlepassUpgradeSheet(context, ref);
+          Navigator.push(context, BattlepassUpgradePage.route());
         } else {
           if (promoteTournament) {
             BranchRepository.trackCustomEvent(
@@ -1357,12 +1664,31 @@ class CompeteTournamentCard extends ConsumerWidget {
               height: 40,
               color: const Color(0xff54C339),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TournamentDetailScreen(tournamentId: tournament.id),
-                  ),
-                );
+                final isPremium = ref.read(homeProvider).isPremium;
+                if (!isAvailableRemote) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<TournamentDetailScreen>(
+                      builder: (_) => TournamentDetailScreen(tournamentId: tournament.id),
+                    ),
+                  );
+                } else if (!isPremium && tournament.isPremium) {
+                  Navigator.push(context, BattlepassUpgradePage.route());
+                } else {
+                  if (promoteTournament) {
+                    BranchRepository.trackCustomEvent(
+                      'first_play_onboarding',
+                      ref: ref,
+                      data: {'tournamentId': tournament.id},
+                    );
+                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TournamentDetailScreen(tournamentId: tournament.id),
+                    ),
+                  );
+                }
               },
               minWidth: double.infinity,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -1462,7 +1788,7 @@ class _HomeBannersWidgetState extends ConsumerState<HomeBannersWidget> {
     _pageController = PageController();
 
     // Auto Scroll
-    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
+    _timer = Timer.periodic(const Duration(seconds: 10), (_) {
       if (!mounted) return;
       final fetchHomeBanners = ref.read(homeProvider).banners;
       if (fetchHomeBanners.isEmpty) return;
@@ -1724,7 +2050,7 @@ class GameTypeBottomSheet extends ConsumerWidget {
     final session = ref.watch(authSessionProvider);
     return Container(
       decoration: const BoxDecoration(
-        color: const Color(0xff2B2D30),
+        color: Color(0xff2B2D30),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),

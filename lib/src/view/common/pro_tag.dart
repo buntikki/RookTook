@@ -11,9 +11,7 @@ class ProTag extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        if (isProTag) {
-          openBattlepassUpgradeSheet(context, ref, isProTag: true);
-        }
+        Navigator.push(context, BattlepassUpgradePage.route(isProTag: isProTag));
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

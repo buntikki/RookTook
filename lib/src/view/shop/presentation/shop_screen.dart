@@ -204,7 +204,7 @@ class _ShopScreenState extends ConsumerState<ShopScreen> {
                             }
                             : !isPremium
                             ? () {
-                              openBattlepassUpgradeSheet(context, ref);
+                              Navigator.push(context, BattlepassUpgradePage.route());
                             }
                             : () async {
                               if (!isPremium) {

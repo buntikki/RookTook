@@ -337,7 +337,7 @@ class LedgerModel {
   final String transactionType;
   final String reason;
   final int createdAt;
-  final int updatedAt;
+  // final int updatedAt;
   final int amount;
   final int balanceBefore;
   final int balanceAfter;
@@ -350,7 +350,7 @@ class LedgerModel {
     required this.transactionType,
     required this.reason,
     required this.createdAt,
-    required this.updatedAt,
+    // required this.updatedAt,
     required this.amount,
     required this.balanceBefore,
     required this.balanceAfter,
@@ -365,7 +365,7 @@ class LedgerModel {
       'transactionType': transactionType,
       'reason': reason,
       'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      // 'updatedAt': updatedAt,
       'amount': amount,
       'balanceBefore': balanceBefore,
       'balanceAfter': balanceAfter,
@@ -381,7 +381,7 @@ class LedgerModel {
       transactionType: map['transactionType'] as String,
       reason: map['reason'] as String,
       createdAt: map['createdAt'] as int,
-      updatedAt: map['updatedAt'] as int,
+      // updatedAt: map['updatedAt'] as int,
       amount: map['amount'] as int,
       balanceBefore: map['balanceBefore'] as int,
       balanceAfter: map['balanceAfter'] as int,

@@ -1,18 +1,28 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:rooktook/src/constants.dart';
 import 'package:rooktook/src/model/auth/auth_session.dart';
 import 'package:rooktook/src/model/auth/bearer.dart';
 import 'package:rooktook/src/model/auth/session_storage.dart';
+import 'package:rooktook/src/view/home/home_tab_screen.dart';
 
 final homeProvider = StateNotifierProvider((ref) => HomeProvider());
 
 final fetchHomeBannersProvider = FutureProvider<List<BannerModel>>(
   (ref) => ref.read(homeProvider.notifier).fetchHomeBanners(),
 );
+final fetchIsFreeGameAvailableProvider = FutureProvider<bool>((ref) {
+  final session = ref.watch(authSessionProvider);
+  if (session != null) {
+    return ref.read(homeProvider.notifier).fetchIsFreeGameAvailable(session.user.name);
+  } else {
+    return false;
+  }
+});
 final fetchBattleRatingsProvider = FutureProvider<int>((ref) {
   final session = ref.watch(authSessionProvider);
   if (session != null) {
@@ -99,7 +109,42 @@ class HomeProvider extends StateNotifier<HomeState> {
     return 0;
   }
 
-  Future<bool> fetchUserSubscription(String userId) async {
+  Future<bool> fetchIsFreeGameAvailable(String userId) async {
+    const storage = SessionStorage();
+    final data = await storage.read();
+    final headers = {
+      'Access-Control-Allow-Origin': '*',
+      'Origin': 'https://lichess.dev',
+      'Authorization': 'Bearer ${signBearerToken(data!.token)}',
+      'X-API-Key':
+          '00033dbbd7e3c2388d922359abe33193012c6fb36f3854706c2a6b1c7187b5154292acc867fb4e54db67635b5d8ef3ce2d58403ac51e15c95cba3e81e48f01b9',
+    };
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          releaseMode
+              ? 'https://api.rooktook.com/api/v1/rankings/player/$userId'
+              : 'https://dev-api.rooktook.com/api/v1/rankings/player/$userId',
+        ),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        log(response.body);
+        final Map<String, dynamic> decodedResponse =
+            jsonDecode(response.body) as Map<String, dynamic>;
+        state = state.copyWith(
+          ratings: RatingsModel.fromMap(decodedResponse['data'] as Map<String, dynamic>),
+        );
+        return state.ratings.isFreeGameAvailable;
+      }
+    } catch (e) {
+      log('Error fetching isFreeGameAvailable: $e');
+    }
+    return false;
+  }
+
+  Future<bool> fetchUserSubscription(String userId, BuildContext context) async {
     const storage = SessionStorage();
     final data = await storage.read();
     final headers = {
@@ -129,6 +174,9 @@ class HomeProvider extends StateNotifier<HomeState> {
           isPremium: isPremium ?? false,
           subscriptionPrice: subscriptionPrice ?? '0',
         );
+        if (context.mounted && !state.isPremium) {
+          Navigator.push(context, BattlepassUpgradePage.route());
+        }
         return state.isPremium;
       }
     } catch (e) {
@@ -168,6 +216,7 @@ class HomeState {
         currentStreak: 0,
         battleRating: 0,
         maxStreak: 0,
+        isFreeGameAvailable: false,
       ),
     );
   }
@@ -248,6 +297,7 @@ class RatingsModel {
   final int currentStreak;
   final int battleRating;
   final int maxStreak;
+  final bool isFreeGameAvailable;
 
   RatingsModel({
     required this.totalTournamentsWon,
@@ -256,6 +306,7 @@ class RatingsModel {
     required this.currentStreak,
     required this.battleRating,
     required this.maxStreak,
+    required this.isFreeGameAvailable,
   });
 
   factory RatingsModel.fromMap(Map<String, dynamic> map) {
@@ -266,6 +317,7 @@ class RatingsModel {
       currentStreak: double.parse(map['currentStreak'].toString()).toInt(),
       battleRating: double.parse(map['battleRating'].toString()).toInt(),
       maxStreak: double.parse(map['maxStreak'].toString()).toInt(),
+      isFreeGameAvailable: map['isFreeGameAvailable'] as bool? ?? false,
     );
   }
 }

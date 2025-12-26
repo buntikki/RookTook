@@ -179,7 +179,7 @@ class TournamentNotifier extends StateNotifier<List<Tournament>> {
     // print(signBearerToken(data!.token));
     try {
       final response = await http.post(
-        lichessUri('/api/rt-tournament/join/$id'),
+        lichessUri('/api/rt-tournament/join-now/$id'),
         headers: headers,
         body: jsonEncode({'inviteCode': inviteCode ?? ''}),
       );

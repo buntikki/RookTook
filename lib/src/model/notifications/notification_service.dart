@@ -159,6 +159,7 @@ class NotificationService {
     if (initialMessage != null) {
       _handleFcmMessageOpenedApp(initialMessage);
     }
+    await FirebaseMessaging.instance.subscribeToTopic('all-users');
 
     // Handle any other interaction that caused the app to open when in background.
     LichessBinding.instance.firebaseMessagingOnMessageOpenedApp.listen(_handleFcmMessageOpenedApp);
@@ -316,18 +317,18 @@ class NotificationService {
     );
 
     final parsedMessage = FcmMessage.fromRemoteMessage(message);
-    final json = message.data;
-    print(json);
-    final isTournament = (json['eventType'] as String?)?.toLowerCase() == 'tournament';
-    if (isTournament) {
-      Navigator.push(
-        rootNavigatorKey.currentContext!,
-        CupertinoPageRoute(
-          builder:
-              (context) => TournamentDetailScreen(tournamentId: json['tournamentId'] as String),
-        ),
-      );
-    }
+    // final json = message.data;
+    // print(json);
+    // final isTournament = (json['eventType'] as String?)?.toLowerCase() == 'tournament';
+    // if (isTournament) {
+    //   Navigator.push(
+    //     rootNavigatorKey.currentContext!,
+    //     CupertinoPageRoute(
+    //       builder:
+    //           (context) => TournamentDetailScreen(tournamentId: json['tournamentId'] as String),
+    //     ),
+    //   );
+    // }
 
     _fcmMessageStreamController.add((message: parsedMessage, fromBackground: fromBackground));
 
@@ -370,6 +371,7 @@ class NotificationService {
   Future<void> registerDevice() async {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
       final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      print('apnsToken: ${await FirebaseMessaging.instance.getToken()}');
       if (apnsToken == null) {
         _logger.warning('APNS token is null');
         return;

@@ -13,6 +13,7 @@ import 'package:rooktook/src/model/notifications/notification_service.dart';
 import 'package:rooktook/src/navigation.dart';
 import 'package:rooktook/src/utils/branch_repository.dart';
 import 'package:rooktook/src/view/home/home_provider.dart';
+import 'package:rooktook/src/view/home/home_tab_screen.dart';
 import 'package:rooktook/src/view/puzzle/storm_screen.dart';
 import 'package:rooktook/src/view/settings/faq_screen.dart';
 import 'package:rooktook/src/view/tournament/pages/participants_screen.dart';
@@ -123,8 +124,12 @@ class _TournamentDetailScreenState extends ConsumerState<TournamentDetailScreen>
     }
   }
 
-  void handleButtonFn() {
-    if (tournament!.access.toLowerCase() == 'invite') {
+  Future<void> handleButtonFn() async {
+    final isFreeGameAvailable = await ref.refresh(fetchIsFreeGameAvailableProvider.future);
+    final isPremium = ref.read(homeProvider).isPremium;
+    if (!isFreeGameAvailable && !isPremium) {
+      Navigator.push(context, BattlepassUpgradePage.route());
+    } else if (tournament!.access.toLowerCase() == 'invite') {
       showModalBottomSheet(
         context: context,
         backgroundColor: const Color(0xFF1A1F23),
